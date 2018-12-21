@@ -1,0 +1,20 @@
+{
+  "browser_action": {
+    "default_icon": "run.png"
+  },
+  "manifest_version": 2,
+  "name": "test",
+  "version": "1.0",
+  "background": {
+    "scripts": ["background.js", "aze.js"]
+  },
+  "icons": {
+    "128": "run.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.google.com/*"],
+      "js": ["test.js"]
+    }
+  ]
+}
