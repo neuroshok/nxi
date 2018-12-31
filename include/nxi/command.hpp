@@ -43,7 +43,7 @@ namespace nxi
 		/*
 		enum class interface_location{ none, page_bar, control_bar, content, custom };
 
-		url_pattern{"http://*.com"};
+		url_pattern{"http://.com"};
 
 		location
 		matches

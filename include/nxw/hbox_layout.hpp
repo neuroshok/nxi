@@ -14,6 +14,8 @@ namespace nxw
             setContentsMargins(0, 0, 0, 0);
             setSpacing(0);
         }
+
+        ~hbox_layout() = default;
     };
 } // nxw
 
