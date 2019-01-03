@@ -54,6 +54,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(NDB_ENGINE_SQLITE ON)
 add_subdirectory(${NXI_THIRD_PARTY_ROOT}/ndb ${NXI_THIRD_PARTY_ROOT}/ndb/cmake-build)
 
+# speedlog
+add_library(lib_speedlog INTERFACE)
+target_include_directories(lib_speedlog INTERFACE ${NXI_THIRD_PARTY_ROOT}/spdlog/include)
+
 # QT
 find_package(Qt5 REQUIRED COMPONENTS ${QT_COMPONENTS})
 # must be set before files scan
@@ -128,7 +132,7 @@ else()
     add_executable(nxi ${NXI_SOURCES})
     target_include_directories(nxi PUBLIC include)
 
-    target_link_libraries(nxi lib_ndb ${NXI_MODULES} ${QT_LIBS})
+    target_link_libraries(nxi lib_ndb lib_speedlog ${NXI_MODULES} ${QT_LIBS})
 
     set_target_properties(nxi
             PROPERTIES
