@@ -1,5 +1,5 @@
-#ifndef UI_WEB_VIEW_H_NXI
-#define UI_WEB_VIEW_H_NXI
+#ifndef UI_VIEW_WEB_H_NXI
+#define UI_VIEW_WEB_H_NXI
 
 #include <nxi/page/id.hpp>
 #include <ui/interface.hpp>
@@ -33,4 +33,4 @@ namespace ui
     };
 } // nxw
 
-#endif // UI_WEB_VIEW_H_NXI
+#endif // UI_VIEW_WEB_H_NXI

@@ -2,7 +2,7 @@
 #define UI_CONTENT_H_NXI
 
 #include <ui/interface.hpp>
-#include <ui/renderer_view.hpp>
+#include <ui/view/renderer.hpp>
 
 namespace nxw
 {

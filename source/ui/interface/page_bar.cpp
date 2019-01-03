@@ -4,7 +4,7 @@
 #include <nxi/core.hpp>
 
 #include <nxw/hbox_layout.hpp>
-#include <nxw/tree.hpp>
+#include <ui/view/page_tree.hpp>
 #include <nxw/vbox_layout.hpp>
 
 #include <nxw/menu.hpp>
@@ -24,7 +24,7 @@ namespace ui::interfaces
 
         auto page_control_layout = new nxw::hbox_layout;
 
-        page_tree_ = new ui::page_tree(ui_core_);
+        page_tree_ = new ui::page_tree_view(ui_core_);
 
         auto btn_web_new = new nxw::icon_button(this, ":/button/page_web_new");
         auto btn_explorer_new = new nxw::icon_button(this, ":/button/page_explorer_new");

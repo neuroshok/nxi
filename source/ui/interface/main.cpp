@@ -3,7 +3,7 @@
 #include <nxi/core.hpp>
 #include <nxi/system/page.hpp>
 
-#include <nxw/tree.hpp>
+#include <ui/view/page_tree.hpp>
 #include <nxw/hbox_layout.hpp>
 #include <nxw/vbox_layout.hpp>
 

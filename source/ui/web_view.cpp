@@ -1,4 +1,4 @@
-#include <ui/web_view.hpp>
+#include <ui/view/web.hpp>
 
 #include <ui/core.hpp>
 #include <ui/page/web.hpp>

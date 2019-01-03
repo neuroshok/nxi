@@ -1,5 +1,5 @@
-#ifndef UI_RENDERER_VIEW_H_NXI
-#define UI_RENDERER_VIEW_H_NXI
+#ifndef UI_VIEW_RENDERER_H_NXI
+#define UI_VIEW_RENDERER_H_NXI
 
 #include <QWidget>
 #include <nxi/system/page.hpp>
@@ -32,4 +32,4 @@ namespace ui
     };
 } // ui
 
-#endif // UI_RENDERER_VIEW_H_NXI
+#endif // UI_VIEW_RENDERER_H_NXI

@@ -5,13 +5,13 @@
 #include <nxi/system/command.hpp>
 
 #include <nxw/hbox_layout.hpp>
-#include <ui/web_view.hpp>
-#include <nxw/explorer_view.hpp>
+#include <ui/view/web.hpp>
+#include <ui/view/explorer.hpp>
 
 #include <QStackedWidget>
 #include <QWebEngineView>
 
-#include <ui/renderer_view.hpp>
+#include <ui/view/renderer.hpp>
 
 namespace ui::interfaces
 {
