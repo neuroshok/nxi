@@ -118,7 +118,10 @@ if (NXI_TARGET_SYSTEM STREQUAL "android")
     target_link_libraries(nxi_android lib_ndb ${NXI_MODULES} ${QT_LIBS})
 
     include(cmake/android/android_apk.cmake)
-    add_qt_android_apk(nxi_android_apk nxi_android DEPENDS "libs/armeabi-v7a/libc++_shared.so" INSTALL)
+    add_qt_android_apk(nxi_android_apk nxi_android
+            PACKAGE_NAME "org.neuroshok.nxi"
+            PACKAGE_SOURCES "${NXI_ROOT}/platform/android/package"
+            DEPENDS "libs/${ANDROID_ABI}/libc++_shared.so" INSTALL)
 else()
     # sources
     file(GLOB_RECURSE NXI_SOURCES

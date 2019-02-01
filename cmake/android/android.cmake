@@ -5,11 +5,10 @@ set(ANDROID_TOOLCHAIN_FILE ${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cma
 
 # android build target
 # create build output for android
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/android_build")
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/android_build" AND NOT NXI_TARGET_SYSTEM STREQUAL "android")
     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/android_build")
 endif()
 
-# SDK defined, create a target for android
 if (NXI_TARGET_SYSTEM STREQUAL "android")
     set(CMAKE_GENERATOR "MinGW Makefiles" CACHE INTERNAL "" FORCE)
     set(CMAKE_MAKE_PROGRAM ${ANDROID_MAKE_PROGRAM} CACHE INTERNAL "" FORCE)
@@ -17,9 +16,6 @@ if (NXI_TARGET_SYSTEM STREQUAL "android")
 
     set(QT_COMPONENTS Core Widgets Gui WebView Qml Quick QuickWidgets 3DCore 3DRender 3DInput 3DExtras)
     set(QT_LIBS Qt5::Core Qt5::Widgets Qt5::Gui Qt5::WebView Qt5::Qml Qt5::Quick Qt5::QuickWidgets Qt5::3DCore Qt5::3DRender Qt5::3DInput Qt5::3DExtras)
-
-    # sources
-    #file(GLOB_RECURSE NXI_SOURCES "include/nxw/*.hpp")
 
     set(NXI_SOURCES ${NXI_SOURCES}
             source/platform/android/main.cpp
@@ -36,6 +32,7 @@ add_custom_target(
         ALL
         COMMAND ${CMAKE_COMMAND} -G \"${ANDROID_GENERATOR}\"
         -DNXI_TARGET_SYSTEM=android
+        -DANDROID_ABI=${ANDROID_ABI}
         -DCMAKE_MAKE_PROGRAM=${ANDROID_MAKE_PROGRAM}
         -DCMAKE_TOOLCHAIN_FILE=${ANDROID_TOOLCHAIN_FILE}
         ../..
