@@ -5,9 +5,13 @@ cmake_minimum_required(VERSION 3.13)
 #-------------------------------------------------------
 include(cmake/utility.cmake)
 
-# default target system
+# default
+# target system
 if (NOT NXI_TARGET_SYSTEM)
     set(NXI_TARGET_SYSTEM windows)
+endif()
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
 endif()
 
 # user config file
@@ -23,20 +27,23 @@ set(NXI_MODULE_ROOT "${NXI_ROOT}/module")
 set(NXI_THIRD_PARTY_ROOT ${NXI_ROOT}/third_party)
 
 # qt path
-set(CMAKE_FIND_ROOT_PATH  ${QT_ROOT})
-set(CMAKE_PREFIX_PATH  ${QT_ROOT})
+if (NOT NXI_QT_ROOT)
+    message(FATAL_ERROR "Variable NXI_QT_ROOT not found")
+endif()
+set(CMAKE_FIND_ROOT_PATH  ${NXI_QT_ROOT})
+set(CMAKE_PREFIX_PATH  ${NXI_QT_ROOT})
 
 
 ## PLATFORM
 # windows
 if (NXI_TARGET_SYSTEM STREQUAL "windows")
-    set(QT_COMPONENTS Core Widgets Gui WebEngine WebEngineWidgets 3DCore 3DRender 3DInput 3DExtras)
-    set(QT_LIBS Qt5::Core Qt5::Widgets Qt5::Gui Qt5::WebEngine Qt5::WebEngineWidgets
+    set(NXI_QT_COMPONENTS Core Widgets Gui WebEngine WebEngineWidgets 3DCore 3DRender 3DInput 3DExtras)
+    set(NXI_QT_LIBS Qt5::Core Qt5::Widgets Qt5::Gui Qt5::WebEngine Qt5::WebEngineWidgets
             Qt5::3DCore Qt5::3DRender Qt5::3DInput Qt5::3DExtras)
 endif()
 
 # android
-include(cmake/android/android.cmake)
+include(platform/android/cmake/android.cmake)
 
 #-------------------------------------------------------
 #                     Project
@@ -59,7 +66,7 @@ add_library(lib_speedlog INTERFACE)
 target_include_directories(lib_speedlog INTERFACE ${NXI_THIRD_PARTY_ROOT}/spdlog/include)
 
 # QT
-find_package(Qt5 REQUIRED COMPONENTS ${QT_COMPONENTS})
+find_package(Qt5 REQUIRED COMPONENTS ${NXI_QT_COMPONENTS})
 # must be set before files scan
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -73,11 +80,9 @@ set(CMAKE_AUTORCC ON)
 message("--------------------------------------------------------
                          NXI
 --------------------------------------------------------")
-
-
 message("Host system : ${CMAKE_HOST_SYSTEM_NAME}")
 message("Target system : ${NXI_TARGET_SYSTEM}")
-message("Qt path : ${QT_ROOT}")
+message("Qt path : ${NXI_QT_ROOT}")
 
 
 #-------------------------------------------------------
@@ -113,15 +118,11 @@ configure_file(
 #-------------------------------------------------------
 
 if (NXI_TARGET_SYSTEM STREQUAL "android")
-    add_library(nxi_android SHARED ${NXI_SOURCES})
-    target_include_directories(nxi_android PUBLIC include)
-    target_link_libraries(nxi_android lib_ndb ${NXI_MODULES} ${QT_LIBS})
+    add_library(nxi SHARED ${NXI_SOURCES})
+    target_include_directories(nxi PUBLIC include)
+    target_link_libraries(nxi lib_ndb ${NXI_MODULES} ${NXI_QT_LIBS})
 
-    include(cmake/android/android_apk.cmake)
-    add_qt_android_apk(nxi_android_apk nxi_android
-            PACKAGE_NAME "org.neuroshok.nxi"
-            PACKAGE_SOURCES "${NXI_ROOT}/platform/android/package"
-            DEPENDS "libs/${ANDROID_ABI}/libc++_shared.so" INSTALL)
+    nxi_android_apk_target(nxi)
 else()
     # sources
     file(GLOB_RECURSE NXI_SOURCES
@@ -135,7 +136,7 @@ else()
     add_executable(nxi ${NXI_SOURCES})
     target_include_directories(nxi PUBLIC include)
 
-    target_link_libraries(nxi lib_ndb lib_speedlog ${NXI_MODULES} ${QT_LIBS})
+    target_link_libraries(nxi lib_ndb lib_speedlog ${NXI_MODULES} ${NXI_QT_LIBS})
 
     set_target_properties(nxi
             PROPERTIES
