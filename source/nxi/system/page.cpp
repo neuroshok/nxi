@@ -11,6 +11,10 @@
 
 namespace nxi
 {
+    page_system::page_system(nxi::core& nxi_core) :
+            nxi_core_{ nxi_core }
+    {}
+
     void page_system::load()
     {
         nxi_log << "load page_system";

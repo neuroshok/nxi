@@ -11,10 +11,7 @@ namespace nxi
     {
         Q_OBJECT
     public:
-        web_page(nxi::page_system& ps, nxi::page_id id)
-            : nxi::page(ps, id, "web_page")
-            , url_{ "http://www.google.fr" }
-        {}
+        web_page(nxi::page_system& ps, nxi::page_id id);
         web_page(nxi::page_system& ps, nxi::page_id id, const QString& name) : nxi::page(ps, id, name) {}
 
         void focus();

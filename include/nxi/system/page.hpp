@@ -14,6 +14,7 @@
 
 namespace nxi
 {
+    class core;
     class page;
     class page_node;
     class web_page;
@@ -28,6 +29,8 @@ namespace nxi
         using pages_view = std::vector<stz::observer_ptr<nxi::page>>;
 
         using page_connections_type = std::vector<ndb::objects::page_connection>;
+
+        page_system(nxi::core&);
 
         void load();
 
@@ -80,7 +83,10 @@ namespace nxi
         void event_update(const nxi::page&);
         void event_update(const nxi::web_page&);
 
-    private:
+
+    public:
+        nxi::core& nxi_core_;
+
         template<class Page, class... Args>
         Page& internal_add(nxi::page_id source_id, Args&&... args);
 

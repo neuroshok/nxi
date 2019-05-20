@@ -1,14 +1,18 @@
 #include <nxi/core.hpp>
 
+#include <include/nxi/database/config.hpp>
 #include <nxi/database.hpp>
 #include <nxi/log.hpp>
 
 namespace nxi
 {
-    core::core() :
-        command_system_{ *this }
+    core::core()
+        : ndb_init_{}
+        , command_system_{ *this }
         , window_system_{ *this }
+        , page_system_{ *this }
         , module_system_{ *this }
+        , config_{ "nxi" }
     {}
 
     core::~core()
@@ -23,6 +27,9 @@ namespace nxi
         command_system_.load();
         window_system_.load();
         page_system_.load();
+
+        config_.browser.download_path = "d:/";
+        config_.browser.home = "http://youtube.com";
     }
 
     void core::quit() const

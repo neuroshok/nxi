@@ -9,6 +9,8 @@
 #include <nxi/system/module.hpp>
 #include <nxi/system/window.hpp>
 
+#include <nxi/database/config.hpp>
+
 namespace nxi
 {
     class core : public QObject
@@ -28,6 +30,8 @@ namespace nxi
             emit event_test(w);
         }
 
+        const nxi::config& config() const { return config_; }
+
         nxi::command_system& command_system();
         nxi::module_system& module_system();
         nxi::page_system& page_system();
@@ -40,6 +44,8 @@ namespace nxi
     private:
         ndb::initializer<ndb::sqlite> ndb_init_;
         ndb::connector<dbs::core> ndb_connector_;
+
+        nxi::config config_;
 
         nxi::command_system command_system_;
         nxi::window_system window_system_;

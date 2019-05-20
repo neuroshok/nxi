@@ -7,6 +7,10 @@
 #include <QWebEnginePage>
 #include <QWebEngineSettings>
 
+#include <include/nxi/database/config.hpp>
+#include <nxi/core.hpp>
+#include <ui/core.hpp>
+
 namespace ui
 {
     web_page::web_page(ui::core& ui_core, nxi::web_page& page) :
@@ -17,7 +21,7 @@ namespace ui
         native_page_ = new QWebEnginePage(this);
         native_page_->settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
         native_page_->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
-        native_page_->load(QUrl("http://www.google.fr"));
+        native_page_->load(QUrl(ui_core_.nxi_core().config().browser.home.get().c_str()));
 
         connect(native_page_, &QWebEnginePage::urlChanged, this, [this](const QUrl& url)
         {
