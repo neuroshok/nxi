@@ -61,6 +61,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(NDB_ENGINE_SQLITE ON)
 add_subdirectory(${NXI_THIRD_PARTY_ROOT}/ndb ${NXI_THIRD_PARTY_ROOT}/ndb/cmake-build)
 
+# NDS
+add_subdirectory(${NXI_THIRD_PARTY_ROOT}/nds)
+
 # speedlog
 add_library(lib_speedlog INTERFACE)
 target_include_directories(lib_speedlog INTERFACE ${NXI_THIRD_PARTY_ROOT}/spdlog/include)
@@ -120,7 +123,7 @@ configure_file(
 if (NXI_TARGET_SYSTEM STREQUAL "android")
     add_library(nxi SHARED ${NXI_SOURCES})
     target_include_directories(nxi PUBLIC include)
-    target_link_libraries(nxi lib_ndb ${NXI_MODULES} ${NXI_QT_LIBS})
+    target_link_libraries(nxi lib_ndb lib_nds ${NXI_MODULES} ${NXI_QT_LIBS})
 
     nxi_android_apk_target(nxi)
 else()
@@ -136,7 +139,7 @@ else()
     add_executable(nxi ${NXI_SOURCES})
     target_include_directories(nxi PUBLIC include)
 
-    target_link_libraries(nxi lib_ndb lib_speedlog ${NXI_MODULES} ${NXI_QT_LIBS})
+    target_link_libraries(nxi lib_ndb lib_nds lib_speedlog ${NXI_MODULES} ${NXI_QT_LIBS})
 
     set_target_properties(nxi
             PROPERTIES

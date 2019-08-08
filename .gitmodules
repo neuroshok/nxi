@@ -4,3 +4,6 @@
 [submodule "third_party/spdlog"]
 	path = third_party/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "third_party/nds"]
+	path = third_party/nds
+	url = https://github.com/ads00/nds.git
