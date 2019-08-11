@@ -1,6 +1,6 @@
 # windows
 if (NXI_TARGET_SYSTEM STREQUAL "windows")
-    set(NXI_QT_ROOT C:/qt/5.12.3/msvc2017_64)
+    set(NXI_QT_ROOT C:/qt/5.13.0/msvc2017_64)
 
     # module
     module_build(strateon)
@@ -8,7 +8,7 @@ if (NXI_TARGET_SYSTEM STREQUAL "windows")
 endif()
 
 if (NXI_TARGET_SYSTEM STREQUAL "android")
-    set(NXI_QT_ROOT C:/qt/5.12.3/android_arm64_v8a)
+    set(NXI_QT_ROOT C:/qt/5.13.0/android_arm64_v8a)
     set(NXI_ANDROID_ABI arm64-v8a)
 
     # android
