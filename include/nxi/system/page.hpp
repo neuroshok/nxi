@@ -12,6 +12,8 @@
 
 #include <nxi/database.hpp>
 
+#include <nds/graph.hpp>
+
 namespace nxi
 {
     class core;
@@ -86,6 +88,10 @@ namespace nxi
 
     public:
         nxi::core& nxi_core_;
+        //nds::graph<nxi::page, nxi::page_node> graph_;
+        //nxi::com::connect(source, target)
+        //nxi::com::send(page_system::add)
+
 
         template<class Page, class... Args>
         Page& internal_add(nxi::page_id source_id, Args&&... args);

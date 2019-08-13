@@ -12,12 +12,12 @@ namespace nxi
 	window_system::window_system(nxi::core& nxi_core) :
 		nxi_core_{ nxi_core }
 	{
-        nxi_log << "init window_system";
+            //nxi_log << "init window_system";
 	}
 
     void window_system::load()
     {
-        nxi_log << "load window_system";
+        nxi_trace("call nxi::window_system::load");
 
         // load stored windows
         for (auto& window : ndb::oget<dbs::core>(nxi_model.window))

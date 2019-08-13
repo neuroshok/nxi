@@ -22,7 +22,7 @@ namespace nxi::modules
 
     void strateon::on_load()
     {
-        nxi_log << "load static module strateon";
+        //nxi_log << "load static module strateon";
 
 
         // custom_page

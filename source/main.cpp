@@ -14,12 +14,13 @@ int main(int argc, char* argv[])
     try
     {
         // init
-        nxi_log << "init nxi::core";
+        spdlog::set_level(spdlog::level::trace);
+
+        nxi_trace("init nxi::core");
         nxi::core nxi_core;
-        nxi_log << "init ui::core";
+        nxi_trace("init ui::core");
         ui::core ui_core(app, nxi_core);
 
-        nxi_log << "load nxi";
         nxi_core.load();
 
         status = QApplication::exec();

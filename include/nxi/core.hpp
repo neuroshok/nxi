@@ -30,7 +30,7 @@ namespace nxi
             emit event_test(w);
         }
 
-        const nxi::config& config() const { return config_; }
+        nxi::config& config() { return config_; }
 
         nxi::command_system& command_system();
         nxi::module_system& module_system();

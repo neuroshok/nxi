@@ -25,7 +25,7 @@ namespace nxi
 
     void module_system::load()
     {
-        nxi_log << "load module_system";
+        nxi_trace("call nxi::module_system::load");
 
         // load static modules
         static_modules_.load();

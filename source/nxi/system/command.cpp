@@ -4,12 +4,25 @@
 #include <nxi/system/page.hpp>
 
 #include <QUrl>
-#include <nxi/system/command.hpp>
-#include <nxi/system/module.hpp>
-#include <nxi/error.hpp>
+#include <include/nxi/log.hpp>
 #include <include/nxi/module/web.hpp>
 #include <include/nxi/system/command.hpp>
+#include <nxi/error.hpp>
+#include <nxi/system/command.hpp>
+#include <nxi/system/module.hpp>
 
+#include <nds/encoder/graph.hpp>
+#include <nds/algorithm/graph/find.hpp>
+
+namespace nds::encoders
+{
+    template<>
+    template<>
+    std::string dot<void>::node_name(const nxi::command& p)
+    {
+        return p.name().toStdString();
+    }
+} // nds::encoders
 
 namespace nxi
 {
@@ -19,16 +32,16 @@ namespace nxi
 
     void command_system::load()
     {
-        // TODO use node system
+        nxi_trace("call nxi::command_system::load");
 
         // add nxi commands
+        auto main_cmd = graph_.add(nxi::command("nxi", "command_node", std::bind(&nxi::core::quit, &nxi_core_)));
 
-        nxi::command quit("nxi", "quit", std::bind(&nxi::core::quit, &nxi_core_), ":/button/quit");
-        add(std::move(quit));
+        add(nxi::command("nxi", "quit", std::bind(&nxi::core::quit, &nxi_core_), ":/button/quit"), main_cmd);
+        add(nxi::command("nxi", "zeta", std::bind(&nxi::core::quit, &nxi_core_), ":/image/nex"), main_cmd);
+        add(nxi::command("nxi", "config", std::bind(&nxi::core::quit, &nxi_core_), ":/image/nex"), main_cmd);
 
-        nxi::command zeta("nxi", "zeta", std::bind(&nxi::core::quit, &nxi_core_), ":/image/nex");
-        add(std::move(zeta));
-
+        //nds::encoders::dot<>::encode<nds::console>(graph_);
 
         // load module commands
         /*
@@ -56,17 +69,29 @@ namespace nxi
 
     const nxi::command& command_system::get(const QString& action_name, const QString& module_name) const
     {
-        nxi_assert(command_indexes_.count(action_name));
-        return *commands_[command_indexes_[action_name]];
+        nxi::command* command = nullptr;
+
+        nds::algorithm::graph::find(graph_
+        , [&command](auto&& found_node){ command = std::addressof(found_node->get()); }
+        , [&action_name](auto&& node){ return node->get().action_name() == action_name; });
+
+        if (command == nullptr) nxi_error("nxi::command not found");
+        return *command;
     }
 
-    void command_system::add(nxi::command command)
+    nds::node<nxi::command>* command_system::add(nxi::command command, nds::node<nxi::command>* source)
     {
+        qDebug()<< "__________" << command.action_name();
+        auto command_node = graph_.add(std::move(command), source);
+        //qDebug()<< "__________" << command_node->get().name();
+
+        return command_node;
+        /*
         size_t index = commands_.size();
         command_indexes_.insert(command.action_name(), index);
         commands_.emplace_back(std::make_unique<nxi::command>(std::move(command)));
 
-        emit event_add(*commands_[index]);
+        emit event_add(*commands_[index]);*/
     }
 
     void command_system::exec(const QString& command, command_context context)

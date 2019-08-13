@@ -10,6 +10,8 @@
 #include <QObject>
 #include <QHash>
 
+#include <nds/graph.hpp>
+
 namespace nxi
 {
 	class core;
@@ -22,27 +24,29 @@ namespace nxi
 
         Q_OBJECT
     public:
-		command_system(nxi::core&);
-		command_system(const command_system&) = delete;
+        command_system(nxi::core&);
+        command_system(const command_system&) = delete;
         void operator=(const command_system&) = delete;
 
         void load();
 
         const std::vector<std::unique_ptr<nxi::command>>& get();
         const nxi::command& get(const QString& module_action, const QString& module_name = "nxi") const;
-		void add(nxi::command command);
+        nds::node<nxi::command>* add(nxi::command command, nds::node<nxi::command>* source = nullptr);
         void exec(const QString& command, command_context context = command_context::deduced);
-		commands_view search(const QString&);
+        commands_view search(const QString&);
 
         signals:
         void event_add(const nxi::command&);
 
     private:
-		nxi::core& nxi_core_;
+        nxi::core& nxi_core_;
 
-		std::vector<std::unique_ptr<nxi::command>> commands_;
-		QHash<QString, size_t> command_indexes_;
-		//QHash<shortcut, unsigned int
+        std::vector<std::unique_ptr<nxi::command>> commands_;
+        QHash<QString, size_t> command_indexes_;
+        // QHash<shortcut, unsigned int
+        nds::graph<nxi::command> graph_;
+
     };
 } // nxi
 

@@ -14,7 +14,7 @@ namespace ui
 	window_system::window_system(ui::core& ui_core) :
 		m_ui_core{ ui_core }
 	{
-        nxi_log << "ui - init windows";
+            //nxi_log << "ui - init windows";
 
         QObject::connect(&m_ui_core.nxi_core().window_system(), &nxi::window_system::event_add, [this](const nxi::window& window)
         {

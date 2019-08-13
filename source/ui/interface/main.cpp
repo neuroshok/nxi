@@ -12,6 +12,8 @@
 #include <ui/interface/control_bar.hpp>
 #include <ui/interface/page_bar.hpp>
 
+#include <ui/view/config.hpp>
+
 namespace ui::interfaces
 {
     main::main(ui::core& ui_core) :
@@ -30,9 +32,14 @@ namespace ui::interfaces
         top_layout->addWidget(control_bar_);
 
         middle_layout->addWidget(page_bar_);
-        middle_layout->addWidget(content_);
+        //middle_layout->addWidget(content_);
+
+        auto cfg = new ui::config(ui_core_);
+        middle_layout->addWidget(cfg);
 
         main_layout->addLayout(top_layout);
         main_layout->addLayout(middle_layout);
+
+
     }
 } // ui::interfaces

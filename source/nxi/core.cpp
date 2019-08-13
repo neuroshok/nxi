@@ -15,21 +15,18 @@ namespace nxi
         , config_{ "nxi" }
     {}
 
-    core::~core()
-    {
-    }
+    core::~core() = default;
 
     void core::load()
     {
+        nxi_trace("call nxi::core::load");
+
         // load modules before other systems
         module_system_.load();
 
         command_system_.load();
         window_system_.load();
         page_system_.load();
-
-        config_.browser.download_path = "d:/";
-        config_.browser.home = "http://youtube.com";
     }
 
     void core::quit() const

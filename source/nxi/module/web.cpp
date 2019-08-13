@@ -42,7 +42,7 @@ namespace nxi
 
             for (auto s : scripts)
             {
-                nxi_log << "load web_module script " << s.toString().toStdString();
+                nxi_trace("load web_module script {}", s.toString().toStdString());
             }
 
             // content_scripts

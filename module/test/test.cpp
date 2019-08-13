@@ -14,7 +14,7 @@ namespace nxi::modules
 
     void test::on_load()
     {
-        nxi_log << "load static test module";
+        //nxi_log << "load static test module";
 
         auto cmd = nxi::command("static_module_test", "action", std::bind(&nxi::core::quit, &nxi_core_));
 

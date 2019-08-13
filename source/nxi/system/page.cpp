@@ -17,7 +17,8 @@ namespace nxi
 
     void page_system::load()
     {
-        nxi_log << "load page_system";
+        // nxi::message_system::send(nxi::messages::page_system_loaded)
+        nxi_trace("call nxi::page_system::load");
 
         // load pages, connect all pages to root
         for (auto& page_data : ndb::oget<dbs::core>(nxi_model.page))
@@ -109,7 +110,7 @@ namespace nxi
 
     void page_system::focus(nxi::page_id id)
     {
-        nxi_log << "FOCUS " << id;
+        //nxi_log << "FOCUS " << id;
         current_page_ = &get(id);
         current_page_->focus();
         // emit event_change(static_cast<Page*>(current_page_));
@@ -120,7 +121,7 @@ namespace nxi
     {
         const auto& pc = nxi_model.page_connection;
 
-        nxi_log << "PS MOVE : " << page_id << source_id << target_id;
+        //nxi_log << "PS MOVE : " << page_id << source_id << target_id;
 
         // page doesn't move
         if (source_id == target_id) return;
