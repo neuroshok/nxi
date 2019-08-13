@@ -1,0 +1,13 @@
+#ide files
+.idea/
+.vs/
+.vscode/
+
+# binary folders
+**bin/
+build/
+
+# cmake build folders
+**cmake-*/
+
+**user-config.cmake
