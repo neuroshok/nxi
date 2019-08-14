@@ -7,7 +7,7 @@
 #include <QWebEnginePage>
 #include <QWebEngineSettings>
 
-#include <include/nxi/database/config.hpp>
+#include <nxi/config.hpp>
 #include <nxi/core.hpp>
 #include <ui/core.hpp>
 

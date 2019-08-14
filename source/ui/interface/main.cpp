@@ -3,7 +3,6 @@
 #include <nxi/core.hpp>
 #include <nxi/system/page.hpp>
 
-#include <ui/view/page_tree.hpp>
 #include <nxw/hbox_layout.hpp>
 #include <nxw/vbox_layout.hpp>
 
@@ -13,6 +12,7 @@
 #include <ui/interface/page_bar.hpp>
 
 #include <ui/view/config.hpp>
+#include <ui/view/page_tree.hpp>
 
 namespace ui::interfaces
 {
@@ -34,7 +34,7 @@ namespace ui::interfaces
         middle_layout->addWidget(page_bar_);
         //middle_layout->addWidget(content_);
 
-        auto cfg = new ui::config(ui_core_);
+        auto cfg = new ui::views::config(ui_core_);
         middle_layout->addWidget(cfg);
 
         main_layout->addLayout(top_layout);

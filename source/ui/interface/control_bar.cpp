@@ -15,6 +15,7 @@
 #include <QWebEngineView>
 #include <include/nxi/module/web.hpp>
 #include <include/nxi/log.hpp>
+#include <nxi/config.hpp>
 
 namespace nxw
 {
@@ -106,6 +107,9 @@ namespace ui::interfaces
         m_ui_core{ ui_core }
     {
         nxi_trace("control_bar::control_bar");
+
+
+
         QHBoxLayout* layout = new nxw::hbox_layout;
         setLayout(layout);
         setStyleSheet("border-bottom:1px solid #CCCCCC;");

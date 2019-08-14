@@ -1,7 +1,5 @@
 #include <nxi/core.hpp>
 
-#include <include/nxi/database/config.hpp>
-#include <nxi/database.hpp>
 #include <nxi/log.hpp>
 
 namespace nxi

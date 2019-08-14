@@ -9,7 +9,7 @@
 #include <nxi/system/module.hpp>
 #include <nxi/system/window.hpp>
 
-#include <nxi/database/config.hpp>
+#include <nxi/config.hpp>
 
 namespace nxi
 {
