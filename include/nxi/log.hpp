@@ -5,6 +5,13 @@
 #include <iostream>
 
 #include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
+
+template<typename OStream>
+OStream& operator<<(OStream &os, const QString& c)
+{
+    return os << c.toStdString();
+}
 
 #define nxi_assert(C) Q_ASSERT(C)
 
