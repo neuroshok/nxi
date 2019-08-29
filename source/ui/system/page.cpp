@@ -18,7 +18,7 @@ namespace ui
     page_system::page_system(ui::core& ui_core) : ui_core_{ ui_core }
     {
         // init static widget page
-        make<ui::views::config>("nxi/config");
+        make_widget<ui::views::config>("nxi/config");
 
         QObject::connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, this, [this](nxi::page& page, nxi::page_id)
         {

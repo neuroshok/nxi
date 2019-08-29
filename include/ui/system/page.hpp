@@ -31,10 +31,10 @@ namespace ui
         stz::observer_ptr<ui::page> get(nxi::page& page);
 
         template<class Widget>
-        auto make(const QString& path)
+        auto make_widget(const QString& path)
         {
             auto it = widget_pages_.find(path);
-            if (it != widget_pages_.end()) nxi_warning("page {path} already exists", path);
+            if (it != widget_pages_.end()) nxi_warning("page {} already exists", path);
             else
             {
                 auto widget = new Widget(ui_core_);
