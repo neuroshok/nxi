@@ -32,6 +32,7 @@ namespace nxi
 
         const std::vector<std::unique_ptr<nxi::command>>& get();
         const nxi::command& get(const QString& module_action, const QString& module_name = "nxi") const;
+        nxi::command* find(const QString& module_action, const QString& module_name = "nxi") const;
         nds::node<nxi::command>* add(nxi::command command, nds::node<nxi::command>* source = nullptr);
         void exec(const QString& command, command_context context = command_context::deduced);
         commands_view search(const QString&);

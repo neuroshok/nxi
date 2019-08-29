@@ -57,7 +57,7 @@ namespace nxi
 
         add(nxi::command("nxi", "quit", std::bind(&nxi::core::quit, &nxi_core_), ":/button/quit"), main_cmd);
         add(nxi::command("nxi", "zeta", std::bind(&nxi::core::quit, &nxi_core_), ":/image/nex"), main_cmd);
-        add(nxi::command("nxi", "config", [this](){ nxi_core_.page_system().add<nxi::web_page>();  }, ":/image/nex"), main_cmd);
+        add(nxi::command("nxi", "config", [this](){ nxi_core_.page_system().add_static("nxi/config");  }, ":/image/nex"), main_cmd);
 
         //nds::encoders::dot<>::encode<nds::console>(graph_);
 
@@ -85,13 +85,20 @@ namespace nxi
         return commands_;
     }
 
-    const nxi::command& command_system::get(const QString& action_name, const QString& module_name) const
+    nxi::command* command_system::find(const QString& module_action, const QString& module_name) const
     {
         nxi::command* command = nullptr;
 
         nds::algorithm::graph::find(graph_
         , [&command](auto&& found_node){ command = std::addressof(found_node->get()); }
-        , [&action_name](auto&& node){ return node->get().action_name() == action_name; });
+        , [&module_action](auto&& node){ return node->get().action_name() == module_action; });
+
+        return command;
+    }
+
+    const nxi::command& command_system::get(const QString& action_name, const QString& module_name) const
+    {
+        nxi::command* command = find(action_name, module_name);
 
         if (command == nullptr) nxi_error("nxi::command not found : {}", action_name);
         return *command;
@@ -112,9 +119,17 @@ namespace nxi
         emit event_add(*commands_[index]);*/
     }
 
-    void command_system::exec(const QString& command, command_context context)
+    void command_system::exec(const QString& str_command, command_context context)
     {
-        QUrl url{ command };
+        nxi_trace("call command_system::exec {}", str_command);
+
+
+        QUrl url{ str_command };
+        auto* command = find(url.path(), url.scheme());
+        if (command == nullptr) nxi_core_.error("command not found " + str_command);
+        else command->exec();
+
+
         //qDebug() << "scheme : " << url.scheme() << "__" << url.path();
 
         switch (context)

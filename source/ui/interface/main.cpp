@@ -14,6 +14,8 @@
 #include <ui/view/config.hpp>
 #include <ui/view/page_tree.hpp>
 
+#include <QMessageBox>
+
 namespace ui::interfaces
 {
     main::main(ui::core& ui_core) :
@@ -37,6 +39,13 @@ namespace ui::interfaces
         main_layout->addLayout(top_layout);
         main_layout->addLayout(middle_layout);
 
-
+        connect(&ui_core_.nxi_core(), &nxi::core::event_error, this, [](const QString& message)
+        {
+            auto* error = new QMessageBox;
+            error->setAttribute(Qt::WA_DeleteOnClose, true);
+            error->setWindowTitle("nxi error");
+            error->setText(message);
+            error->show();
+        });
     }
 } // ui::interfaces

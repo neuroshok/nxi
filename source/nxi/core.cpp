@@ -51,4 +51,9 @@ namespace nxi
     {
         return window_system_;
     }
+
+    void core::error(const QString& message) const
+    {
+        emit event_error(message);
+    }
 } // nxi

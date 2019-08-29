@@ -25,6 +25,8 @@ namespace nxi
         void load();
         void quit() const;
 
+        void error(const QString& message) const;
+
         void test(QWidget* w)
         {
             emit event_test(w);
@@ -40,6 +42,7 @@ namespace nxi
     signals:
         void event_quit() const;
         void event_test(QWidget*);
+        void event_error(const QString&) const;
 
     private:
         ndb::initializer<ndb::sqlite> ndb_init_;

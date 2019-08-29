@@ -40,7 +40,7 @@ namespace ui
         systray_->setIcon(QIcon(":/image/nex"));
         systray_->show();
 
-        QObject::connect(&nxi_core_, &nxi::core::event_quit, this, &core::quit);
+        connect(&nxi_core_, &nxi::core::event_quit, this, &core::quit);
     }
 
     void core::quit()
