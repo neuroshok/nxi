@@ -3,7 +3,7 @@
 #include <ui/core.hpp>
 #include <ui/page/web.hpp>
 #include <nxi/core.hpp>
-#include <nxi/error.hpp>
+#include <nxi/log.hpp>
 #include <nxi/system/page.hpp>
 #include <nxw/vbox_layout.hpp>
 

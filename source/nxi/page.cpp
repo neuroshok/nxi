@@ -1,7 +1,7 @@
 #include <nxi/page.hpp>
 
 #include <nxi/database.hpp>
-#include <include/nxi/error.hpp>
+#include <nxi/log.hpp>
 
 namespace nxi
 {

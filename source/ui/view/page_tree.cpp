@@ -9,7 +9,7 @@
 #include <ui/view/page_tree/page_item.hpp>
 
 #include <QDebug>
-#include <include/nxi/error.hpp>
+#include <nxi/log.hpp>
 #include <ui/view/page_tree.hpp>
 #include <include/nxw/menu.hpp>
 
@@ -21,7 +21,6 @@
 #include <QPainter>
 #include <QtCore/QEvent>
 #include <QMouseEvent>
-#include <include/nxi/log.hpp>
 #include <include/nxi/page/custom.hpp>
 #include <include/ui/view/config.hpp>
 

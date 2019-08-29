@@ -7,7 +7,6 @@
 #include <include/nxi/log.hpp>
 #include <include/nxi/module/web.hpp>
 #include <include/nxi/system/command.hpp>
-#include <nxi/error.hpp>
 #include <nxi/system/command.hpp>
 #include <nxi/system/module.hpp>
 #include <nxi/system/page.hpp>

@@ -6,7 +6,6 @@
 #include <nxi/database.hpp>
 
 #include <nxi/log.hpp>
-#include <nxi/error.hpp>
 #include <include/nxi/page/custom.hpp>
 
 namespace nxi
