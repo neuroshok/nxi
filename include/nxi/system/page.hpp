@@ -45,8 +45,8 @@ namespace nxi
         const page_connections_type& connections() const;
         nxi::page& get(nxi::page_id id) const;
 
-        template<class Page>
-        void add(nxi::page_id source_id = 0);
+        template<class Page, class... Args>
+        void add(nxi::page_id source_id = 0, Args&&... args);
 
         void focus(nxi::page_id id);
 
@@ -67,10 +67,6 @@ namespace nxi
 
     signals:
         void event_add(nxi::page&, nxi::page_id source_id);
-        void event_add(nxi::page_node&, nxi::page_id source_id);
-        void event_add(nxi::web_page&, nxi::page_id source_id);
-        void event_add(nxi::explorer_page&, nxi::page_id source_id);
-        void event_add(nxi::custom_page&, nxi::page_id source_id);
 
         void event_focus(nxi::page&);
         void event_focus(nxi::page_node&);
@@ -88,13 +84,9 @@ namespace nxi
 
     public:
         nxi::core& nxi_core_;
-        //nds::graph<nxi::page, nxi::page_node> graph_;
+        nds::graph<nxi::page> graph_;
         //nxi::com::connect(source, target)
         //nxi::com::send(page_system::add)
-
-
-        template<class Page, class... Args>
-        Page& internal_add(nxi::page_id source_id, Args&&... args);
 
         nxi::page* current_page_;
         std::vector<nxi::page*> visible_pages_;

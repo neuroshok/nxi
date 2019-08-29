@@ -1,11 +1,18 @@
 #ifndef UI_SYSTEM_PAGE_H_NXI
 #define UI_SYSTEM_PAGE_H_NXI
 
+#include <nxi/log.hpp>
 #include <nxi/type.hpp>
 
 #include <unordered_map>
 
 #include <QObject>
+#include <QHash>
+#include <QString>
+#include <include/stz/observer_ptr.hpp>
+#include <ui/page.hpp>
+
+class QWidget;
 
 namespace nxi { class page; }
 
@@ -20,14 +27,25 @@ namespace ui
     public:
         page_system(ui::core& ui_core);
 
-        void add(ui::page* ui_page);
+        QWidget* get(const QString& page_path);
+        stz::observer_ptr<ui::page> get(nxi::page& page);
 
-        ui::page* get(nxi::page& page);
+        template<class Widget>
+        auto make(const QString& path)
+        {
+            auto it = widget_pages_.find(path);
+            if (it != widget_pages_.end()) nxi_warning("page {path} already exists", path);
+            else
+            {
+                auto widget = new Widget(ui_core_);
+                widget_pages_.insert(path, widget);
+            }
+        }
 
     private:
 		ui::core& ui_core_;
-
-        std::unordered_map<nxi::page_id, ui::page*> pages_;
+        QHash<QString, QWidget*> widget_pages_;
+        std::unordered_map<nxi::page_id, std::unique_ptr<ui::page>> pages_;
     };
 } // ui
 

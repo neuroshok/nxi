@@ -3,11 +3,11 @@
 
 #include <ndb/preprocessor.hpp>
 
-ndb_table(
-    page
-    , ndb_field_id
+ndb_object(page
     , ndb_field(name, QString)
+    , ndb_field(command, QString)
     , ndb_field(type, nxi::page_type)
+    , ndb_field(renderer_type, nxi::renderer_type)
 )
 
 ndb_table(

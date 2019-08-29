@@ -1,22 +1,22 @@
 #include <ui/renderer/widget.hpp>
 
 #include <QDebug>
+#include <QLineEdit>
+#include <ui/page/widget.hpp>
+#include <QHBoxLayout>
 
 namespace ui
 {
-    widget_renderer::widget_renderer(QWidget* widget) : widget_{ widget }
-    {
-
-    }
-
     void widget_renderer::display(widget_page* p)
     {
-        qDebug() << "DISPLAY widget";
+        auto layout = new QHBoxLayout;
+        setLayout(layout);
+        layout->addWidget(p->widget());
     }
 
     QWidget* widget_renderer::widget()
     {
-        return widget_;
+        return this;
     }
 
 } // ui

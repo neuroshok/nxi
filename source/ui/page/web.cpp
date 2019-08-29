@@ -10,6 +10,7 @@
 #include <nxi/config.hpp>
 #include <nxi/core.hpp>
 #include <ui/core.hpp>
+#include <include/nxi/log.hpp>
 
 namespace ui
 {
@@ -21,11 +22,12 @@ namespace ui
         native_page_ = new QWebEnginePage(this);
         native_page_->settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
         native_page_->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
-        native_page_->load(QUrl(ui_core_.nxi_core().config().browser.home.get().c_str()));
+        load(page_.command());
 
         connect(native_page_, &QWebEnginePage::urlChanged, this, [this](const QUrl& url)
         {
-            page_.url_update(url.toString());
+            qDebug() << "urlChanged" << url.toString();
+            //page_.command_update(url.toString());
         });
 
         connect(native_page_, &QWebEnginePage::loadFinished, this, [this](bool n)
@@ -47,26 +49,25 @@ namespace ui
 
         connect(&page_, &nxi::web_page::event_load, this, [this]()
         {
-            qDebug() << "LOAD PAGE";
-            native_page_->load(QUrl(page_.url()));
+            load(page_.command());
         });
     }
 
     void web_page::display(ui::renderer* renderer)
     {
-        qDebug() << "web_page::display " << page_.url();
-        native_page_->load(QUrl(page_.url()));
+        load(page_.command());
         renderer->display(this);
     }
 
-    renderer* web_page::make_renderer()
+    renderer* web_page::make_renderer() const
     {
         return new web_renderer;
     }
 
     void web_page::load(const QString& url)
     {
-        native_page_->load(QUrl(url));
+        nxi_trace("web_page::load {}", url);
+        native_page_->load(QUrl::fromUserInput(url));
     }
 
     QWebEnginePage* web_page::native()

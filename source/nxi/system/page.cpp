@@ -23,18 +23,18 @@ namespace nxi
         // load pages, connect all pages to root
         for (auto& page_data : ndb::oget<dbs::core>(nxi_model.page))
         {
-            auto page_id = page_data.id;
+            auto page_id = page_data.oid;
             auto page_type = page_data.type;
 
             // make_page(page_type, args...)
             switch(page_type)
             {
                 case page_type::node:
-                    internal_add<nxi::page_node>(0, *this, page_id, page_data.name);
+
                     break;
 
                 case page_type::web:
-                    internal_add<nxi::web_page>(0, *this, page_id, page_data.name);
+
                     break;
 
                 case page_type::explorer:
@@ -42,7 +42,7 @@ namespace nxi
                     break;
 
                 case page_type::custom:
-                    internal_add<nxi::custom_page>(0, *this, page_id, page_data.name);
+
                     break;
 
                 default:

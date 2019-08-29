@@ -7,15 +7,14 @@ class QWidget;
 
 namespace ui
 {
-    class widget_renderer : renderer
+    class widget_renderer : public renderer
     {
     public:
-        widget_renderer(QWidget* w);
+        widget_renderer() = default;
 
         void display(widget_page* p);
         QWidget* widget();
 
-        QWidget* widget_;
     };
 } // ui
 

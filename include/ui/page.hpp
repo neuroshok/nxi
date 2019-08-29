@@ -15,7 +15,7 @@ namespace ui
         page(nxi::page& page) : page_{ page } {}
 
         virtual void display(renderer*) = 0;
-        virtual renderer* make_renderer() = 0;
+        virtual renderer* make_renderer() const = 0;
 
         nxi::page& nxi_page() { return page_; }
 

@@ -23,6 +23,7 @@
 #include <QMouseEvent>
 #include <include/nxi/log.hpp>
 #include <include/nxi/page/custom.hpp>
+#include <include/ui/view/config.hpp>
 
 /*
 class tree_page_item_delegate : public QStyledItemDelegate {
@@ -154,35 +155,16 @@ namespace ui
             menu->add("new node", [this, source_id](){ ui_core_.nxi_core().page_system().add<nxi::page_node>(source_id); });
             menu->add("new web_page", [this, source_id](){ ui_core_.nxi_core().page_system().add<nxi::web_page>(source_id); });
 
+
+            menu->add("new cfg", [this, source_id](){ ui_core_.nxi_core().page_system().add<nxi::custom_page>(source_id, "nxi:config", "nxi/config", nxi::renderer_type::widget); });
+            menu->add("new web page custom", [this, source_id](){ ui_core_.nxi_core().page_system().add<nxi::custom_page>(source_id, "nxi:test", "file:///C:/Users/ads/Desktop/test.html", nxi::renderer_type::web); });
+
             menu->exec();
         });
 
         // page_system::event_add
         // page_node
-        connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page_node&, nxi::page_id>(&nxi::page_system::event_add), this, [this](nxi::page_node& page, nxi::page_id source_id)
-        {
-            auto page_item = add(page, source_id);
-            page_item->setIcon(0, QIcon(":/image/node"));
-        });
 
-        // web_page
-        connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::web_page&, nxi::page_id>(&nxi::page_system::event_add), this, [this](nxi::web_page& page, nxi::page_id source_id)
-        {
-            auto page_item = add(page, source_id);
-            page_item->setIcon(0, QIcon(":/image/network"));
-
-            connect(&page, &nxi::web_page::event_update_icon, [page_item](const QIcon& icon)
-            {
-                page_item->setIcon(0, icon);
-            });
-        });
-
-        // custom_page
-        connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::custom_page&, nxi::page_id>(&nxi::page_system::event_add), this, [this](nxi::custom_page& page, nxi::page_id source_id)
-        {
-            auto page_item = add(page, source_id);
-            page_item->setIcon(0, QIcon(":/strateon/logo"));
-        });
 
         // connection move
         connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_move, this, [this](nxi::page_id page_id, nxi::page_id source_id, nxi::page_id target_id)

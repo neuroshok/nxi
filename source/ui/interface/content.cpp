@@ -12,6 +12,7 @@
 #include <QWebEngineView>
 
 #include <ui/view/renderer.hpp>
+#include <include/nxi/log.hpp>
 
 namespace ui::interfaces
 {
@@ -21,9 +22,22 @@ namespace ui::interfaces
         QHBoxLayout* layout = new nxw::hbox_layout;
         setLayout(layout);
 
-        render_view_ = new ui::renderer_view(ui_core_, this);
+        renderer_view_ = new ui::renderer_view(ui_core_, this);
+        layout->addWidget(renderer_view_);
 
-        layout->addWidget(render_view_);
+        // connect(page_focus) render_view_->focus(page)
+        connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), [this](nxi::page& page)
+        {
+            nxi_trace("focus page {}", page.name());
+
+            renderer_view_->display(page);
+        });
+
+        connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&, nxi::page_id>(&nxi::page_system::event_add), [](nxi::page& page,  nxi::page_id)
+        {
+            nxi_trace("add page {}", page.name());
+        });
+
 
     }
 } // ui::interfaces

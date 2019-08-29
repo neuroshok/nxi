@@ -10,9 +10,13 @@
 #include <nxi/error.hpp>
 #include <nxi/system/command.hpp>
 #include <nxi/system/module.hpp>
+#include <nxi/system/page.hpp>
 
 #include <nds/encoder/graph.hpp>
 #include <nds/algorithm/graph/find.hpp>
+
+#include <nxi/page/custom.hpp>
+#include <include/ui/view/config.hpp>
 
 namespace nds::encoders
 {
@@ -26,6 +30,14 @@ namespace nds::encoders
 
 namespace nxi
 {
+    namespace commands
+    {
+        void config(nxi::core& core)
+        {
+            //core.page_system().add<nxi::custom_page>();
+        }
+    }
+
     command_system::command_system(nxi::core& nxi_core) :
         nxi_core_{ nxi_core }
     {}
@@ -34,12 +46,19 @@ namespace nxi
     {
         nxi_trace("call nxi::command_system::load");
 
+
         // add nxi commands
         auto main_cmd = graph_.add(nxi::command("nxi", "command_node", std::bind(&nxi::core::quit, &nxi_core_)));
 
+        // test cmd
+        add(nxi::command("nxi", "test", []()
+        {
+             qDebug() << "TEST PAGE";
+        }), main_cmd);
+
         add(nxi::command("nxi", "quit", std::bind(&nxi::core::quit, &nxi_core_), ":/button/quit"), main_cmd);
         add(nxi::command("nxi", "zeta", std::bind(&nxi::core::quit, &nxi_core_), ":/image/nex"), main_cmd);
-        add(nxi::command("nxi", "config", std::bind(&nxi::core::quit, &nxi_core_), ":/image/nex"), main_cmd);
+        add(nxi::command("nxi", "config", [this](){ nxi_core_.page_system().add<nxi::web_page>();  }, ":/image/nex"), main_cmd);
 
         //nds::encoders::dot<>::encode<nds::console>(graph_);
 
@@ -75,13 +94,13 @@ namespace nxi
         , [&command](auto&& found_node){ command = std::addressof(found_node->get()); }
         , [&action_name](auto&& node){ return node->get().action_name() == action_name; });
 
-        if (command == nullptr) nxi_error("nxi::command not found");
+        if (command == nullptr) nxi_error("nxi::command not found : {}", action_name);
         return *command;
     }
 
     nds::node<nxi::command>* command_system::add(nxi::command command, nds::node<nxi::command>* source)
     {
-        qDebug()<< "__________" << command.action_name();
+        //qDebug()<< "__________" << command.action_name();
         auto command_node = graph_.add(std::move(command), source);
         //qDebug()<< "__________" << command_node->get().name();
 
@@ -97,7 +116,7 @@ namespace nxi
     void command_system::exec(const QString& command, command_context context)
     {
         QUrl url{ command };
-        qDebug() << "scheme : " << url.scheme() << "__" << url.path();
+        //qDebug() << "scheme : " << url.scheme() << "__" << url.path();
 
         switch (context)
         {

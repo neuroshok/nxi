@@ -32,10 +32,7 @@ namespace ui::interfaces
         top_layout->addWidget(control_bar_);
 
         middle_layout->addWidget(page_bar_);
-        //middle_layout->addWidget(content_);
-
-        auto cfg = new ui::views::config(ui_core_);
-        middle_layout->addWidget(cfg);
+        middle_layout->addWidget(content_);
 
         main_layout->addLayout(top_layout);
         main_layout->addLayout(middle_layout);

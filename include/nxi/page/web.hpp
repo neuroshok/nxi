@@ -11,19 +11,15 @@ namespace nxi
     {
         Q_OBJECT
     public:
-        web_page(nxi::page_system& ps, nxi::page_id id);
-        web_page(nxi::page_system& ps, nxi::page_id id, const QString& name) : nxi::page(ps, id, name) {}
+        web_page(nxi::page_system& ps);
+        web_page(nxi::page_system& ps, const QString& name) : nxi::page(ps, name) {}
 
         void focus();
         void load();
 
-        const QString& url() const { return url_; }
-        void url_update(const QString& url) { url_ = url; }
-
-        static nxi::page_type type() { return page_type::web; }
 
     private:
-        QString url_;
+
 
     signals:
         void event_update_icon(const QIcon&);

@@ -32,7 +32,7 @@ namespace nxi
         using persistent_group::persistent_group;
 
         nxi_config_open
-            nxi_config_key(home, std::string, "nxi.neuroshok.com", "");
+            nxi_config_key(home, std::string, "www.google.com", "");
             nxi_config_key(download_path, std::string, "d:/incoming", "");
             nxi_config_key(page_unload_timeout, int, 20, "Duration before unloading a closed page");
 

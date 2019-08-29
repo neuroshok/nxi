@@ -21,6 +21,7 @@ namespace ndb
 
     ndb_type_map(nxi::page_id, int64_, scope::global);
     ndb_type_map(nxi::page_type, int64_, scope::global);
+    ndb_type_map(nxi::renderer_type, int64_, scope::global);
     ndb_type_map(nxi::module_type, int64_, scope::global);
 }
 

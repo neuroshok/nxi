@@ -25,7 +25,7 @@ namespace ui::interfaces
     private:
         ui::core& ui_core_;
 
-        ui::renderer_view* render_view_;
+        ui::renderer_view* renderer_view_;
     };
 } // ui::interfaces
 

@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
         QQuickStyle::setStyle(settings.value("style").toString());
 
     QQmlApplicationEngine engine;
-    qDebug() << "zeta__________________ " <<  engine.importPathList();
+    //qDebug() << "zeta__________________ " <<  engine.importPathList();
 
 
 

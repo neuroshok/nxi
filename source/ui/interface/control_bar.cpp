@@ -120,10 +120,11 @@ namespace ui::interfaces
         auto menu = new nxw::menu{ this };
         menu->setObjectName("main_menu");
         menu->add<nxw::menu_item>("new window", [&ui_core](){ ui_core.nxi_core().window_system().add({}); });
-        menu->add<nxw::menu_item>("options");
+        menu->add(ui_core.nxi_core().command_system().get("config"));
         menu->add<nxw::menu_item>("about");
         menu->add<nxw::menu_separator>();
         menu->add(ui_core.nxi_core().command_system().get("quit"));
+        menu->add(ui_core.nxi_core().command_system().get("test"));
         menu->show_at(btn_menu);
 
         QObject::connect(btn_menu, &nxw::icon_button::clicked, menu, &nxw::menu::exec);

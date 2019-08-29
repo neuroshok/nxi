@@ -2,6 +2,7 @@
 #define UI_RENDERER_H_NXI
 
 #include <QWidget>
+#include <include/stz/observer_ptr.hpp>
 
 namespace ui
 {
@@ -22,7 +23,7 @@ namespace ui
         void display(web_page*);
         void display(widget_page*);
 
-        static renderer* make(page*);
+        static renderer* make(stz::observer_ptr<page>);
 
     protected:
         renderer() = default;

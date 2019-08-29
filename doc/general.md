@@ -1,4 +1,10 @@
 # Architecture
+- nxi
+    - systems
+- ui
+    - interface : contain widgets, manage events between nxi and ui
+    - view : widget displaying datas
+    - system : contain ui data of nxi systems
 
 ## Project tree
 - module : static modules

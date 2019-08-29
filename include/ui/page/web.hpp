@@ -17,11 +17,12 @@ namespace ui
     public:
         web_page(ui::core& ui_core, nxi::web_page& page);
 
-        void display(renderer*) override;
-        renderer* make_renderer() override;
-
         void load(const QString& url);
         QWebEnginePage* native();
+
+    private:
+        void display(renderer*) override;
+        renderer* make_renderer() const override;
 
     private:
         ui::core& ui_core_;
@@ -30,6 +31,6 @@ namespace ui
         QWebEnginePage* native_page_;
     };
 
-} // nxw
+} // ui
 
 #endif // UI_PAGE_WEB_H_NXI

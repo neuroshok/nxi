@@ -6,9 +6,8 @@
 
 namespace nxi
 {
-    web_page::web_page(nxi::page_system& ps, nxi::page_id id)
-        : nxi::page(ps, id, "web_page")
-        , url_{ ps.nxi_core_.config().browser.home.get().c_str() }
+    web_page::web_page(nxi::page_system& ps)
+        : nxi::page(ps, "web_page", ps.nxi_core_.config().browser.home.get().c_str(), nxi::page_type::web, nxi::renderer_type::web)
     {}
 
     void web_page::focus()
