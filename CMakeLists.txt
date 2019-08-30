@@ -132,7 +132,7 @@ else()
             "${PROJECT_SOURCE_DIR}/source/nxi/*.cpp"
             "${PROJECT_SOURCE_DIR}/source/nxw/*.cpp"
             "${PROJECT_SOURCE_DIR}/source/ui/*.cpp"
-            "${PROJECT_SOURCE_DIR}/source/ui/*.qrc"
+            "${PROJECT_SOURCE_DIR}/resource/*.qrc"
             "${PROJECT_SOURCE_DIR}/include/*.hpp")
     set(NXI_SOURCES ${NXI_SOURCES} source/main.cpp)
 

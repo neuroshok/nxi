@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/page/nxi/">
+        <file alias="about">./page/about.html</file>
+    </qresource>
+</RCC>
