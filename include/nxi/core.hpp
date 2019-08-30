@@ -39,6 +39,8 @@ namespace nxi
         nxi::page_system& page_system();
         nxi::window_system& window_system();
 
+        static QString page_path(const QString&);
+
     signals:
         void event_quit() const;
         void event_test(QWidget*);

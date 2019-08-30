@@ -22,6 +22,7 @@ namespace ui
         native_page_ = new QWebEnginePage(this);
         native_page_->settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
         native_page_->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
+
         load(page_.command());
 
         connect(native_page_, &QWebEnginePage::urlChanged, this, [this](const QUrl& url)

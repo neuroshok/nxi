@@ -50,7 +50,7 @@ namespace ui
         //delete renderer_;
         renderer_ = ui::renderer::make(ui_page);
 
-        //while (layout_->takeAt(0)) {}
+        while (layout_->takeAt(0)) {}
         layout_->addWidget(renderer_->widget());
 
 

@@ -2,6 +2,9 @@
 
 #include <nxi/log.hpp>
 
+#include <QCoreApplication>
+#include <QDir>
+
 namespace nxi
 {
     core::core()
@@ -55,5 +58,10 @@ namespace nxi
     void core::error(const QString& message) const
     {
         emit event_error(message);
+    }
+
+    QString core::page_path(const QString& path)
+    {
+        return "qrc:/page/" + path;
     }
 } // nxi

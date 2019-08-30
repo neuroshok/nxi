@@ -26,14 +26,15 @@ namespace nxi
         nxi::page_type type() const;
         nxi::renderer_type renderer_type() const;
 
-        virtual void focus() = 0;
+        virtual void focus();
         virtual void load();
 
         void name_update(const QString& name);
         void command_update(const QString& command);
 
-    protected:
         page(page_system& ps, QString name = "new_page", QString command = "", nxi::page_type = nxi::page_type::custom, nxi::renderer_type = nxi::renderer_type::web);
+    protected:
+
 
         nxi::page_system& page_system_;
 

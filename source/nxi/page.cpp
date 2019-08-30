@@ -3,6 +3,8 @@
 #include <nxi/database.hpp>
 #include <nxi/log.hpp>
 
+#include <nxi/system/page.hpp>
+
 namespace nxi
 {
     page::page(page_system& ps, QString name, QString command, nxi::page_type type, nxi::renderer_type renderer_type)
@@ -33,6 +35,11 @@ namespace nxi
     void page::load()
     {
         emit event_load();
+    }
+
+    void page::focus()
+    {
+        emit page_system_.event_focus(*this);
     }
 
     nxi::page_id page::id() const

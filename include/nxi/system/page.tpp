@@ -6,7 +6,6 @@ namespace nxi
     {
         auto page = graph_.emplace<nxi::page, Page>( *this, std::forward<Args>(args)...);
         ndb::store(page->get());
-        qDebug() << "______" << page->get().id();
 
         emit event_add(static_cast<nxi::page&>(page->get()), 0);
     }

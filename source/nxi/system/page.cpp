@@ -1,5 +1,6 @@
 #include <nxi/system/page.hpp>
 
+#include <nxi/core.hpp>
 #include <nxi/page/node.hpp>
 #include <nxi/page/web.hpp>
 
@@ -70,6 +71,12 @@ namespace nxi
     {
         // set loaded
         emit event_load(page);
+    }
+
+    void page_system::add_static(const QString& path, nxi::renderer_type renderer_type)
+    {
+        if (renderer_type == nxi::renderer_type::web) add<nxi::page>(0, path, nxi::core::page_path(path), nxi::page_type::static_ , renderer_type);
+        else add<nxi::page>(0, path, path, nxi::page_type::static_ , renderer_type);
     }
 
     const page_system::pages_view& page_system::get() const

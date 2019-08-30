@@ -20,7 +20,7 @@ namespace ui
         // init static widget page
         make_widget<ui::views::config>("nxi/config");
 
-        QObject::connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, this, [this](nxi::page& page, nxi::page_id)
+        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, this, [this](nxi::page& page, nxi::page_id)
         {
             if (page.renderer_type() == nxi::renderer_type::web) pages_.emplace(page.id(), std::make_unique<ui::web_page>(ui_core_, static_cast<nxi::web_page&>(page)));
             else if (page.renderer_type() == nxi::renderer_type::widget) pages_.emplace(page.id(), std::make_unique<ui::widget_page>(ui_core_, static_cast<nxi::custom_page&>(page)));

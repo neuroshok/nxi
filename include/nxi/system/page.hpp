@@ -45,6 +45,8 @@ namespace nxi
         const page_connections_type& connections() const;
         nxi::page& get(nxi::page_id id) const;
 
+        void add_static(const QString& path, nxi::renderer_type renderer_type = nxi::renderer_type::web);
+
         template<class Page, class... Args>
         void add(nxi::page_id source_id = 0, Args&&... args);
 
@@ -67,6 +69,7 @@ namespace nxi
 
     signals:
         void event_add(nxi::page&, nxi::page_id source_id);
+        void event_init_static(nxi::page&);
 
         void event_focus(nxi::page&);
         void event_focus(nxi::page_node&);
