@@ -26,7 +26,7 @@ namespace ui
     private:
         ui::core& ui_core_;
         std::vector<renderer*> renderers_;
-        renderer* renderer_;
+        ui::renderer* renderer_;
 
         nxw::vbox_layout* layout_;
     };

@@ -21,24 +21,6 @@ namespace ui
     {
         layout_ = new nxw::vbox_layout;
         setLayout(layout_);
-
-        QObject::connect(&ui_core.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), this, [this](nxi::page& page)
-        {
-            //display(page);
-        });
-
-        QObject::connect(&ui_core.nxi_core().page_system(), qOverload<nxi::page_node&>(&nxi::page_system::event_focus), this, [this](nxi::page_node& node)
-        {
-            /*
-            qDebug() << "event_focus node" << node.name();
-
-            delete renderer_;
-            renderer_ = new ui::qt3d_renderer;
-            while (layout_->takeAt(0)) {}
-            layout_->addWidget(renderer_->widget());
-*/
-            //display(ui_core_.nxi_core().page_system().list(node));
-        });
     }
 
     void renderer_view::display(nxi::page& page)
@@ -48,6 +30,7 @@ namespace ui
 
         // update renderer
         //delete renderer_;
+
         renderer_ = ui::renderer::make(ui_page);
 
         while (layout_->takeAt(0)) {}
@@ -55,6 +38,7 @@ namespace ui
 
 
         ui_page->display(renderer_);
+        //ui_page->get_renderer(renderer_);
     }
 
     void renderer_view::display(nxi::page_system::pages_view pages)
@@ -69,5 +53,3 @@ namespace ui
     }
 
 } // ui
-
-// REPLACE ui::page by nxi::page, get ui_page in renderers
