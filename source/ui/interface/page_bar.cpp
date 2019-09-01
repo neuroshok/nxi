@@ -32,7 +32,6 @@ namespace ui::interfaces
 
         connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&, nxi::page_id>(&nxi::page_system::event_add), [this](nxi::page& page,  nxi::page_id source_id)
         {
-            nxi_trace("page_tree add page {} renderer {}", page.name(), (int)page.renderer_type());
             page_tree_->add(page, source_id);
         });
 

@@ -43,7 +43,7 @@ namespace nxi
 
     void command_system::load()
     {
-        nxi_trace("call nxi::command_system::load");
+        nxi_trace("");
 
 
         // add nxi commands
@@ -121,7 +121,7 @@ namespace nxi
 
     void command_system::exec(const QString& str_command, command_context context)
     {
-        nxi_trace("call command_system::exec {}", str_command);
+        nxi_trace("{}", str_command);
 
 
         QUrl url{ str_command };

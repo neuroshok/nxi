@@ -18,7 +18,7 @@ namespace nxi
     void page_system::load()
     {
         // nxi::message_system::send(nxi::messages::page_system_loaded)
-        nxi_trace("call nxi::page_system::load");
+        nxi_trace("");
 
         // load pages, connect all pages to root
         for (auto& page_data : ndb::oget<dbs::core>(nxi_model.page))
@@ -110,7 +110,7 @@ namespace nxi
         return result;
     }
 
-    void page_system::focus(nxi::web_page& page) { emit event_focus(page); emit event_focus(static_cast<nxi::page&>(page)); }
+    void page_system::focus(nxi::web_page& page) { nxi_trace_event("nxi::page_system::event_focus"); emit event_focus(page); emit event_focus(static_cast<nxi::page&>(page)); }
     void page_system::focus(nxi::custom_page& page) { emit event_focus(page); emit event_focus(static_cast<nxi::page&>(page)); }
     void page_system::focus(nxi::page_node& node) { emit event_focus(node); }
 

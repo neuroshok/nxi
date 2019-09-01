@@ -17,7 +17,7 @@ namespace nxi
 
     void window_system::load()
     {
-        nxi_trace("call nxi::window_system::load");
+        nxi_trace("");
 
         // load stored windows
         for (auto& window : ndb::oget<dbs::core>(nxi_model.window))

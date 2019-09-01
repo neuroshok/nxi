@@ -106,7 +106,7 @@ namespace ui::interfaces
     control_bar::control_bar(ui::core& ui_core) :
         m_ui_core{ ui_core }
     {
-        nxi_trace("control_bar::control_bar");
+        nxi_trace("");
 
 
 

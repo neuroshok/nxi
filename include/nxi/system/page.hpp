@@ -55,6 +55,7 @@ namespace nxi
         template<class Page>
         void focus(nxi::page_id id)
         {
+            nxi_trace_event("{}", id);
             emit event_focus(static_cast<Page&>(get(id)));
             emit event_focus(get(id));
         }

@@ -28,14 +28,12 @@ namespace ui::interfaces
         // connect(page_focus) render_view_->focus(page)
         connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), [this](nxi::page& page)
         {
-            nxi_trace("focus page {}", page.name());
-
             renderer_view_->display(page);
         });
 
-        connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&, nxi::page_id>(&nxi::page_system::event_add), [](nxi::page& page,  nxi::page_id)
+        connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&, nxi::page_id>(&nxi::page_system::event_add), [this](nxi::page& page,  nxi::page_id)
         {
-            nxi_trace("add page {}", page.name());
+
         });
 
 

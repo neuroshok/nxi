@@ -23,17 +23,15 @@ namespace ui
         native_page_->settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
         native_page_->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
 
-        load(page_.command());
-
         connect(native_page_, &QWebEnginePage::urlChanged, this, [this](const QUrl& url)
         {
-            qDebug() << "urlChanged" << url.toString();
-            //page_.command_update(url.toString());
+            nxi_debug("{}",  url.toString());
+            page_.command_update(url.toString());
         });
 
         connect(native_page_, &QWebEnginePage::loadFinished, this, [this](bool n)
         {
-            qDebug() << "COMPELTE " << n;
+            nxi_debug("load complete");
         });
 
         connect(native_page_, &QWebEnginePage::titleChanged, this, [this](const QString& name)
@@ -60,14 +58,14 @@ namespace ui
         renderer->display(this);
     }
 
-    renderer* web_page::make_renderer() const
+    ui::renderer* web_page::make_renderer() const
     {
         return new web_renderer;
     }
 
     void web_page::load(const QString& url)
     {
-        nxi_trace("web_page::load {}", url);
+        nxi_trace("{}", url);
         native_page_->load(QUrl::fromUserInput(url));
     }
 

@@ -20,7 +20,7 @@ namespace nxi
 
     void core::load()
     {
-        nxi_trace("call nxi::core::load");
+        nxi_trace("");
 
         // load modules before other systems
         module_system_.load();

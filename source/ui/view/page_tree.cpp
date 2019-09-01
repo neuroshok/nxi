@@ -175,6 +175,7 @@ namespace ui
         // page focus
         connect(this, &QTreeWidget::itemClicked, [this](QTreeWidgetItem* base_item, int)
         {
+            nxi_trace_event("QTreeWidget::itemClicked");
             auto page_item = static_cast<ui::tree_page_item*>(base_item);
             page_item->page().focus();
         });

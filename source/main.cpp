@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     try
     {
         // init
-        spdlog::set_level(spdlog::level::trace);
+        init_logger();
 
         nxi_trace("init nxi::core");
         nxi::core nxi_core;
