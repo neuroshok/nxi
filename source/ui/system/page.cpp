@@ -11,7 +11,8 @@
 
 #include <QObject>
 #include <include/nxi/log.hpp>
-#include <include/ui/view/config.hpp>
+#include <ui/view/config.hpp>
+#include <ui/view/aboutgl.hpp>
 
 namespace ui
 {
@@ -19,6 +20,7 @@ namespace ui
     {
         // init static widget page
         make_widget<ui::views::config>("nxi/config");
+        make_widget<ui::views::aboutgl>("nxi/aboutgl");
 
         connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, this, [this](nxi::page& page, nxi::page_id)
         {

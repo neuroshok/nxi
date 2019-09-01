@@ -45,10 +45,14 @@ namespace nxi
         const page_connections_type& connections() const;
         nxi::page& get(nxi::page_id id) const;
 
-        void add_static(const QString& path, nxi::renderer_type renderer_type = nxi::renderer_type::web);
+        nxi::page& add_static(const QString& path, nxi::renderer_type renderer_type = nxi::renderer_type::web);
+        void open_static(const QString& path, nxi::renderer_type renderer_type = nxi::renderer_type::web);
 
         template<class Page, class... Args>
-        void add(nxi::page_id source_id = 0, Args&&... args);
+        Page& add(nxi::page_id source_id = 0, Args&&... args);
+
+        template<class Page, class... Args>
+        void open(nxi::page_id source_id = 0, Args&&... args);
 
         void focus(nxi::page_id id);
 

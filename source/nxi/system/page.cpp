@@ -73,10 +73,16 @@ namespace nxi
         emit event_load(page);
     }
 
-    void page_system::add_static(const QString& path, nxi::renderer_type renderer_type)
+    nxi::page& page_system::add_static(const QString& path, nxi::renderer_type renderer_type)
     {
-        if (renderer_type == nxi::renderer_type::web) add<nxi::page>(0, path, nxi::core::page_path(path), nxi::page_type::static_ , renderer_type);
-        else add<nxi::page>(0, path, path, nxi::page_type::static_ , renderer_type);
+        if (renderer_type == nxi::renderer_type::web) return add<nxi::page>(0, path, nxi::core::page_path(path), nxi::page_type::static_ , renderer_type);
+        else return add<nxi::page>(0, path, path, nxi::page_type::static_ , renderer_type);
+    }
+
+    void page_system::open_static(const QString& path, nxi::renderer_type renderer_type)
+    {
+        nxi::page& added_page = add_static(path, renderer_type);
+        added_page.load();
     }
 
     const page_system::pages_view& page_system::get() const

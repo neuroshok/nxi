@@ -56,8 +56,9 @@ namespace nxi
         }), main_cmd);
 
         add(nxi::command("nxi", "quit", std::bind(&nxi::core::quit, &nxi_core_), ":/button/quit"), main_cmd);
-        add(nxi::command("nxi", "config", [this](){ nxi_core_.page_system().add_static("nxi/config", nxi::renderer_type::widget);  }, ":/image/nex"), main_cmd);
-        add(nxi::command("nxi", "about", [this](){ nxi_core_.page_system().add_static("nxi/about");  }), main_cmd);
+        add(nxi::command("nxi", "config", [this](){ nxi_core_.page_system().open_static("nxi/config", nxi::renderer_type::widget);  }, ":/image/nex"), main_cmd);
+        add(nxi::command("nxi", "about", [this](){ nxi_core_.page_system().open_static("nxi/about");  }), main_cmd);
+        add(nxi::command("nxi", "aboutgl", [this](){ nxi_core_.page_system().open_static("nxi/aboutgl", nxi::renderer_type::widget);  }), main_cmd);
 
         //nds::encoders::dot<>::encode<nds::console>(graph_);
 
