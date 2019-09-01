@@ -1,8 +1,10 @@
 #ifndef UI_RENDERER_H_NXI
 #define UI_RENDERER_H_NXI
 
+#include <nxi/type.hpp>
+#include <stz/observer_ptr.hpp>
+
 #include <QWidget>
-#include <include/stz/observer_ptr.hpp>
 
 namespace ui
 {
@@ -18,12 +20,12 @@ namespace ui
         renderer& operator=(const renderer&) = delete;
         virtual ~renderer();
 
-        virtual QWidget* widget() = 0;
+        virtual nxi::renderer_type type() const = 0;
 
         void display(web_page*);
         void display(widget_page*);
 
-        static renderer* make(stz::observer_ptr<page>);
+        static ui::renderer* make(stz::observer_ptr<page>);
 
     protected:
         renderer() = default;

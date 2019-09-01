@@ -3,19 +3,25 @@
 
 #include <ui/renderer.hpp>
 
+#include <QWidget>
+#include <QPainter>
+
 class QWebEngineView;
+
+#include <QWebEngineView>
+#include <QDebug>
 
 namespace ui
 {
     class web_page;
 
-    class web_renderer : public renderer
+    class web_renderer : public ui::renderer
     {
     public:
         web_renderer();
 
         void display(web_page* p);
-        QWidget* widget();
+        nxi::renderer_type type() const override;
 
     private:
         QWebEngineView* view_;

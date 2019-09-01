@@ -22,7 +22,7 @@ namespace ui
 
     private:
         void display(renderer*) override;
-        renderer* make_renderer() const override;
+        ui::renderer* make_renderer() const override;
 
     private:
         ui::core& ui_core_;

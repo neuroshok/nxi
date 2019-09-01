@@ -22,7 +22,7 @@ namespace ui
         static_cast<widget_renderer*>(this)->display(p);
     }
 
-    renderer* renderer::make(stz::observer_ptr<page> p)
+    ui::renderer* renderer::make(stz::observer_ptr<page> p)
     {
         return p->make_renderer();
     }

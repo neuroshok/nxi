@@ -1,7 +1,7 @@
 #ifndef UI_PAGE_H_NXI
 #define UI_PAGE_H_NXI
 
-#include <QObject>
+#include <QWidget>
 
 #include <nxi/page.hpp>
 
@@ -9,13 +9,13 @@ namespace ui
 {
     class renderer;
 
-    class page : public QObject
+    class page : public QWidget
     {
     public:
         page(nxi::page& page) : page_{ page } {}
 
         virtual void display(renderer*) = 0;
-        virtual renderer* make_renderer() const = 0;
+        virtual ui::renderer* make_renderer() const = 0;
 
         nxi::page& nxi_page() { return page_; }
 

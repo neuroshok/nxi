@@ -7,13 +7,13 @@ class QWidget;
 
 namespace ui
 {
-    class widget_renderer : public renderer
+    class widget_renderer : public ui::renderer
     {
     public:
         widget_renderer() = default;
 
         void display(widget_page* p);
-        QWidget* widget();
+        nxi::renderer_type type() const override;
 
     };
 } // ui

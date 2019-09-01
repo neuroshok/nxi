@@ -17,7 +17,7 @@ namespace ui
         widget_page(ui::core& ui_core, nxi::custom_page& page);
 
         void display(ui::renderer* renderer) override;
-        renderer* make_renderer() const override;
+        ui::renderer* make_renderer() const override;
 
         QWidget* widget();
 

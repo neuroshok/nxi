@@ -19,14 +19,12 @@ namespace ui
     public:
         renderer_view(ui::core& ui_core, QWidget* parent);
 
-
         void display(nxi::page& page);
         void display(nxi::page_system::pages_view pages);
 
     private:
         ui::core& ui_core_;
-        std::vector<renderer*> renderers_;
-        ui::renderer* renderer_;
+        std::vector<stz::observer_ptr<ui::renderer>> renderers_;
 
         nxw::vbox_layout* layout_;
     };

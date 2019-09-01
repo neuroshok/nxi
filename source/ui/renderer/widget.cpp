@@ -14,9 +14,8 @@ namespace ui
         layout->addWidget(p->widget());
     }
 
-    QWidget* widget_renderer::widget()
+    nxi::renderer_type widget_renderer::type() const
     {
-        return this;
+        return nxi::renderer_type::widget;
     }
-
 } // ui

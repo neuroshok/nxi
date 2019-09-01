@@ -17,7 +17,6 @@ namespace ui
     renderer_view::renderer_view(ui::core& ui_core, QWidget* parent)
         : QWidget(parent)
         , ui_core_{ ui_core }
-        , renderer_{ nullptr }
     {
         layout_ = new nxw::vbox_layout;
         setLayout(layout_);
@@ -28,21 +27,31 @@ namespace ui
         nxi_trace("display {}", page.name());
         auto ui_page = ui_core_.page_system().get(page);
 
-        // update renderer
-        //delete renderer_;
+        auto get_renderer = [this, &ui_page](nxi::page& page)
+        {
+            for (auto renderer : renderers_) renderer->hide();
+            for (auto renderer : renderers_)
+            {
+                // get the first available renderer of the right type
+                if (renderer->type() == page.renderer_type()) return renderer.get();
+            }
+            // not renderer available, make one
+            renderers_.push_back(stz::make_observer<ui::renderer>(ui::renderer::make(ui_page)));
+            return renderers_.back().get();
+        };
 
-        renderer_ = ui::renderer::make(ui_page);
+        ui::renderer* page_renderer = get_renderer(page);
+        page_renderer->show();
 
         while (layout_->takeAt(0)) {}
-        layout_->addWidget(renderer_->widget());
+        layout_->addWidget(page_renderer);
 
-
-        ui_page->display(renderer_);
-        //ui_page->get_renderer(renderer_);
+        ui_page->display(page_renderer);
     }
 
     void renderer_view::display(nxi::page_system::pages_view pages)
     {
+        /*
         for (auto page : pages)
         {
             auto ui_page = ui_core_.page_system().get(*page);
@@ -50,6 +59,7 @@ namespace ui
             ui_page->display(renderer);
             layout_->addWidget(renderer->widget());
         }
+         */
     }
 
 } // ui

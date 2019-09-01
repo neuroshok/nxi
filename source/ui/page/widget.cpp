@@ -6,6 +6,7 @@
 
 #include <ui/core.hpp>
 #include <ui/renderer/widget.hpp>
+#include <nxw/hbox_layout.hpp>
 
 namespace ui
 {
@@ -14,7 +15,11 @@ namespace ui
         , page_{ page }
         , ui_core_{ ui_core }
         , widget_{ ui_core_.page_system().get(page.command()) }
-    {}
+    {
+        auto* l = new nxw::hbox_layout;
+        setLayout(l);
+        l->addWidget(widget_);
+    }
 
     void widget_page::display(ui::renderer *renderer)
     {
