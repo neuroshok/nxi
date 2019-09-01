@@ -4,17 +4,20 @@
 #include <ui/renderer.hpp>
 
 class QWidget;
+class QHBoxLayout;
 
 namespace ui
 {
     class widget_renderer : public ui::renderer
     {
     public:
-        widget_renderer() = default;
+        widget_renderer();
 
         void display(widget_page* p);
         nxi::renderer_type type() const override;
 
+    private:
+        QHBoxLayout* layout_;
     };
 } // ui
 

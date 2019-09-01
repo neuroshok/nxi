@@ -7,11 +7,14 @@
 
 namespace ui
 {
+    widget_renderer::widget_renderer()
+    {
+        layout_ = new QHBoxLayout;
+        setLayout(layout_);
+    }
     void widget_renderer::display(widget_page* p)
     {
-        auto layout = new QHBoxLayout;
-        setLayout(layout);
-        layout->addWidget(p->widget());
+        layout_->addWidget(p->widget());
     }
 
     nxi::renderer_type widget_renderer::type() const

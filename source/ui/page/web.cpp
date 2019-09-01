@@ -54,7 +54,6 @@ namespace ui
 
     void web_page::display(ui::renderer* renderer)
     {
-        load(page_.command());
         renderer->display(this);
     }
 
