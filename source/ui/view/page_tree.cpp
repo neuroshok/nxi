@@ -105,16 +105,16 @@ private:
 };
 */
 
-namespace ui
+namespace ui::views
 {
-    page_tree_view::page_tree_view(ui::core& ui_core) : ui_core_{ ui_core }
+    page_tree::page_tree(ui::core& ui_core) : ui_core_{ ui_core }
     {
         init_ui();
         init_data();
         init_event();
     }
 
-    void page_tree_view::init_ui()
+    void page_tree::init_ui()
     {
         auto layout = new nxw::vbox_layout;
 
@@ -135,15 +135,15 @@ namespace ui
         setDefaultDropAction(Qt::MoveAction);
     }
 
-    void page_tree_view::init_data()
+    void page_tree::init_data()
     {
 
     }
 
-    void page_tree_view::init_event()
+    void page_tree::init_event()
     {
         // tree option menu
-        connect(this, &ui::page_tree_view::customContextMenuRequested, [this](const QPoint& point)
+        connect(this, &ui::views::page_tree::customContextMenuRequested, [this](const QPoint& point)
         {
             unsigned int source_id = 0;
 
@@ -180,7 +180,7 @@ namespace ui
         });
     }
 
-    ui::tree_page_item* page_tree_view::add(nxi::page& page, nxi::page_id source_id)
+    ui::tree_page_item* page_tree::add(nxi::page& page, nxi::page_id source_id)
     {
         auto page_item = new ui::tree_page_item(this, page);
         page_item->setText(0, page.name());
@@ -198,36 +198,36 @@ namespace ui
         return page_item;
     }
 
-    void page_tree_view::add(tree_item* item)
+    void views::page_tree::add(tree_item* item)
     {
         //setItemDelegate(new tree_page_item_delegate{this});
         addTopLevelItem(item);
     }
 
-    void page_tree_view::add(tree_item* item, tree_item* source_item)
+    void views::page_tree::add(tree_item* item, tree_item* source_item)
     {
         source_item->addChild(item);
     }
 
-    tree_item *page_tree_view::current_item() const
+    tree_item *views::page_tree::current_item() const
     {
         return static_cast<ui::tree_item*>(currentItem());
     }
 
-    tree_item* page_tree_view::get(nxi::page_id id) const
+    tree_item* views::page_tree::get(nxi::page_id id) const
     {
         assert(page_items_.count(id));
 
         return page_items_.at(id);
     }
 
-    void page_tree_view::connection_add(nxi::page_id source_id, nxi::page_id target_id)
+    void views::page_tree::connection_add(nxi::page_id source_id, nxi::page_id target_id)
     {
         if (source_id == 0) add(get(target_id));
         else add(get(target_id), get(source_id));
     }
 
-    void page_tree_view::connection_del(nxi::page_id source_id, nxi::page_id target_id)
+    void views::page_tree::connection_del(nxi::page_id source_id, nxi::page_id target_id)
     {
         if (source_id == 0)
         {
@@ -240,7 +240,7 @@ namespace ui
         }
     }
 
-    void page_tree_view::dropEvent(QDropEvent* event)
+    void views::page_tree::dropEvent(QDropEvent* event)
     {
         // internal source
         if (event->source() == this)

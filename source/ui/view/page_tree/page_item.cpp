@@ -19,7 +19,7 @@
 
 namespace ui
 {
-    tree_page_item::tree_page_item(ui::page_tree_view* tree, nxi::page& page, tree_item* parent)
+    tree_page_item::tree_page_item(ui::views::page_tree* tree, nxi::page& page, tree_item* parent)
         : ui::tree_item(tree, parent)
         , page_{ page }
         , tree_{ tree }

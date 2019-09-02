@@ -19,7 +19,7 @@ namespace ui::interfaces
 
     private:
         ui::core& ui_core_;
-        ui::page_tree_view* page_tree_;
+        ui::views::page_tree* page_tree_;
     };
 } // ui::interfaces
 

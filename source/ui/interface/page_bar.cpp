@@ -28,7 +28,7 @@ namespace ui::interfaces
 
         auto page_control_layout = new nxw::hbox_layout;
 
-        page_tree_ = new ui::page_tree_view(ui_core_);
+        page_tree_ = new ui::views::page_tree(ui_core_);
 
         connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&, nxi::page_id>(&nxi::page_system::event_add), [this](nxi::page& page,  nxi::page_id source_id)
         {

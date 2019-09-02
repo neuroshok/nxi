@@ -12,12 +12,15 @@ namespace ui
     class core;
     class tree_item;
     class tree_page_item;
+}
 
-    class page_tree_view : public QTreeWidget
+namespace ui::views
+{
+    class page_tree : public QTreeWidget
     {
         Q_OBJECT
     public:
-        page_tree_view(ui::core&);
+        views::page_tree(ui::core&);
 
         ui::tree_page_item* add(nxi::page& page, nxi::page_id source_id);
         tree_item* get(nxi::page_id id) const;

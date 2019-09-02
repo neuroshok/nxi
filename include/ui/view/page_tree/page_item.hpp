@@ -13,7 +13,7 @@ namespace ui
     class tree_page_item : public ui::tree_item
     {
     public:
-        tree_page_item(ui::page_tree_view*, nxi::page&, tree_item* parent = nullptr);
+        tree_page_item(ui::views::page_tree*, nxi::page&, tree_item* parent = nullptr);
         ~tree_page_item() = default;
 
         nxi::page& page() { return page_; }
@@ -22,7 +22,7 @@ namespace ui
         void option() override;
 
     private:
-        ui::page_tree_view* tree_;
+        ui::views::page_tree* tree_;
         nxi::page& page_;
     };
 } // nxw

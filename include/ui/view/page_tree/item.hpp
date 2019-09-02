@@ -3,14 +3,14 @@
 
 #include <QTreeWidgetItem>
 
+namespace ui::views { class page_tree; }
+
 namespace ui
 {
-    class page_tree_view;
-
     class tree_item : public QTreeWidgetItem
     {
     public:
-        explicit tree_item(ui::page_tree_view*, tree_item* parent = 0);
+        explicit tree_item(ui::views::page_tree*, tree_item* parent = 0);
         ~tree_item() = default;
 
 
@@ -19,7 +19,7 @@ namespace ui
         virtual void option() = 0;
 
     private:
-        ui::page_tree_view* m_tree;
+        ui::views::page_tree* m_tree;
     };
 } // ui
 
