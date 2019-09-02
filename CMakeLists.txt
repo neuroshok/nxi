@@ -128,6 +128,7 @@ if (NXI_TARGET_SYSTEM STREQUAL "android")
     nxi_android_apk_target(nxi)
 else()
     # sources
+    set(NXI_ICON "${PROJECT_SOURCE_DIR}/resource/icon.rc" "${PROJECT_SOURCE_DIR}/resource/icon.ico")
     file(GLOB_RECURSE NXI_SOURCES
             "${PROJECT_SOURCE_DIR}/source/nxi/*.cpp"
             "${PROJECT_SOURCE_DIR}/source/nxw/*.cpp"
@@ -136,7 +137,7 @@ else()
             "${PROJECT_SOURCE_DIR}/include/*.hpp")
     set(NXI_SOURCES ${NXI_SOURCES} source/main.cpp)
 
-    add_executable(nxi ${NXI_SOURCES})
+    add_executable(nxi ${NXI_SOURCES} ${NXI_ICON})
     target_include_directories(nxi PUBLIC include)
 
     target_link_libraries(nxi lib_ndb lib_nds lib_speedlog ${NXI_MODULES} ${NXI_QT_LIBS})
