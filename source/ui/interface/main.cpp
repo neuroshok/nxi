@@ -48,4 +48,21 @@ namespace ui::interfaces
             error->show();
         });
     }
+
+    void main::toggle_fullmode()
+    {
+        nxi_debug("fullmode");
+
+        interface::toggle_fullmode();
+        if (interface::fullmode())
+        {
+            control_bar_->hide();
+            page_bar_->hide();
+        }
+        else
+        {
+            control_bar_->show();
+            page_bar_->show();
+        }
+    }
 } // ui::interfaces

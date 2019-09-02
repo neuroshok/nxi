@@ -2,6 +2,7 @@
 #define UI_WINDOW_H_NXI
 
 #include <nxi/window.hpp>
+#include <stz/observer_ptr.hpp>
 
 #include <QWidget>
 
@@ -26,6 +27,7 @@ namespace ui
         void mouseDoubleClickEvent(QMouseEvent* event) override;
         void closeEvent(QCloseEvent* event) override;
 
+        ui::interface* interface();
         void interface_set(ui::interface* interface);
 
         unsigned int id() const;

@@ -22,6 +22,7 @@ namespace ui
     window::window(ui::core& ui_core, unsigned int id) :
         m_ui_core{ ui_core }
         , m_id{ id }
+        , m_interface{ nullptr }
         , m_moving{ false }
     {
         QIcon icon(":image/nex");
@@ -71,10 +72,15 @@ namespace ui
         deleteLater();
     }
 
+    ui::interface* ui::window::interface()
+    {
+        nxi_assert(m_interface != nullptr);
+        return m_interface;
+    }
+
     void window::interface_set(ui::interface* interface)
     {
         m_interface = interface;
-        m_interface->setParent(this);
         m_layout->addWidget(m_interface);
     }
 

@@ -4,13 +4,17 @@
 #include <ui/renderer.hpp>
 #include <ui/renderer/web.hpp>
 
+#include <QWebEngineFullScreenRequest>
 #include <QWebEnginePage>
 #include <QWebEngineSettings>
+
 
 #include <nxi/config.hpp>
 #include <nxi/core.hpp>
 #include <ui/core.hpp>
 #include <include/nxi/log.hpp>
+#include <ui/window.hpp>
+#include <ui/interface.hpp>
 
 namespace ui
 {
@@ -22,6 +26,12 @@ namespace ui
         native_page_ = new QWebEnginePage(this);
         native_page_->settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
         native_page_->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
+
+        connect(native_page_, &QWebEnginePage::fullScreenRequested, [this](QWebEngineFullScreenRequest request)
+        {
+            static_cast<ui::window*>(native_page_->view()->window())->interface()->toggle_fullmode();
+            request.accept();
+        });
 
         connect(native_page_, &QWebEnginePage::urlChanged, this, [this](const QUrl& url)
         {

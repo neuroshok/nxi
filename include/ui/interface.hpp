@@ -13,7 +13,13 @@ namespace ui
         interface();
         interface(ui::window*);
 
+        bool fullmode() const;
+        virtual void toggle_fullmode();
+
         ui::window* window() const;
+
+    private:
+        bool fullmode_;
     };
 } // ui
 

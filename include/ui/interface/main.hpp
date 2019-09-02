@@ -13,10 +13,13 @@ namespace ui::interfaces
 
     class main : public ui::interface
     {
-    Q_OBJECT
+        Q_OBJECT
     public:
         main(ui::core&);
 
+        void toggle_fullmode() override;
+
+    private:
         ui::core& ui_core_;
 
         ui::interfaces::content* content_;
