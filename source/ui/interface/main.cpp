@@ -18,8 +18,9 @@
 
 namespace ui::interfaces
 {
-    main::main(ui::core& ui_core) :
-        ui_core_{ ui_core }
+    main::main(ui::core& ui_core)
+        : ui::interface("main")
+        , ui_core_{ ui_core }
     {
         auto main_layout = new nxw::vbox_layout;
         setLayout(main_layout);

@@ -13,7 +13,7 @@ namespace nxw
     {
         Q_OBJECT
     public:
-        explorer_view(ui::core& ui_core) : m_ui_core{ ui_core }
+        explorer_view(ui::core& ui_core) : ui::interface("explorer_view"), m_ui_core{ ui_core }
         {
             list_ = new QListWidget(this);
             list_->addItem("test");

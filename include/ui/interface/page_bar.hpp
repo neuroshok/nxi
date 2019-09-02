@@ -13,6 +13,7 @@ namespace ui::interfaces
 {
     class page_bar : public ui::interface
     {
+        Q_OBJECT
     public:
 
         explicit page_bar(ui::core& ui_core);

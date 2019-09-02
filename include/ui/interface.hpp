@@ -10,8 +10,8 @@ namespace ui
     class interface : public QWidget
     {
     public:
-        interface();
-        interface(ui::window*);
+        interface(const QString& name = "default");
+        interface(const QString& name, ui::window*);
 
         bool fullmode() const;
         virtual void toggle_fullmode();

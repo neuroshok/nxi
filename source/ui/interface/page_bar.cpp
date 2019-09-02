@@ -16,7 +16,8 @@
 namespace ui::interfaces
 {
     page_bar::page_bar(ui::core& ui_core) :
-        ui_core_{ ui_core }
+        ui::interface("page_bar")
+        , ui_core_{ ui_core }
     {
         if (ui_core_.nxi_core().config().browser.interface.show_page_bar.get()) show();
         //else hide();

@@ -5,13 +5,17 @@
 
 namespace ui
 {
-    interface::interface(ui::window* window)
-        : fullmode_{ false }
-        , QWidget(window)
-    {}
+    interface::interface(const QString& name, ui::window* window)
+        : QWidget(window)
+        , fullmode_{ false }
+    {
+        setObjectName("interface_" + name);
+        // nxi_bug_qt_styled_background
+        setAttribute(Qt::WA_StyledBackground, true);
+    }
 
-    interface::interface()
-         : interface(nullptr)
+    interface::interface(const QString& name)
+         : interface(name, nullptr)
     {}
 
     ui::window* interface::window() const

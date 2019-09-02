@@ -36,7 +36,7 @@ namespace ui
             //operator QWidget*() { return this->widget(); }
 
             // ui::interface
-            home()
+            home() : ui::interface("home")
             {
                 login_ = new QLineEdit(this);
                 login_->setText("ads00");
