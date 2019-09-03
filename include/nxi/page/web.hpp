@@ -22,7 +22,6 @@ namespace nxi
 
 
     signals:
-        void event_update_icon(const QIcon&);
         //void event_load_begin();
         //void event_load_end();
     };

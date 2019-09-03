@@ -11,7 +11,7 @@ namespace nxi
     class page_node : public nxi::page
     {
     public:
-        page_node(nxi::page_system& ps) : nxi::page(ps, "new node") {}
+        page_node(nxi::page_system& ps) : nxi::page(ps, "node", "", nxi::page_type::node) {}
         page_node(nxi::page_system& ps, const QString& name) : nxi::page(ps, name) {}
 
         void focus();

@@ -116,7 +116,14 @@ namespace nxi
         return result;
     }
 
-    void page_system::focus(nxi::web_page& page) { nxi_trace_event("nxi::page_system::event_focus"); emit event_focus(page); emit event_focus(static_cast<nxi::page&>(page)); }
+    void page_system::focus(nxi::web_page& page)
+    {
+        nxi_trace_event("nxi::page_system::event_focus");
+        focus_ = stz::make_observer<nxi::page>(&page);
+        emit event_focus(page);
+        emit event_focus(
+        static_cast<nxi::page&>(page));
+    }
     void page_system::focus(nxi::custom_page& page) { emit event_focus(page); emit event_focus(static_cast<nxi::page&>(page)); }
     void page_system::focus(nxi::page_node& node) { emit event_focus(node); }
 

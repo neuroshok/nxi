@@ -68,6 +68,18 @@ class command : public QLineEdit
 
         }
 
+        void enterEvent(QEvent * event) override
+        {
+            auto focused_page = ui_core_.nxi_core().page_system().focus();
+            if (focused_page.has_value()) setText(focused_page.value()->command());
+        }
+
+        void leaveEvent(QEvent *event) override
+        {
+            auto focused_page = ui_core_.nxi_core().page_system().focus();
+            if (focused_page.has_value()) setText(focused_page.value()->name());
+        }
+
     private:
         ui::core& ui_core_;
 

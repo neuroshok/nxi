@@ -7,6 +7,7 @@
 #include <QObject>
 #include <unordered_map>
 #include <stz/observer_ptr.hpp>
+#include <optional>
 
 #include <nxi/page/web.hpp>
 
@@ -56,6 +57,8 @@ namespace nxi
 
         void focus(nxi::page_id id);
 
+        std::optional<stz::observer_ptr<nxi::page>> focus() { return focus_; }
+
         template<class Page>
         void focus(nxi::page_id id)
         {
@@ -97,6 +100,7 @@ namespace nxi
         //nxi::com::send(page_system::add)
 
         nxi::page* current_page_;
+        std::optional<stz::observer_ptr<nxi::page>> focus_;
         std::vector<nxi::page*> visible_pages_;
 
         pages_type pages_;

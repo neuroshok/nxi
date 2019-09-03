@@ -43,6 +43,7 @@ namespace nxi
 
     signals:
         void event_update_name(const QString&);
+        void event_update_icon(const QIcon&);
         void event_load();
     };
 } // nxi
