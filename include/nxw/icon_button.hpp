@@ -4,6 +4,8 @@
 #include <nxi/command.hpp>
 
 #include <QPushButton>
+#include <QBitmap>
+#include <QPixmap>
 
 namespace nxw
 {

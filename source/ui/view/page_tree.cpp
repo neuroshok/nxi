@@ -182,16 +182,27 @@ namespace ui::views
     ui::tree_page_item* page_tree::add(nxi::page& page, nxi::page_id source_id)
     {
         auto page_item = new ui::tree_page_item(this, page);
+        page_item->setIcon(0, QIcon(":/image/nex"));
         page_item->setText(0, page.name());
 
         page_items_.emplace(page.id(), page_item);
 
         connection_add(source_id, page.id());
 
+        if (page.type() == nxi::page_type::node)
+        {
+            page_item->setIcon(0, QIcon(":/image/node"));
+        }
+
         // page update
-        connect(&page, &nxi::page::event_update_name, [page_item](const QString& name)
+        connect(&page, &nxi::page::event_update_name, this, [page_item](const QString& name)
         {
             page_item->setText(0, name);
+        });
+
+        connect(&page, &nxi::page::event_update_icon, this, [page_item](const QIcon& icon)
+        {
+            page_item->setIcon(0, icon);
         });
 
         return page_item;
