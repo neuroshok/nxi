@@ -121,7 +121,6 @@ namespace ui::views
         setLayout(layout);
 
         setHeaderHidden(true);
-        setStyleSheet("border: none;");
         //setRootIsDecorated(false);
         setContextMenuPolicy(Qt::CustomContextMenu);
         setEditTriggers(QAbstractItemView::EditKeyPressed);

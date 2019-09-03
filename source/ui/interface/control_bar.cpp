@@ -35,8 +35,6 @@ class command : public QLineEdit
     public:
         command(ui::core& ui_core) : ui_core_{ ui_core }
         {
-            setFixedWidth(400);
-
             menu_ = new nxw::menu(this);
             menu_->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
             menu_->setFixedWidth(width());
@@ -109,17 +107,13 @@ namespace ui::interfaces
     {
         nxi_trace("");
 
-
-
         QHBoxLayout* layout = new nxw::hbox_layout;
         setLayout(layout);
-        setStyleSheet("border-bottom:1px solid #CCCCCC;");
 
         auto btn_menu = new nxw::icon_button(this, ":/button/menu");
 
 
         auto menu = new nxw::menu{ this };
-        menu->setObjectName("main_menu");
         menu->add<nxw::menu_item>("new window", [&ui_core](){ ui_core.nxi_core().window_system().add({}); });
         menu->add(ui_core.nxi_core().command_system().get("config"));
         menu->add(ui_core.nxi_core().command_system().get("about"));
@@ -136,6 +130,7 @@ namespace ui::interfaces
         m_context->addItem("auto");
         m_context->addItem("web");
         m_context->addItem("explorer");
+        m_context->hide();
 
         command_bar_ = new nxw::command(m_ui_core);
         QObject::connect(command_bar_, &QLineEdit::returnPressed, [this]()
@@ -174,7 +169,7 @@ namespace ui::interfaces
 
         layout->addSpacing(16);
         layout->addWidget(m_context);
-        layout->addWidget(command_bar_);
+        layout->addWidget(command_bar_, 1);
         layout->addLayout(module_controls_);
         layout->addStretch();
         layout->addWidget(window_controls);
