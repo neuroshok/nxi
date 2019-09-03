@@ -98,17 +98,17 @@ namespace ui::interfaces
             auto layout = new nxw::hbox_layout;
             setLayout(layout);
 
-            auto win_minimize = new nxw::icon_button(this, ":/button/window_minimize");
+            auto win_minimize = new nxw::icon_button(this, ":/button/minimize");
             QObject::connect(win_minimize, &QPushButton::pressed, [this, &ui_core]()
             {
                 ui_core.window_system().minimize(window());
             });
 
-            auto win_close = new nxw::icon_button(this, ":/button/window_close");
+            auto win_close = new nxw::icon_button(this, ":/button/close");
             QObject::connect(win_close, &QPushButton::pressed, &ui_core, &ui::core::quit);
 
             layout->addWidget(win_minimize);
-            layout->addWidget(new nxw::icon_button(this, ":/button/window_maximize"));
+            layout->addWidget(new nxw::icon_button(this, ":/button/maximize"));
             layout->addWidget(win_close);
         }
     };
@@ -174,8 +174,8 @@ namespace ui::interfaces
         layout->addWidget(btn_menu);
         layout->addSpacing(64);
 
-        layout->addWidget(new nxw::icon_button(this, ":/button/history_previous"));
-        layout->addWidget(new nxw::icon_button(this, ":/button/history_next"));
+        layout->addWidget(new nxw::icon_button(this, ":/button/previous"));
+        layout->addWidget(new nxw::icon_button(this, ":/button/next"));
         layout->addWidget(new nxw::icon_button(this, ":/button/notification_none"));
         layout->addWidget(new nxw::icon_button(this, ":/button/download"));
 
