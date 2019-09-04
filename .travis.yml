@@ -15,6 +15,7 @@ matrix:
         - C_COMPILER=gcc-8 CXX_COMPILER=g++-8
 
     - os: osx
+      osx_image: xcode11
       env:
         - C_COMPILER=clang-8 CXX_COMPILER=clang++-8
 
