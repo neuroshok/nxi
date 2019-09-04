@@ -25,13 +25,6 @@ namespace ui
         private:
             QLineEdit* login_;
 
-            void home::paintEvent(QPaintEvent *e)
-            {
-                QPainter painter(this);
-                painter.drawPixmap(0, 0, QPixmap(":/image/login_background").scaled(size()));
-                QWidget::paintEvent(e);
-            }
-
         public:
             //operator QWidget*() { return this->widget(); }
 
