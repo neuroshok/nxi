@@ -30,7 +30,7 @@ language:
 addons:
   apt:
     packages:
-      - libmongo-client-dev
+      - qt5
   homebrew:
     packages:
       - qt5
