@@ -1,5 +1,5 @@
 # windows
-if (NXI_TARGET_SYSTEM STREQUAL "windows")
+if (NXI_TARGET_DESKTOP)
     set(NXI_QT_ROOT C:/qt/5.13.0/msvc2017_64)
 
     # module

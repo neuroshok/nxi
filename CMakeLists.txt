@@ -8,10 +8,12 @@ include(cmake/utility.cmake)
 # default
 # target system
 if (NOT NXI_TARGET_SYSTEM)
-    set(NXI_TARGET_SYSTEM windows)
+    set(NXI_TARGET_DESKTOP 1)
+    set(NXI_TARGET_SYSTEM ${CMAKE_HOST_SYSTEM_NAME})
 endif()
+
 if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
+    set(CMAKE_BUILD_TYPE Release)
 endif()
 
 # user config file
@@ -36,7 +38,7 @@ set(CMAKE_PREFIX_PATH  ${NXI_QT_ROOT})
 
 ## PLATFORM
 # windows
-if (NXI_TARGET_SYSTEM STREQUAL "windows")
+if (NXI_TARGET_DESKTOP)
     set(NXI_QT_COMPONENTS Core Widgets Gui WebEngine WebEngineWidgets 3DCore 3DRender 3DInput 3DExtras)
     set(NXI_QT_LIBS Qt5::Core Qt5::Widgets Qt5::Gui Qt5::WebEngine Qt5::WebEngineWidgets
             Qt5::3DCore Qt5::3DRender Qt5::3DInput Qt5::3DExtras)
@@ -126,9 +128,14 @@ if (NXI_TARGET_SYSTEM STREQUAL "android")
     target_link_libraries(nxi lib_ndb lib_nds ${NXI_MODULES} ${NXI_QT_LIBS})
 
     nxi_android_apk_target(nxi)
-else()
+endif()
+
+if (NXI_TARGET_DESKTOP)
     # sources
-    set(NXI_ICON "${PROJECT_SOURCE_DIR}/resource/icon.rc" "${PROJECT_SOURCE_DIR}/resource/icon.ico")
+    if (WIN32)
+        set(NXI_ICON "${PROJECT_SOURCE_DIR}/resource/icon.rc" "${PROJECT_SOURCE_DIR}/resource/icon.ico")
+    endif()
+
     file(GLOB_RECURSE NXI_SOURCES
             "${PROJECT_SOURCE_DIR}/source/nxi/*.cpp"
             "${PROJECT_SOURCE_DIR}/source/nxw/*.cpp"
@@ -150,12 +157,14 @@ else()
 
 
     # deploy
-    get_target_property(QT5_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
-    get_filename_component(QT5_WINDEPLOYQT_EXECUTABLE ${QT5_QMAKE_EXECUTABLE} PATH)
-    set(QT5_WINDEPLOYQT_EXECUTABLE "${QT5_WINDEPLOYQT_EXECUTABLE}/windeployqt.exe")
+    if (WIN32)
+        get_target_property(QT5_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
+        get_filename_component(QT5_WINDEPLOYQT_EXECUTABLE ${QT5_QMAKE_EXECUTABLE} PATH)
+        set(QT5_WINDEPLOYQT_EXECUTABLE "${QT5_WINDEPLOYQT_EXECUTABLE}/windeployqt.exe")
 
-    add_custom_target(nxi_deploy COMMAND ${QT5_WINDEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi>)
-    add_dependencies(nxi_deploy nxi)
+        add_custom_target(nxi_deploy COMMAND ${QT5_WINDEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi>)
+        add_dependencies(nxi_deploy nxi)
+    endif()
 endif()
 
 
