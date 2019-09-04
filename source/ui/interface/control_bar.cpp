@@ -17,6 +17,8 @@
 #include <include/nxi/log.hpp>
 #include <nxi/config.hpp>
 
+#include <ui/command.hpp>
+
 namespace nxw
 {
     class popup : public QWebEngineView
@@ -27,66 +29,7 @@ namespace nxw
             load(QUrl::fromLocalFile(url));
         }
     };
-
-
-
-class command : public QLineEdit
-    {
-    public:
-        command(ui::core& ui_core) : ui_core_{ ui_core }
-        {
-            menu_ = new nxw::menu(this);
-            menu_->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-            menu_->setFixedWidth(width());
-            menu_->hide();
-
-            connect(this, &QLineEdit::editingFinished, [this]()
-            {
-                menu_->hide();
-                menu_->clear();
-            });
-
-            connect(this, &QLineEdit::textChanged, [this]()
-            {
-                menu_->clear();
-                auto result = ui_core_.nxi_core().command_system().search(text());
-                if (result.size() > 0)
-                {
-                    for (auto cmd : result)
-                    {
-                        menu_->add(*cmd);
-                    }
-                    menu_->show_at(this);
-                    menu_->exec();
-                }
-            });
-
-            connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), this, [this](nxi::page& page)
-            {
-                setText(page.name());
-            });
-
-        }
-
-        void enterEvent(QEvent * event) override
-        {
-            auto focused_page = ui_core_.nxi_core().page_system().focus();
-            if (focused_page.has_value()) setText(focused_page.value()->command());
-        }
-
-        void leaveEvent(QEvent *event) override
-        {
-            auto focused_page = ui_core_.nxi_core().page_system().focus();
-            if (focused_page.has_value()) setText(focused_page.value()->name());
-        }
-
-    private:
-        ui::core& ui_core_;
-
-        nxw::menu* menu_;
-    };
 }
-
 
 namespace ui::interfaces
 {
@@ -144,7 +87,7 @@ namespace ui::interfaces
         m_context->addItem("explorer");
         m_context->hide();
 
-        command_bar_ = new nxw::command(m_ui_core);
+        command_bar_ = new ui::command(m_ui_core);
         QObject::connect(command_bar_, &QLineEdit::returnPressed, [this]()
         {
             nxi::command_context context = nxi::command_context::deduced;

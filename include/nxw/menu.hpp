@@ -4,10 +4,10 @@
 namespace ui { class core; }
 
 #include <ui/interface.hpp>
-#include "vbox_layout.hpp"
-#include "hbox_layout.hpp"
+#include <nxw/vbox_layout.hpp>
+#include <nxw/hbox_layout.hpp>
 #include <QLabel>
-#include <QtCore/QEvent>
+#include <QEvent>
 
 namespace nxw
 {
@@ -75,15 +75,20 @@ namespace nxw
             //setAttribute(Qt::WA_ShowWithoutActivating);
             setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 
-            layout_ = new nxw::vbox_layout;
-            layout_->setAlignment(layout_, Qt::AlignTop);
+            item_layout_ = new nxw::vbox_layout;
+            item_layout_->setAlignment(item_layout_, Qt::AlignTop);
 
-            setLayout(layout_);
+            bottom_layout_ = new nxw::hbox_layout;
+
+            auto main_layout = new nxw::vbox_layout;
+            main_layout->addLayout(item_layout_);
+            main_layout->addLayout(bottom_layout_);
+            setLayout(main_layout);
         }
 
         void clear()
         {
-            while (auto item = layout_->takeAt(0))
+            while (auto item = item_layout_->takeAt(0))
             {
                 delete item->widget();
             }
@@ -93,7 +98,7 @@ namespace nxw
         void add(Args&&... args)
         {
             auto widget = new Widget(std::forward<Args>(args)...);
-            layout_->addWidget(widget);
+            item_layout_->addWidget(widget);
             adjustSize();
         }
 
@@ -109,7 +114,12 @@ namespace nxw
 
         void add(QWidget* widget)
         {
-            layout_->addWidget(widget);
+            item_layout_->addWidget(widget);
+        }
+
+        void add_bottom(QWidget* widget)
+        {
+            bottom_layout_->addWidget(widget);
         }
 
         void show_at(QWidget* widget)
@@ -134,7 +144,8 @@ namespace nxw
     private:
         //ui::core& ui_core;
         //std::vector<nxw::menu_item>
-        nxw::vbox_layout* layout_;
+        nxw::vbox_layout* item_layout_;
+        nxw::hbox_layout* bottom_layout_;
         QWidget* widget_origin_;
 
     };

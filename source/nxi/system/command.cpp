@@ -17,6 +17,8 @@
 #include <nxi/page/custom.hpp>
 #include <include/ui/view/config.hpp>
 
+#include <nds/algorithm/graph/find.hpp>
+
 namespace nds::encoders
 {
     template<>
@@ -90,9 +92,9 @@ namespace nxi
     {
         nxi::command* command = nullptr;
 
-        nds::algorithm::graph::find(graph_
-        , [&command](auto&& found_node){ command = std::addressof(found_node->get()); }
-        , [&module_action](auto&& node){ return node->get().action_name() == module_action; });
+        nds::algorithm::graph::find_if(graph_
+        , [&module_action, &module_name](auto&& node){ return node->get().action_name() == module_action && node->get().module_name() == module_name ; }
+        , [&command](auto&& found_node){ command = std::addressof(found_node->get()); });
 
         return command;
     }
@@ -157,11 +159,10 @@ namespace nxi
     {
         commands_view commands;
 
-        for (const auto& command : commands_)
+        nds::algorithm::graph::for_each(graph_, [&commands, &search_string](auto&& node)
         {
-            //qDebug() << "search " << search_string << " match : " << command->name();
-            if (command->name().contains(search_string)) commands.emplace_back(command.get());
-        }
+            if (node->get().name().contains(search_string)) commands.emplace_back(std::addressof(node->get()));
+        });
 
         return commands;
     }
