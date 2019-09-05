@@ -2,41 +2,22 @@ services: docker
 
 matrix:
   include:
-    - os: linux
-      dist: xenial
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - gcc-8
-            - g++-8
-      env:
-        - C_COMPILER=gcc-8 CXX_COMPILER=g++-8
-
     - os: osx
       osx_image: xcode11
-      env:
-        - C_COMPILER=clang-8 CXX_COMPILER=clang++-8
+      before_install:
+        - brew install qt5
+        - brew link qt5 --force
 
-    - os: windows
-      dist: 1803-containers
-      env: VERSION=1.11 VARIANT=windows/windowsservercore-1803
+      env:
+        - QT_PATH=/usr/local/Cellar/qt/5.13.0
+
 
 sudo: required
 
 language:
   - cpp
 
-addons:
-  apt:
-    packages:
-      - qt5
-  homebrew:
-    packages:
-      - qt5
-
 
 script:
-  - cmake -DCMAKE_C_COMPILER=${C_COMPILER} -DCMAKE_CXX_COMPILER=${CXX_COMPILER}
+  - cmake -DCMAKE_PREFIX_PATH=${QT_PATH} -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} .
   - cmake --build . --target nxi --config Release
