@@ -19,5 +19,7 @@ language:
 
 
 script:
-  - cmake -DCMAKE_PREFIX_PATH=${QT_PATH} -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} .
+  - ls /usr/local/Cellar
+  - ls /usr/local/Cellar/qt
+  - cmake -DNXI_QT_ROOT=${QT_PATH} -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} .
   - cmake --build . --target nxi --config Release
