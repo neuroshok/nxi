@@ -1,5 +1,8 @@
 services: docker
 
+sudo: required
+language: cpp
+
 matrix:
   include:
     - os: linux
@@ -26,8 +29,12 @@ matrix:
         - cmake -DNXI_QT_ROOT=${QT_PATH} -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} -DSTZ_FILESYSTEM=ON .
         - cmake --build . --target nxi --config Release
 
-
-sudo: required
-
-language:
-  - cpp
+deploy:
+  provider: releases
+  api_key:
+    secure: RVJGyTzT+pK7aNJPK/0GtooxRat1rDPsJblfbEHUaRKyiUIck9ONHDJps0WaRcdxj02lowTiB4DsZ4EYlMqnbbn7NvcyzbB7r+2LQV6kxug7g1NWXAuTRh5PzpI9AOtYYd4GRE2cVaabIqyxiIhx0vVAxfll4ABGVnO29Dzc/c8sjio5fGhTETzQJ6Cx9OPyByNFw8j1m8Kx/RCRKNKbIqXxXE0AfpcB2E7MEAf/2qPe95H4Pf9KUY8GvUd6wnLhxIX/iZWJvcnyG+vGsLf92FCx2z2G8obAnVjzyom3N7Pkmb7w74GFavQYFB103i5sqlo7MbNYh3oF6p05uIJXlTJdRHVmy2lz2w4eP1gLNYwHzVIr/xQmXn+HJb6VePr+t1MkPQzsEX1PWQ1vrHIgu2TJToD+DDwaZu4BAmUdmH1aGUnARqA7zXimmyTV8hZFrR/QbUqaiPwf9P9d++nhFhN5MsjIgQT9/hwx0kpqdcFpoC6hEc9NwWWFwxeT6ILgsU2wfWf09w3dmwRKcCvYZjZbK2JgSgQBkb1drzOmHzocMvMqRvtd8fGi+N0tBD0h/1yEJuTBjOheMh/Ahl3cGtjXm7XsagmWdALWTZp1h06xzv5RYFOeZrTd0jApn2+cflBjlLb3dDay0y1KV90dXfM2rTmajhntyisr3eKShcA=
+  file: 'bin/nxi'
+  skip_cleanup: true
+  on:
+    repo: ads00/nxi
+    all_branches: true
