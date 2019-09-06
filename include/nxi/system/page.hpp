@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <stz/observer_ptr.hpp>
 #include <optional>
+#include <nxi/log.hpp>
 
 #include <nxi/page/web.hpp>
 

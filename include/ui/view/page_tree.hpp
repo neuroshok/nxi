@@ -20,7 +20,7 @@ namespace ui::views
     {
         Q_OBJECT
     public:
-        views::page_tree(ui::core&);
+        page_tree(ui::core&);
 
         ui::tree_page_item* add(nxi::page& page, nxi::page_id source_id);
         tree_item* get(nxi::page_id id) const;
