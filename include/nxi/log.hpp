@@ -26,11 +26,11 @@ OStream& operator<<(OStream &os, const QString& c)
 #endif
 
 #define nxi_assert(C) Q_ASSERT(C)
-#define nxi_debug(Message, ...) SPDLOG_LOGGER_DEBUG(spdlog::get("debug"), Message, __VA_ARGS__)
-#define nxi_error(Message, ...) SPDLOG_LOGGER_ERROR(spdlog::default_logger_raw(), Message, __VA_ARGS__)
-#define nxi_warning(Message, ...) SPDLOG_LOGGER_WARN(spdlog::default_logger_raw(), Message, __VA_ARGS__)
+#define nxi_debug(...) SPDLOG_LOGGER_DEBUG(spdlog::get("debug"), __VA_ARGS__)
+#define nxi_error(...) SPDLOG_LOGGER_ERROR(spdlog::default_logger_raw(), __VA_ARGS__)
+#define nxi_warning(...) SPDLOG_LOGGER_WARN(spdlog::default_logger_raw(), __VA_ARGS__)
 
-#define nxi_trace(Message, ...) SPDLOG_LOGGER_TRACE(spdlog::get("execution"), Message, __VA_ARGS__)
-#define nxi_trace_event(Message, ...) SPDLOG_LOGGER_TRACE(spdlog::get("event"), Message, __VA_ARGS__)
+#define nxi_trace(...) SPDLOG_LOGGER_TRACE(spdlog::get("execution"), __VA_ARGS__)
+#define nxi_trace_event(...) SPDLOG_LOGGER_TRACE(spdlog::get("event"), __VA_ARGS__)
 
 #endif // NXI_LOG_H_NXI

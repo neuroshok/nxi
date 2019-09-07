@@ -48,7 +48,7 @@ namespace ui::interfaces
 
         connect(btn_web_new, &QPushButton::clicked, this, [this]()
         {
-            ui_core_.nxi_core().page_system().add<nxi::web_page>();
+            ui_core_.nxi_core().page_system().add<nxi::web_page>(0);
         });
 
         connect(btn_explorer_new, &QPushButton::clicked, this, [this]()

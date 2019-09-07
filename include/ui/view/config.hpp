@@ -12,11 +12,11 @@
 
 namespace ui::views
 {
+    template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+    template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
     class config : public QWidget
     {
-        template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-        template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
-
     public:
         config(ui::core& ui_core);
 
