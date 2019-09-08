@@ -19,7 +19,8 @@ namespace ui
             menu_->show_at(this);
 
             menu_->add_bottom(info_);
-            menu_->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+            menu_->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
+            menu_->setAttribute(Qt::WA_ShowWithoutActivating);
             menu_->hide();
 
             connect(this, &QLineEdit::editingFinished, [this]()
@@ -41,7 +42,6 @@ namespace ui
                     {
                         menu_->add(*cmd);
                     }
-                    menu_->show();
                     menu_->exec();
                 }
                 info_->setText("results : " + QString::number(result.size()));
@@ -54,7 +54,6 @@ namespace ui
                     selectAll();
                     blockSignals(false);
                 }
-
             });
 
             connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), this, [this](nxi::page& page)
