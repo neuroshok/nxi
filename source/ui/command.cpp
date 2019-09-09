@@ -4,6 +4,8 @@
 
 #include <ui/core.hpp>
 #include <ui/menu.hpp>
+#include <nxw/menu.hpp>
+#include <nxw/menu/item.hpp>
 
 #include <QKeyEvent>
 #include <QLabel>
@@ -14,7 +16,7 @@ namespace ui
         : ui_core_{ ui_core }
     {
         info_ = new QLabel(this);
-        menu_ = new ui::menu(this);
+        menu_ = new nxw::menu(this);
         menu_->setObjectName("ui_command_menu");
         menu_->show_at(this);
 
@@ -38,9 +40,9 @@ namespace ui
             auto result = ui_core_.nxi_core().command_system().search(input_);
             if (result.size() > 0)
             {
-                for (auto cmd : result)
+                for (auto command : result)
                 {
-                    menu_->add(*cmd);
+                    menu_->add<nxw::menu_item>(command->name(), command->function(), command->icon());
                 }
 
             }
@@ -74,11 +76,8 @@ namespace ui
     {
         QLineEdit::keyPressEvent(event);
 
-        if (event->key() == Qt::Key_Down)
-        {
-            qDebug() << "down";
-            menu_->focus_next();
-        }
+        if (event->key() == Qt::Key_Up) menu_->focus_previous();
+        if (event->key() == Qt::Key_Down) menu_->focus_next();
     }
 
     void command::focusOutEvent(QFocusEvent* event)

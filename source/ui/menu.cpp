@@ -9,6 +9,7 @@
 
 #include <QLabel>
 #include <QEvent>
+#include <QStyle>
 
 #include <nxi/command.hpp>
 
@@ -39,6 +40,7 @@ namespace ui
         {
             delete item->widget();
         }
+        item_index_ = -1;
     }
 
     void menu::set_max_items(size_t n) { max_items_ = n; }
@@ -83,11 +85,27 @@ namespace ui
         adjustSize();
     }
 
+    void menu::focus_previous()
+    {
+        if (item_index_ < 0) item_index_ = 0;
+        auto item_prev = item_at(item_index_);
+        item_prev->setProperty("selected", false);
+        item_prev->style()->polish(item_prev);item_prev->style()->unpolish(item_prev);
+        item_previous();
+        auto item_next = item_at(item_index_);
+        item_next->setProperty("selected", true);
+        item_next->style()->polish(item_next);item_next->style()->unpolish(item_next);
+    }
     void menu::focus_next()
     {
-        item_at(item_index_)->setStyleSheet("color:white");
+        if (item_index_ < 0) item_index_ = item_count() - 1;
+        auto item_prev = item_at(item_index_);
+        item_prev->setProperty("selected", false);
+        item_prev->style()->polish(item_prev);item_prev->style()->unpolish(item_prev);
         item_next();
-        item_at(item_index_)->setStyleSheet("color:red");
+        auto item_next = item_at(item_index_);
+        item_next->setProperty("selected", true);
+        item_next->style()->polish(item_next);item_next->style()->unpolish(item_next);
     }
 
     size_t menu::item_count() const
@@ -102,7 +120,7 @@ namespace ui
 
     void menu::item_next()
     {
-        ++item_index_ % item_count();
+        item_index_ = ++item_index_ % item_count();
     }
 
     ui::menu_item* menu::item_at(size_t index) const

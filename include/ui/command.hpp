@@ -32,7 +32,7 @@ namespace ui
         ui::core& ui_core_;
         QString input_;
 
-        ui::menu* menu_;
+        nxw::menu* menu_;
         QLabel* info_;
     };
 } // ui

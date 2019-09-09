@@ -44,6 +44,7 @@ namespace ui
             auto layout_ = new nxw::hbox_layout;
             setLayout(layout_);
 
+
             auto icon = new QLabel(this);
             if (!str_icon.isEmpty())
             {
@@ -95,6 +96,7 @@ namespace ui
         void add(QWidget* widget);
         void add_bottom(QWidget* widget);
 
+        void focus_previous();
         void focus_next();
 
         ui::menu_item* item_at(size_t index) const;

@@ -33,31 +33,40 @@
     border-radius: 2;
     border:1px solid #00BFFF;
 }
-
-
-ui--menu_item
+#ui_command_menu .nxw--menu_item[selected=false]
 {
-
+    background-color: #222222;
 }
 
-.ui--menu
+
+.nxw--menu
 {
     background-color: #585b61;
 }
 
-.ui--menu_item
+.nxw--menu_item[selected=true]
+{
+    background-color: #3d4147;
+}
+
+.nxw--menu_item[selected=false]
+{
+    background-color: #585b61;
+}
+
+.nxw--menu_item
 {
     padding-left: 10px;
     padding-right: 10px;
     qproperty-height: 24;
 }
 
-.ui--menu_item:hover
+.nxw--menu_item:hover
 {
     background-color: #3d4147;
 }
 
-.ui--menu_separator
+.nxw--menu_separator
 {
     color: #3d4147;
 }
@@ -81,7 +90,7 @@ nxw--icon_button:pressed
     background-color: #4d5157;
 }
 
-.ui--menu
+.nxw--menu
 {
     padding-top: 2px;
     padding-bottom: 2px;
