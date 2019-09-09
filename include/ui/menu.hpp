@@ -97,6 +97,7 @@ namespace ui
 
         void focus_next();
 
+        ui::menu_item* item_at(size_t index) const;
         size_t item_count() const;
         void item_previous();
         void item_next();

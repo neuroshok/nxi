@@ -1,8 +1,12 @@
 #include <ui/menu.hpp>
 
-#include <ui/interface.hpp>
+#include <nxi/log.hpp>
+
 #include <nxw/vbox_layout.hpp>
 #include <nxw/hbox_layout.hpp>
+
+#include <ui/interface.hpp>
+
 #include <QLabel>
 #include <QEvent>
 
@@ -81,8 +85,9 @@ namespace ui
 
     void menu::focus_next()
     {
+        item_at(item_index_)->setStyleSheet("color:white");
         item_next();
-        static_cast<ui::menu_item*>(item_layout_->itemAt(item_index_)->widget()) ->setStyleSheet("color:red");
+        item_at(item_index_)->setStyleSheet("color:red");
     }
 
     size_t menu::item_count() const
@@ -98,5 +103,11 @@ namespace ui
     void menu::item_next()
     {
         ++item_index_ % item_count();
+    }
+
+    ui::menu_item* menu::item_at(size_t index) const
+    {
+        nxi_assert(index < static_cast<size_t>(item_layout_->count()));
+        return static_cast<ui::menu_item*>(item_layout_->itemAt(index)->widget()) ;
     }
 } // ui
