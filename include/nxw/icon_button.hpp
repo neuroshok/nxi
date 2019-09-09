@@ -14,6 +14,7 @@ namespace nxw
         Q_OBJECT
 
         Q_PROPERTY(QColor mask READ mask WRITE set_mask)
+        Q_PROPERTY(QColor mask_hover READ mask_hover WRITE set_mask_hover)
 
     public:
         icon_button(QWidget* parent, const QString& icon_path)
@@ -22,6 +23,18 @@ namespace nxw
         {
             setIcon(QIcon(icon_path));
             setFixedSize(32, 32);
+        }
+
+        void enterEvent(QEvent * event)
+        {
+            replace_color(mask_, mask_hover_);
+            QPushButton::enterEvent(event);
+        }
+
+        void leaveEvent(QEvent * event)
+        {
+            replace_color(mask_hover_, mask_);
+            QPushButton::leaveEvent(event);
         }
 
         void replace_color(const QColor& source, const QColor& target)
@@ -35,11 +48,14 @@ namespace nxw
         }
 
         QColor mask() const { return mask_; }
-        void set_mask(QColor color) {  replace_color(mask_, color); mask_ = color; }
+        void set_mask(QColor color) {  mask_ = color; replace_color(QColor(0, 0, 0), mask_); }
+        QColor mask_hover() const { return mask_hover_; }
+        void set_mask_hover(QColor color) {  mask_hover_ = color; }
 
     private:
         QString path_;
         QColor mask_;
+        QColor mask_hover_;
     };
 } // nxw
 

@@ -26,29 +26,38 @@
     background-color: #4d5157;
 }
 
-nxw--menu_item
+#ui_command_menu
+{
+    background-color: #222222;
+    padding: 5 10 5 10;
+    border-radius: 2;
+    border:1px solid #00BFFF;
+}
+
+
+ui--menu_item
 {
 
 }
 
-nxw--menu
+.ui--menu
 {
     background-color: #585b61;
 }
 
-nxw--menu_item
+.ui--menu_item
 {
     padding-left: 10px;
     padding-right: 10px;
     qproperty-height: 24;
 }
 
-nxw--menu_item:hover
+.ui--menu_item:hover
 {
     background-color: #3d4147;
 }
 
-nxw--menu_separator
+.ui--menu_separator
 {
     color: #3d4147;
 }
@@ -59,7 +68,8 @@ nxw--menu_separator
 
 nxw--icon_button
 {
-    qproperty-mask: #00BFFF;
+    qproperty-mask: #EEEEEE;
+    qproperty-mask_hover: #00BFFF;
 }
 
 nxw--icon_button:hover
@@ -71,7 +81,7 @@ nxw--icon_button:pressed
     background-color: #4d5157;
 }
 
-.nxw--menu
+.ui--menu
 {
     padding-top: 2px;
     padding-bottom: 2px;
