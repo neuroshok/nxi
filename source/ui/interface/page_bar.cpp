@@ -7,7 +7,7 @@
 #include <ui/view/page_tree.hpp>
 #include <nxw/vbox_layout.hpp>
 
-#include <nxw/menu.hpp>
+#include <ui/menu.hpp>
 #include <nxw/icon_button.hpp>
 #include <include/ui/interface/page_bar.hpp>
 #include <include/nxi/log.hpp>

@@ -20,10 +20,10 @@ namespace nxi
 
     class command_system : public QObject
     {
-    	using commands_view = std::vector<stz::observer_ptr<nxi::command>>;
-
         Q_OBJECT
     public:
+        using commands_view = std::vector<stz::observer_ptr<nxi::command>>;
+
         command_system(nxi::core&);
         command_system(const command_system&) = delete;
         void operator=(const command_system&) = delete;

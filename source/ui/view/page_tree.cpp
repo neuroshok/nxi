@@ -11,7 +11,7 @@
 #include <QDebug>
 #include <nxi/log.hpp>
 #include <ui/view/page_tree.hpp>
-#include <include/nxw/menu.hpp>
+#include <include/ui/menu.hpp>
 
 #include <nxi/page/node.hpp>
 #include <nxi/page/web.hpp>
@@ -149,7 +149,7 @@ namespace ui::views
             auto item = itemAt(point);
             if (item) source_id = static_cast<ui::tree_page_item*>(item)->page().id();
 
-            auto menu = new nxw::menu(this);
+            auto menu = new ui::menu(this);
             menu->add("new node", [this, source_id](){ ui_core_.nxi_core().page_system().add<nxi::page_node>(source_id); });
             menu->add("new web_page", [this, source_id](){ ui_core_.nxi_core().page_system().open<nxi::web_page>(source_id); });
 

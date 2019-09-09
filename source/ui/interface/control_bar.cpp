@@ -9,7 +9,7 @@
 
 #include <nxw/hbox_layout.hpp>
 #include <nxw/icon_button.hpp>
-#include <nxw/menu.hpp>
+#include <ui/menu.hpp>
 #include <include/ui/interface/control_bar.hpp>
 #include <ui/view/web.hpp>
 #include <QWebEngineView>
@@ -68,16 +68,16 @@ namespace ui::interfaces
         auto btn_menu = new nxw::icon_button(this, ":/button/menu");
 
 
-        auto menu = new nxw::menu{ this };
-        menu->add<nxw::menu_item>("new window", [&ui_core](){ ui_core.nxi_core().window_system().add({}); });
+        auto menu = new ui::menu{ this };
+        menu->add<ui::menu_item>("new window", [&ui_core](){ ui_core.nxi_core().window_system().add({}); });
         menu->add(ui_core.nxi_core().command_system().get("config"));
         menu->add(ui_core.nxi_core().command_system().get("about"));
-        menu->add<nxw::menu_separator>();
+        menu->add<ui::menu_separator>();
         menu->add(ui_core.nxi_core().command_system().get("quit"));
         menu->add(ui_core.nxi_core().command_system().get("test"));
         menu->show_at(btn_menu);
 
-        QObject::connect(btn_menu, &nxw::icon_button::clicked, menu, &nxw::menu::exec);
+        QObject::connect(btn_menu, &nxw::icon_button::clicked, menu, &ui::menu::exec);
         //menu->add(nxi::command::get("nxi", "quit"), customwidget);
 
 

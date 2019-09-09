@@ -1,0 +1,102 @@
+#include <ui/menu.hpp>
+
+#include <ui/interface.hpp>
+#include <nxw/vbox_layout.hpp>
+#include <nxw/hbox_layout.hpp>
+#include <QLabel>
+#include <QEvent>
+
+#include <nxi/command.hpp>
+
+namespace ui
+{
+    menu::menu(QWidget* parent)
+        : QWidget(parent)
+        , widget_origin_{ nullptr }
+        , max_items_{ 5 }
+        , item_index_{ -1 }
+    {
+        setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+
+        item_layout_ = new nxw::vbox_layout;
+        item_layout_->setAlignment(item_layout_, Qt::AlignTop);
+
+        bottom_layout_ = new nxw::hbox_layout;
+
+        auto main_layout = new nxw::vbox_layout;
+        main_layout->addLayout(item_layout_);
+        main_layout->addLayout(bottom_layout_);
+        setLayout(main_layout);
+    }
+
+    void menu::clear()
+    {
+        while (auto item = item_layout_->takeAt(0))
+        {
+            delete item->widget();
+        }
+    }
+
+    void menu::set_max_items(size_t n) { max_items_ = n; }
+
+    void menu::add(const nxi::command& command)
+    {
+        add<ui::menu_item>(command.name(), command.function(), command.icon());
+    }
+
+    void menu::add(const QString& action_name, std::function<void()> function)
+    {
+        add<ui::menu_item>(action_name, std::move(function));
+    }
+
+    void menu::add(QWidget* widget)
+    {
+        item_layout_->addWidget(widget);
+    }
+
+    void menu::add_bottom(QWidget* widget)
+    {
+        bottom_layout_->addWidget(widget);
+    }
+
+    void menu::show_at(QWidget* widget)
+    {
+        widget_origin_ = widget;
+    }
+
+    void menu::exec()
+    {
+        QPoint position = QCursor::pos();
+
+        if (widget_origin_)
+        {
+            // move menu to widget global position
+            position = widget_origin_->mapToGlobal(widget_origin_->rect().bottomLeft());
+        }
+
+        move(position);
+        show();
+        adjustSize();
+    }
+
+    void menu::focus_next()
+    {
+        item_next();
+        static_cast<ui::menu_item*>(item_layout_->itemAt(item_index_)->widget()) ->setStyleSheet("color:red");
+    }
+
+    size_t menu::item_count() const
+    {
+        return item_layout_->count();
+    }
+
+    void menu::item_previous()
+    {
+        item_index_ = (item_index_ + item_count() - 1) % item_count();
+    }
+
+    void menu::item_next()
+    {
+        ++item_index_ % item_count();
+    }
+} // ui
