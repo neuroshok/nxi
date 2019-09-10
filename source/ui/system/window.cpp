@@ -71,7 +71,7 @@ namespace ui
         window->showMinimized();
     }
 
-    unsigned int window_system::count() const
+    size_t window_system::count() const
     {
         return m_windows.size();
     }

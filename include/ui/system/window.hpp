@@ -24,7 +24,7 @@ namespace ui
         void resize(ui::window*, int w, int h);
         void minimize(ui::window*);
 
-        unsigned int count() const;
+        size_t count() const;
 
     private:
 		ui::core& m_ui_core;

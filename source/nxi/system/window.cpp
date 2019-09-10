@@ -4,8 +4,9 @@
 #include <nxi/database.hpp>
 #include <nxi/log.hpp>
 
-#include <QDesktopWidget>
-
+#include <QGuiApplication>
+#include <QRect>
+#include <QScreen>
 
 namespace nxi
 {
@@ -28,8 +29,7 @@ namespace nxi
 
         if (windows_.empty())
         {
-            QDesktopWidget screen;
-            QRect screen_size = screen.availableGeometry(screen.primaryScreen());
+            QRect screen_size = QGuiApplication::primaryScreen()->geometry();
 
             nxi::window window;
             window.w = screen_size.width() * 0.8;
