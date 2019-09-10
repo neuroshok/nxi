@@ -4,6 +4,20 @@ sudo: required
 
 matrix:
   include:
+    - os: linux
+      env:
+        - CC=gcc-8 CXX=g++-8
+        - QT_PATH=/5.13.1/gcc_64
+      before_install:
+      - docker build -t nxi_image ./ci
+      script:
+      - docker run --name nxi -w /nxi -v `pwd`:/nxi nxi_image
+              bash -c "
+                  mkdir build && cd build &&
+                  cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} -DNXI_QT_ROOT=${QT_PATH} -DSTZ_FILESYSTEM=ON .. &&
+                  cmake --build . --target nxi --config Release
+              "
+
     - os: osx
       osx_image: xcode11
       env:
@@ -23,5 +37,5 @@ deploy:
   file: 'bin/nxi'
   skip_cleanup: true
   on:
-    repo: ads00/nxi
+    tags: true
     all_branches: true
