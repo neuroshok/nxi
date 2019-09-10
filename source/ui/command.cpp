@@ -28,7 +28,6 @@ namespace ui
         connect(this, &QLineEdit::editingFinished, [this]()
         {
             menu_->hide();
-            menu_->clear();
         });
 
         connect(this, &QLineEdit::textChanged, [this]()
@@ -75,9 +74,17 @@ namespace ui
     void command::keyPressEvent(QKeyEvent* event)
     {
         QLineEdit::keyPressEvent(event);
-
-        if (event->key() == Qt::Key_Up) menu_->focus_previous();
-        if (event->key() == Qt::Key_Down) menu_->focus_next();
+        switch (event->key())
+        {
+            case Qt::Key_Up:
+                menu_->select_previous();
+                menu_->show();
+                break;
+            case Qt::Key_Down:
+                menu_->select_next();
+                menu_->show();
+                break;
+        }
     }
 
     void command::focusOutEvent(QFocusEvent* event)

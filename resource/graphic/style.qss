@@ -38,27 +38,21 @@
     background-color: #222222;
 }
 
-
+/*//////////////////////////////////////////////////////////////////////////////
+////////////////////////            nxw::menu           ////////////////////////
+//////////////////////////////////////////////////////////////////////////////*/
 .nxw--menu
 {
     background-color: #585b61;
-}
-
-.nxw--menu_item[selected=true]
-{
-    background-color: #3d4147;
-}
-
-.nxw--menu_item[selected=false]
-{
-    background-color: #585b61;
+    border: 1px solid #00BFFF;
 }
 
 .nxw--menu_item
 {
-    padding-left: 10px;
-    padding-right: 10px;
-    qproperty-height: 24;
+    padding-left: 10;
+    padding-right: 10;
+    min-height: 32;
+    max-height: 32;
 }
 
 .nxw--menu_item:hover
@@ -68,7 +62,7 @@
 
 .nxw--menu_separator
 {
-    color: #3d4147;
+    color: #222222;
 }
 
 /*//////////////////////////////////////////////////////////////////////////////
