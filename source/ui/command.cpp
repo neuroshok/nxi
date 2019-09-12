@@ -9,6 +9,14 @@
 
 #include <QKeyEvent>
 #include <QLabel>
+#include <nxi/system/interface.hpp>
+#include <nxi/theme.hpp>
+/*
+class zeta_widget : QWidget, nxw::stylable<zeta_widget>
+void theme::apply(widgte_type w)
+{
+
+}*/
 
 namespace ui
 {
@@ -24,6 +32,11 @@ namespace ui
         menu_->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
         menu_->setAttribute(Qt::WA_ShowWithoutActivating);
         menu_->hide();
+
+        connect(&ui_core_.nxi_core().interface_system(), &nxi::interface_system::event_load_theme, [this](const nxi::theme& theme)
+        {
+            theme.update(this);
+        });
 
         connect(this, &QLineEdit::editingFinished, [this]()
         {
@@ -108,5 +121,17 @@ namespace ui
         if (!input_.isEmpty()) return;
         auto focused_page = ui_core_.nxi_core().page_system().focus();
         if (focused_page.has_value()) setText(focused_page.value()->name());
+    }
+
+    bool command::event(QEvent *event)
+    {
+        /*
+        if (event->type() == QEvent::PaletteChange)
+        {
+            auto pal = ui_core_.nxi_core().interface_system().theme().palette(this);
+            //menu_->setStyleSheet("background-color: " ui_core_.interface)
+        }*/
+
+        return QLineEdit::event(event);
     }
 } // ui

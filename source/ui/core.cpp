@@ -2,6 +2,8 @@
 
 #include <nxi/core.hpp>
 #include <nxi/database.hpp>
+#include <nxi/system/interface.hpp>
+#include <nxi/theme.hpp>
 #include <nxi/log.hpp>
 
 #include <ui/system/page.hpp>
@@ -11,10 +13,11 @@
 #include <QFile>
 #include <QSystemTrayIcon>
 #include <QtWebEngine>
+#include <QWidgetList>
 
 #include <ui/interface/home.hpp>
 #include <ui/interface/page_bar.hpp>
-
+#include <QWidgetList>
 
 namespace ui
 {
@@ -30,10 +33,11 @@ namespace ui
         QtWebEngine::initialize();
 
         // load qss
+        /*
         QFile qss_file(":/style.qss");
         qss_file.open(QFile::ReadOnly);
         QString qss = QLatin1String(qss_file.readAll());
-        app_.setStyleSheet(qss);
+        app_.setStyleSheet(qss);*/
 
         // systray
         systray_ = new QSystemTrayIcon;
@@ -41,6 +45,18 @@ namespace ui
         systray_->show();
 
         connect(&nxi_core_, &nxi::core::event_quit, this, &core::quit);
+
+        connect(&nxi_core_.interface_system(), &nxi::interface_system::event_load_theme, [](const nxi::theme& theme)
+        {
+            const QWidgetList top_widgets = QApplication::topLevelWidgets();
+            for (auto top_widget : top_widgets)
+            {
+                for (auto widget : top_widget->findChildren<QWidget*>())
+                {
+                    theme.apply(widget);
+                }
+            }
+        });
     }
 
     void core::quit()

@@ -9,6 +9,8 @@ class QResizeEvent;
 class QKeyEvent;
 class QEvent;
 
+#include <QEvent>
+
 namespace nxw { class menu; }
 
 namespace ui
@@ -27,6 +29,8 @@ namespace ui
         void leaveEvent(QEvent* event) override;
 
         void focusOutEvent(QFocusEvent* event) override;
+
+        bool event(QEvent* event) override;
 
     private:
         ui::core& ui_core_;

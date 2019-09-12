@@ -10,6 +10,7 @@
 #include <nxi/system/command.hpp>
 #include <nxi/system/module.hpp>
 #include <nxi/system/page.hpp>
+#include <nxi/system/interface.hpp>
 
 #include <nds/encoder/graph.hpp>
 #include <nds/algorithm/graph/find.hpp>
@@ -61,6 +62,8 @@ namespace nxi
         add(nxi::command("nxi", "config", [this](){ nxi_core_.page_system().open_static("nxi/config", nxi::renderer_type::widget);  }, ":/image/nex"), main_cmd);
         add(nxi::command("nxi", "about", [this](){ nxi_core_.page_system().open_static("nxi/about");  }), main_cmd);
         add(nxi::command("nxi", "aboutgl", [this](){ nxi_core_.page_system().open_static("nxi/aboutgl", nxi::renderer_type::widget);  }), main_cmd);
+
+        add(nxi::command("nxi", "load_theme", [this](){ nxi_core_.interface_system().load_theme("nebula_space"); }), main_cmd);
 
         //nds::encoders::dot<>::encode<nds::console>(graph_);
 

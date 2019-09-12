@@ -10,9 +10,10 @@ namespace nxi
     core::core()
         : ndb_init_{}
         , command_system_{ *this }
-        , window_system_{ *this }
-        , page_system_{ *this }
+        , interface_system_{ *this }
         , module_system_{ *this }
+        , page_system_{ *this }
+        , window_system_{ *this }
         , config_{ "nxi" }
     {}
 
@@ -38,6 +39,11 @@ namespace nxi
     nxi::command_system& core::command_system()
     {
         return command_system_;
+    }
+
+    nxi::interface_system& core::interface_system()
+    {
+        return interface_system_;
     }
 
     nxi::module_system& core::module_system()
