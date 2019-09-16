@@ -2,40 +2,79 @@ services: docker
 language: cpp
 sudo: required
 
+env:
+  global:
+    - RELEASE_FILENAME=release_${TRAVIS_TAG}_${TRAVIS_OS_NAME}.7z
+
 matrix:
   include:
-    - os: linux
-      env:
-        - CC=gcc-8 CXX=g++-8
-        - QT_PATH=/5.13.1/gcc_64
-      before_install:
-      - docker build -t nxi_image ./ci
-      script:
-      - docker run --name nxi -w /nxi -v `pwd`:/nxi nxi_image
-              bash -c "
-                  mkdir build && cd build &&
-                  cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} -DNXI_QT_ROOT=${QT_PATH} -DSTZ_FILESYSTEM=ON .. &&
-                  cmake --build . --target nxi --config Release
-              "
+  - os: linux
+    env:
+      - CC=gcc-8 CXX=g++-8
+      - QT_PATH=/5.13.1/gcc_64
+    before_install:
+    - docker build -t nxi_image ./ci
+    script:
+    - docker run --name nxi -w /nxi -v `pwd`:/nxi nxi_image
+            bash -c "
+                mkdir build && cd build &&
+                cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} -DNXI_QT_ROOT=${QT_PATH} -DSTZ_FILESYSTEM=ON .. &&
+                cmake --build . --target nxi --config Release &&
+                cd .. &&
+                7z a -r ${RELEASE_FILENAME} ./bin/*
+            "
+    deploy:
+      provider: releases
+      api_key:
+        secure: RVJGyTzT+pK7aNJPK/0GtooxRat1rDPsJblfbEHUaRKyiUIck9ONHDJps0WaRcdxj02lowTiB4DsZ4EYlMqnbbn7NvcyzbB7r+2LQV6kxug7g1NWXAuTRh5PzpI9AOtYYd4GRE2cVaabIqyxiIhx0vVAxfll4ABGVnO29Dzc/c8sjio5fGhTETzQJ6Cx9OPyByNFw8j1m8Kx/RCRKNKbIqXxXE0AfpcB2E7MEAf/2qPe95H4Pf9KUY8GvUd6wnLhxIX/iZWJvcnyG+vGsLf92FCx2z2G8obAnVjzyom3N7Pkmb7w74GFavQYFB103i5sqlo7MbNYh3oF6p05uIJXlTJdRHVmy2lz2w4eP1gLNYwHzVIr/xQmXn+HJb6VePr+t1MkPQzsEX1PWQ1vrHIgu2TJToD+DDwaZu4BAmUdmH1aGUnARqA7zXimmyTV8hZFrR/QbUqaiPwf9P9d++nhFhN5MsjIgQT9/hwx0kpqdcFpoC6hEc9NwWWFwxeT6ILgsU2wfWf09w3dmwRKcCvYZjZbK2JgSgQBkb1drzOmHzocMvMqRvtd8fGi+N0tBD0h/1yEJuTBjOheMh/Ahl3cGtjXm7XsagmWdALWTZp1h06xzv5RYFOeZrTd0jApn2+cflBjlLb3dDay0y1KV90dXfM2rTmajhntyisr3eKShcA=
+      file: ${RELEASE_FILENAME}
+      skip_cleanup: true
+      on:
+        tags: true
+        all_branches: true
 
-    - os: osx
-      osx_image: xcode11
-      env:
-        - QT_PATH=/usr/local/Cellar/qt/5.13.0
-      before_install:
-        - brew install qt5
-        - brew link qt5 --force
-
-      script:
-      - cmake -DNXI_QT_ROOT=${QT_PATH} -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} -DSTZ_FILESYSTEM=ON .
+  # --ignore-package-exit-codes ignore error on reboot
+  - os: windows
+    dist: 1803-containers
+    env:
+      - VERSION=1.11 VARIANT=windows/windowsservercore-1803
+    script:
+      - choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+      - choco install visualstudio2019buildtools --ignore-package-exit-codes --package-parameters '--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --quiet --norestart'
+      - choco install python
+      - /c/Python37/python.exe -m pip install requests semantic_version lxml
+      - /c/Python37/python.exe ci/qt_downloader windows desktop 5.13.1 win64_msvc2017_64
+      - cmake -G"Visual Studio 16 2019" -DNXI_QT_ROOT=${PWD}/5.13.1/msvc2017_64 .
       - cmake --build . --target nxi --config Release
+      - 7z a -r ${RELEASE_FILENAME} ./bin/*
+    deploy:
+      provider: releases
+      api_key:
+        secure: RVJGyTzT+pK7aNJPK/0GtooxRat1rDPsJblfbEHUaRKyiUIck9ONHDJps0WaRcdxj02lowTiB4DsZ4EYlMqnbbn7NvcyzbB7r+2LQV6kxug7g1NWXAuTRh5PzpI9AOtYYd4GRE2cVaabIqyxiIhx0vVAxfll4ABGVnO29Dzc/c8sjio5fGhTETzQJ6Cx9OPyByNFw8j1m8Kx/RCRKNKbIqXxXE0AfpcB2E7MEAf/2qPe95H4Pf9KUY8GvUd6wnLhxIX/iZWJvcnyG+vGsLf92FCx2z2G8obAnVjzyom3N7Pkmb7w74GFavQYFB103i5sqlo7MbNYh3oF6p05uIJXlTJdRHVmy2lz2w4eP1gLNYwHzVIr/xQmXn+HJb6VePr+t1MkPQzsEX1PWQ1vrHIgu2TJToD+DDwaZu4BAmUdmH1aGUnARqA7zXimmyTV8hZFrR/QbUqaiPwf9P9d++nhFhN5MsjIgQT9/hwx0kpqdcFpoC6hEc9NwWWFwxeT6ILgsU2wfWf09w3dmwRKcCvYZjZbK2JgSgQBkb1drzOmHzocMvMqRvtd8fGi+N0tBD0h/1yEJuTBjOheMh/Ahl3cGtjXm7XsagmWdALWTZp1h06xzv5RYFOeZrTd0jApn2+cflBjlLb3dDay0y1KV90dXfM2rTmajhntyisr3eKShcA=
+      file: ${RELEASE_FILENAME}
+      skip_cleanup: true
+      on:
+        tags: true
+        all_branches: true
 
-deploy:
-  provider: releases
-  api_key:
-    secure: RVJGyTzT+pK7aNJPK/0GtooxRat1rDPsJblfbEHUaRKyiUIck9ONHDJps0WaRcdxj02lowTiB4DsZ4EYlMqnbbn7NvcyzbB7r+2LQV6kxug7g1NWXAuTRh5PzpI9AOtYYd4GRE2cVaabIqyxiIhx0vVAxfll4ABGVnO29Dzc/c8sjio5fGhTETzQJ6Cx9OPyByNFw8j1m8Kx/RCRKNKbIqXxXE0AfpcB2E7MEAf/2qPe95H4Pf9KUY8GvUd6wnLhxIX/iZWJvcnyG+vGsLf92FCx2z2G8obAnVjzyom3N7Pkmb7w74GFavQYFB103i5sqlo7MbNYh3oF6p05uIJXlTJdRHVmy2lz2w4eP1gLNYwHzVIr/xQmXn+HJb6VePr+t1MkPQzsEX1PWQ1vrHIgu2TJToD+DDwaZu4BAmUdmH1aGUnARqA7zXimmyTV8hZFrR/QbUqaiPwf9P9d++nhFhN5MsjIgQT9/hwx0kpqdcFpoC6hEc9NwWWFwxeT6ILgsU2wfWf09w3dmwRKcCvYZjZbK2JgSgQBkb1drzOmHzocMvMqRvtd8fGi+N0tBD0h/1yEJuTBjOheMh/Ahl3cGtjXm7XsagmWdALWTZp1h06xzv5RYFOeZrTd0jApn2+cflBjlLb3dDay0y1KV90dXfM2rTmajhntyisr3eKShcA=
-  file: 'bin/nxi'
-  skip_cleanup: true
-  on:
-    tags: true
-    all_branches: true
+  - os: osx
+    osx_image: xcode11
+    env:
+      - QT_PATH=/usr/local/Cellar/qt/5.13.0
+    before_install:
+      - brew install qt5
+      - brew link qt5 --force
+      - brew install p7zip
+    script:
+    - cmake -DNXI_QT_ROOT=${QT_PATH} -DSTZ_FILESYSTEM=ON .
+    - cmake --build . --target nxi --config Release
+    - 7z a -r ${RELEASE_FILENAME} ./bin/*
+    deploy:
+      provider: releases
+      api_key:
+        secure: RVJGyTzT+pK7aNJPK/0GtooxRat1rDPsJblfbEHUaRKyiUIck9ONHDJps0WaRcdxj02lowTiB4DsZ4EYlMqnbbn7NvcyzbB7r+2LQV6kxug7g1NWXAuTRh5PzpI9AOtYYd4GRE2cVaabIqyxiIhx0vVAxfll4ABGVnO29Dzc/c8sjio5fGhTETzQJ6Cx9OPyByNFw8j1m8Kx/RCRKNKbIqXxXE0AfpcB2E7MEAf/2qPe95H4Pf9KUY8GvUd6wnLhxIX/iZWJvcnyG+vGsLf92FCx2z2G8obAnVjzyom3N7Pkmb7w74GFavQYFB103i5sqlo7MbNYh3oF6p05uIJXlTJdRHVmy2lz2w4eP1gLNYwHzVIr/xQmXn+HJb6VePr+t1MkPQzsEX1PWQ1vrHIgu2TJToD+DDwaZu4BAmUdmH1aGUnARqA7zXimmyTV8hZFrR/QbUqaiPwf9P9d++nhFhN5MsjIgQT9/hwx0kpqdcFpoC6hEc9NwWWFwxeT6ILgsU2wfWf09w3dmwRKcCvYZjZbK2JgSgQBkb1drzOmHzocMvMqRvtd8fGi+N0tBD0h/1yEJuTBjOheMh/Ahl3cGtjXm7XsagmWdALWTZp1h06xzv5RYFOeZrTd0jApn2+cflBjlLb3dDay0y1KV90dXfM2rTmajhntyisr3eKShcA=
+      file: ${RELEASE_FILENAME}
+      skip_cleanup: true
+      on:
+        tags: true
+        all_branches: true
