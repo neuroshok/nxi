@@ -33,7 +33,8 @@ namespace ui::views
         void init_data();
         void init_event();
 
-        void dropEvent(QDropEvent* event) override;
+        void dropEvent(QDropEvent*) override;
+        void wheelEvent(QWheelEvent*) override;
 
         void add(tree_item*);
         void add(tree_item* item, tree_item* source_item);

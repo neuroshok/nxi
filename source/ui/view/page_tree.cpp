@@ -21,6 +21,7 @@
 #include <QPainter>
 #include <QtCore/QEvent>
 #include <QMouseEvent>
+#include <QWheelEvent>
 #include <include/nxi/page/custom.hpp>
 #include <include/ui/view/config.hpp>
 
@@ -126,6 +127,7 @@ namespace ui::views
         setEditTriggers(QAbstractItemView::EditKeyPressed);
         setSelectionMode(QAbstractItemView::ExtendedSelection);
         setFixedWidth(200);
+        setFrameShape(QFrame::NoFrame);
 
         setDragEnabled(true);
         setAcceptDrops(true);
@@ -171,9 +173,8 @@ namespace ui::views
         });
 
         // page focus
-        connect(this, &QTreeWidget::itemClicked, [this](QTreeWidgetItem* base_item, int)
+        connect(this, &QTreeWidget::currentItemChanged, [this](QTreeWidgetItem* base_item, QTreeWidgetItem* previous)
         {
-            nxi_trace_event("QTreeWidget::itemClicked");
             auto page_item = static_cast<ui::tree_page_item*>(base_item);
             page_item->page().focus();
         });
@@ -293,5 +294,14 @@ namespace ui::views
         }
 
         QTreeWidget::dropEvent(event);
+    }
+
+    void page_tree::wheelEvent(QWheelEvent* event)
+    {
+        QTreeWidgetItemIterator it(current_item());
+        if (event->delta() < 0) ++it;
+        else --it;
+        if (*it) setCurrentItem(*it);
+        QTreeWidget::wheelEvent(event);
     }
 } // nxw
