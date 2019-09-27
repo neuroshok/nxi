@@ -41,17 +41,17 @@ namespace ui::interfaces
             auto layout = new nxw::hbox_layout;
             setLayout(layout);
 
-            auto win_minimize = new nxw::icon_button(this, ":/button/minimize");
+            auto win_minimize = new nxw::icon_button(this, ":/icon/minimize");
             QObject::connect(win_minimize, &QPushButton::pressed, [this, &ui_core]()
             {
                 ui_core.window_system().minimize(window());
             });
 
-            auto win_close = new nxw::icon_button(this, ":/button/close");
+            auto win_close = new nxw::icon_button(this, ":/icon/close");
             QObject::connect(win_close, &QPushButton::pressed, &ui_core, &ui::core::quit);
 
             layout->addWidget(win_minimize);
-            layout->addWidget(new nxw::icon_button(this, ":/button/maximize"));
+            layout->addWidget(new nxw::icon_button(this, ":/icon/maximize"));
             layout->addWidget(win_close);
         }
     };
@@ -62,10 +62,14 @@ namespace ui::interfaces
     {
         nxi_trace("");
 
+        connect(&m_ui_core.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style){
+            style.update(this);
+        });
+
         QHBoxLayout* layout = new nxw::hbox_layout;
         setLayout(layout);
 
-        auto btn_menu = new nxw::icon_button(this, ":/button/menu");
+        auto btn_menu = new nxw::icon_button(this, ":/icon/menu");
 
 
         auto menu = new ui::menu{ this };
@@ -117,10 +121,10 @@ namespace ui::interfaces
         layout->addWidget(btn_menu);
         layout->addSpacing(64);
 
-        layout->addWidget(new nxw::icon_button(this, ":/button/previous"));
-        layout->addWidget(new nxw::icon_button(this, ":/button/next"));
-        layout->addWidget(new nxw::icon_button(this, ":/button/notification_none"));
-        layout->addWidget(new nxw::icon_button(this, ":/button/download"));
+        layout->addWidget(new nxw::icon_button(this, ":/icon/previous"));
+        layout->addWidget(new nxw::icon_button(this, ":/icon/next"));
+        layout->addWidget(new nxw::icon_button(this, ":/icon/message"));
+        layout->addWidget(new nxw::icon_button(this, ":/icon/download"));
 
         layout->addSpacing(16);
         layout->addWidget(m_context);

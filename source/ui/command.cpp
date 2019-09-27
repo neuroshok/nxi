@@ -10,7 +10,7 @@
 #include <QKeyEvent>
 #include <QLabel>
 #include <nxi/system/interface.hpp>
-#include <nxi/theme.hpp>
+#include <nxi/style.hpp>
 /*
 class zeta_widget : QWidget, nxw::stylable<zeta_widget>
 void theme::apply(widgte_type w)
@@ -23,6 +23,11 @@ namespace ui
     command::command(ui::core& ui_core)
         : ui_core_{ ui_core }
     {
+        //ui::interface_system::connect_theme(this);
+        connect(&ui_core.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style){
+            style.update(this);
+        });
+
         info_ = new QLabel(this);
         menu_ = new nxw::menu(this);
         menu_->setObjectName("ui_command_menu");
@@ -33,10 +38,6 @@ namespace ui
         menu_->setAttribute(Qt::WA_ShowWithoutActivating);
         menu_->hide();
 
-        connect(&ui_core_.nxi_core().interface_system(), &nxi::interface_system::event_load_theme, [this](const nxi::theme& theme)
-        {
-            theme.update(this);
-        });
 
         connect(this, &QLineEdit::editingFinished, [this]()
         {
@@ -75,7 +76,6 @@ namespace ui
         {
             setText(page.name());
         });
-
     }
 
     void command::resizeEvent(QResizeEvent* event)

@@ -63,7 +63,8 @@ namespace nxi
         add(nxi::command("nxi", "about", [this](){ nxi_core_.page_system().open_static("nxi/about");  }), main_cmd);
         add(nxi::command("nxi", "aboutgl", [this](){ nxi_core_.page_system().open_static("nxi/aboutgl", nxi::renderer_type::widget);  }), main_cmd);
 
-        add(nxi::command("nxi", "load_theme", [this](){ nxi_core_.interface_system().load_theme("nebula_space"); }), main_cmd);
+        add(nxi::command("nxi", "load_theme_ffx", [this](){ nxi_core_.interface_system().load_style("ffx"); }), main_cmd);
+        add(nxi::command("nxi", "load_theme_nebula", [this](){ nxi_core_.interface_system().load_style("nebula_space"); }), main_cmd);
 
         //nds::encoders::dot<>::encode<nds::console>(graph_);
 

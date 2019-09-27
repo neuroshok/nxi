@@ -15,6 +15,13 @@
 #include <ui/view/page_tree.hpp>
 
 #include <QMessageBox>
+#include <nxi/system/page.hpp>
+#include <nxi/type.hpp>
+
+#include <QBrush>
+#include <QImage>
+#include <QPalette>
+#include <QtGui/QPainter>
 
 namespace ui::interfaces
 {
@@ -22,6 +29,10 @@ namespace ui::interfaces
         : ui::interface("main")
         , ui_core_{ ui_core }
     {
+        connect(&ui_core_.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style){
+            style.update(this);
+        });
+
         auto main_layout = new nxw::vbox_layout;
         setLayout(main_layout);
 
@@ -33,12 +44,12 @@ namespace ui::interfaces
         page_bar_ = new ui::interfaces::page_bar(ui_core_);
 
         top_layout->addWidget(control_bar_);
-
         middle_layout->addWidget(page_bar_);
         middle_layout->addWidget(content_);
 
         main_layout->addLayout(top_layout);
         main_layout->addLayout(middle_layout);
+
 
         connect(&ui_core_.nxi_core(), &nxi::core::event_error, this, [](const QString& message)
         {
@@ -65,5 +76,23 @@ namespace ui::interfaces
             control_bar_->show();
             page_bar_->show();
         }
+    }
+
+    void main::paintEvent(QPaintEvent*)
+    {
+        /*
+        //ui_core_.nxi_core().interface_system().style().draw(this);
+        QImage image(ui_core_.nxi_core().interface_system().style().data().image);
+        image = image.transformed(QMatrix().rotate(90));
+
+        auto d_y = image.height() - height();
+
+        QRectF source(0.0, 0.0, image.width(), image.height());
+        QRectF target(0, -d_y, image.width(), image.height());
+
+
+        QPainter painter(this);
+        painter.fillRect(0, 0 ,width(), height(), ui_core_.nxi_core().interface_system().style().data().palette.base().color());
+        painter.drawImage(target, image, source);*/
     }
 } // ui::interfaces

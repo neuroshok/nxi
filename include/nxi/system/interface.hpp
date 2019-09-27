@@ -1,14 +1,14 @@
 #ifndef INCLUDE_NXI_SYSTEM_INTERFACE_HPP_NXI
 #define INCLUDE_NXI_SYSTEM_INTERFACE_HPP_NXI
 
-#include <nxi/theme.hpp>
+#include <nxi/style.hpp>
 
 #include <QObject>
 
 namespace nxi
 {
     class core;
-    class theme;
+    class style;
 
     class interface_system : public QObject
     {
@@ -19,16 +19,16 @@ namespace nxi
         void operator=(const interface_system&) = delete;
 
         void load();
-        void load_theme(const QString& name);
-        nxi::theme& theme();
+        void load_style(const QString& name);
+        nxi::style& style();
 
         signals:
-        void event_load_theme(const nxi::theme&);
+        void event_update_style(const nxi::style&);
 
     private:
 		nxi::core& nxi_core_;
 
-		nxi::theme theme_;
+		nxi::style style_;
     };
 } // nxi
 

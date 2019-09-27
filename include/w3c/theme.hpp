@@ -4,7 +4,7 @@
 
 #include <regex>
 #include <nxi/log.hpp>
-#include <nxi/config/json_loader.hpp>
+#include <nxi/utility/json_loader.hpp>
 
 #include <QColor>
 

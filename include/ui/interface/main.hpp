@@ -19,6 +19,8 @@ namespace ui::interfaces
 
         void toggle_fullmode() override;
 
+        void paintEvent(QPaintEvent*) override;
+
     private:
         ui::core& ui_core_;
 

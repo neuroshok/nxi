@@ -1,7 +1,7 @@
 #ifndef INCLUDE_NXI_STYLE_DATA_HPP_NXI
 #define INCLUDE_NXI_STYLE_DATA_HPP_NXI
 
-#include <nxi/config/json_loader.hpp>
+#include <nxi/utility/json_loader.hpp>
 
 #include <QColor>
 #include <QSize>

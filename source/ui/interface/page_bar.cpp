@@ -19,6 +19,12 @@ namespace ui::interfaces
         ui::interface("page_bar")
         , ui_core_{ ui_core }
     {
+        /*
+        connect(&ui_core_.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style){
+            style.update(this);
+            style.update(page_tree_);
+        });*/
+
         if (ui_core_.nxi_core().config().browser.interface.show_page_bar.get()) show();
         //else hide();
 

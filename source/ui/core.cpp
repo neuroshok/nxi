@@ -3,7 +3,7 @@
 #include <nxi/core.hpp>
 #include <nxi/database.hpp>
 #include <nxi/system/interface.hpp>
-#include <nxi/theme.hpp>
+#include <nxi/style.hpp>
 #include <nxi/log.hpp>
 
 #include <ui/system/page.hpp>
@@ -45,18 +45,6 @@ namespace ui
         systray_->show();
 
         connect(&nxi_core_, &nxi::core::event_quit, this, &core::quit);
-
-        connect(&nxi_core_.interface_system(), &nxi::interface_system::event_load_theme, [](const nxi::theme& theme)
-        {
-            const QWidgetList top_widgets = QApplication::topLevelWidgets();
-            for (auto top_widget : top_widgets)
-            {
-                for (auto widget : top_widget->findChildren<QWidget*>())
-                {
-                    theme.apply(widget);
-                }
-            }
-        });
     }
 
     void core::quit()

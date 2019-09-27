@@ -1,7 +1,7 @@
 #include <nxi/system/interface.hpp>
 
 #include <nxi/core.hpp>
-#include <nxi/theme.hpp>
+#include <nxi/style.hpp>
 
 namespace nxi
 {
@@ -12,15 +12,15 @@ namespace nxi
 
     void interface_system::load(){}
 
-    void interface_system::load_theme(const QString& name)
+    void interface_system::load_style(const QString& name)
     {
-        theme_ = nxi::theme{ name };
-        theme_.load();
-        emit event_load_theme(theme_);
+        style_ = nxi::style{ name };
+        style_.load();
+        emit event_update_style(style_);
     }
 
-    nxi::theme& interface_system::theme()
+    nxi::style& interface_system::style()
     {
-        return theme_;
+        return style_;
     }
 } // nxi
