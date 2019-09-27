@@ -3,6 +3,16 @@
         <file alias="nex">graphic/nex.png</file>
         <file alias="node">graphic/node.png</file>
     </qresource>
+    <qresource prefix="/icon">
+        <file alias="menu">icon/menu24.png</file>
+        <file alias="next">icon/next24.png</file>
+        <file alias="download">icon/download24.png</file>
+        <file alias="message">icon/message24.png</file>
+        <file alias="previous">icon/previous24.png</file>
+        <file alias="minimize">icon/minimize24.png</file>
+        <file alias="maximize">icon/maximize24.png</file>
+        <file alias="close">icon/close24.png</file>
+    </qresource>
     <qresource prefix="/button">
         <file alias="menu">graphic/menu.png</file>
         <file alias="page_new">graphic/page_new.png</file>
