@@ -1,4 +1,8 @@
 <RCC>
+    <qresource prefix="/style">
+        <file alias="background">style/background.png</file>
+    </qresource>
+
     <qresource prefix="/image">
         <file alias="nex">graphic/nex.png</file>
         <file alias="node">graphic/node.png</file>

@@ -10,6 +10,13 @@ namespace ui
     class interface : public QWidget
     {
     public:
+        struct style_type
+        {
+            QColor background_color = {238, 238, 238};
+            QImage background_image;
+        } style_data;
+
+    public:
         interface(const QString& name = "default");
         interface(const QString& name, ui::window*);
 

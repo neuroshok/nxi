@@ -1,5 +1,6 @@
 #include <nxi/system/interface.hpp>
 
+#include <QApplication>
 #include <nxi/core.hpp>
 #include <nxi/style.hpp>
 
@@ -14,13 +15,14 @@ namespace nxi
 
     void interface_system::load_style(const QString& name)
     {
-        style_ = nxi::style{ name };
-        style_.load();
-        emit event_update_style(style_);
+        auto style = new nxi::style(name);
+        style->load();
+        QApplication::setStyle(style); // QApplication own style
+        emit event_update_style(*style);
     }
 
     nxi::style& interface_system::style()
     {
-        return style_;
+        return *static_cast<nxi::style*>(QApplication::style());
     }
 } // nxi

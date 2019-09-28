@@ -9,7 +9,8 @@
 
 #include <nxw/hbox_layout.hpp>
 #include <nxw/icon_button.hpp>
-#include <ui/menu.hpp>
+#include <nxw/menu.hpp>
+#include <nxw/menu/item.hpp>
 #include <include/ui/interface/control_bar.hpp>
 #include <ui/view/web.hpp>
 #include <QWebEngineView>
@@ -62,26 +63,24 @@ namespace ui::interfaces
     {
         nxi_trace("");
 
-        connect(&m_ui_core.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style){
-            style.update(this);
-        });
-
         QHBoxLayout* layout = new nxw::hbox_layout;
         setLayout(layout);
 
         auto btn_menu = new nxw::icon_button(this, ":/icon/menu");
 
 
-        auto menu = new ui::menu{ this };
-        menu->add<ui::menu_item>("new window", [&ui_core](){ ui_core.nxi_core().window_system().add({}); });
-        menu->add(ui_core.nxi_core().command_system().get("config"));
+        auto menu = new nxw::menu{ this };
+        menu->add<nxw::menu_item>("new window", [&ui_core](){ ui_core.nxi_core().window_system().add({}); });
+        menu->add<nxw::menu_item>(ui_core.nxi_core().command_system().get("quit").name(), ui_core.nxi_core().command_system().get("quit").function() );
+
+/*        menu->add(ui_core.nxi_core().command_system().get("config"));
         menu->add(ui_core.nxi_core().command_system().get("about"));
-        menu->add<ui::menu_separator>();
+        //menu->add<nxw::menu_separator>();
         menu->add(ui_core.nxi_core().command_system().get("quit"));
         menu->add(ui_core.nxi_core().command_system().get("test"));
-        menu->show_at(btn_menu);
+        menu->show_at(btn_menu);*/
 
-        QObject::connect(btn_menu, &nxw::icon_button::clicked, menu, &ui::menu::exec);
+        QObject::connect(btn_menu, &nxw::icon_button::clicked, menu, &nxw::menu::exec);
         //menu->add(nxi::command::get("nxi", "quit"), customwidget);
 
 

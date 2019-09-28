@@ -84,17 +84,17 @@ namespace nxw
     {
         if (!item_count()) return;
         if (item_index_ < 0) item_index_ = 0;
-        item_at(item_index_)->set_state(menu_item::states::idle);
+        //item_at(item_index_)->set_state(menu_item::states::idle);
         item_previous();
-        item_at(item_index_)->set_state(menu_item::states::selected);
+        //item_at(item_index_)->set_state(menu_item::states::selected);
     }
     void menu::select_next()
     {
         if (!item_count()) return;
         if (item_index_ < 0) item_index_ = item_count() - 1;
-        item_at(item_index_)->set_state(menu_item::states::idle);
+        //item_at(item_index_)->set_state(menu_item::states::idle);
         item_next();
-        item_at(item_index_)->set_state(menu_item::states::selected);
+        //item_at(item_index_)->set_state(menu_item::states::selected);
     }
 
 

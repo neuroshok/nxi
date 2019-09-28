@@ -2,7 +2,8 @@
 #define INCLUDE_NXW_MENU_HPP_NXI
 
 #include <functional>
-
+#include <nxw/vbox_layout.hpp>
+#include <QPalette>
 #include <QWidget>
 
 class QString;
@@ -11,11 +12,23 @@ namespace nxw
 {
     class menu_item;
     class hbox_layout;
-    class vbox_layout;
 
     class menu : public QWidget
     {
         Q_OBJECT
+    public:
+        struct style_type
+        {
+            QColor background_color{ 200, 200, 200 };
+            QColor item_text_color{ 0, 0, 0 };
+            QColor item_text_color_hover{ 0, 0, 0 };
+            QColor item_background_color_hover{ 150, 150, 150 };
+            QColor item_background_color_selected{ 100, 100, 200 };
+
+            int item_height{ 120 };
+            int item_text_size{ 24 };
+        } style_data;
+
     public:
         menu(QWidget* parent);
 
@@ -58,7 +71,7 @@ namespace nxw
     template<class Widget, class... Args>
     void menu::add(Args&&... args)
     {
-        auto widget = new Widget(std::forward<Args>(args)...);
+        auto widget = new Widget(this, std::forward<Args>(args)...);
         item_layout_->addWidget(widget);
     }
 } // nxw

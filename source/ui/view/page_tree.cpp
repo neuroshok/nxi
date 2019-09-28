@@ -298,10 +298,11 @@ namespace ui::views
 
     void page_tree::wheelEvent(QWheelEvent* event)
     {
+        /*
         QTreeWidgetItemIterator it(current_item());
         if (event->delta() < 0) ++it;
         else --it;
-        if (*it) setCurrentItem(*it);
+        if (*it) setCurrentItem(*it);*/
         QTreeWidget::wheelEvent(event);
     }
 } // nxw

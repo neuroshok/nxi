@@ -27,8 +27,6 @@ namespace nxi
 
     private:
 		nxi::core& nxi_core_;
-
-		nxi::style style_;
     };
 } // nxi
 

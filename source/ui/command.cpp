@@ -8,26 +8,16 @@
 #include <nxw/menu/item.hpp>
 
 #include <QKeyEvent>
+#include <QPaintEvent>
 #include <QLabel>
 #include <nxi/system/interface.hpp>
 #include <nxi/style.hpp>
-/*
-class zeta_widget : QWidget, nxw::stylable<zeta_widget>
-void theme::apply(widgte_type w)
-{
-
-}*/
 
 namespace ui
 {
     command::command(ui::core& ui_core)
         : ui_core_{ ui_core }
     {
-        //ui::interface_system::connect_theme(this);
-        connect(&ui_core.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style){
-            style.update(this);
-        });
-
         info_ = new QLabel(this);
         menu_ = new nxw::menu(this);
         menu_->setObjectName("ui_command_menu");
@@ -123,15 +113,10 @@ namespace ui
         if (focused_page.has_value()) setText(focused_page.value()->name());
     }
 
-    bool command::event(QEvent *event)
+    void command::paintEvent(QPaintEvent* event)
     {
-        /*
-        if (event->type() == QEvent::PaletteChange)
-        {
-            auto pal = ui_core_.nxi_core().interface_system().theme().palette(this);
-            //menu_->setStyleSheet("background-color: " ui_core_.interface)
-        }*/
 
-        return QLineEdit::event(event);
+
+        QLineEdit::paintEvent(event);
     }
 } // ui

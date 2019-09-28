@@ -29,7 +29,8 @@ namespace ui::interfaces
         : ui::interface("main")
         , ui_core_{ ui_core }
     {
-        connect(&ui_core_.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style){
+        connect(&ui_core_.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style)
+        {
             style.update(this);
         });
 
@@ -80,19 +81,15 @@ namespace ui::interfaces
 
     void main::paintEvent(QPaintEvent*)
     {
-        /*
-        //ui_core_.nxi_core().interface_system().style().draw(this);
-        QImage image(ui_core_.nxi_core().interface_system().style().data().image);
-        image = image.transformed(QMatrix().rotate(90));
+        auto& image = style_data.background_image;
 
         auto d_y = image.height() - height();
 
         QRectF source(0.0, 0.0, image.width(), image.height());
         QRectF target(0, -d_y, image.width(), image.height());
 
-
         QPainter painter(this);
-        painter.fillRect(0, 0 ,width(), height(), ui_core_.nxi_core().interface_system().style().data().palette.base().color());
-        painter.drawImage(target, image, source);*/
+        painter.fillRect(0, 0 ,width(), height(), style_data.background_color);
+        painter.drawImage(target, image, source);
     }
 } // ui::interfaces

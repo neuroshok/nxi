@@ -8,45 +8,38 @@
 
 #include <QColor>
 
-struct color
+namespace w3c
 {
-    color() {}
-    color(const QString& input)
+    struct color : public QColor
     {
-        if (input.size() > 0 && input[0] == '#')
+        color() = default;
+        color(const QString& input) : QColor(init_color(input))
         {
-            QColor c{input};
-            r = c.red();
-            g = c.green();
-            b = c.blue();
-            a = c.alpha();
-        }
-        else
-        {
-            std::regex rgx(R"__(^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+\.?\d*)\s*\)$)__");
 
-            std::smatch match;
-            auto str = input.toStdString();
-            if (std::regex_search(str, match, rgx))
+        }
+
+        QColor init_color(const QString& input)
+        {
+            if (input[0] == 'r')
             {
-                r = std::stoi(match[1]);
-                g = std::stoi(match[2]);
-                b = std::stoi(match[3]);
-                a = std::stof(match[4]) * 255;
-            } else nxi_warning("can't parse color '{}'", str);
+                QColor color;
+                std::regex rgx(R"__(^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+\.?\d*)\s*\)$)__");
+
+                std::smatch match;
+                auto str = input.toStdString();
+                if (std::regex_search(str, match, rgx))
+                {
+                    color.setRed(std::stoi(match[1]));
+                    color.setGreen(std::stoi(match[2]));
+                    color.setBlue(std::stoi(match[3]));
+                    color.setAlpha(std::stof(match[4]) * 255);
+                } else nxi_warning("can't parse color '{}'", str);
+                return color;
+            }
+            return QColor(input);
         }
-    }
-
-    QColor toQColor() const
-    {
-        return QColor(r, g, b, a);
-    }
-    int r = 0;
-    int g = 0;
-    int b = 0;
-    int a = 255;
-};
-
+    };
+} // w3c
 
 
 //! https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme
@@ -68,24 +61,27 @@ namespace w3c
         nxi_json_close(images)
 
         nxi_json_open(colors)
-            //!* The color of text and icons in the bookmark and find bars. Also, if tab_text isn't defined it sets
+            //! The color of text and icons in the bookmark and find bars. Also, if tab_text isn't defined it sets
             //! the color of the active tab text and if icons isn't defined the color of the toolbar icons.
             //! Provided as Chrome compatible alias for toolbar_text.
-            nxi_json_key(bookmark_text, ::color)
-            nxi_json_key(button_background_active, ::color)
-            nxi_json_key(button_background_hover, ::color)
+            nxi_json_key(bookmark_text, w3c::color)
+            nxi_json_key(button_background_active, w3c::color)
+            nxi_json_key(button_background_hover, w3c::color)
 
 
-            nxi_json_key(frame, ::color)
-            nxi_json_key(tab_background_text, ::color)
+            nxi_json_key(frame, w3c::color)
+            nxi_json_key(tab_background_text, w3c::color)
 
+            //! The background color of popups (such as the url bar dropdown and the arrow panels).
+            nxi_json_key(popup, w3c::color)
+            nxi_json_key(popup_border, w3c::color)
+            nxi_json_key(popup_highlight, w3c::color)
+            nxi_json_key(popup_highlight_text, w3c::color)
+            nxi_json_key(popup_text, w3c::color)
 
-            nxi_json_key(popup, ::color)
-            nxi_json_key(popup_text, ::color)
-
-            nxi_json_key(toolbar_field, ::color)
-            nxi_json_key(toolbar_field_text, ::color)
-            nxi_json_key(toolbar_text, ::color)
+            nxi_json_key(toolbar_field, w3c::color)
+            nxi_json_key(toolbar_field_text, w3c::color)
+            nxi_json_key(toolbar_text, w3c::color)
         nxi_json_close(colors)
     };
 } // w3c

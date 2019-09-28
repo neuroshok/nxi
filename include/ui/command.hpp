@@ -12,6 +12,7 @@ class QEvent;
 #include <QEvent>
 
 namespace nxw { class menu; }
+namespace nxi { class style; }
 
 namespace ui
 {
@@ -30,7 +31,7 @@ namespace ui
 
         void focusOutEvent(QFocusEvent* event) override;
 
-        bool event(QEvent* event) override;
+        void paintEvent(QPaintEvent*) override;
 
     private:
         ui::core& ui_core_;

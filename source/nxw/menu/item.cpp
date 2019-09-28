@@ -6,43 +6,21 @@
 #include <QVariant>
 #include <QStyle>
 #include <QDebug>
+#include <QPainter>
+#include <nxi/style.hpp>
+#include <nxw/menu.hpp>
 
 namespace nxw
 {
-    menu_item::menu_item(const QString& str_name, std::function<void()> command, const QString& str_icon) :
-        command_{ std::move(command) }
+    menu_item::menu_item(nxw::menu* menu, const QString& str_name, std::function<void()> command, const QString& str_icon)
+        : menu_{ menu }
+        , command_{ std::move(command) }
+        , text_{ str_name }
     {
-        auto layout_ = new nxw::hbox_layout;
-        setLayout(layout_);
-
-
-        auto icon = new QLabel(this);
-        if (!str_icon.isEmpty())
-        {
-            icon->setPixmap(QPixmap(str_icon).scaledToWidth(16));
-        }
-        icon->setFixedWidth(24);
-
-        auto label = new QLabel(this);
-        label->setText(str_name);
-
-        layout_->addWidget(icon);
-        layout_->addWidget(label);
-        layout_->addStretch(1);
+        setFixedHeight(menu->style_data.item_height);
     }
 
-    void menu_item::set_state(states state)
-    {
-        switch (state)
-        {
-            case states::idle: setProperty("state", QVariant::fromValue(QString("idle"))); break;
-            case states::hover: setProperty("state", QVariant::fromValue(QString("hover"))); break;
-            case states::selected: setProperty("state", QVariant::fromValue(QString("selected"))); break;
-        }
 
-        style()->unpolish(this);
-        style()->polish(this);
-    }
 
     void menu_item::mouseReleaseEvent(QMouseEvent* event)
     {
@@ -52,15 +30,43 @@ namespace nxw
 
     void menu_item::enterEvent(QEvent *event)
     {
-
-        //ui::theme_system::apply<theme_system::w3c::icons>("")
-        //set_state(states::hover);
-        QWidget::enterEvent(event);
+        states_.setFlag(QStyle::State_MouseOver);
+        update();
     }
 
     void menu_item::leaveEvent(QEvent *event)
     {
+        states_.setFlag(QStyle::State_MouseOver, false);
+        update();
+    }
 
-        QWidget::leaveEvent(event);
+    const QString& menu_item::text() const
+    {
+        return text_;
+    }
+
+    void menu_item::paintEvent(QPaintEvent* event)
+    {
+        QColor background_color = menu_->style_data.background_color;
+        QColor text_color = menu_->style_data.item_text_color;
+        if (states_.testFlag(QStyle::State_MouseOver))
+        {
+            background_color = menu_->style_data.item_background_color_hover;
+            text_color = menu_->style_data.item_text_color_hover;
+        }
+
+        QPainter painter(this);
+        painter.fillRect(rect(), background_color);
+
+        QFont font = painter.font();
+        font.setPixelSize(height() / 2);
+        painter.setFont(font);
+        painter.setPen(text_color);
+        painter.drawText(rect(), Qt::AlignVCenter, text_);
+    }
+
+    void menu_item::set_text(const QString& text)
+    {
+        text_ = text;
     }
 } // nxw
