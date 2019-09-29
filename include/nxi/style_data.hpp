@@ -18,7 +18,7 @@ namespace nxi
 
         nxi_json_open(field)
             nxi_json_key(background_color, QColor, (34, 34, 34) )
-            nxi_json_key(background_color_focus, QColor, (34, 34, 34) )
+            nxi_json_key(background_color_focus, QColor, (50, 50, 50) )
             nxi_json_key(text_color, QColor, (34, 34, 34) )
             nxi_json_key(text_color_focus, QColor, (34, 34, 34) )
         nxi_json_close(field)

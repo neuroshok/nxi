@@ -19,8 +19,10 @@ namespace nxi
         void operator=(const interface_system&) = delete;
 
         void load();
-        void load_style(const QString& name);
+        void load_style(const QString& name = "nxi");
         nxi::style& style();
+
+        std::vector<QString> styles() const;
 
         signals:
         void event_update_style(const nxi::style&);

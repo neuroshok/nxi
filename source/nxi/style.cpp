@@ -112,6 +112,7 @@ namespace nxi
     void style::from_w3c(w3c::theme& theme)
     {
         data_.background_image.set(QImage(path() + theme.images.theme_frame.get()));
+        map_color(theme.colors.frame, data_.background_color);
 
         map_color(theme.colors.popup, data_.menu.background_color);
         //map_color(theme.colors.popup_border, data_.menu.background_color);
@@ -127,6 +128,7 @@ namespace nxi
     void style::polish(QPalette& palette)
     {
         QPainter painter;
+        palette.setColor(QPalette::Text, data_.text_color.get());
         palette.setColor(QPalette::ColorRole::Base, Qt::transparent);
     }
 
@@ -156,13 +158,14 @@ namespace nxi
                 backgroundGradient.setColorAt(0.0, field_background_color);
                 backgroundGradient.setColorAt(1.0, QColor(0, 0, 0));
 
+                painter->fillRect(option->rect, backgroundGradient);
+                /*
                 painter->setRenderHint(QPainter::Antialiasing);
                 QPainterPath path;
-
                 path.addRoundedRect(0, 0, option->rect.width(), option->rect.height(), 5, 5);
 
                 painter->fillPath(path, backgroundGradient);
-                painter->drawPath(path);
+                painter->drawPath(path);*/
 
             }
             break;
