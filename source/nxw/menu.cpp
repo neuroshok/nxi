@@ -26,8 +26,10 @@ namespace nxw
         item_layout_->setAlignment(item_layout_, Qt::AlignTop);
 
         bottom_layout_ = new nxw::hbox_layout;
+        top_layout_ = new nxw::hbox_layout;
 
         auto main_layout = new nxw::vbox_layout;
+        main_layout->addLayout(top_layout_);
         main_layout->addLayout(item_layout_);
         main_layout->addLayout(bottom_layout_);
         setLayout(main_layout);
@@ -58,6 +60,11 @@ namespace nxw
     void menu::add_bottom(QWidget* widget)
     {
         bottom_layout_->addWidget(widget);
+    }
+
+    void menu::add_top(QWidget* widget)
+    {
+        top_layout_->addWidget(widget);
     }
 
     void menu::show_at(QWidget* widget)

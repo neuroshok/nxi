@@ -47,7 +47,7 @@ namespace ui
 
     void menu::add(const nxi::command& command)
     {
-        add<ui::menu_item>(command.name(), command.function(), command.icon());
+        add<ui::menu_item>(command.name(), [&command](){ command.exec(); }, command.icon());
     }
 
     void menu::add(const QString& action_name, std::function<void()> function)

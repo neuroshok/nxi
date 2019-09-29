@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <nxi/core.hpp>
 #include <nxi/style.hpp>
+#include <QDir>
 
 namespace nxi
 {
@@ -11,7 +12,10 @@ namespace nxi
     {}
 
 
-    void interface_system::load(){}
+    void interface_system::load()
+    {
+        load_style();
+    }
 
     void interface_system::load_style(const QString& name)
     {
@@ -24,5 +28,13 @@ namespace nxi
     nxi::style& interface_system::style()
     {
         return *static_cast<nxi::style*>(QApplication::style());
+    }
+
+    std::vector<QString> interface_system::styles() const
+    {
+        std::vector<QString> styles;
+        QDir dir ("./module/theme/");
+        QStringList list = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        return list.toVector().toStdVector();
     }
 } // nxi

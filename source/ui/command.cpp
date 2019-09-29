@@ -17,42 +17,58 @@ namespace ui
 {
     command::command(ui::core& ui_core)
         : ui_core_{ ui_core }
+        , input_{ ui_core_.nxi_core().command_system() }
     {
         info_ = new QLabel(this);
+        header_ = new QLabel(this);
         menu_ = new nxw::menu(this);
         menu_->setObjectName("ui_command_menu");
         menu_->show_at(this);
 
+        menu_->add_top(header_);
         menu_->add_bottom(info_);
         menu_->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
         menu_->setAttribute(Qt::WA_ShowWithoutActivating);
         menu_->hide();
 
+        connect(this, &QLineEdit::returnPressed, [this]()
+        {
+            input_.exec();
+            setText(input_.text());
+            header_->setText(input_.state_text());
+            if (input_.state() == nxi::command_input::states::action) menu_->hide();
+        });
+
 
         connect(this, &QLineEdit::editingFinished, [this]()
         {
-            menu_->hide();
+            //menu_->hide();
         });
 
         connect(this, &QLineEdit::textChanged, [this]()
         {
             if (!hasFocus()) return;
 
-            input_ = text();
+            input_.update(text());
             menu_->clear();
-            auto result = ui_core_.nxi_core().command_system().search(input_);
-            if (result.size() > 0)
-            {
-                for (auto command : result)
-                {
-                    menu_->add<nxw::menu_item>(command->name(), command->function(), command->icon());
-                }
 
+            if (input_.state() == nxi::command_input::states::action)
+            {
+                for (auto command : input_.suggestions())
+                {
+                    menu_->add<nxw::menu_item>(command->name(), [&command](){ command->exec(); }, command->icon());
+                }
             }
-            info_->setText("results : " + QString::number(result.size()));
+            if (input_.state() == nxi::command_input::states::param)
+            {
+                for (auto item : input_.param_suggestions()) menu_->add<nxw::menu_item>(item, [](){});
+            }
+
+            header_->setText(input_.text());
+            info_->setText("results : " + QString::number(input_.suggestion_count()));
             menu_->exec();
 
-            if (input_.isEmpty())
+            if (input_.is_empty())
             {
                 auto focused_page = ui_core_.nxi_core().page_system().focus();
                 blockSignals(true);
@@ -100,7 +116,7 @@ namespace ui
     void command::enterEvent(QEvent* event)
     {
         if (hasFocus()) return;
-        if (!input_.isEmpty()) return;
+        if (!input_.is_empty()) return;
         auto focused_page = ui_core_.nxi_core().page_system().focus();
         if (focused_page.has_value()) setText(focused_page.value()->command());
     }
@@ -108,7 +124,7 @@ namespace ui
     void command::leaveEvent(QEvent* event)
     {
         if (hasFocus()) return;
-        if (!input_.isEmpty()) return;
+        if (!input_.is_empty()) return;
         auto focused_page = ui_core_.nxi_core().page_system().focus();
         if (focused_page.has_value()) setText(focused_page.value()->name());
     }

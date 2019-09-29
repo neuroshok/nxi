@@ -41,6 +41,7 @@ namespace nxw
         void add(const QString& action_name, std::function<void()> function);
         void add(QWidget* widget);
         void add_bottom(QWidget* widget);
+        void add_top(QWidget* widget);
 
         void select_previous();
         void select_next();
@@ -59,6 +60,7 @@ namespace nxw
         nxw::vbox_layout* item_layout_;
 
         nxw::hbox_layout* bottom_layout_;
+        nxw::hbox_layout* top_layout_;
         QWidget* widget_origin_;
 
         size_t max_items_;

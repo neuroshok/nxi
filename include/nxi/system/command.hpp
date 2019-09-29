@@ -12,6 +12,7 @@
 
 #include <nds/graph.hpp>
 
+#include <nxi/system/command.hpp>
 namespace nxi
 {
 	class core;

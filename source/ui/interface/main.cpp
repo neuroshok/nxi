@@ -22,6 +22,7 @@
 #include <QImage>
 #include <QPalette>
 #include <QtGui/QPainter>
+#include <ui/command.hpp>
 
 namespace ui::interfaces
 {
@@ -41,11 +42,12 @@ namespace ui::interfaces
         auto middle_layout = new nxw::hbox_layout(this);
 
         content_ = new interfaces::content(ui_core_);
-        control_bar_ = new ui::interfaces::control_bar(ui_core_);
-        page_bar_ = new ui::interfaces::page_bar(ui_core_);
+        //control_bar_ = new ui::interfaces::control_bar(ui_core_);
+        //page_bar_ = new ui::interfaces::page_bar(ui_core_);
 
-        top_layout->addWidget(control_bar_);
-        middle_layout->addWidget(page_bar_);
+        //top_layout->addWidget(control_bar_);
+        top_layout->addWidget(new ui::command(ui_core_));
+        //middle_layout->addWidget(page_bar_);
         middle_layout->addWidget(content_);
 
         main_layout->addLayout(top_layout);

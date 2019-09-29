@@ -71,7 +71,7 @@ namespace ui::interfaces
 
         auto menu = new nxw::menu{ this };
         menu->add<nxw::menu_item>("new window", [&ui_core](){ ui_core.nxi_core().window_system().add({}); });
-        menu->add<nxw::menu_item>(ui_core.nxi_core().command_system().get("quit").name(), ui_core.nxi_core().command_system().get("quit").function() );
+        menu->add<nxw::menu_item>(ui_core.nxi_core().command_system().get("quit").name(), [&ui_core](){  ui_core.nxi_core().command_system().get("quit").exec(); } );
 
 /*        menu->add(ui_core.nxi_core().command_system().get("config"));
         menu->add(ui_core.nxi_core().command_system().get("about"));
@@ -91,15 +91,6 @@ namespace ui::interfaces
         m_context->hide();
 
         command_bar_ = new ui::command(m_ui_core);
-        QObject::connect(command_bar_, &QLineEdit::returnPressed, [this]()
-        {
-            nxi::command_context context = nxi::command_context::deduced;
-            if (m_context->currentText() == "web") context = nxi::command_context::web;
-            if (m_context->currentText() == "explorer") context = nxi::command_context::explorer;
-
-            m_ui_core.nxi_core().command_system().exec(command_bar_->text(), context);
-        });
-
 
         // module command
         // init

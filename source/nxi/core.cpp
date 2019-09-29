@@ -29,6 +29,7 @@ namespace nxi
         command_system_.load();
         window_system_.load();
         page_system_.load();
+        interface_system_.load();
     }
 
     void core::quit() const

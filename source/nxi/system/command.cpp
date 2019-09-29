@@ -53,18 +53,36 @@ namespace nxi
         auto main_cmd = graph_.add(nxi::command("nxi", "command_node", std::bind(&nxi::core::quit, &nxi_core_)));
 
         // test cmd
-        add(nxi::command("nxi", "test", []()
+        add(nxi::command("nxi", "test", [](const nxi::command_params&)
         {
              qDebug() << "TEST PAGE";
         }), main_cmd);
 
-        add(nxi::command("nxi", "quit", std::bind(&nxi::core::quit, &nxi_core_), ":/button/quit"), main_cmd);
-        add(nxi::command("nxi", "config", [this](){ nxi_core_.page_system().open_static("nxi/config", nxi::renderer_type::widget);  }, ":/image/nex"), main_cmd);
-        add(nxi::command("nxi", "about", [this](){ nxi_core_.page_system().open_static("nxi/about");  }), main_cmd);
-        add(nxi::command("nxi", "aboutgl", [this](){ nxi_core_.page_system().open_static("nxi/aboutgl", nxi::renderer_type::widget);  }), main_cmd);
+        add(nxi::command("nxi", "quit", [this](const nxi::command_params&){ nxi_core_.quit(); }, ":/button/quit"), main_cmd);
+        add(nxi::command("nxi", "config", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/config", nxi::renderer_type::widget);  }, ":/image/nex"), main_cmd);
+        add(nxi::command("nxi", "about", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/about");  }), main_cmd);
+        add(nxi::command("nxi", "aboutgl", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/aboutgl", nxi::renderer_type::widget);  }), main_cmd);
 
-        add(nxi::command("nxi", "load_theme_ffx", [this](){ nxi_core_.interface_system().load_style("ffx"); }), main_cmd);
-        add(nxi::command("nxi", "load_theme_nebula", [this](){ nxi_core_.interface_system().load_style("nebula_space"); }), main_cmd);
+        /*add(nxi::command("nxi", "light_ui", [this](const nxi::command_params&){
+            nxi_core_.interface_system().set_mode(1);
+        }), main_cmd);*/
+
+        auto node_nxi = add(nxi::command("nxi", "nxi", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/about"); }));
+        auto node_theme = add(nxi::command("nxi", "theme", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/about"); }), node_nxi);
+
+
+        auto theme_load = nxi::command("nxi", "load", [this](const nxi::command_params& params)
+        {
+            auto style_name = params.get(0);
+            nxi_core_.interface_system().load_style(style_name);
+        });
+        theme_load.add_param("name", nxi_core_.interface_system().styles());
+
+        add(std::move(theme_load), node_theme);
+        add(nxi::command("nxi", "load_theme_nebula", [this](const nxi::command_params&){ nxi_core_.interface_system().load_style("nebula_space"); }), main_cmd);
+
+        //auto cmd_page = add(nxi::command("nxi", "page", [this](const nxi::command_params&){ nxi_core_.page_system().focus(); }), main_cmd);
+        //cmd_page->get().add_param("page_id", nxi_core_.page_system().get());
 
         //nds::encoders::dot<>::encode<nds::console>(graph_);
 

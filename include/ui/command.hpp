@@ -10,6 +10,8 @@ class QKeyEvent;
 class QEvent;
 
 #include <QEvent>
+#include <include/nxi/system/command.hpp>
+#include <nxi/command/input.hpp>
 
 namespace nxw { class menu; }
 namespace nxi { class style; }
@@ -35,10 +37,11 @@ namespace ui
 
     private:
         ui::core& ui_core_;
-        QString input_;
+        nxi::command_input input_;
 
         nxw::menu* menu_;
         QLabel* info_;
+        QLabel* header_;
     };
 } // ui
 

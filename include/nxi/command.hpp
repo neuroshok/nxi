@@ -12,10 +12,35 @@ namespace nxi
 {
 	class core;
 
+	struct command_node
+    {
+	    command_node(const QString& module_name, const QString& node_name)
+        {
+
+        }
+    };
+
+	class command_params
+    {
+    public:
+        command_params() = default;
+
+        void add(const QString& value) { values_.push_back(value); }
+        auto get(int index) const { return values_[index]; }
+        void clear() { values_.clear(); }
+
+    private:
+        std::vector<QString> values_;
+    };
+
 	class command
 	{
 	public:
-		command(const QString& module_name, const QString& action_name, std::function<void()> fn, const QString& icon = ":/image/nex");
+	    using function_type = std::function<void(const nxi::command_params&)>;
+	    using params_type = std::vector<QString>;
+	    using param_suggestions_type = std::vector<std::vector<QString>>;
+
+		command(const QString& module_name, const QString& action_name, function_type fn, const QString& icon = ":/image/nex");
         command(command&&) = default;
         command& operator=(command&&) = default;
 
@@ -23,21 +48,31 @@ namespace nxi
         command& operator=(const command&) = delete;
 
 		void exec() const;
+		void exec(const nxi::command_params&) const;
+
+		void add_param(const QString&, std::vector<QString> = {});
+		const std::vector<QString>& param_suggestions(int index);
+		params_type params() const;
+
 
         const QString& name() const;
         const QString& module_name() const;
         const QString& action_name() const;
         const QString& icon() const;
-        const std::function<void()>& function() const;
+        const function_type& function() const;
 
 	private:
 		QString module_name_;
 		QString action_name_;
 		QString name_;
-		std::function<void()> function_;
+		function_type function_;
+		params_type params_;
+		param_suggestions_type param_suggestions_;
 
         QString icon_;
         QString description_;
+
+
         // shortcut
 
 		/*
