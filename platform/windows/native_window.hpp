@@ -13,7 +13,7 @@ namespace platform::windows
     public:
         explicit native_window(QWidget* parent = 0);
         void set_grip(QWidget* widget);
-:
+
         void setContentsMargins(const QMargins &margins);
         void setContentsMargins(int left, int top, int right, int bottom);
         QMargins contentsMargins() const;
