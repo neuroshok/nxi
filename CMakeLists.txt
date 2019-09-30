@@ -134,6 +134,9 @@ if (NXI_TARGET_DESKTOP)
     # sources
     if (WIN32)
         set(NXI_ICON "${PROJECT_SOURCE_DIR}/resource/icon.rc" "${PROJECT_SOURCE_DIR}/resource/icon.ico")
+        file(GLOB_RECURSE NXI_PLATFORM_SOURCES
+            "${PROJECT_SOURCE_DIR}/platform/windows/*.cpp"
+            "${PROJECT_SOURCE_DIR}/platform/*.hpp")
     endif()
 
     file(GLOB_RECURSE NXI_SOURCES
@@ -142,7 +145,7 @@ if (NXI_TARGET_DESKTOP)
             "${PROJECT_SOURCE_DIR}/source/ui/*.cpp"
             "${PROJECT_SOURCE_DIR}/resource/*.qrc"
             "${PROJECT_SOURCE_DIR}/include/*.hpp")
-    set(NXI_SOURCES ${NXI_SOURCES} source/main.cpp)
+    set(NXI_SOURCES ${NXI_SOURCES} ${NXI_PLATFORM_SOURCES} source/main.cpp)
 
     add_executable(nxi ${NXI_SOURCES} ${NXI_ICON})
     target_include_directories(nxi PUBLIC include)
