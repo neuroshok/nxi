@@ -12,7 +12,7 @@ namespace nxi
         Q_OBJECT
     public:
         web_page(nxi::page_system& ps);
-        web_page(nxi::page_system& ps, const QString& name) : nxi::page(ps, name) {}
+        web_page(nxi::page_system& ps, const QString& url) : nxi::page(ps, "new_page", url) {}
 
         void focus();
         void load();

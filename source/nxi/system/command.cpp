@@ -70,6 +70,14 @@ namespace nxi
         auto node_nxi = add(nxi::command("nxi", "nxi", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/about"); }));
         auto node_theme = add(nxi::command("nxi", "theme", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/about"); }), node_nxi);
 
+        auto page_load = nxi::command("nxi", "open", [this](const nxi::command_params& params)
+        {
+            //auto page_command = params.get(0);
+            nxi_core_.page_system().open<nxi::web_page>(0);
+        });
+        //page_load.add_param("command", { "http://www.google.fr", "www.youtube.com" });
+        add(std::move(page_load), node_nxi);
+
 
         auto theme_load = nxi::command("nxi", "load", [this](const nxi::command_params& params)
         {

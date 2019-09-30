@@ -3,7 +3,7 @@
 
 #include <ui/interface.hpp>
 
-namespace ui { class core; }
+namespace ui { class core; class command; }
 
 namespace ui::interfaces
 {
@@ -24,6 +24,7 @@ namespace ui::interfaces
     private:
         ui::core& ui_core_;
 
+        ui::command* command_bar_;
         ui::interfaces::content* content_;
         ui::interfaces::page_bar* page_bar_;
         ui::interfaces::control_bar* control_bar_;

@@ -47,8 +47,9 @@ namespace ui::interfaces
 
         static_cast<ui::window*>(this->window())->set_grip(this);
 
+        command_bar_ = new ui::command(ui_core_);
         top_layout->addSpacing(128);
-        top_layout->addWidget(new ui::command(ui_core_));
+        top_layout->addWidget(command_bar_);
         top_layout->addSpacing(128);
         //middle_layout->addWidget(page_bar_);
         middle_layout->addWidget(content_);
@@ -74,13 +75,15 @@ namespace ui::interfaces
         interface::toggle_fullmode();
         if (interface::fullmode())
         {
-            control_bar_->hide();
-            page_bar_->hide();
+            //control_bar_->hide();
+            //page_bar_->hide();
+            command_bar_->hide();
         }
         else
         {
-            control_bar_->show();
-            page_bar_->show();
+            //control_bar_->show();
+            //page_bar_->show();
+            command_bar_->show();
         }
     }
 

@@ -29,6 +29,7 @@ namespace ui
 
         connect(native_page_, &QWebEnginePage::fullScreenRequested, [this](QWebEngineFullScreenRequest request)
         {
+            nxi_debug("fullScreenRequested");
             static_cast<ui::window*>(native_page_->view()->window())->interface()->toggle_fullmode();
             request.accept();
         });

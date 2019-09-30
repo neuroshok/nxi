@@ -17,5 +17,6 @@ namespace nxi
     {
         Page& added_page = add<Page>(source_id, std::forward<Args>(args)...);
         added_page.load();
+        added_page.focus();
     }
 } // nxi

@@ -83,6 +83,7 @@ namespace nxi
     {
         nxi::page& added_page = add_static(path, renderer_type);
         added_page.load();
+        added_page.focus();
     }
 
     const page_system::pages_view& page_system::get() const
