@@ -4,66 +4,28 @@
 #include <ui/interface.hpp>
 #include <ui/system/window.hpp>
 
-#include <nxi/core.hpp>
-#include <nxi/database.hpp>
-
-#include <QIcon>
-#include <QMouseEvent>
-#include <QtWidgets/qboxlayout.h>
-
 #include <nxw/hbox_layout.hpp>
-#include <ui/interface/main.hpp>
-#include <include/ui/interface/home.hpp>
-#include <include/ui/window.hpp>
 
 
 namespace ui
 {
     window::window(ui::core& ui_core, unsigned int id) :
-        m_ui_core{ ui_core }
-        , m_id{ id }
-        , m_interface{ nullptr }
-        , m_moving{ false }
+        ui_core_{ ui_core }
+        , id_{ id }
+        , interface_{ nullptr }
     {
-        QIcon icon(":image/nex");
-        setWindowIcon(icon);
-        setWindowFlags(Qt::CustomizeWindowHint);
-
-        m_layout = new nxw::hbox_layout;
-        setLayout(m_layout);
+        layout_ = new nxw::hbox_layout;
+        setLayout(layout_);
     }
 
     window::~window(){ }
 
-    void window::mousePressEvent(QMouseEvent* event)
-    {
-        if (event->button() == Qt::LeftButton)
-        {
-            m_moving = true;
-            m_move_origin = event->globalPos() - pos();
-        }
-    }
 
     void window::mouseReleaseEvent(QMouseEvent* event)
     {
-        m_moving = false;
+        if (platform::native_window::isMaximized()) return;
         window_system().move(this, x(), y());
         window_system().resize(this, width(), height());
-    }
-
-    void window::mouseMoveEvent(QMouseEvent* event)
-    {
-        QPoint delta = event->globalPos() - m_move_origin;
-        if (m_moving) move(delta.x(), delta.y());
-    }
-
-    void window::mouseDoubleClickEvent(QMouseEvent* event)
-    {
-        if (event->button() == Qt::LeftButton)
-        {
-            if (isMaximized()) showNormal();
-            else showMaximized();
-        }
     }
 
     void window::closeEvent(QCloseEvent* event)
@@ -74,23 +36,34 @@ namespace ui
 
     ui::interface* ui::window::interface()
     {
-        nxi_assert(m_interface != nullptr);
-        return m_interface;
+        nxi_assert(interface_ != nullptr);
+        return interface_;
     }
 
-    void window::interface_set(ui::interface* interface)
+    void window::set_interface(ui::interface* interface)
     {
-        m_interface = interface;
-        m_layout->addWidget(m_interface);
+        interface_ = interface;
+        layout_->addWidget(interface_);
     }
+
 
     unsigned int window::id() const
     {
-        return m_id;
+        return id_;
     }
 
     ui::window_system& window::window_system()
     {
-        return m_ui_core.window_system();
+        return ui_core_.window_system();
+    }
+
+    void window::set_grip(QWidget* widget)
+    {
+        platform::native_window::set_grip(widget);
+    }
+
+    void window::set_fullscreen()
+    {
+        platform::native_window::set_fullscreen();
     }
 } // ui

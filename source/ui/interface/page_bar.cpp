@@ -15,8 +15,8 @@
 
 namespace ui::interfaces
 {
-    page_bar::page_bar(ui::core& ui_core) :
-        ui::interface("page_bar")
+    page_bar::page_bar(ui::core& ui_core, ui::window* window) :
+        ui::interface("page_bar", window)
         , ui_core_{ ui_core }
     {
         /*

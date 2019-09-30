@@ -16,7 +16,7 @@ namespace ui::interfaces
         Q_OBJECT
     public:
 
-        explicit page_bar(ui::core& ui_core);
+        explicit page_bar(ui::core& ui_core, ui::window*);
 
     private:
         ui::core& ui_core_;

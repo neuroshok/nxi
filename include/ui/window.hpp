@@ -5,6 +5,7 @@
 #include <stz/observer_ptr.hpp>
 
 #include <QWidget>
+#include <platform/native_window.hpp>
 
 class QHBoxLayout;
 
@@ -14,35 +15,29 @@ namespace ui
     class window_system;
     class interface;
 
-    class window : public QWidget
+class window : public platform::native_window
     {
     Q_OBJECT
     public:
         window(ui::core& ui_core, unsigned int m_id);
         ~window();
 
-        void mousePressEvent(QMouseEvent* event) override;
         void mouseReleaseEvent(QMouseEvent* event) override;
-        void mouseMoveEvent(QMouseEvent* event) override;
-        void mouseDoubleClickEvent(QMouseEvent* event) override;
         void closeEvent(QCloseEvent* event) override;
 
         ui::interface* interface();
-        void interface_set(ui::interface* interface);
+        void set_interface(ui::interface* interface);
+        void set_grip(QWidget*);
+        void set_fullscreen();
 
         unsigned int id() const;
         ui::window_system& window_system();
 
     private:
-        ui::core& m_ui_core;
-        unsigned int m_id;
-
-        QHBoxLayout* m_layout;
-
-        ui::interface* m_interface;
-
-        bool m_moving;
-        QPoint m_move_origin;
+        ui::core& ui_core_;
+        unsigned int id_;
+        QHBoxLayout* layout_;
+        ui::interface* interface_;
     };
 
 } // ui

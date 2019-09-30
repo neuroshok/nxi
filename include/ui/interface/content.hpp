@@ -20,7 +20,7 @@ namespace ui::interfaces
     {
     public:
 
-        explicit content(ui::core& ui_core);
+        explicit content(ui::core& ui_core, ui::window* window);
 
     private:
         ui::core& ui_core_;

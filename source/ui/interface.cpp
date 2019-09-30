@@ -14,8 +14,8 @@ namespace ui
         setAttribute(Qt::WA_StyledBackground, true);
     }
 
-    interface::interface(const QString& name)
-         : interface(name, nullptr)
+    interface::interface(ui::window* window)
+         : interface("default", window)
     {}
 
     ui::window* interface::window() const

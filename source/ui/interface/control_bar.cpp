@@ -6,6 +6,7 @@
 
 #include <QComboBox>
 #include <QLineEdit>
+#include <QLabel>
 
 #include <nxw/hbox_layout.hpp>
 #include <nxw/icon_button.hpp>
@@ -19,6 +20,7 @@
 #include <nxi/config.hpp>
 
 #include <ui/command.hpp>
+#include <ui/window.hpp>
 
 namespace nxw
 {
@@ -37,7 +39,7 @@ namespace ui::interfaces
     class window_controls : public ui::interface
     {
     public:
-        window_controls(ui::core& ui_core)
+        window_controls(ui::core& ui_core, ui::window* w) : interface(w)
         {
             auto layout = new nxw::hbox_layout;
             setLayout(layout);
@@ -57,8 +59,8 @@ namespace ui::interfaces
         }
     };
 
-    control_bar::control_bar(ui::core& ui_core)
-        : ui::interface("control_bar")
+    control_bar::control_bar(ui::core& ui_core, ui::window* window)
+        : ui::interface("control_bar", window)
         , m_ui_core{ ui_core }
     {
         nxi_trace("");
@@ -106,7 +108,7 @@ namespace ui::interfaces
         });
 
 
-        auto window_controls = new ui::interfaces::window_controls(ui_core);
+        auto window_controls = new ui::interfaces::window_controls(ui_core, window);
 
         layout->addWidget(btn_menu);
         layout->addSpacing(64);
@@ -116,7 +118,9 @@ namespace ui::interfaces
         layout->addWidget(new nxw::icon_button(this, ":/icon/message"));
         layout->addWidget(new nxw::icon_button(this, ":/icon/download"));
 
-        layout->addSpacing(16);
+        //ui::window::get(this)->
+        static_cast<ui::window*>(this->window())->set_grip(this);
+
         layout->addWidget(m_context);
         layout->addWidget(command_bar_, 1);
         layout->addLayout(module_controls_);

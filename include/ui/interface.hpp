@@ -17,8 +17,8 @@ namespace ui
         } style_data;
 
     public:
-        interface(const QString& name = "default");
         interface(const QString& name, ui::window*);
+        interface(ui::window*);
 
         bool fullmode() const;
         virtual void toggle_fullmode();

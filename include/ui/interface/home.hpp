@@ -12,7 +12,7 @@
 #include <ui/interface.hpp>
 
 
-
+/*
 namespace ui
 {
     namespace interfaces
@@ -51,5 +51,5 @@ namespace ui
 
 
 } // ui
-
+*/
 #endif

@@ -15,7 +15,7 @@ namespace ui::interfaces
     {
         Q_OBJECT
     public:
-        main(ui::core&);
+        main(ui::core&, ui::window*);
 
         void toggle_fullmode() override;
 

@@ -16,8 +16,8 @@
 
 namespace ui::interfaces
 {
-    content::content(ui::core& ui_core)
-        : ui::interface("content")
+    content::content(ui::core& ui_core, ui::window* window)
+        : ui::interface("content", window)
         , ui_core_{ ui_core }
     {
         QHBoxLayout* layout = new nxw::hbox_layout;

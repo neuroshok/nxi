@@ -26,8 +26,8 @@
 
 namespace ui::interfaces
 {
-    main::main(ui::core& ui_core)
-        : ui::interface("main")
+    main::main(ui::core& ui_core, ui::window* window)
+        : ui::interface("main", window)
         , ui_core_{ ui_core }
     {
         connect(&ui_core_.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style)
@@ -41,12 +41,15 @@ namespace ui::interfaces
         auto top_layout = new nxw::hbox_layout(this);
         auto middle_layout = new nxw::hbox_layout(this);
 
-        content_ = new interfaces::content(ui_core_);
-        //control_bar_ = new ui::interfaces::control_bar(ui_core_);
-        //page_bar_ = new ui::interfaces::page_bar(ui_core_);
+        content_ = new interfaces::content(ui_core_, window);
+        //control_bar_ = new ui::interfaces::control_bar(ui_core_, window);
+        //page_bar_ = new ui::interfaces::page_bar(ui_core_, window);
 
-        //top_layout->addWidget(control_bar_);
+        static_cast<ui::window*>(this->window())->set_grip(this);
+
+        top_layout->addSpacing(128);
         top_layout->addWidget(new ui::command(ui_core_));
+        top_layout->addSpacing(128);
         //middle_layout->addWidget(page_bar_);
         middle_layout->addWidget(content_);
 

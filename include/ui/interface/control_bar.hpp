@@ -17,7 +17,7 @@ namespace ui::interfaces
     {
     public:
 
-        explicit control_bar(ui::core& ui_core);
+        explicit control_bar(ui::core& ui_core, ui::window* window);
 
         void command_add(const nxi::command&);
 

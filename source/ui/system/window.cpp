@@ -38,8 +38,8 @@ namespace ui
         ui_window->resize(window.w, window.h);
         ui_window->show();
 
-        auto ui_interface = new ui::interfaces::main(m_ui_core);
-        ui_window->interface_set(ui_interface);
+        auto ui_interface = new ui::interfaces::main(m_ui_core, ui_window);
+        ui_window->set_interface(ui_interface);
 
         m_windows.push_back(ui_window);
         return ui_window;
