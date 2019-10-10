@@ -32,62 +32,15 @@ namespace nds::encoders
 
 namespace nxi
 {
-    namespace commands
-    {
-        void config(nxi::core& core)
-        {
-            //core.page_system().add<nxi::custom_page>();
-        }
-    }
-
-    command_system::command_system(nxi::core& nxi_core) :
-        nxi_core_{ nxi_core }
+    command_system::command_system(nxi::core& nxi_core)
+        : nxi_core_{ nxi_core }
+        , user_input_{ *this }
     {}
 
     void command_system::load()
     {
         nxi_trace("");
-
-
-        // add nxi commands
-        auto main_cmd = graph_.add(nxi::command("nxi", "command_node", std::bind(&nxi::core::quit, &nxi_core_)));
-
-        // test cmd
-        add(nxi::command("nxi", "test", [](const nxi::command_params&)
-        {
-             qDebug() << "TEST PAGE";
-        }), main_cmd);
-
-        add(nxi::command("nxi", "quit", [this](const nxi::command_params&){ nxi_core_.quit(); }, ":/button/quit"), main_cmd);
-        add(nxi::command("nxi", "config", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/config", nxi::renderer_type::widget);  }, ":/image/nex"), main_cmd);
-        add(nxi::command("nxi", "about", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/about");  }), main_cmd);
-        add(nxi::command("nxi", "aboutgl", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/aboutgl", nxi::renderer_type::widget);  }), main_cmd);
-
-        /*add(nxi::command("nxi", "light_ui", [this](const nxi::command_params&){
-            nxi_core_.interface_system().set_mode(1);
-        }), main_cmd);*/
-
-        auto node_nxi = add(nxi::command("nxi", "nxi", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/about"); }));
-        auto node_theme = add(nxi::command("nxi", "theme", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/about"); }), node_nxi);
-
-        auto page_load = nxi::command("nxi", "open", [this](const nxi::command_params& params)
-        {
-            //auto page_command = params.get(0);
-            nxi_core_.page_system().open<nxi::web_page>(0);
-        });
-        //page_load.add_param("command", { "http://www.google.fr", "www.youtube.com" });
-        add(std::move(page_load), node_nxi);
-
-
-        auto theme_load = nxi::command("nxi", "load", [this](const nxi::command_params& params)
-        {
-            auto style_name = params.get(0);
-            nxi_core_.interface_system().load_style(style_name);
-        });
-        theme_load.add_param("name", nxi_core_.interface_system().styles());
-
-        add(std::move(theme_load), node_theme);
-        add(nxi::command("nxi", "load_theme_nebula", [this](const nxi::command_params&){ nxi_core_.interface_system().load_style("nebula_space"); }), main_cmd);
+        init_commands();
 
         //auto cmd_page = add(nxi::command("nxi", "page", [this](const nxi::command_params&){ nxi_core_.page_system().focus(); }), main_cmd);
         //cmd_page->get().add_param("page_id", nxi_core_.page_system().get());
@@ -139,17 +92,7 @@ namespace nxi
 
     nds::node<nxi::command>* command_system::add(nxi::command command, nds::node<nxi::command>* source)
     {
-        //qDebug()<< "__________" << command.action_name();
-        auto command_node = graph_.add(std::move(command), source);
-        //qDebug()<< "__________" << command_node->get().name();
-
-        return command_node;
-        /*
-        size_t index = commands_.size();
-        command_indexes_.insert(command.action_name(), index);
-        commands_.emplace_back(std::make_unique<nxi::command>(std::move(command)));
-
-        emit event_add(*commands_[index]);*/
+        return graph_.add(std::move(command), source);
     }
 
     void command_system::exec(const QString& str_command, command_context context)
@@ -195,6 +138,138 @@ namespace nxi
         });
 
         return commands;
+    }
+
+    void command_system::init_group(const QString& command_node)
+    {
+        init_node_group_ = add(nxi::command("nxi", command_node, [this](const nxi::command_params&){}, ":/image/nex"), init_node_group_);
+    }
+
+    void command_system::init(const QString& action, function_type fn, const QString& icon)
+    {
+        init_node_command_ = add(nxi::command("nxi", action, std::move(fn), icon), init_node_group_);
+    }
+
+    void command_system::init(nxi::command_data data)
+    {
+        init_node_command_ = add(nxi::command(std::move(data)), init_node_group_);
+    }
+
+    void command_system::init_param(const QString& name, std::function<void(std::vector<QString>&)> fn)
+    {
+        init_node_command_->get().add_param(name, fn);
+    }
+
+    void command_system::init_commands()
+    {
+        nds::node<nxi::command>* node_group = nullptr;
+        nds::node<nxi::command>* node_command = nullptr;
+
+        init_group("main");
+            // quit
+            nxi::command_data quit;
+            quit.action = "quit";
+            quit.icon = ":/button/quit";
+            quit.description = "Quit application";
+            quit.function = [this](const nxi::command_params&){ nxi_core_.quit(); };
+            init(std::move(quit));
+
+            // test
+            init("test", [this](const nxi::command_params&){ qDebug() << "TEST PAGE"; });
+            // about
+            init("about", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/about"); });
+
+        // SETTINGS
+        init_group("settings");
+            init("config", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/config", nxi::renderer_type::widget); });
+
+        // PAGE
+        init_group("page");
+            // open
+            init("open", [this](const nxi::command_params&)
+            {
+                nxi_core_.page_system().open<nxi::web_page>(0);
+            }, ":/image/nex");
+                init_param("command", [](std::vector<QString>& suggestion)
+                {
+                    suggestion.push_back("www.youtube.com");
+                    suggestion.push_back("www.google.com");
+                });
+
+            // switch
+            nxi::command_data page_switch;
+            page_switch.action = "switch";
+            page_switch.icon = ":/icon/switch";
+            page_switch.description = "Switch between all pages";
+            page_switch.function = [this](const nxi::command_params& params)
+            {
+                auto id = params.get(0).toUInt();
+                nxi_core_.page_system().focus(id);
+            };
+            init(std::move(page_switch));
+                init_param("id", [this](std::vector<QString>& suggestion)
+                {
+                    qDebug() << "pages" << nxi_core_.page_system().get().size();
+                    for (auto& page : nxi_core_.page_system().get())
+                    {
+                        suggestion.push_back(QString::number(page->id()));
+                    }
+                });
+
+                nxi_core_.page_system().get();
+
+            /* struct switch
+             * {
+             *     std::string name = "switch";
+             *
+             * }
+             *
+             */
+
+
+
+/*
+        // add nxi commands
+        auto main_cmd = graph_.add(nxi::command("nxi", "command_node", std::bind(&nxi::core::quit, &nxi_core_)));
+
+        // test cmd
+        add(nxi::command("nxi", "test", [](const nxi::command_params&)
+        {
+             qDebug() << "TEST PAGE";
+        }), main_cmd);
+
+        add(nxi::command("nxi", "quit", [this](const nxi::command_params&){ nxi_core_.quit(); }, ":/button/quit"), main_cmd);
+        add(nxi::command("nxi", "config", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/config", nxi::renderer_type::widget);  }, ":/image/nex"), main_cmd);
+        add(nxi::command("nxi", "about", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/about");  }), main_cmd);
+        add(nxi::command("nxi", "aboutgl", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/aboutgl", nxi::renderer_type::widget);  }), main_cmd);
+
+        auto node_nxi = add(nxi::command("nxi", "nxi", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/about"); }));
+        auto node_theme = add(nxi::command("nxi", "theme", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/about"); }), node_nxi);
+
+        auto page_load = nxi::command("nxi", "open", [this](const nxi::command_params& params)
+        {
+            //auto page_command = params.get(0);
+            nxi_core_.page_system().open<nxi::web_page>(0);
+        });
+        //page_load.add_param("command", { "http://www.google.fr", "www.youtube.com" });
+        add(std::move(page_load), node_nxi);
+
+
+        auto theme_load = nxi::command("nxi", "load", [this](const nxi::command_params& params)
+        {
+            auto style_name = params.get(0);
+            nxi_core_.interface_system().load_style(style_name);
+        });
+        theme_load.add_param("name", nxi_core_.interface_system().styles());
+
+        add(std::move(theme_load), node_theme);
+        add(nxi::command("nxi", "load_theme_nebula", [this](const nxi::command_params&){ nxi_core_.interface_system().load_style("nebula_space"); }), main_cmd);
+*/
+    }
+
+    nxi::command_input& command_system::user_input()
+    {
+        return user_input_;
     }
 } // nxi
 
