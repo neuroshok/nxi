@@ -8,6 +8,7 @@
 #include <qdebug.h>
 
 #include <ui/command.hpp>
+#include <ui/command/menu.hpp>
 #include <ui/interface/main.hpp>
 #include <ui/interface/control_bar.hpp>
 #include <include/w3c/theme.hpp>
@@ -50,7 +51,7 @@ namespace nxi
         const QWidgetList top_widgets = QApplication::topLevelWidgets();
         for (auto top_widget : top_widgets)
         {
-            for (auto widget : top_widget->findChildren<nxw::menu*>())
+            for (auto widget : top_widget->findChildren<ui::command_menu*>())
             {
                 update(widget);
             }
@@ -97,7 +98,7 @@ namespace nxi
     {
     }
 
-    void style::update(nxw::menu* widget)
+    void style::update(ui::command_menu* widget)
     {
         widget->style_data.background_color = data_.menu.background_color.get();
         widget->style_data.item_text_color = data_.menu.item_text_color.get();

@@ -8,6 +8,8 @@ class QPalette;
 namespace ui
 {
     class command;
+    class command_menu;
+
     namespace interfaces
     {
         class main;
@@ -52,7 +54,7 @@ namespace nxi
         void update(ui::interfaces::main*) const;
         void update(ui::interfaces::control_bar*) const;
 
-        void update(nxw::menu*);
+        void update(ui::command_menu*);
 
         void polish(QPalette& palette) override;
         void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;
