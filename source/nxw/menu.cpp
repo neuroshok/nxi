@@ -9,6 +9,7 @@
 #include <QEvent>
 #include <QStyle>
 #include <QVariant>
+#include <QDebug>
 
 #include <nxi/log.hpp>
 
@@ -83,8 +84,8 @@ namespace nxw
         }
 
         move(position);
-        show();
-        adjustSize();
+        setFixedHeight(item_count() * style_data.item_height);
+        //show();
     }
 
     void menu::select_previous()

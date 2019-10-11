@@ -6,6 +6,7 @@
     <qresource prefix="/image">
         <file alias="nex">graphic/nex.png</file>
         <file alias="node">graphic/node.png</file>
+        <file alias="sound">graphic/sound24.gif</file>
     </qresource>
     <qresource prefix="/icon">
         <file alias="menu">icon/menu24.png</file>
@@ -16,6 +17,7 @@
         <file alias="minimize">icon/minimize24.png</file>
         <file alias="maximize">icon/maximize24.png</file>
         <file alias="close">icon/close24.png</file>
+        <file alias="switch">icon/switch16.png</file>
     </qresource>
     <qresource prefix="/button">
         <file alias="menu">graphic/menu.png</file>

@@ -19,7 +19,7 @@ namespace nxi { class style; }
 namespace ui
 {
     class core;
-    class menu;
+    class command_menu;
 
     class command : public QLineEdit
     {
@@ -36,10 +36,12 @@ namespace ui
         void paintEvent(QPaintEvent*) override;
 
     private:
-        ui::core& ui_core_;
-        nxi::command_input input_;
+        nxi::command_input& user_input();
 
-        nxw::menu* menu_;
+    private:
+        ui::core& ui_core_;
+
+        ui::command_menu* menu_;
         QLabel* info_;
         QLabel* header_;
     };

@@ -4,8 +4,7 @@
 
 #include <ui/core.hpp>
 #include <ui/menu.hpp>
-#include <nxw/menu.hpp>
-#include <nxw/menu/item.hpp>
+#include <ui/command/menu.hpp>
 
 #include <QKeyEvent>
 #include <QPaintEvent>
@@ -17,26 +16,31 @@ namespace ui
 {
     command::command(ui::core& ui_core)
         : ui_core_{ ui_core }
-        , input_{ ui_core_.nxi_core().command_system() }
     {
+        setPlaceholderText("Enter command");
+
         info_ = new QLabel(this);
         header_ = new QLabel(this);
-        menu_ = new nxw::menu(this);
+        /*menu_ = new ui::command_menu(this);
+
         menu_->setObjectName("ui_command_menu");
         menu_->show_at(this);
 
-        menu_->add_top(header_);
-        menu_->add_bottom(info_);
+        //menu_->add_top(header_);
+        //menu_->add_bottom(info_);
         menu_->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
         menu_->setAttribute(Qt::WA_ShowWithoutActivating);
-        menu_->hide();
+        menu_->show();
+
+        connect(&user_input(), &nxi::command_input::event_suggestion_update, [this](std::vector<stz::observer_ptr<nxi::command>> cmds)
+        {
+            menu_->set_data(cmds);
+            menu_->exec();
+        });*/
 
         connect(this, &QLineEdit::returnPressed, [this]()
         {
-            input_.exec();
-            setText(input_.text());
-            header_->setText(input_.state_text());
-            if (input_.state() == nxi::command_input::states::action) menu_->hide();
+            user_input().exec();
         });
 
 
@@ -49,20 +53,11 @@ namespace ui
         {
             if (!hasFocus()) return;
 
-            input_.update(text());
-            menu_->clear();
+            user_input().update(text());
 
-            if (input_.state() == nxi::command_input::states::action)
-            {
-                for (auto command : input_.suggestions())
-                {
-                    menu_->add<nxw::menu_item>(command->name(), [&command](){ command->exec(); }, command->icon());
-                }
-            }
-            if (input_.state() == nxi::command_input::states::param)
-            {
-                for (auto item : input_.param_suggestions()) menu_->add<nxw::menu_item>(item, [](){});
-            }
+
+            /*
+            menu_->clear();
 
             header_->setText(input_.text());
             info_->setText("results : " + QString::number(input_.suggestion_count()));
@@ -75,7 +70,7 @@ namespace ui
                 if (focused_page.has_value()) setText(focused_page.value()->command());
                 selectAll();
                 blockSignals(false);
-            }
+            }*/
         });
 
         connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), this, [this](nxi::page& page)
@@ -87,7 +82,7 @@ namespace ui
     void command::resizeEvent(QResizeEvent* event)
     {
         QLineEdit::resizeEvent(event);
-        menu_->setFixedWidth(width());
+        //menu_->setFixedWidth(width());
     }
 
     void command::keyPressEvent(QKeyEvent* event)
@@ -96,12 +91,12 @@ namespace ui
         switch (event->key())
         {
             case Qt::Key_Up:
-                menu_->select_previous();
-                menu_->show();
+                //menu_->select_previous();
+                //menu_->show();
                 break;
             case Qt::Key_Down:
-                menu_->select_next();
-                menu_->show();
+                //menu_->select_next();
+                //menu_->show();
                 break;
         }
     }
@@ -116,7 +111,7 @@ namespace ui
     void command::enterEvent(QEvent* event)
     {
         if (hasFocus()) return;
-        if (!input_.is_empty()) return;
+        //if (!input_.is_empty()) return;
         auto focused_page = ui_core_.nxi_core().page_system().focus();
         if (focused_page.has_value()) setText(focused_page.value()->command());
     }
@@ -124,7 +119,7 @@ namespace ui
     void command::leaveEvent(QEvent* event)
     {
         if (hasFocus()) return;
-        if (!input_.is_empty()) return;
+        //if (!input_.is_empty()) return;
         auto focused_page = ui_core_.nxi_core().page_system().focus();
         if (focused_page.has_value()) setText(focused_page.value()->name());
     }
@@ -134,5 +129,10 @@ namespace ui
 
 
         QLineEdit::paintEvent(event);
+    }
+
+    nxi::command_input& command::user_input()
+    {
+        return ui_core_.nxi_core().command_system().user_input();
     }
 } // ui

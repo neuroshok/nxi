@@ -23,6 +23,7 @@
 #include <QPalette>
 #include <QtGui/QPainter>
 #include <ui/command.hpp>
+#include <ui/command/menu.hpp>
 
 namespace ui::interfaces
 {
@@ -34,6 +35,7 @@ namespace ui::interfaces
         {
             style.update(this);
         });
+
 
         auto main_layout = new nxw::vbox_layout;
         setLayout(main_layout);
@@ -48,6 +50,17 @@ namespace ui::interfaces
         static_cast<ui::window*>(this->window())->set_grip(this);
 
         command_bar_ = new ui::command(ui_core_);
+        command_bar_->setFocus();
+        command_menu_ = new ui::command_menu(ui_core_, this);
+        command_menu_->hide();
+
+        connect(&ui_core_.nxi_core().command_system().user_input(), &nxi::command_input::event_suggestion_update, [this](std::vector<stz::observer_ptr<nxi::command>> cmds)
+        {
+            command_menu_->set_data(cmds);
+            command_menu_->exec();
+        });
+
+
         top_layout->addSpacing(128);
         top_layout->addWidget(command_bar_);
         top_layout->addSpacing(128);
@@ -56,7 +69,6 @@ namespace ui::interfaces
 
         main_layout->addLayout(top_layout);
         main_layout->addLayout(middle_layout);
-
 
         connect(&ui_core_.nxi_core(), &nxi::core::event_error, this, [](const QString& message)
         {
@@ -99,5 +111,11 @@ namespace ui::interfaces
         QPainter painter(this);
         painter.fillRect(0, 0 ,width(), height(), style_data.background_color);
         painter.drawImage(target, image, source);
+    }
+
+    void main::resizeEvent(QResizeEvent*)
+    {
+        command_menu_->setFixedWidth(command_bar_->width());
+        command_menu_->move(command_bar_->x(), command_bar_->height());
     }
 } // ui::interfaces

@@ -8,6 +8,7 @@
 
 class QString;
 
+#include <QDebug>
 namespace nxw
 {
     class menu_item;

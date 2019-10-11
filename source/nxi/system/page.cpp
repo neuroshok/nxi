@@ -88,6 +88,11 @@ namespace nxi
 
     const page_system::pages_view& page_system::get() const
     {
+        pages_view pages;
+        graph_.nodes([&pages](auto&& node)
+        {
+            pages.push_back(stz::make_observer<nxi::page>(&node->get()));
+        });
         return pages_view_;
     }
 
