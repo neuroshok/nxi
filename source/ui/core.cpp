@@ -8,6 +8,9 @@
 
 #include <ui/system/page.hpp>
 #include <ui/system/window.hpp>
+#include <ui/interface/standard/main.hpp>
+#include <ui/interface/light/main.hpp>
+#include <ui/window.hpp>
 
 #include <QApplication>
 #include <QFile>
@@ -15,9 +18,7 @@
 #include <QtWebEngine>
 #include <QWidgetList>
 
-#include <ui/interface/home.hpp>
-#include <ui/interface/page_bar.hpp>
-#include <QWidgetList>
+
 
 namespace ui
 {
@@ -26,6 +27,7 @@ namespace ui
         , nxi_core_{ nxi_core }
         , page_system_{ *this }
         , window_system_{ *this }
+        , main_interface_{ [this](ui::window* window){ return new ui::interfaces::light::main(*this, window); } }
     {
         QApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 		qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");

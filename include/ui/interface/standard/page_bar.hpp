@@ -1,5 +1,5 @@
-#ifndef UI_PAGE_BAR_H_NXI
-#define UI_PAGE_BAR_H_NXI
+#ifndef INCLUDE_UI_INTERFACE_STANDARD_PAGE_BAR_HPP_NXI
+#define INCLUDE_UI_INTERFACE_STANDARD_PAGE_BAR_HPP_NXI
 
 #include <ui/window.hpp>
 #include <ui/interface.hpp>
@@ -9,7 +9,7 @@
 namespace nxw { class tree; };
 namespace nxi { class web_page; class page_node; };
 
-namespace ui::interfaces
+namespace ui::interfaces::standard
 {
     class page_bar : public ui::interface
     {
@@ -22,6 +22,6 @@ namespace ui::interfaces
         ui::core& ui_core_;
         ui::views::page_tree* page_tree_;
     };
-} // ui::interfaces
+} // ui::interfaces::standard
 
-#endif // UI_PAGE_BAR_H_NXI
+#endif // INCLUDE_UI_INTERFACE_STANDARD_PAGE_BAR_HPP_NXI

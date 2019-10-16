@@ -14,7 +14,7 @@
 #include <ui/core.hpp>
 #include <include/nxi/log.hpp>
 #include <ui/window.hpp>
-#include <ui/interface.hpp>
+#include <ui/interface/main.hpp>
 
 namespace ui
 {
@@ -30,7 +30,7 @@ namespace ui
         connect(native_page_, &QWebEnginePage::fullScreenRequested, [this](QWebEngineFullScreenRequest request)
         {
             nxi_debug("fullScreenRequested");
-            static_cast<ui::window*>(native_page_->view()->window())->interface()->toggle_fullmode();
+            static_cast<ui::window*>(native_page_->view()->window())->main_interface()->toggle_fullmode();
             request.accept();
         });
 

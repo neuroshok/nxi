@@ -1,5 +1,5 @@
-#ifndef UI_INTERFACE_HOME_H_NXI
-#define UI_INTERFACE_HOME_H_NXI
+#ifndef INCLUDE_UI_INTERFACE_STANDARD_HOME_HPP_NXI
+#define INCLUDE_UI_INTERFACE_STANDARD_HOME_HPP_NXI
 
 #include <QStackedWidget>
 #include <QLineEdit>
@@ -52,4 +52,4 @@ namespace ui
 
 } // ui
 */
-#endif
+#endif // INCLUDE_UI_INTERFACE_STANDARD_HOME_HPP_NXI

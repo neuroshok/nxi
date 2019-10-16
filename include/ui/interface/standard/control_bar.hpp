@@ -1,5 +1,5 @@
-#ifndef UI_CONTROL_BAR_H_NXI
-#define UI_CONTROL_BAR_H_NXI
+#ifndef INCLUDE_UI_INTERFACE_STANDARD_CONTROL_BAR_HPP_NXI
+#define INCLUDE_UI_INTERFACE_STANDARD_CONTROL_BAR_HPP_NXI
 
 #include <ui/interface.hpp>
 
@@ -11,7 +11,7 @@ class QComboBox;
 class QLineEdit;
 class QPushButton;
 
-namespace ui::interfaces
+namespace ui::interfaces::standard
 {
     class control_bar : public ui::interface
     {
@@ -28,6 +28,6 @@ namespace ui::interfaces
         QComboBox* m_context;
         nxw::hbox_layout* module_controls_;
     };
-} // ui::interfaces
+} // ui::interfaces::standard
 
-#endif // UI_CONTROL_BAR_H_NXI
+#endif // INCLUDE_UI_INTERFACE_STANDARD_CONTROL_BAR_HPP_NXI

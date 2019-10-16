@@ -1,7 +1,7 @@
 #include <ui/window.hpp>
 
 #include <ui/core.hpp>
-#include <ui/interface.hpp>
+#include <ui/interface/main.hpp>
 #include <ui/system/window.hpp>
 
 #include <nxw/hbox_layout.hpp>
@@ -34,13 +34,13 @@ namespace ui
         deleteLater();
     }
 
-    ui::interface* ui::window::interface()
+    ui::main_interface* ui::window::main_interface()
     {
         nxi_assert(interface_ != nullptr);
         return interface_;
     }
 
-    void window::set_interface(ui::interface* interface)
+    void window::set_interface(ui::main_interface* interface)
     {
         interface_ = interface;
         layout_->addWidget(interface_);

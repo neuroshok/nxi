@@ -1,4 +1,4 @@
-#include <ui/interface/control_bar.hpp>
+#include <ui/interface/standard/control_bar.hpp>
 
 #include <ui/core.hpp>
 #include <nxi/core.hpp>
@@ -12,7 +12,7 @@
 #include <nxw/icon_button.hpp>
 #include <nxw/menu.hpp>
 #include <nxw/menu/item.hpp>
-#include <include/ui/interface/control_bar.hpp>
+#include <include/ui/interface/standard/control_bar.hpp>
 #include <ui/view/web.hpp>
 #include <QWebEngineView>
 #include <include/nxi/module/web.hpp>
@@ -34,7 +34,7 @@ namespace nxw
     };
 }
 
-namespace ui::interfaces
+namespace ui::interfaces::standard
 {
     class window_controls : public ui::interface
     {
@@ -108,7 +108,7 @@ namespace ui::interfaces
         });
 
 
-        auto window_controls = new ui::interfaces::window_controls(ui_core, window);
+        auto window_controls = new ui::interfaces::standard::window_controls(ui_core, window);
 
         layout->addWidget(btn_menu);
         layout->addSpacing(64);

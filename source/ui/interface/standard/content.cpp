@@ -1,4 +1,4 @@
-#include <ui/interface/content.hpp>
+#include <ui/interface/standard/content.hpp>
 
 #include <ui/core.hpp>
 #include <nxi/core.hpp>
@@ -14,7 +14,7 @@
 #include <ui/view/renderer.hpp>
 #include <include/nxi/log.hpp>
 
-namespace ui::interfaces
+namespace ui::interfaces::standard
 {
     content::content(ui::core& ui_core, ui::window* window)
         : ui::interface("content", window)

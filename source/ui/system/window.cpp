@@ -5,7 +5,7 @@
 #include <nxi/system/window.hpp>
 
 #include <ui/core.hpp>
-#include <ui/interface/main.hpp>
+#include <ui/interface/standard/main.hpp>
 #include <ui/system/window.hpp>
 #include <ui/window.hpp>
 
@@ -38,7 +38,7 @@ namespace ui
         ui_window->resize(window.w, window.h);
         ui_window->show();
 
-        auto ui_interface = new ui::interfaces::main(m_ui_core, ui_window);
+        auto ui_interface = m_ui_core.make_main_interface(ui_window);
         ui_window->set_interface(ui_interface);
 
         m_windows.push_back(ui_window);

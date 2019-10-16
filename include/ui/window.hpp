@@ -13,7 +13,7 @@ namespace ui
 {
     class core;
     class window_system;
-    class interface;
+    class main_interface;
 
 class window : public platform::native_window
     {
@@ -25,8 +25,8 @@ class window : public platform::native_window
         void mouseReleaseEvent(QMouseEvent* event) override;
         void closeEvent(QCloseEvent* event) override;
 
-        ui::interface* interface();
-        void set_interface(ui::interface* interface);
+        ui::main_interface* main_interface();
+        void set_interface(ui::main_interface* interface);
         void set_grip(QWidget*);
         void set_fullscreen();
 
@@ -37,7 +37,7 @@ class window : public platform::native_window
         ui::core& ui_core_;
         unsigned int id_;
         QHBoxLayout* layout_;
-        ui::interface* interface_;
+        ui::main_interface* interface_;
     };
 
 } // ui

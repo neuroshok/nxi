@@ -1,4 +1,4 @@
-#include <ui/interface/main.hpp>
+#include <ui/interface/standard/main.hpp>
 
 #include <nxi/core.hpp>
 #include <nxi/system/page.hpp>
@@ -7,9 +7,9 @@
 #include <nxw/vbox_layout.hpp>
 
 #include <ui/core.hpp>
-#include <ui/interface/content.hpp>
-#include <ui/interface/control_bar.hpp>
-#include <ui/interface/page_bar.hpp>
+#include <ui/interface/standard/content.hpp>
+#include <ui/interface/standard/control_bar.hpp>
+#include <ui/interface/standard/page_bar.hpp>
 
 #include <ui/view/config.hpp>
 #include <ui/view/page_tree.hpp>
@@ -25,11 +25,10 @@
 #include <ui/command.hpp>
 #include <ui/command/menu.hpp>
 
-namespace ui::interfaces
+namespace ui::interfaces::standard
 {
     main::main(ui::core& ui_core, ui::window* window)
-        : ui::interface("main", window)
-        , ui_core_{ ui_core }
+        : ui_core_{ ui_core }
     {
         connect(&ui_core_.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style)
         {
@@ -43,28 +42,14 @@ namespace ui::interfaces
         auto top_layout = new nxw::hbox_layout(this);
         auto middle_layout = new nxw::hbox_layout(this);
 
-        content_ = new interfaces::content(ui_core_, window);
-        //control_bar_ = new ui::interfaces::control_bar(ui_core_, window);
-        //page_bar_ = new ui::interfaces::page_bar(ui_core_, window);
+        content_ = new content(ui_core_, window);
+        control_bar_ = new control_bar(ui_core_, window);
+        page_bar_ = new page_bar(ui_core_, window);
 
         static_cast<ui::window*>(this->window())->set_grip(this);
 
-        command_bar_ = new ui::command(ui_core_);
-        command_bar_->setFocus();
-        command_menu_ = new ui::command_menu(ui_core_, this);
-        command_menu_->hide();
-
-        connect(&ui_core_.nxi_core().command_system().user_input(), &nxi::command_input::event_suggestion_update, [this](std::vector<stz::observer_ptr<nxi::command>> cmds)
-        {
-            command_menu_->set_data(cmds);
-            command_menu_->exec();
-        });
-
-
-        top_layout->addSpacing(128);
-        top_layout->addWidget(command_bar_);
-        top_layout->addSpacing(128);
-        //middle_layout->addWidget(page_bar_);
+        top_layout->addWidget(control_bar_);
+        middle_layout->addWidget(page_bar_);
         middle_layout->addWidget(content_);
 
         main_layout->addLayout(top_layout);
@@ -84,18 +69,16 @@ namespace ui::interfaces
     {
         nxi_debug("fullmode");
 
-        interface::toggle_fullmode();
-        if (interface::fullmode())
+        main_interface::toggle_fullmode();
+        if (main_interface::fullmode())
         {
-            //control_bar_->hide();
-            //page_bar_->hide();
-            command_bar_->hide();
+            control_bar_->hide();
+            page_bar_->hide();
         }
         else
         {
-            //control_bar_->show();
-            //page_bar_->show();
-            command_bar_->show();
+            control_bar_->show();
+            page_bar_->show();
         }
     }
 
@@ -115,7 +98,6 @@ namespace ui::interfaces
 
     void main::resizeEvent(QResizeEvent*)
     {
-        command_menu_->setFixedWidth(command_bar_->width());
-        command_menu_->move(command_bar_->x(), command_bar_->height());
+
     }
 } // ui::interfaces

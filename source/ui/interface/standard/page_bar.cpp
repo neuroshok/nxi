@@ -1,4 +1,4 @@
-#include <ui/interface/page_bar.hpp>
+#include <ui/interface/standard/page_bar.hpp>
 
 #include <ui/core.hpp>
 #include <nxi/core.hpp>
@@ -9,11 +9,11 @@
 
 #include <ui/menu.hpp>
 #include <nxw/icon_button.hpp>
-#include <include/ui/interface/page_bar.hpp>
+#include <include/ui/interface/standard/page_bar.hpp>
 #include <include/nxi/log.hpp>
 
 
-namespace ui::interfaces
+namespace ui::interfaces::standard
 {
     page_bar::page_bar(ui::core& ui_core, ui::window* window) :
         ui::interface("page_bar", window)
