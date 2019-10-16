@@ -1,9 +1,9 @@
 #ifndef INCLUDE_NXI_COMMAND_INPUT_HPP_NXI
 #define INCLUDE_NXI_COMMAND_INPUT_HPP_NXI
 
-#include <nxi/command.hpp>
-#include <stz/observer_ptr.hpp>
-#include <vector>
+#include <nxi/command/fwd.hpp>
+#include <nxi/command/params.hpp>
+
 
 #include <QString>
 #include <include/nxi/system/page.hpp>
@@ -32,21 +32,33 @@ namespace nxi
         std::vector<stz::observer_ptr<nxi::command>> suggestions() const;
         const std::vector<QString>& param_suggestions() const;
         const QString& text() const;
+
+
+        void select_suggestion(int index);
+        void select_previous_suggestion();
+        void select_next_suggestion();
         size_t suggestion_count() const;
+        stz::observer_ptr<nxi::command> suggestion(int index);
+        stz::observer_ptr<nxi::command> selected_suggestion();
+
         bool is_empty() const;
         bool is_valid() const;
 
     signals:
-        void event_suggestion_update(std::vector<stz::observer_ptr<nxi::command>>);
+        void event_suggestion_update(stz::observer_ptr<nxi::commands_view>);
         //void event_suggestion_update(std::vector<stz::observer_ptr<nxi::page>>);
+        void event_selection_update(int index);
 
     private:
+        nxi::command_system& command_system_;
+
         QString input_;
         states state_;
         nxi::command_params params_;
         stz::observer_ptr<nxi::command> command_;
         int param_index_ = 0;
-        nxi::command_system& command_system_;
+
+        int selected_suggestion_index_;
         std::vector<stz::observer_ptr<nxi::command>> suggestions_;
         std::vector<QString> param_suggestions_;
     };

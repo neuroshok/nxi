@@ -1,5 +1,7 @@
 #include <nxi/command.hpp>
 
+#include <nxi/command/params.hpp>
+
 #include <nxi/log.hpp>
 
 namespace nxi

@@ -13,10 +13,17 @@ namespace ui
     command_menu::command_menu(ui::core& ui_core, QWidget* parent)
         : QWidget(parent)
         , ui_core_{ ui_core }
+        , selection_index_{ -1 }
         , movie_{ ":/image/sound" }
     {
         connect(&movie_, &QMovie::frameChanged, [this](int){ repaint(); });
         movie_.start();
+
+        connect(&ui_core_.nxi_core().command_system().user_input(), &nxi::command_input::event_selection_update, [this](int index)
+        {
+            selection_index_ = index;
+            repaint();
+        });
     }
 
     void command_menu::exec()
@@ -24,12 +31,12 @@ namespace ui
         show();
     }
 
-    void command_menu::set_data(std::vector<stz::observer_ptr<nxi::command>> data)
+    void command_menu::set_data(stz::observer_ptr<nxi::commands_view> data)
     {
-        commands_ = std::move(data);
+        commands_ = data;
 
         setContentsMargins(5, 5, 5, 5);
-        setFixedHeight(commands_.size() * (style_data.item_height + 1) + contentsMargins().top() + contentsMargins().bottom());
+        setFixedHeight(commands_->size() * (style_data.item_height + 1) + contentsMargins().top() + contentsMargins().bottom());
 
         repaint();
     }
@@ -42,19 +49,29 @@ namespace ui
 
         int item_y = contentsMargins().top();
         int item_x = contentsMargins().left();
-        for (auto item : commands_)
+        int item_index = 0;
+
+        if (commands_)
         {
-            QRect item_rect{ item_x, item_y, width() - contentsMargins().left() - contentsMargins().right(), style_data.item_height };
-            draw_item(item, item_rect);
-            item_y += style_data.item_height + 1;
+            for (auto item : *commands_)
+            {
+                QRect item_rect{ item_x, item_y, width() - contentsMargins().left() - contentsMargins().right(), style_data.item_height };
+                bool selected = false;
+                if (item_index == selection_index_) selected = true;
+
+                draw_item(item, item_rect, selected);
+                item_y += style_data.item_height + 1;
+                item_index++;
+            }
         }
     }
 
-    void command_menu::draw_item(stz::observer_ptr<nxi::command> command,  QRect& item_rect)
+    // draw command
+    void command_menu::draw_item(stz::observer_ptr<nxi::command> command,  QRect& item_rect, bool selected)
     {
         QPainter painter(this);
-
-        painter.fillRect(item_rect, style_data.item_background_color_hover);
+        if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
+        else painter.fillRect(item_rect, style_data.background_color);
 
         // icon
         QRect icon_rect{ item_rect.left(), item_rect.top(), style_data.item_height, style_data.item_height };

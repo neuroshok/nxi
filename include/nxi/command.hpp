@@ -1,7 +1,8 @@
 #ifndef NXI_COMMAND_H_NXI
 #define NXI_COMMAND_H_NXI
 
-#include <nxi/window.hpp>
+#include <nxi/command/fwd.hpp>
+#include <nxi/command/data.hpp>
 
 #include <functional>
 #include <QObject>
@@ -12,32 +13,10 @@ namespace nxi
 {
 	class core;
 
-	class command_params
-    {
-    public:
-        command_params() = default;
-
-        void add(const QString& value) { values_.push_back(value); }
-        auto get(int index) const { return values_[index]; }
-        void clear() { values_.clear(); }
-
-    private:
-        std::vector<QString> values_;
-    };
-
-	struct command_data
-    {
-	    QString module = "nxi";
-		QString action = "none";
-		std::function<void(const nxi::command_params&)> function;
-        QString icon;
-        QString description;
-    };
-
 	class command
 	{
 	public:
-	    using function_type = std::function<void(const nxi::command_params&)>;
+	    using function_type = nxi::command_function_type;
 	    using params_type = std::vector<QString>;
 	    using param_suggestions_type = std::function<void(std::vector<QString>&)>;
 

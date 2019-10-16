@@ -10,6 +10,7 @@ namespace nxi
     command_input::command_input(nxi::command_system& command_system)
         : command_system_{ command_system }
         , state_{ states::action }
+        , selected_suggestion_index_{ -1 }
     {}
 
     void command_input::add_param(const QString& param)
@@ -23,8 +24,8 @@ namespace nxi
 
         if (state_ == states::action)
         {
-            auto suggestion = command_system_.search(input_);
-            emit event_suggestion_update(suggestion);
+            suggestions_ = command_system_.search(input_);
+            emit event_suggestion_update(stz::make_observer<nxi::commands_view>(&suggestions_));
         }
         if (state_ == states::param)
         {
@@ -32,21 +33,27 @@ namespace nxi
             param_suggestions_.clear();
             command_->add_suggestion(param_suggestions_);
         }
+
+        select_suggestion(0);
     }
 
     void command_input::exec()
     {
+        nxi_trace(" exec {}", input_);
+        if (suggestion_count() == 0) return;
+
         if (state_ == states::action)
         {
-            qDebug() << "exec action";
-            auto& command = suggestions_[0];
+            qDebug() << "exec action" << suggestion(selected_suggestion_index_)->name();
+            auto& command = suggestion(0);
+            qDebug() << " -> " << command.get()->name();
             // required parameters
             if (command->params().size() > 0)
             {
                 state_ = states::param;
                 input_ = "";
                 param_index_ = 0;
-                command_ =  suggestions_[0];
+                command_ =  suggestion(0);
                 suggestions_.clear();
             }
             else command->exec();
@@ -106,5 +113,32 @@ namespace nxi
     const nxi::command_params& command_input::params()
     {
         return params_;
+    }
+
+    void command_input::select_suggestion(int index)
+    {
+        selected_suggestion_index_ = index;
+        emit event_selection_update(index);
+    }
+
+    void command_input::select_previous_suggestion()
+    {
+        if (selected_suggestion_index_ > 0) select_suggestion(selected_suggestion_index_ - 1);
+    }
+
+    void command_input::select_next_suggestion()
+    {
+        if (selected_suggestion_index_ + 1 < suggestions_.size()) select_suggestion(selected_suggestion_index_ + 1);
+    }
+
+    stz::observer_ptr<nxi::command> command_input::suggestion(int index)
+    {
+        nxi_assert(index >= 0 && index < suggestions_.size());
+        return suggestions_[index];
+    }
+
+    stz::observer_ptr<nxi::command> command_input::selected_suggestion()
+    {
+        return suggestion(selected_suggestion_index_);
     }
 } // nxi

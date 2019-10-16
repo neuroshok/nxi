@@ -21,22 +21,6 @@ namespace ui
 
         info_ = new QLabel(this);
         header_ = new QLabel(this);
-        /*menu_ = new ui::command_menu(this);
-
-        menu_->setObjectName("ui_command_menu");
-        menu_->show_at(this);
-
-        //menu_->add_top(header_);
-        //menu_->add_bottom(info_);
-        menu_->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
-        menu_->setAttribute(Qt::WA_ShowWithoutActivating);
-        menu_->show();
-
-        connect(&user_input(), &nxi::command_input::event_suggestion_update, [this](std::vector<stz::observer_ptr<nxi::command>> cmds)
-        {
-            menu_->set_data(cmds);
-            menu_->exec();
-        });*/
 
         connect(this, &QLineEdit::returnPressed, [this]()
         {
@@ -49,11 +33,12 @@ namespace ui
             //menu_->hide();
         });
 
-        connect(this, &QLineEdit::textChanged, [this]()
+        // text changed by the user
+        connect(this, &QLineEdit::textEdited, [this](const QString& text)
         {
             if (!hasFocus()) return;
 
-            user_input().update(text());
+            user_input().update(text);
 
 
             /*
@@ -91,12 +76,10 @@ namespace ui
         switch (event->key())
         {
             case Qt::Key_Up:
-                //menu_->select_previous();
-                //menu_->show();
+                user_input().select_previous_suggestion();
                 break;
             case Qt::Key_Down:
-                //menu_->select_next();
-                //menu_->show();
+                user_input().select_next_suggestion();
                 break;
         }
     }

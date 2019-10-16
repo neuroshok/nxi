@@ -1,8 +1,7 @@
 #ifndef INCLUDE_UI_COMMAND_MENU_HPP_NXI
 #define INCLUDE_UI_COMMAND_MENU_HPP_NXI
 
-#include <stz/observer_ptr.hpp>
-#include <vector>
+#include <nxi/command/fwd.hpp>
 
 #include <QColor>
 #include <QMovie>
@@ -22,6 +21,7 @@ namespace ui
     class command_menu : public QWidget
     {
         Q_OBJECT
+
     public:
         struct style_type
         {
@@ -38,7 +38,9 @@ namespace ui
     public:
         command_menu(ui::core&, QWidget* parent);
 
-        void set_data(std::vector<stz::observer_ptr<nxi::command>>);
+        void select_next();
+
+        void set_data(stz::observer_ptr<nxi::commands_view>);
 
         void exec();
 
@@ -46,11 +48,14 @@ namespace ui
         void paintEvent(QPaintEvent*) override;
 
     private:
-        void draw_item(stz::observer_ptr<nxi::command>, QRect&);
+        void draw_item(stz::observer_ptr<nxi::command>, QRect&, bool selected);
 
     private:
         ui::core& ui_core_;
-        std::vector<stz::observer_ptr<nxi::command>> commands_;
+
+        int selection_index_;
+
+        stz::observer_ptr<nxi::commands_view> commands_;
         std::vector<stz::observer_ptr<nxi::page>> pages_;
 
         QMovie movie_;
