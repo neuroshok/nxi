@@ -9,6 +9,7 @@ namespace ui
 {
     class command;
     class command_menu;
+    class main_interface;
 
     namespace interfaces
     {
@@ -29,6 +30,7 @@ namespace nxw
 #include <ui/view/page_tree.hpp>
 #include <w3c/theme.hpp>
 #include <QProxyStyle>
+#include <ui/interface/main.hpp>
 
 namespace nxi
 {
@@ -51,8 +53,7 @@ namespace nxi
         void update(ui::views::page_tree*) const;
         void update(QWidget*) const;
         void update(ui::command*) const;
-        void update(ui::interfaces::main*) const;
-        void update(ui::interfaces::control_bar*) const;
+        void update(ui::main_interface*) const;
 
         void update(ui::command_menu*);
 

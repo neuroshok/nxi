@@ -10,7 +10,7 @@
 #include <ui/command.hpp>
 #include <ui/command/menu.hpp>
 #include <ui/interface/main.hpp>
-#include <ui/interface/control_bar.hpp>
+#include <ui/interface/standard/control_bar.hpp>
 #include <include/w3c/theme.hpp>
 #include <include/nxi/log.hpp>
 
@@ -63,20 +63,15 @@ namespace nxi
                 w->style.icon_color_hover = data_.icon_button.icon_color_hover.get();
             }
 
-            for (auto w : top_widget->findChildren<ui::interfaces::main*>())
-            {
-                w->style_data.background_color = data_.background_color.get();
-                w->style_data.background_image = data_.background_image.get();
-                w->style_data.background_image = w->style_data.background_image.transformed(QMatrix().rotate(90));
-            }
         }
     }
 
 
-    void style::update(ui::interfaces::main* ui) const
+    void style::update(ui::main_interface* w) const
     {
-
-
+        w->style_data.background_color = data_.background_color.get();
+        w->style_data.background_image = data_.background_image.get();
+        w->style_data.background_image = w->style_data.background_image.transformed(QMatrix().rotate(90));
     }
 
     void style::update(ui::command* ui) const
@@ -84,10 +79,6 @@ namespace nxi
 
     }
 
-    void style::update(ui::interfaces::control_bar* ui) const
-    {
-
-    }
 
     void style::update(QWidget* ui) const
     {
@@ -104,7 +95,7 @@ namespace nxi
         widget->style_data.item_text_color = data_.menu.item_text_color.get();
         widget->style_data.item_text_color_hover = data_.menu.item_text_color_hover.get();
         widget->style_data.item_background_color_hover = data_.menu.item_background_color_hover.get();
-        widget->style_data.item_background_color_hover = data_.menu.item_background_color_hover.get();
+        widget->style_data.item_background_color_selected = data_.menu.item_background_color_selected.get();
 
         widget->style_data.item_height = data_.menu.item_height.get();
     }
