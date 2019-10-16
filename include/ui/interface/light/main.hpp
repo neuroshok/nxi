@@ -1,0 +1,43 @@
+#ifndef INCLUDE_UI_INTERFACE_LIGHT_MAIN_HPP_NXI
+#define INCLUDE_UI_INTERFACE_LIGHT_MAIN_HPP_NXI
+
+#include <ui/interface/main.hpp>
+
+namespace ui
+{
+    class command_menu;
+    class core;
+    class window;
+
+    namespace interfaces::standard
+    {
+        class content;
+    } // interfaces
+} // ui
+
+namespace ui::interfaces::light
+{
+    class control_bar;
+
+    class main : public ui::main_interface
+    {
+        Q_OBJECT
+    public:
+        main(ui::core&, ui::window*);
+
+        void toggle_fullmode() override;
+
+    protected:
+        void paintEvent(QPaintEvent*) override;
+        void resizeEvent(QResizeEvent*) override;
+
+    private:
+        ui::core& ui_core_;
+
+        ui::interfaces::standard::content* content_;
+        ui::interfaces::light::control_bar* control_bar_;
+        ui::command_menu* command_menu_;
+    };
+} // ui::interfaces::light
+
+#endif // INCLUDE_UI_INTERFACE_LIGHT_MAIN_HPP_NXI
