@@ -22,6 +22,12 @@ namespace nxi
     {
         input_ = input;
 
+        if (input_.isEmpty())
+        {
+            emit event_complete();
+            return;
+        }
+
         if (state_ == states::action)
         {
             suggestions_ = command_system_.search(input_);
@@ -46,7 +52,6 @@ namespace nxi
         {
             qDebug() << "exec action" << suggestion(selected_suggestion_index_)->name();
             auto& command = suggestion(0);
-            qDebug() << " -> " << command.get()->name();
             // required parameters
             if (command->params().size() > 0)
             {
@@ -55,6 +60,7 @@ namespace nxi
                 param_index_ = 0;
                 command_ =  suggestion(0);
                 suggestions_.clear();
+                qDebug() << "wait params ";
             }
             else command->exec();
         }

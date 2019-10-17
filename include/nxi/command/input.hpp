@@ -47,7 +47,9 @@ namespace nxi
     signals:
         void event_suggestion_update(stz::observer_ptr<nxi::commands_view>);
         //void event_suggestion_update(std::vector<stz::observer_ptr<nxi::page>>);
+        void event_state_update(states);
         void event_selection_update(int index);
+        void event_complete();
 
     private:
         nxi::command_system& command_system_;

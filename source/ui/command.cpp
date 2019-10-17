@@ -17,7 +17,7 @@ namespace ui
     command::command(ui::core& ui_core)
         : ui_core_{ ui_core }
     {
-        setPlaceholderText("Enter command");
+        setPlaceholderText("Enter command or use shortcut");
 
         info_ = new QLabel(this);
         header_ = new QLabel(this);
@@ -40,22 +40,6 @@ namespace ui
 
             user_input().update(text);
 
-
-            /*
-            menu_->clear();
-
-            header_->setText(input_.text());
-            info_->setText("results : " + QString::number(input_.suggestion_count()));
-            menu_->exec();
-
-            if (input_.is_empty())
-            {
-                auto focused_page = ui_core_.nxi_core().page_system().focus();
-                blockSignals(true);
-                if (focused_page.has_value()) setText(focused_page.value()->command());
-                selectAll();
-                blockSignals(false);
-            }*/
         });
 
         connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), this, [this](nxi::page& page)
@@ -75,6 +59,8 @@ namespace ui
         QLineEdit::keyPressEvent(event);
         switch (event->key())
         {
+            case Qt::Key_Escape:
+                //user_input().reset();
             case Qt::Key_Up:
                 user_input().select_previous_suggestion();
                 break;

@@ -49,7 +49,7 @@ namespace nxi
         void init_commands();
         void init_group(const QString& command_node);
         void init(nxi::command_data);
-        void init(const QString& action, function_type, const QString& icon = ":/button/quit");
+        void init(const QString& action, function_type, const QString& icon = "");
         void init_param(const QString& name, std::function<void(std::vector<QString>&)>);
 
         nds::node<nxi::command>* init_node_group_ = nullptr;

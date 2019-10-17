@@ -56,6 +56,12 @@ namespace ui::interfaces::light
         main_layout->addLayout(middle_layout, 1);
 
         command_menu_ = new ui::command_menu(ui_core_, this);
+        command_menu_->hide();
+
+        connect(&ui_core_.nxi_core().command_system().user_input(), &nxi::command_input::event_complete, [this]()
+        {
+            command_menu_->hide();
+        });
 
         connect(&ui_core_.nxi_core().command_system().user_input(), &nxi::command_input::event_suggestion_update, [this](stz::observer_ptr<nxi::commands_view> cmds)
         {

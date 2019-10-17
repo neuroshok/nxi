@@ -41,7 +41,6 @@ namespace ui
     private:
         ui::core& ui_core_;
 
-        ui::command_menu* menu_;
         QLabel* info_;
         QLabel* header_;
     };

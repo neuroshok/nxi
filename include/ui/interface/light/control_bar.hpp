@@ -18,6 +18,8 @@ namespace ui::interfaces::light
 
         explicit control_bar(ui::core& ui_core, ui::window* window);
 
+        ui::command* command_input();
+
     private:
         ui::core& ui_core_;
 

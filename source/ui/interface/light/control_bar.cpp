@@ -38,12 +38,16 @@ namespace ui::interfaces::light
 
         auto command_root_ = new QLabel(this);
         command_root_->setText("nxi");
-        command_root_->setStyleSheet("background-color: #070d14; color: #00BBFF; padding: 0 20 0 20;");
-
+        command_root_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #00BBFF; padding: 0 20 0 20;");
 
         command_input_ = new ui::command(ui_core_);
         command_input_->setFocus();
         layout->addWidget(command_root_);
         layout->addWidget(command_input_);
+    }
+
+    ui::command *control_bar::command_input()
+    {
+        return command_input_;
     }
 } // ui::interfaces

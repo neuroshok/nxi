@@ -185,6 +185,11 @@ namespace nxi
 
         // PAGE
         init_group("page");
+            // new
+            init("new_page", [this](const nxi::command_params&)
+            {
+                nxi_core_.page_system().open<nxi::web_page>(0);
+            });
             // open
             init("open", [this](const nxi::command_params&)
             {
@@ -217,15 +222,6 @@ namespace nxi
                 });
 
                 nxi_core_.page_system().get();
-
-            /* struct switch
-             * {
-             *     std::string name = "switch";
-             *
-             * }
-             *
-             */
-
 
 
 /*
