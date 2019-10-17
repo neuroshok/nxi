@@ -17,9 +17,9 @@ namespace nxi
         nxi_json_key(text_color, QColor, (186, 187, 193) )
 
         nxi_json_open(field)
-            nxi_json_key(background_color, QColor, (34, 34, 34) )
-            nxi_json_key(background_color_focus, QColor, (50, 50, 50) )
-            nxi_json_key(text_color, QColor, (34, 34, 34) )
+            nxi_json_key(background_color, QColor, (15, 20, 25) )
+            nxi_json_key(background_color_focus, QColor, (7, 13, 20) )
+            nxi_json_key(text_color, QColor, (0, 187, 250) )
             nxi_json_key(text_color_focus, QColor, (34, 34, 34) )
         nxi_json_close(field)
 
@@ -31,11 +31,11 @@ namespace nxi
         nxi_json_close(icon_button)
 
         nxi_json_open(menu)
-            nxi_json_key(background_color, QColor, (88, 91, 97) )
+            nxi_json_key(background_color, QColor, (15, 20, 25) )
             nxi_json_key(item_text_color, QColor, (186, 187, 193) )
             nxi_json_key(item_text_color_hover, QColor, (186, 187, 193) )
             nxi_json_key(item_background_color_hover, QColor, (61, 65, 71) )
-            nxi_json_key(item_background_color_selected, QColor, (0, 191, 255) )
+            nxi_json_key(item_background_color_selected, QColor, (61, 65, 71) )
             nxi_json_key(item_height, int, (24) )
         nxi_json_close(menu)
 

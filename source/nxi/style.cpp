@@ -148,7 +148,7 @@ namespace nxi
                 QPoint          bottomRight = option->rect.topRight();
                 QLinearGradient backgroundGradient(topLeft, bottomRight);
                 backgroundGradient.setColorAt(0.0, field_background_color);
-                backgroundGradient.setColorAt(1.0, QColor(0, 0, 0));
+                backgroundGradient.setColorAt(1.0, field_background_color);
 
                 painter->fillRect(option->rect, backgroundGradient);
                 /*

@@ -23,6 +23,7 @@
 #include <ui/command/menu.hpp>
 #include <ui/window.hpp>
 
+#include <QPushButton>
 
 namespace ui::interfaces::light
 {
@@ -35,8 +36,14 @@ namespace ui::interfaces::light
         QHBoxLayout* layout = new nxw::hbox_layout;
         setLayout(layout);
 
+        auto command_root_ = new QLabel(this);
+        command_root_->setText("nxi");
+        command_root_->setStyleSheet("background-color: #070d14; color: #00BBFF; padding: 0 20 0 20;");
+
+
         command_input_ = new ui::command(ui_core_);
         command_input_->setFocus();
+        layout->addWidget(command_root_);
         layout->addWidget(command_input_);
     }
 } // ui::interfaces
