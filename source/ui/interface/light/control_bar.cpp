@@ -20,9 +20,9 @@
 #include <nxi/config.hpp>
 
 #include <ui/command.hpp>
-#include <ui/command/menu.hpp>
 #include <ui/window.hpp>
 
+#include <QLabel>
 #include <QPushButton>
 
 namespace ui::interfaces::light
@@ -36,7 +36,7 @@ namespace ui::interfaces::light
         QHBoxLayout* layout = new nxw::hbox_layout;
         setLayout(layout);
 
-        auto command_root_ = new QLabel(this);
+        command_root_ = new QLabel(this);
         command_root_->setText("nxi");
         command_root_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #00BBFF; padding: 0 20 0 20;");
 
@@ -44,6 +44,12 @@ namespace ui::interfaces::light
         command_input_->setFocus();
         layout->addWidget(command_root_);
         layout->addWidget(command_input_);
+
+        connect(&ui_core_.nxi_core().command_system(), &nxi::command_system::event_root_update,
+        [this](nds::node<nxi::command>* command)
+        {
+            command_root_->setText(command->get().action_name());
+        });
     }
 
     ui::command *control_bar::command_input()

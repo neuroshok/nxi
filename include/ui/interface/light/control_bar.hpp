@@ -3,11 +3,12 @@
 
 #include <ui/interface.hpp>
 
+class QLabel;
+
 namespace ui
 {
     class core;
     class command;
-    class command_menu;
 } // ui
 
 namespace ui::interfaces::light
@@ -15,7 +16,6 @@ namespace ui::interfaces::light
     class control_bar : public ui::interface
     {
     public:
-
         explicit control_bar(ui::core& ui_core, ui::window* window);
 
         ui::command* command_input();
@@ -24,6 +24,7 @@ namespace ui::interfaces::light
         ui::core& ui_core_;
 
         ui::command* command_input_;
+        QLabel* command_root_;
     };
 } // ui::interfaces::light
 

@@ -96,11 +96,13 @@ namespace ui::interfaces::standard
 
         // module command
         // init
+        /*
         module_controls_ = new nxw::hbox_layout;
         for (const auto& command : m_ui_core.nxi_core().command_system().get())
         {
             command_add(*command);
         }
+         */
         // event
         QObject::connect(&ui_core.nxi_core().command_system(), &nxi::command_system::event_add, [this](const nxi::command& command)
         {

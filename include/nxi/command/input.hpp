@@ -33,13 +33,18 @@ namespace nxi
         const std::vector<QString>& param_suggestions() const;
         const QString& text() const;
 
-
+        void suggest_command();
         void select_suggestion(int index);
         void select_previous_suggestion();
         void select_next_suggestion();
         size_t suggestion_count() const;
         stz::observer_ptr<nxi::command> suggestion(int index);
         stz::observer_ptr<nxi::command> selected_suggestion();
+        int selected_suggestion_index();
+        bool has_selected_suggestion();
+
+        void clear();
+        void reset();
 
         bool is_empty() const;
         bool is_valid() const;
@@ -61,7 +66,7 @@ namespace nxi
         int param_index_ = 0;
 
         int selected_suggestion_index_;
-        std::vector<stz::observer_ptr<nxi::command>> suggestions_;
+        nxi::commands_view suggestions_;
         std::vector<QString> param_suggestions_;
     };
 } // nxi

@@ -4,6 +4,8 @@
 #include <nxi/command/fwd.hpp>
 #include <nxi/command/data.hpp>
 
+#include <nds/graph/node.hpp>
+
 #include <functional>
 #include <QObject>
 #include <QHash>
@@ -36,6 +38,8 @@ namespace nxi
 
 		params_type params() const;
 
+		void set_function(function_type);
+		void set_node(nds::node<nxi::command>*);
 
         const QString& name() const;
         const QString& module_name() const;
@@ -44,7 +48,10 @@ namespace nxi
         const QString& icon() const;
         const QString& description() const;
 
+        nds::node<nxi::command>* node() const;
+
 	private:
+	    nds::node<nxi::command>* node_;
 		QString module_name_;
 		QString action_name_;
 		QString name_;

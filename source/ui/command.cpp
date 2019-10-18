@@ -25,12 +25,12 @@ namespace ui
         connect(this, &QLineEdit::returnPressed, [this]()
         {
             user_input().exec();
+            setText("");
         });
-
 
         connect(this, &QLineEdit::editingFinished, [this]()
         {
-            //menu_->hide();
+            user_input().reset();
         });
 
         // text changed by the user
@@ -39,7 +39,6 @@ namespace ui
             if (!hasFocus()) return;
 
             user_input().update(text);
-
         });
 
         connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), this, [this](nxi::page& page)
@@ -60,14 +59,27 @@ namespace ui
         switch (event->key())
         {
             case Qt::Key_Escape:
-                //user_input().reset();
+                user_input().reset();
+                break;
             case Qt::Key_Up:
                 user_input().select_previous_suggestion();
                 break;
             case Qt::Key_Down:
-                user_input().select_next_suggestion();
+                if (!user_input().has_selected_suggestion())
+                {
+                    if (user_input().is_empty()) user_input().suggest_command();
+                    else user_input().update(text());
+
+                    user_input().select_next_suggestion();
+                }
+                else user_input().select_next_suggestion();
                 break;
         }
+    }
+
+    void command::focusInEvent(QFocusEvent *event)
+    {
+        QLineEdit::focusInEvent(event);
     }
 
     void command::focusOutEvent(QFocusEvent* event)

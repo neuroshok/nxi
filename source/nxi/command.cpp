@@ -8,6 +8,7 @@ namespace nxi
 {
     command::command(nxi::command_data data)
         : module_name_{ std::move(data.module) }
+        , node_{ nullptr }
         , action_name_ { std::move(data.action) }
         , name_ { module_name_ + ":" + action_name_ }
         , function_{ std::move(data.function) }
@@ -19,6 +20,7 @@ namespace nxi
 
     command::command(const QString& module_name, const QString& action_name, function_type fn, const QString& icon)
         : module_name_{ module_name }
+        , node_{ nullptr }
         , action_name_{ action_name }
         , name_{ module_name_ + ":" + action_name_ }
         , icon_{ icon }
@@ -47,7 +49,15 @@ namespace nxi
     }
 
 
+    void command::set_function(command::function_type fn)
+    {
+        function_ = std::move(fn);
+    }
 
+    void command::set_node(nds::node<nxi::command>* node)
+    {
+        node_ = node;
+    }
 
     command::params_type command::params() const
     {

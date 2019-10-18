@@ -18,6 +18,7 @@
         <file alias="maximize">icon/maximize24.png</file>
         <file alias="close">icon/close24.png</file>
         <file alias="switch">icon/switch16.png</file>
+        <file alias="node">icon/node16.png</file>
     </qresource>
     <qresource prefix="/button">
         <file alias="menu">graphic/menu.png</file>

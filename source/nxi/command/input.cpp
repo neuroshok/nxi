@@ -55,14 +55,17 @@ namespace nxi
             // required parameters
             if (command->params().size() > 0)
             {
+                reset();
                 state_ = states::param;
-                input_ = "";
-                param_index_ = 0;
                 command_ =  suggestion(0);
-                suggestions_.clear();
                 qDebug() << "wait params ";
             }
-            else command->exec();
+            else
+            {
+                command->exec();
+                reset();
+                emit event_complete();
+            }
         }
         else if (state_ == states::param)
         {
@@ -77,10 +80,7 @@ namespace nxi
                 if (command_) command_->exec(params_);
 
                 qDebug() << "final exec " << command_->name() << "  " << input_;
-                input_ = "";
-                param_index_ = 0;
-                state_ = states::action;
-                params_.clear();
+                reset();
             }
         }
     }
@@ -146,5 +146,36 @@ namespace nxi
     stz::observer_ptr<nxi::command> command_input::selected_suggestion()
     {
         return suggestion(selected_suggestion_index_);
+    }
+
+    void command_input::suggest_command()
+    {
+        suggestions_ = command_system_.root_list();
+        emit event_suggestion_update(stz::make_observer(&suggestions_));
+    }
+
+    void command_input::reset()
+    {
+        param_index_ = 0;
+        selected_suggestion_index_ = -1;
+        state_ = states::action;
+        params_.clear();
+        suggestions_.clear();
+    }
+
+    int command_input::selected_suggestion_index()
+    {
+        return selected_suggestion_index_;
+    }
+
+    bool command_input::has_selected_suggestion()
+    {
+        return selected_suggestion_index_ > -1;
+    }
+
+    void command_input::clear()
+    {
+        input_ = "";
+        reset();
     }
 } // nxi

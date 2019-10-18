@@ -34,7 +34,7 @@ namespace nxi
 
         void load();
 
-        const std::vector<std::unique_ptr<nxi::command>>& get();
+        nxi::commands_view root_list();
         const nxi::command& get(const QString& module_action, const QString& module_name = "nxi") const;
         nxi::command* find(const QString& module_action, const QString& module_name = "nxi") const;
         nds::node<nxi::command>* add(nxi::command command, nds::node<nxi::command>* source = nullptr);
@@ -42,12 +42,15 @@ namespace nxi
         commands_view search(const QString&);
         nxi::command_input& user_input();
 
+        void set_root(nds::node<nxi::command>*);
+
         signals:
         void event_add(const nxi::command&);
+        void event_root_update(nds::node<nxi::command>*);
 
     private:
         void init_commands();
-        void init_group(const QString& command_node);
+        nds::node<nxi::command>* init_group(const QString& command_node, nds::node<nxi::command>* = nullptr);
         void init(nxi::command_data);
         void init(const QString& action, function_type, const QString& icon = "");
         void init_param(const QString& name, std::function<void(std::vector<QString>&)>);
@@ -58,8 +61,8 @@ namespace nxi
     private:
         nxi::core& nxi_core_;
         nxi::command_input user_input_;
+        nds::node<nxi::command>* root_;
 
-        std::vector<std::unique_ptr<nxi::command>> commands_;
         QHash<QString, size_t> command_indexes_;
         // QHash<shortcut, unsigned int
         nds::graph<nxi::command> graph_;

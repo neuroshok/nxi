@@ -25,6 +25,7 @@
 #include <ui/command.hpp>
 #include <ui/command/menu.hpp>
 #include <ui/window.hpp>
+#include <include/nxi/style_data.hpp>
 
 namespace ui::interfaces::light
 {
@@ -57,6 +58,14 @@ namespace ui::interfaces::light
 
         command_menu_ = new ui::command_menu(ui_core_, this);
         command_menu_->hide();
+
+        setFocusPolicy(Qt::ClickFocus);
+
+
+        connect(control_bar_->command_input(), &QLineEdit::editingFinished, [this]()
+        {
+            command_menu_->hide();
+        });
 
         connect(&ui_core_.nxi_core().command_system().user_input(), &nxi::command_input::event_complete, [this]()
         {
@@ -98,6 +107,10 @@ namespace ui::interfaces::light
         QPainter painter(this);
         painter.fillRect(0, 0 ,width(), height(), style_data.background_color);
         painter.drawImage(target, image, source);
+
+        // insane design drawing
+        auto& design_color = ui_core_.nxi_core().interface_system().style().data().field.background_color.get();
+        painter.fillRect(0, 0 , width(), control_bar_->height(), design_color);
     }
 
     void main::resizeEvent(QResizeEvent*)
