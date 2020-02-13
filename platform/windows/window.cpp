@@ -1,4 +1,4 @@
-#include <platform/windows/native_window.hpp>
+#include <platform/windows/window.hpp>
 
 #include <QApplication>
 #include <QPoint>
@@ -16,7 +16,7 @@
 
 namespace platform::windows
 {
-    native_window::native_window(QWidget *parent)
+    window::window(QWidget *parent)
         : QWidget(parent)
         , grip_{ nullptr }
         , mouse_down_{ false }
@@ -38,7 +38,7 @@ namespace platform::windows
         setVisible(true);
     }
 
-    bool native_window::nativeEvent(const QByteArray& eventType, void* message, long* result)
+    bool window::nativeEvent(const QByteArray& eventType, void* message, long* result)
     {
         // https://forum.qt.io/topic/93141/qtablewidget-itemselectionchanged/13
         #if (QT_VERSION == QT_VERSION_CHECK(5, 11, 1))
@@ -199,12 +199,12 @@ namespace platform::windows
         }
     }
 
-    void native_window::setContentsMargins(const QMargins &margins)
+    void window::setContentsMargins(const QMargins &margins)
     {
         QWidget::setContentsMargins(margins+m_frames);
         m_margins = margins;
     }
-    void native_window::setContentsMargins(int left, int top, int right, int bottom)
+    void window::setContentsMargins(int left, int top, int right, int bottom)
     {
         QWidget::setContentsMargins(left+m_frames.left(),\
                                         top+m_frames.top(), \
@@ -215,13 +215,13 @@ namespace platform::windows
         m_margins.setRight(right);
         m_margins.setBottom(bottom);
     }
-    QMargins native_window::contentsMargins() const
+    QMargins window::contentsMargins() const
     {
         QMargins margins = QWidget::contentsMargins();
         margins -= m_frames;
         return margins;
     }
-    void native_window::getContentsMargins(int *left, int *top, int *right, int *bottom) const
+    void window::getContentsMargins(int *left, int *top, int *right, int *bottom) const
     {
         QWidget::getContentsMargins(left,top,right,bottom);
         if (!(left&&top&&right&&bottom)) return;
@@ -234,7 +234,7 @@ namespace platform::windows
         }
     }
 
-    QRect native_window::contentsRect() const
+    QRect window::contentsRect() const
     {
         QRect rect = QWidget::contentsRect();
         int width = rect.width();
@@ -246,7 +246,7 @@ namespace platform::windows
         return rect;
     }
 
-    void native_window::set_fullscreen()
+    void window::set_fullscreen()
     {
         if (isMaximized())
         {
@@ -256,19 +256,19 @@ namespace platform::windows
         QWidget::showFullScreen();
     }
 
-    void native_window::set_grip(QWidget* widget)
+    void window::set_grip(QWidget* widget)
     {
         grip_ = widget;
     }
 
     /*
-    void native_window::mousePressEvent(QMouseEvent* event)
+    void window::mousePressEvent(QMouseEvent* event)
     {
         if (event->button() == Qt::LeftButton)
         {
             if ( event->type() == QEvent::MouseButtonDblClick)
             {
-                qDebug() << "native_window::MouseButtonDblClick";
+                qDebug() << "window::MouseButtonDblClick";
                 showMaximized();
             }
 
@@ -277,20 +277,20 @@ namespace platform::windows
             SendMessage( (HWND)winId(), WM_NCLBUTTONDOWN, HTCAPTION, 0 );
             SetCapture((HWND)winId());
 
-            //qDebug() << "native_window::mousePressEvent";
+            //qDebug() << "window::mousePressEvent";
 
         }
     }
 
 
-    void native_window::mouseReleaseEvent(QMouseEvent *event)
+    void window::mouseReleaseEvent(QMouseEvent *event)
     {
 
         SendMessage( (HWND)winId(), WM_NCLBUTTONUP, HTCAPTION, 0 );
-        qDebug() << "native_window::mouseReleaseEvent";
+        qDebug() << "window::mouseReleaseEvent";
     }
 
-    void native_window::mouseMoveEvent(QMouseEvent *event)
+    void window::mouseMoveEvent(QMouseEvent *event)
     {
 
         QWidget::mouseMoveEvent(event);

@@ -1,17 +1,16 @@
-#ifndef PLATFORM_WINDOWS_NATIVE_WINDOW_HPP_NXI
-#define PLATFORM_WINDOWS_NATIVE_WINDOW_HPP_NXI
-
+#ifndef PLATFORM_WINDOWS_WINDOW_HPP_NXI
+#define PLATFORM_WINDOWS_WINDOW_HPP_NXI
 
 #include <QObject>
 #include <QWidget>
 
 namespace platform::windows
 {
-    class native_window : public QWidget
+    class window : public QWidget
     {
         Q_OBJECT
     public:
-        explicit native_window(QWidget* parent = 0);
+        explicit window(QWidget* parent = 0);
         void set_grip(QWidget* widget);
 
         void setContentsMargins(const QMargins &margins);
@@ -35,4 +34,4 @@ namespace platform::windows
     };
 } // platform
 
-#endif // PLATFORM_WINDOWS_NATIVE_WINDOW_HPP_NXI
+#endif // PLATFORM_WINDOWS_WINDOW_HPP_NXI

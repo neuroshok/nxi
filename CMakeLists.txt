@@ -137,6 +137,16 @@ if (NXI_TARGET_DESKTOP)
         file(GLOB_RECURSE NXI_PLATFORM_SOURCES
             "${PROJECT_SOURCE_DIR}/platform/windows/*.cpp"
             "${PROJECT_SOURCE_DIR}/platform/*.hpp")
+
+        # use generic window
+        if (NXI_WINDOW_GENERIC)
+            list(APPEND NXI_PLATFORM_SOURCES "${PROJECT_SOURCE_DIR}/platform/generic/window.cpp")
+            list(APPEND NXI_DEFINITIONS NXI_WINDOW_GENERIC)
+            message("use generic window")
+        else()
+            message("use windows native window")
+            list(APPEND NXI_PLATFORM_SOURCES "${PROJECT_SOURCE_DIR}/platform/windows/window.cpp")
+        endif()
     endif()
 
     file(GLOB_RECURSE NXI_SOURCES
@@ -149,7 +159,7 @@ if (NXI_TARGET_DESKTOP)
 
     add_executable(nxi ${NXI_SOURCES} ${NXI_ICON})
     target_include_directories(nxi PUBLIC include)
-
+    target_compile_definitions(nxi PUBLIC ${NXI_DEFINITIONS})
     target_link_libraries(nxi lib_ndb lib_nds lib_speedlog ${NXI_MODULES} ${NXI_QT_LIBS})
 
     set_target_properties(nxi

@@ -5,7 +5,7 @@
 #include <stz/observer_ptr.hpp>
 
 #include <QWidget>
-#include <platform/native_window.hpp>
+#include <platform/window.hpp>
 
 class QHBoxLayout;
 
@@ -15,7 +15,7 @@ namespace ui
     class window_system;
     class main_interface;
 
-class window : public platform::native_window
+    class window : public platform::window
     {
     Q_OBJECT
     public:

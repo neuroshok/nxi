@@ -9,8 +9,8 @@
 
 namespace ui
 {
-    window::window(ui::core& ui_core, unsigned int id) :
-        ui_core_{ ui_core }
+    window::window(ui::core& ui_core, unsigned int id)
+        : ui_core_{ ui_core }
         , id_{ id }
         , interface_{ nullptr }
     {
@@ -23,7 +23,7 @@ namespace ui
 
     void window::mouseReleaseEvent(QMouseEvent* event)
     {
-        if (platform::native_window::isMaximized()) return;
+        if (platform::window::isMaximized()) return;
         window_system().move(this, x(), y());
         window_system().resize(this, width(), height());
     }
@@ -59,11 +59,11 @@ namespace ui
 
     void window::set_grip(QWidget* widget)
     {
-        platform::native_window::set_grip(widget);
+        platform::window::set_grip(widget);
     }
 
     void window::set_fullscreen()
     {
-        platform::native_window::set_fullscreen();
+        platform::window::set_fullscreen();
     }
 } // ui
