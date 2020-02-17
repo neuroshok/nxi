@@ -3,10 +3,12 @@
 
 #include <nxi/command/fwd.hpp>
 #include <nxi/command/params.hpp>
+#include <nxi/command/shortcut_input.hpp>
 
-
+#include <QObject>
 #include <QString>
-#include <include/nxi/system/page.hpp>
+
+class QKeyEvent;
 
 namespace nxi
 {
@@ -22,7 +24,7 @@ namespace nxi
 
         void add_param(const QString& param);
 
-        void update(const QString& input);
+        void update(const QString& input, QKeyEvent*);
         void exec();
 
         states state() const;
@@ -49,6 +51,8 @@ namespace nxi
         bool is_empty() const;
         bool is_valid() const;
 
+        nxi::shortcut_input& shortcut_input();
+
     signals:
         void event_suggestion_update(stz::observer_ptr<nxi::commands_view>);
         //void event_suggestion_update(std::vector<stz::observer_ptr<nxi::page>>);
@@ -59,6 +63,7 @@ namespace nxi
     private:
         nxi::command_system& command_system_;
 
+        nxi::shortcut_input shortcut_input_;
         QString input_;
         states state_;
         nxi::command_params params_;

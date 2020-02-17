@@ -1,8 +1,10 @@
 #include <nxi/command/input.hpp>
 
 #include <nxi/command.hpp>
+#include <nxi/log.hpp>
 #include <nxi/system/command.hpp>
 
+#include <QKeyEvent>
 
 namespace nxi
 {
@@ -18,19 +20,27 @@ namespace nxi
 
     }
 
-    void command_input::update(const QString& input)
+    void command_input::update(const QString& input, QKeyEvent* event)
     {
+        if (event->isAutoRepeat()) return;
+
         input_ = input;
 
+        /*
         if (input_.isEmpty())
         {
             emit event_complete();
             return;
-        }
+        }*/
 
         if (state_ == states::action)
         {
+            suggestions_ = shortcut_input_.update(command_system_, event);
+            /*
             suggestions_ = command_system_.search(input_);
+            auto shortcut_suggestions = shortcut_input_.update(command_system_, event);
+            suggestions_.insert(suggestions_.end(), shortcut_suggestions.begin(), shortcut_suggestions.end());*/
+
             emit event_suggestion_update(stz::make_observer<nxi::commands_view>(&suggestions_));
         }
         if (state_ == states::param)
@@ -177,5 +187,10 @@ namespace nxi
     {
         input_ = "";
         reset();
+    }
+
+    nxi::shortcut_input& command_input::shortcut_input()
+    {
+        return shortcut_input_;
     }
 } // nxi
