@@ -2,10 +2,9 @@
 #define INCLUDE_NXI_COMMAND_SHORTCUT_INPUT_HPP_NXI
 
 #include <nxi/command/fwd.hpp>
+#include <nxi/shortcut.hpp>
 
-#include <unordered_set>
 #include <vector>
-
 #include <QKeyEvent>
 
 namespace nxi
@@ -19,26 +18,19 @@ namespace nxi
 
         shortcut_input();
 
-        void search(nxi::command_system&, QKeyEvent*);
+        void search(nxi::command_system&, Qt::Key);
         nxi::commands_view update(nxi::command_system&, QKeyEvent*);
         void untrigger();
+        QString to_string();
+
+    signals:
+        //void input_update(QString keys);
 
     private:
         nxi::commands_view suggestions_;
+        nxi::shortcut input_;
 
-        std::vector<Qt::Key> sequence_keys_;
-        std::vector<Qt::Key> combo_keys_;
-
-        std::vector<Qt::Key> input_;
-
-
-        std::unordered_set<Qt::Key> triggers_;
-        bool match_;
         trigger_mode trigger_mode_;
-        int sequencing_;
-        Qt::Key trigger_key_;
-        int current_id_;
-        bool executed_;
     };
 } // nxi
 

@@ -33,17 +33,14 @@ namespace ui
             user_input().reset();
         });
 
-        // text changed by the user
-        connect(this, &QLineEdit::textEdited, [this](const QString& text)
-        {
-            if (!hasFocus()) return;
-
-            user_input().update(text);
-        });
-
         connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), this, [this](nxi::page& page)
         {
             setText(page.name());
+        });
+
+        connect(&ui_core_.nxi_core().command_system().user_input(), &nxi::command_input::event_shortcut_input_update, this, [this](const QString& shortcut_input)
+        {
+            setPlaceholderText(shortcut_input);
         });
     }
 
@@ -55,7 +52,10 @@ namespace ui
 
     void command::keyPressEvent(QKeyEvent* event)
     {
+        if (event->isAutoRepeat()) return;
+
         QLineEdit::keyPressEvent(event);
+
         switch (event->key())
         {
             case Qt::Key_Escape:
@@ -68,13 +68,20 @@ namespace ui
                 if (!user_input().has_selected_suggestion())
                 {
                     if (user_input().is_empty()) user_input().suggest_command();
-                    else user_input().update(text());
+                    else user_input().update(text(), event);
 
                     user_input().select_next_suggestion();
                 }
                 else user_input().select_next_suggestion();
                 break;
+
+            default:
+                ui_core_.nxi_core().command_system().user_input().update(text(), event);
         }
+    }
+    void command::keyReleaseEvent(QKeyEvent* event)
+    {
+        ui_core_.nxi_core().command_system().user_input().update(text(), event);
     }
 
     void command::focusInEvent(QFocusEvent *event)

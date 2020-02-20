@@ -18,7 +18,7 @@ namespace nxi
     {
         Q_OBJECT
     public:
-        enum class states { action, param };
+        enum class states { command, action, param };
 
         command_input(nxi::command_system& command_system);
 
@@ -59,6 +59,8 @@ namespace nxi
         void event_state_update(states);
         void event_selection_update(int index);
         void event_complete();
+
+        void event_shortcut_input_update(const QString&);
 
     private:
         nxi::command_system& command_system_;

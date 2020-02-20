@@ -36,10 +36,8 @@ namespace nxi
         if (state_ == states::action)
         {
             suggestions_ = shortcut_input_.update(command_system_, event);
-            /*
-            suggestions_ = command_system_.search(input_);
-            auto shortcut_suggestions = shortcut_input_.update(command_system_, event);
-            suggestions_.insert(suggestions_.end(), shortcut_suggestions.begin(), shortcut_suggestions.end());*/
+            auto str_input = shortcut_input_.to_string();
+            emit event_shortcut_input_update(std::move(str_input));
 
             emit event_suggestion_update(stz::make_observer<nxi::commands_view>(&suggestions_));
         }

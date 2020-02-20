@@ -14,6 +14,12 @@ namespace nxi
         , function_{ std::move(data.function) }
         , icon_ { std::move(data.icon) }
         , description_ { std::move(data.description) }
+        , shortcut_ { std::move(data.shortcut) }
+    {
+
+    }
+
+    command::command(nds::node<nxi::command> *, nxi::command_data)
     {
 
     }
@@ -92,5 +98,10 @@ namespace nxi
     const QString& command::description() const
     {
         return description_;
+    }
+
+    const nxi::shortcut& command::shortcut() const
+    {
+        return shortcut_;
     }
 } // nxi

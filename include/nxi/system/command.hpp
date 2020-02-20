@@ -11,6 +11,7 @@
 #include <QHash>
 
 #include <nds/graph.hpp>
+#include <nds/algorithm/graph.hpp>
 
 #include <nxi/system/command.hpp>
 #include <nxi/command/input.hpp>
@@ -37,6 +38,8 @@ namespace nxi
         nxi::commands_view root_list();
         const nxi::command& get(const QString& module_action, const QString& module_name = "nxi") const;
         nxi::command* find(const QString& module_action, const QString& module_name = "nxi") const;
+        template<class Callback>
+        void for_each(Callback&&);
         nds::node<nxi::command>* add(nxi::command command, nds::node<nxi::command>* source = nullptr);
         void exec(const QString& command, command_context context = command_context::deduced);
         commands_view search(const QString&);
@@ -68,6 +71,18 @@ namespace nxi
         nds::graph<nxi::command> graph_;
 
     };
+} // nxi
+
+namespace nxi
+{
+    template<class Callback>
+    void command_system::for_each(Callback&& fn)
+    {
+        nds::algorithm::graph::for_each(graph_, [&fn](auto&& node)
+        {
+            fn(node);
+        });
+    }
 } // nxi
 
 #endif // NXI_COMMAND_SYSTEM_H_NXI

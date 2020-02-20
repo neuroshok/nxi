@@ -13,12 +13,12 @@
 #include <nxi/system/interface.hpp>
 
 #include <nds/encoder/graph.hpp>
-#include <nds/algorithm/graph/find.hpp>
+#include <nds/algorithm/graph.hpp>
 
 #include <nxi/page/custom.hpp>
 #include <include/ui/view/config.hpp>
 
-#include <nds/algorithm/graph/find.hpp>
+#include <nds/algorithm/graph.hpp>
 
 namespace nds::encoders
 {
@@ -175,6 +175,7 @@ namespace nxi
             quit.action = "quit";
             quit.icon = ":/button/quit";
             quit.description = "Quit application";
+            quit.shortcut = {{ Qt::Key_Control }, { Qt::Key_Q }};
             quit.function = [this](const nxi::command_params&){ nxi_core_.quit(); };
             init(std::move(quit));
 
@@ -185,15 +186,23 @@ namespace nxi
 
         // SETTINGS
         init_group("settings", group_main);
-            init("config", [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/config", nxi::renderer_type::widget); });
+            nxi::command_data config;
+            config.action = "config";
+            config.shortcut = {{ Qt::Key_Control, Qt::Key_Alt }, { Qt::Key_S }};
+            config.function = [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/config", nxi::renderer_type::widget); };
+            init(std::move(config));
 
         // PAGE
         init_group("page", group_main);
             // new
-            init("new_page", [this](const nxi::command_params&)
-            {
-                nxi_core_.page_system().open<nxi::web_page>(0);
-            });
+            nxi::command_data page_new;
+            page_new.action = "new";
+            page_new.description = "Open new web_page";
+            //page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }};
+            page_new.shortcut = {{  }, { Qt::Key_Exclam, Qt::Key_N, Qt::Key_E, Qt::Key_W }};
+            page_new.function = [this](const nxi::command_params&){ nxi_core_.page_system().open<nxi::web_page>(0); };
+            init(std::move(page_new));
+
             // open
             init("open", [this](const nxi::command_params&)
             {
@@ -210,6 +219,7 @@ namespace nxi
             page_switch.action = "switch";
             page_switch.icon = ":/icon/switch";
             page_switch.description = "Switch between all pages";
+            page_switch.shortcut = {{ Qt::Key_Control }, { Qt::Key_W, Qt::Key_S }};
             page_switch.function = [this](const nxi::command_params& params)
             {
                 auto id = params.get(0).toUInt();
@@ -228,6 +238,7 @@ namespace nxi
             nxi::command_data page_close;
             page_close.action = "close";
             page_close.description = "Close active page";
+            page_close.shortcut = {{ Qt::Key_Control }, { Qt::Key_W, Qt::Key_X }};
             page_close.function = [this](const nxi::command_params& params)
             {
                 // close
@@ -245,6 +256,19 @@ namespace nxi
                 nxi_core_.interface_system().load_style(name);
             };
             init(std::move(load_style));
+
+
+            // shortcust test
+            nxi::command_data test;
+            test.shortcut = {{ Qt::Key_Shift }, { Qt::Key_S }};
+            test.function = [this](const nxi::command_params&){ nxi_core_.error("ok"); };
+            init(test);
+
+            test.shortcut = {{}, { Qt::Key_Shift , Qt::Key_Shift }};
+            init(test);
+
+            test.shortcut = {{ Qt::Key_Alt }, { Qt::Key_E }};
+            init(test);
     }
 
     nxi::command_input& command_system::user_input()
@@ -260,7 +284,6 @@ namespace nxi
 
     nxi::commands_view command_system::root_list()
     {
-        qDebug() << "list " << root_->get().name();
         nxi::commands_view commands;
         graph_.targets(root_, [&commands](auto&& node)
         {

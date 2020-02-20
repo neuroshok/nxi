@@ -73,7 +73,7 @@ namespace ui
         if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
         else painter.fillRect(item_rect, style_data.background_color);
 
-        // icon
+        // command icon
         QRect icon_rect{ item_rect.left(), item_rect.top(), style_data.item_height, style_data.item_height };
         QPixmap icon{ command->icon() };
         QRect source_icon_rect = icon.rect();
@@ -110,8 +110,19 @@ namespace ui
             item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, command->description()).width());
         }
 
+        // command shortcut
+        if (!command->shortcut().is_empty())
+        {
+            QFont font;
+            QString shortcut_text = command->shortcut().to_string();
+            painter.setFont(font);
+            painter.setPen(style_data.item_text_color.darker(80));
+            painter.drawText(item_rect, Qt::AlignVCenter, shortcut_text);
+            item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, shortcut_text).width());
+        }
+
         // sound icon
-        QPixmap currentFrame = movie_.currentPixmap();
-        painter.drawPixmap(item_rect.left(), item_rect.top(), currentFrame);
+        //QPixmap currentFrame = movie_.currentPixmap();
+        //painter.drawPixmap(item_rect.left(), item_rect.top(), currentFrame);
     }
 } // ui

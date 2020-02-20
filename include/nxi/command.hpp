@@ -3,6 +3,7 @@
 
 #include <nxi/command/fwd.hpp>
 #include <nxi/command/data.hpp>
+#include <nxi/shortcut.hpp>
 
 #include <nds/graph/node.hpp>
 
@@ -23,6 +24,7 @@ namespace nxi
 	    using param_suggestions_type = std::function<void(std::vector<QString>&)>;
 
 		command(nxi::command_data);
+		command(nds::node<nxi::command>*, nxi::command_data);
 		command(const QString& module_name, const QString& action_name, function_type fn, const QString& icon = ":/image/nex");
         command(command&&) = default;
         command& operator=(command&&) = default;
@@ -47,6 +49,7 @@ namespace nxi
         const function_type& function() const;
         const QString& icon() const;
         const QString& description() const;
+        const nxi::shortcut& shortcut() const;
 
         nds::node<nxi::command>* node() const;
 
@@ -55,12 +58,13 @@ namespace nxi
 		QString module_name_;
 		QString action_name_;
 		QString name_;
-		function_type function_;
-		params_type params_;
-		param_suggestions_type param_suggestions_;
-
         QString icon_;
         QString description_;
+        function_type function_;
+        nxi::shortcut shortcut_;
+
+		params_type params_;
+		param_suggestions_type param_suggestions_;
 
 
         // shortcut
