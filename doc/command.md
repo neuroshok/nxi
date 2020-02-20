@@ -8,6 +8,9 @@
         - default mode
    - command_param : command parameter
         triggered by command
+        
+## Input execution
+
 
 ## Example
 **Command nodes**
@@ -27,7 +30,10 @@
         - pages {youtube.com, youpi.com, pouet.com/youplala}
         
     - search engine
-        - {results}
+        - google
+            - {results}
+        - googoone
+            - {results}
 
 **Shortcuts**
 - {`[CTRL]` `[ALT]`} + {`S`} // 2 combos, 1 séquence 
@@ -49,9 +55,23 @@
 - command mode : shortcut
 - find : `:w [space]` `:ws [space]`
 
+
 - command node : web
 - input : "you"
 - command mode : search
 - find : `youtube.com` `youpi.com` `pouet.com/youplala`
+
+
+- command node : search engine
+- input : "goo"
+- command mode : search
+- find : `google` `googoone`
+- exec : change current command node
+
+- command node : google
+- input : "test"
+- command mode : search
+- find : `{google results}
+- exec : search on google
 
 
