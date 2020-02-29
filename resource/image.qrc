@@ -6,33 +6,18 @@
     <qresource prefix="/image">
         <file alias="nex">graphic/nex.png</file>
         <file alias="node">graphic/node.png</file>
-        <file alias="sound">graphic/sound24.gif</file>
     </qresource>
     <qresource prefix="/icon">
-        <file alias="menu">icon/menu24.png</file>
-        <file alias="next">icon/next24.png</file>
-        <file alias="download">icon/download24.png</file>
-        <file alias="message">icon/message24.png</file>
-        <file alias="previous">icon/previous24.png</file>
-        <file alias="minimize">icon/minimize24.png</file>
-        <file alias="maximize">icon/maximize24.png</file>
         <file alias="close">icon/close24.png</file>
-        <file alias="switch">icon/switch16.png</file>
+        <file alias="download">icon/download24.png</file>
+        <file alias="maximize">icon/maximize24.png</file>
+        <file alias="menu">icon/menu24.png</file>
+        <file alias="message">icon/message24.png</file>
+        <file alias="minimize">icon/minimize24.png</file>
+        <file alias="next">icon/next24.png</file>
         <file alias="node">icon/node16.png</file>
-    </qresource>
-    <qresource prefix="/button">
-        <file alias="menu">graphic/menu.png</file>
-        <file alias="page_new">graphic/page_new.png</file>
-        <file alias="page_explorer_new">graphic/page_explorer_new.png</file>
-        <file alias="page_web_new">graphic/page_web_new.png</file>
-        <file alias="minimize">graphic/minimize.png</file>
-        <file alias="maximize">graphic/maximize.png</file>
-        <file alias="close">graphic/close.png</file>
-        <file alias="notification_none">graphic/notification_none.png</file>
-        <file alias="download">graphic/download.png</file>
-        <file alias="previous">graphic/previous.png</file>
-        <file alias="next">graphic/next.png</file>
-        <file alias="quit">graphic/quit.png</file>
+        <file alias="previous">icon/previous24.png</file>
+        <file alias="switch">icon/switch16.png</file>
     </qresource>
     <qresource prefix="/">
         <file alias="style.qss">graphic/style.qss</file>

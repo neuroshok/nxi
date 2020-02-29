@@ -174,7 +174,7 @@ namespace nxi
             // quit
             nxi::command_data quit;
             quit.action = "quit";
-            quit.icon = ":/button/quit";
+            quit.icon = ":/icon/quit";
             quit.description = "Quit application";
             quit.shortcut = {{ Qt::Key_Control }, { Qt::Key_Q }};
             quit.function = [this](const nxi::command_params&){ nxi_core_.quit(); };
