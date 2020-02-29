@@ -40,7 +40,9 @@ matrix:
       - VERSION=1.11 VARIANT=windows/windowsservercore-1803
     script:
       - choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-      - choco install visualstudio2019buildtools --ignore-package-exit-codes --package-parameters '--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --quiet --norestart'
+      - curl https://download.visualstudio.microsoft.com/download/pr/d7691cc1-82e6-434f-8e9f-a612f85b4b76/c62179f8cbbb58d4af22c21e8d4e122165f21615f529c94fad5cc7e012f1ef08/vs_BuildTools.exe --output vs.exe
+      - vs.exe --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --quiet --norestart
+      #- choco install visualstudio2019buildtools --ignore-package-exit-codes --package-parameters '--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --quiet --norestart'
       - choco install python3 --params "/InstallDir:C:\Python37"
       - /c/Python37/python.exe -m pip install requests semantic_version lxml
       - /c/Python37/python.exe ci/qt_downloader windows desktop 5.13.1 win64_msvc2017_64
@@ -65,6 +67,7 @@ matrix:
       - brew install qt5
       - brew link qt5 --force
       - brew install p7zip
+      - find / -name 5.14.1
     script:
     - cmake -DNXI_QT_ROOT=${QT_PATH} -DSTZ_FILESYSTEM=ON .
     - cmake --build . --target nxi --config Release
