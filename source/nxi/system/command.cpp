@@ -296,7 +296,6 @@ namespace nxi
         {
             commands.push_back(stz::make_observer(&node->get()));
         });
-        qDebug() << "list " << commands.size();
         return commands;
     }
 } // nxi

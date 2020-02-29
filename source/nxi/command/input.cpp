@@ -81,7 +81,7 @@ namespace nxi
         if (state_ == states::command)
         {
             qDebug() << "exec action" << suggestion(selected_suggestion_index_)->name();
-            auto& command = suggestion(0);
+            auto command = suggestion(0);
             // required parameters
             if (command->params().size() > 0)
             {
