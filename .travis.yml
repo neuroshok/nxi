@@ -41,7 +41,7 @@ matrix:
     script:
       - choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
       - choco install visualstudio2019buildtools --ignore-package-exit-codes --package-parameters '--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --quiet --norestart'
-      - choco install python
+      - choco install python3 --params "/InstallDir:C:\Python37"
       - /c/Python37/python.exe -m pip install requests semantic_version lxml
       - /c/Python37/python.exe ci/qt_downloader windows desktop 5.13.1 win64_msvc2017_64
       - cmake -G"Visual Studio 16 2019" -DNXI_QT_ROOT=${PWD}/5.13.1/msvc2017_64 .
@@ -60,7 +60,7 @@ matrix:
   - os: osx
     osx_image: xcode11
     env:
-      - QT_PATH=/usr/local/Cellar/qt/5.13.0
+      - QT_PATH=/usr/local/Cellar/qt/5.14.1
     before_install:
       - brew install qt5
       - brew link qt5 --force
