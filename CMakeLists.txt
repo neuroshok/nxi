@@ -134,19 +134,22 @@ if (NXI_TARGET_DESKTOP)
     # sources
     if (WIN32)
         set(NXI_ICON "${PROJECT_SOURCE_DIR}/resource/icon.rc" "${PROJECT_SOURCE_DIR}/resource/icon.ico")
-        file(GLOB_RECURSE NXI_PLATFORM_SOURCES
-            "${PROJECT_SOURCE_DIR}/platform/windows/*.cpp"
-            "${PROJECT_SOURCE_DIR}/platform/*.hpp")
 
         # use generic window
-        if (NXI_WINDOW_GENERIC)
-            list(APPEND NXI_PLATFORM_SOURCES "${PROJECT_SOURCE_DIR}/platform/generic/window.cpp")
-            list(APPEND NXI_DEFINITIONS NXI_WINDOW_GENERIC)
-            message("use generic window")
-        else()
-            message("use windows native window")
+        if (NOT NXI_WINDOW_GENERIC)
             list(APPEND NXI_PLATFORM_SOURCES "${PROJECT_SOURCE_DIR}/platform/windows/window.cpp")
         endif()
+    endif()
+
+    # use generic window on other platforms
+    if (NOT WIN32)
+        set(NXI_WINDOW_GENERIC ON)
+    endif()
+
+    # use generic window
+    if (NXI_WINDOW_GENERIC)
+        list(APPEND NXI_PLATFORM_SOURCES "${PROJECT_SOURCE_DIR}/platform/generic/window.cpp")
+        list(APPEND NXI_DEFINITIONS NXI_WINDOW_GENERIC)
     endif()
 
     file(GLOB_RECURSE NXI_SOURCES
