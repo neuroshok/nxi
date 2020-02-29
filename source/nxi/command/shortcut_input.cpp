@@ -1,26 +1,20 @@
 #include <nxi/command/shortcut_input.hpp>
 
+#include <nxi/command/input.hpp>
 #include <nxi/system/command.hpp>
 
 #include <sstream>
 #include <optional>
-
-/*
- * !NEW
- * CTRL ALT + S
- * CTRL + W S
- *
- * search
- */
+#include <include/nxi/log.hpp>
 
 namespace nxi
 {
-    shortcut_input::shortcut_input()
-    {
-        untrigger();
-    }
+    shortcut_input::shortcut_input(nxi::command_input& command_input)
+        : command_input_{ command_input }
+        , trigger_mode_{ trigger_mode::combo }
+    {}
 
-    nxi::commands_view shortcut_input::update(nxi::command_system& command_system, QKeyEvent* event)
+    nxi::commands_view shortcut_input::update(QKeyEvent* event)
     {
         if (event->isAutoRepeat()) return suggestions_;
 
@@ -33,13 +27,13 @@ namespace nxi
 
             if (input_.combo_keys.size() < ck && trigger_mode_ == trigger_mode::sequence)
             {
-                untrigger();
+                reset();
                 return suggestions_;
             }
 
             if (input_.combo_keys.empty() && input_.sequence_keys.empty())
             {
-                untrigger();
+                reset();
                 return suggestions_;
             }
 
@@ -49,35 +43,28 @@ namespace nxi
                 // shift the keys
                 key = input_.combo_keys.back();
                 input_.combo_keys.pop_back();
-                search(command_system, key);
+                search(key);
             }
         }
 
         if (event->type() == QEvent::KeyPress)
         {
-            search(command_system, key);
+            search(key);
         }
-
-        /*
-        qDebug() << "___COMBO";
-        for (auto k : input_.combo_keys) qDebug() << k;
-
-        qDebug() << "___SEQ";
-        for (auto k : input_.sequence_keys) qDebug() << k;
-*/
 
         return suggestions_;
     }
 
-    void shortcut_input::untrigger()
+    void shortcut_input::reset()
     {
         suggestions_.clear();
         input_.combo_keys.clear();
         input_.sequence_keys.clear();
         trigger_mode_ = trigger_mode::combo;
+        command_input_.reset();
     }
 
-    void shortcut_input::search(nxi::command_system& command_system, Qt::Key key)
+    void shortcut_input::search(Qt::Key key)
     {
         suggestions_.clear();
 
@@ -85,7 +72,7 @@ namespace nxi
         bool combo_match = false;
         bool sequence_match = false;
 
-        command_system.for_each([this, &key, &found_command, &combo_match, &sequence_match](auto&& node)
+        command_input_.command_system().for_each([this, &key, &found_command, &combo_match, &sequence_match](auto&& node)
         {
             const nxi::shortcut& shortcut = node->get().shortcut();
 
@@ -124,7 +111,9 @@ namespace nxi
                         suggestions_.push_back(stz::observer_ptr(&node->get()));
                         sequence_match = true;
 
-                        if (input_.sequence_keys.size() + 1 == shortcut.sequence_keys.size())
+                        // combo + sequence match
+                        bool combo_fullmatch = std::equal(input_.combo_keys.begin(), input_.combo_keys.end(), shortcut.combo_keys.begin(), shortcut.combo_keys.end());
+                        if (combo_fullmatch && (input_.sequence_keys.size() + 1 == shortcut.sequence_keys.size()))
                         {
                             found_command = std::addressof(node->get());
                         }
@@ -142,19 +131,22 @@ namespace nxi
         if (trigger_mode_ == trigger_mode::combo) input_.combo_keys.push_back(key);
         if (trigger_mode_ == trigger_mode::sequence) input_.sequence_keys.push_back(key);
 
+
+
         // command found
         if (found_command)
         {
-            qDebug() << "EXEC " << found_command->name();
+            nxi_trace("execute shortcut {}", found_command->name());
             found_command->exec();
-            untrigger();
+            reset();
+            return;
         }
 
         // no match reset input
-        if (!combo_match && ! sequence_match)
+        if (!combo_match && !sequence_match)
         {
-            qDebug() << "unknown sequence " << input_.combo_keys << " " << input_.sequence_keys;
-            untrigger();
+            nxi_trace("unknown sequence {}", input_.to_string());
+            reset();
         }
     }
 
@@ -163,4 +155,13 @@ namespace nxi
         return input_.to_string();
     }
 
+    void shortcut_input::add_trigger_key(Qt::Key key)
+    {
+        trigger_keys_.insert(key);
+    }
+
+    bool shortcut_input::is_trigger_key(Qt::Key key)
+    {
+        return std::find(trigger_keys_.begin(), trigger_keys_.end(), key) != trigger_keys_.end();
+    }
 } // nxi

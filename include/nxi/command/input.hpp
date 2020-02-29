@@ -18,7 +18,7 @@ namespace nxi
     {
         Q_OBJECT
     public:
-        enum class states { command, action, param };
+        enum class states { command, command_param, shortcut };
 
         command_input(nxi::command_system& command_system);
 
@@ -51,6 +51,7 @@ namespace nxi
         bool is_empty() const;
         bool is_valid() const;
 
+        nxi::command_system& command_system();
         nxi::shortcut_input& shortcut_input();
 
     signals:
@@ -58,7 +59,7 @@ namespace nxi
         //void event_suggestion_update(std::vector<stz::observer_ptr<nxi::page>>);
         void event_state_update(states);
         void event_selection_update(int index);
-        void event_complete();
+        void event_reset();
 
         void event_shortcut_input_update(const QString&);
 

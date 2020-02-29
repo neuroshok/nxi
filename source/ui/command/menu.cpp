@@ -19,7 +19,7 @@ namespace ui
         connect(&movie_, &QMovie::frameChanged, [this](int){ repaint(); });
         movie_.start();
 
-        connect(&ui_core_.nxi_core().command_system().user_input(), &nxi::command_input::event_selection_update, [this](int index)
+        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_selection_update, [this](int index)
         {
             selection_index_ = index;
             repaint();
@@ -86,12 +86,12 @@ namespace ui
         painter.setPen(style_data.item_text_color);
         painter.drawText(item_rect, Qt::AlignVCenter, command->name());
 
-        auto& user_input = ui_core_.nxi_core().command_system().user_input().text();
-        int hl_offset = command->name().indexOf(user_input);
+        auto& command_input = ui_core_.nxi_core().command_system().command_input().text();
+        int hl_offset = command->name().indexOf(command_input);
         if (hl_offset >= 0)
         {
             QRect hl_rect{ item_rect };
-            QString hl_text = command->name().mid(hl_offset, user_input.size());
+            QString hl_text = command->name().mid(hl_offset, command_input.size());
             hl_rect.setLeft(item_rect.left() + painter.fontMetrics().size(Qt::TextSingleLine, command->name().mid(0, hl_offset)).width());
             painter.setPen(Qt::green);
             painter.drawText(hl_rect, Qt::AlignVCenter, hl_text);

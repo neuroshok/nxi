@@ -5,8 +5,9 @@
 
 #include <QUrl>
 #include <include/nxi/log.hpp>
-#include <include/nxi/module/web.hpp>
-#include <include/nxi/system/command.hpp>
+#include <nxi/module/web.hpp>
+
+#include <nxi/system/command.hpp>
 #include <nxi/system/command.hpp>
 #include <nxi/system/module.hpp>
 #include <nxi/system/page.hpp>
@@ -34,7 +35,7 @@ namespace nxi
 {
     command_system::command_system(nxi::core& nxi_core)
         : nxi_core_{ nxi_core }
-        , user_input_{ *this }
+        , command_input_{ *this }
     {}
 
     void command_system::load()
@@ -193,7 +194,7 @@ namespace nxi
             init(std::move(config));
 
         // PAGE
-        init_group("page", group_main);
+        nds::node<nxi::command>* page_node = init_group("page", group_main);
             // new
             nxi::command_data page_new;
             page_new.action = "new";
@@ -259,21 +260,27 @@ namespace nxi
 
 
             // shortcust test
+            /*
             nxi::command_data test;
-            test.shortcut = {{ Qt::Key_Shift }, { Qt::Key_S }};
-            test.function = [this](const nxi::command_params&){ nxi_core_.error("ok"); };
-            init(test);
+            test.shortcut = {{ Qt::Key_Control }, { Qt::Key_W }};
+            test.function = [this, page_node](const nxi::command_params&)
+            {
+                nxi_core_.command_system().set_root(page_node);
+            };
+            init(test);*/
 
-            test.shortcut = {{}, { Qt::Key_Shift , Qt::Key_Shift }};
-            init(test);
-
-            test.shortcut = {{ Qt::Key_Alt }, { Qt::Key_E }};
-            init(test);
+            // init trigger keys
+            for_each([this](auto&& node)
+            {
+                const nxi::shortcut& shortcut = node->get().shortcut();
+                if (shortcut.combo_keys.size() > 0) command_input().shortcut_input().add_trigger_key(shortcut.combo_keys[0]);
+                else if (shortcut.sequence_keys.size() > 0) command_input().shortcut_input().add_trigger_key(shortcut.sequence_keys[0]);
+            });
     }
 
-    nxi::command_input& command_system::user_input()
+    nxi::command_input& command_system::command_input()
     {
-        return user_input_;
+        return command_input_;
     }
 
     void command_system::set_root(nds::node<nxi::command>* node)

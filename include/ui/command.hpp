@@ -38,7 +38,7 @@ namespace ui
         void paintEvent(QPaintEvent*) override;
 
     private:
-        nxi::command_input& user_input();
+        nxi::command_input& command_input();
 
     private:
         ui::core& ui_core_;

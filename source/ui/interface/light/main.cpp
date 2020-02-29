@@ -61,18 +61,12 @@ namespace ui::interfaces::light
 
         setFocusPolicy(Qt::ClickFocus);
 
-
-        connect(control_bar_->command_input(), &QLineEdit::editingFinished, [this]()
+        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_reset, [this]()
         {
             command_menu_->hide();
         });
 
-        connect(&ui_core_.nxi_core().command_system().user_input(), &nxi::command_input::event_complete, [this]()
-        {
-            command_menu_->hide();
-        });
-
-        connect(&ui_core_.nxi_core().command_system().user_input(), &nxi::command_input::event_suggestion_update, [this](stz::observer_ptr<nxi::commands_view> cmds)
+        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_suggestion_update, [this](stz::observer_ptr<nxi::commands_view> cmds)
         {
             command_menu_->set_data(cmds);
             command_menu_->exec();

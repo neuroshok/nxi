@@ -24,13 +24,13 @@ namespace ui
 
         connect(this, &QLineEdit::returnPressed, [this]()
         {
-            user_input().exec();
+            command_input().exec();
             setText("");
         });
 
         connect(this, &QLineEdit::editingFinished, [this]()
         {
-            user_input().reset();
+            command_input().reset();
         });
 
         connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), this, [this](nxi::page& page)
@@ -38,7 +38,7 @@ namespace ui
             setText(page.name());
         });
 
-        connect(&ui_core_.nxi_core().command_system().user_input(), &nxi::command_input::event_shortcut_input_update, this, [this](const QString& shortcut_input)
+        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_shortcut_input_update, this, [this](const QString& shortcut_input)
         {
             setPlaceholderText(shortcut_input);
         });
@@ -52,36 +52,34 @@ namespace ui
 
     void command::keyPressEvent(QKeyEvent* event)
     {
-        if (event->isAutoRepeat()) return;
-
         QLineEdit::keyPressEvent(event);
 
         switch (event->key())
         {
             case Qt::Key_Escape:
-                user_input().reset();
+                command_input().reset();
                 break;
             case Qt::Key_Up:
-                user_input().select_previous_suggestion();
+                command_input().select_previous_suggestion();
                 break;
             case Qt::Key_Down:
-                if (!user_input().has_selected_suggestion())
+                if (!command_input().has_selected_suggestion())
                 {
-                    if (user_input().is_empty()) user_input().suggest_command();
-                    else user_input().update(text(), event);
+                    if (command_input().is_empty()) command_input().suggest_command();
+                    else command_input().update(text(), event);
 
-                    user_input().select_next_suggestion();
+                    command_input().select_next_suggestion();
                 }
-                else user_input().select_next_suggestion();
+                else command_input().select_next_suggestion();
                 break;
 
             default:
-                ui_core_.nxi_core().command_system().user_input().update(text(), event);
+                ui_core_.nxi_core().command_system().command_input().update(text(), event);
         }
     }
     void command::keyReleaseEvent(QKeyEvent* event)
     {
-        ui_core_.nxi_core().command_system().user_input().update(text(), event);
+        ui_core_.nxi_core().command_system().command_input().update(text(), event);
     }
 
     void command::focusInEvent(QFocusEvent *event)
@@ -119,8 +117,8 @@ namespace ui
         QLineEdit::paintEvent(event);
     }
 
-    nxi::command_input& command::user_input()
+    nxi::command_input& command::command_input()
     {
-        return ui_core_.nxi_core().command_system().user_input();
+        return ui_core_.nxi_core().command_system().command_input();
     }
 } // ui

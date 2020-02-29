@@ -43,7 +43,7 @@ namespace nxi
         nds::node<nxi::command>* add(nxi::command command, nds::node<nxi::command>* source = nullptr);
         void exec(const QString& command, command_context context = command_context::deduced);
         commands_view search(const QString&);
-        nxi::command_input& user_input();
+        nxi::command_input& command_input();
 
         void set_root(nds::node<nxi::command>*);
 
@@ -63,7 +63,7 @@ namespace nxi
 
     private:
         nxi::core& nxi_core_;
-        nxi::command_input user_input_;
+        nxi::command_input command_input_;
         nds::node<nxi::command>* root_;
 
         QHash<QString, size_t> command_indexes_;
