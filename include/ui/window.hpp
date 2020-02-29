@@ -22,8 +22,9 @@ namespace ui
         window(ui::core& ui_core, unsigned int m_id);
         ~window();
 
-        void mouseReleaseEvent(QMouseEvent* event) override;
-        void closeEvent(QCloseEvent* event) override;
+        void mouseReleaseEvent(QMouseEvent*) override;
+        void closeEvent(QCloseEvent*) override;
+        void resizeEvent(QResizeEvent*) override;
 
         ui::main_interface* main_interface();
         void set_interface(ui::main_interface* interface);

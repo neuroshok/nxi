@@ -34,6 +34,11 @@ namespace ui
         deleteLater();
     }
 
+    void window::resizeEvent(QResizeEvent*)
+    {
+        window_system().resize(this, width(), height());
+    }
+
     ui::main_interface* ui::window::main_interface()
     {
         nxi_assert(interface_ != nullptr);

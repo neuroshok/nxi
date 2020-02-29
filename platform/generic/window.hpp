@@ -12,9 +12,9 @@ namespace platform::generic
     public:
         window();
 
-        void mousePressEvent(QMouseEvent* event);
-        void mouseMoveEvent(QMouseEvent* event);
-        void mouseDoubleClickEvent(QMouseEvent* event);
+        void mousePressEvent(QMouseEvent*) override;
+        void mouseMoveEvent(QMouseEvent*) override;
+        void mouseDoubleClickEvent(QMouseEvent*) override;
 
         void set_grip(QWidget* widget);
         void set_fullscreen();

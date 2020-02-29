@@ -7,9 +7,9 @@ namespace platform::generic
     window::window()
         : moving_{ false }
     {
-        setWindowFlag(Qt::Window, true);
-        setWindowFlag(Qt::FramelessWindowHint, true);
-        setWindowFlag(Qt::WindowSystemMenuHint, true);
+        setWindowFlag(Qt::Window);
+        setWindowFlag(Qt::FramelessWindowHint);
+        setWindowFlag(Qt::WindowSystemMenuHint);
     }
 
     void window::mousePressEvent(QMouseEvent* event)
