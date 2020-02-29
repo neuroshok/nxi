@@ -1,6 +1,11 @@
 # nxi
 
 # Build
+## Cmake options
+`STZ_FILESYSTEM` : use embedded filesystem \
+`NXI_WINDOW_GENERIC` : use generic window
+
+## Commands
 ```
 git clone -b dev --recurse-submodules https://github.com/ads00/nxi.git && cd nxi
 ```
