@@ -29,11 +29,6 @@ namespace ui
         , window_system_{ *this }
         , main_interface_{ [this](ui::window* window){ return new ui::interfaces::light::main(*this, window); } }
     {
-        QApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
-		qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
-
-        QtWebEngine::initialize();
-
         // load qss
         /*
         QFile qss_file(":/style.qss");

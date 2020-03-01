@@ -170,24 +170,24 @@ if (NXI_TARGET_DESKTOP)
             RUNTIME_OUTPUT_DIRECTORY "${NXI_BIN_ROOT}/nxi"
             RUNTIME_OUTPUT_DIRECTORY_RELEASE "${NXI_BIN_ROOT}/nxi"
             OUTPUT_NAME "nxi"
+            WIN32_EXECUTABLE true
             )
 
-
     # deploy
-    if (NXI_TARGET_SYSTEM STREQUAL "Windows" OR NXI_TARGET_SYSTEM STREQUAL "Darwin")
-        get_target_property(QT5_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
-        get_filename_component(QT5_DEPLOYQT_EXECUTABLE ${QT5_QMAKE_EXECUTABLE} PATH)
+    get_target_property(QT5_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
+    get_filename_component(QT5_DEPLOYQT_EXECUTABLE ${QT5_QMAKE_EXECUTABLE} PATH)
 
-        if (NXI_TARGET_SYSTEM STREQUAL "Windows")
-            set(QT5_DEPLOYQT_EXECUTABLE "${QT5_DEPLOYQT_EXECUTABLE}/windeployqt.exe")
-        endif()
-        if (NXI_TARGET_SYSTEM STREQUAL "Darwin")
-            set(QT5_DEPLOYQT_EXECUTABLE "${QT5_DEPLOYQT_EXECUTABLE}/macdeployqt")
-        endif()
-
+    if (NXI_TARGET_SYSTEM STREQUAL "Windows")
+        set(QT5_DEPLOYQT_EXECUTABLE "${QT5_DEPLOYQT_EXECUTABLE}/windeployqt.exe")
         add_custom_target(nxi_deploy COMMAND ${QT5_DEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi>)
         add_dependencies(nxi_deploy nxi)
     endif()
+    if (NXI_TARGET_SYSTEM STREQUAL "Darwin")
+        set(QT5_DEPLOYQT_EXECUTABLE "${QT5_DEPLOYQT_EXECUTABLE}/macdeployqt")
+        add_custom_target(nxi_deploy COMMAND ${QT5_DEPLOYQT_EXECUTABLE} $<TARGET_FILE_DIR:nxi> -qmldir=${CMAKE_SOURCE_DIR})
+        add_dependencies(nxi_deploy nxi)
+    endif()
+
 endif()
 
 

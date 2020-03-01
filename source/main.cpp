@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QMessageBox>
+#include <QtWebEngine>
 
 #include <nxi/core.hpp>
 #include <nxi/log.hpp>
@@ -7,6 +8,11 @@
 
 int main(int argc, char* argv[])
 {
+    QApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+
+    QtWebEngine::initialize();
+
     QApplication app(argc, argv);
     QMessageBox error;
     int status = 0;

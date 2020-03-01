@@ -43,6 +43,7 @@ namespace ui::views
     public:
         aboutgl(ui::core& ui_core) : ui_core_{ ui_core }
         {
+            /*
             Qt3DExtras::Qt3DWindow* view = new Qt3DExtras::Qt3DWindow();
             view->defaultFrameGraph()->setClearColor(QColor(QRgb(0xFFFFFF)));
 
@@ -107,6 +108,7 @@ namespace ui::views
             text->addComponent(textMaterial);
             text->addComponent(textTransform);
             text->addComponent(textMesh);
+             */
         }
 
     private:
