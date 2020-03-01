@@ -47,6 +47,8 @@ matrix:
       - choco install python3 --params "/InstallDir:C:\Python37"
       - /c/Python37/python.exe -m pip install requests semantic_version lxml
       - /c/Python37/python.exe ci/qt_downloader windows desktop 5.13.1 win64_msvc2017_64
+      - ls /c/Users/qt/work/install/bin/
+      - find ./ -name Qt5WebEngine.dll
       - cmake -DNXI_QT_ROOT=${PWD}/5.13.1/msvc2017_64 .
       - cmake --build . --target nxi_deploy --config Release
       - 7z a -r ${RELEASE_FILENAME} ./bin/*
