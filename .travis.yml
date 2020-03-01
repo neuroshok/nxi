@@ -38,7 +38,7 @@ matrix:
   - os: windows
     dist: 1803-containers
     env:
-      - QT_VERSION=5.15.0
+      - QT_VERSION=5.14.1
       - VERSION=1.11 VARIANT=windows/windowsservercore-1803
       - PATH="${PATH}:${TRAVIS_BUILD_DIR}/${QT_VERSION}/msvc2017_64/bin:${TRAVIS_BUILD_DIR}/${QT_VERSION}/msvc2017_64"
     script:
