@@ -52,8 +52,6 @@ matrix:
       - cmake -DNXI_QT_ROOT=${PWD}/${QT_VERSION}/msvc2017_64 .
       - cmake --build . --target nxi_deploy --config Release
       - cd ${PWD}/${QT_VERSION}/msvc2017_64
-      - windeployqt
-      - windeployqt ${TRAVIS_BUILD_DIR}/bin/nxi
       - 7z a -r ${RELEASE_FILENAME} ./bin/*
     deploy:
       provider: releases
