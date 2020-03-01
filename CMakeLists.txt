@@ -168,7 +168,8 @@ if (NXI_TARGET_DESKTOP)
     set_target_properties(nxi
             PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY "${NXI_BIN_ROOT}/nxi"
-            OUTPUT_NAME  "nxi"
+            RUNTIME_OUTPUT_DIRECTORY_RELEASE "${NXI_BIN_ROOT}/nxi"
+            OUTPUT_NAME "nxi"
             )
 
 
