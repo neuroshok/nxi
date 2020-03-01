@@ -48,13 +48,14 @@ matrix:
       - choco install python3 --params "/InstallDir:C:\Python37"
       - /c/Python37/python.exe -m pip install requests semantic_version lxml
       - /c/Python37/python.exe ci/qt_downloader windows desktop 5.13.1 win64_msvc2017_64
-      - echo ${PATH}
+      - cmake -DNXI_QT_ROOT=${PWD}/5.13.1/msvc2017_64 .
+      - cmake --build . --target nxi_deploy --config Release
       - ls ${PWD}/5.13.1/msvc2017_64/bin
       - ls ${TRAVIS_BUILD_DIR}/bin/nxi
       - cd ${PWD}/5.13.1/msvc2017_64
-      - ${PWD}/5.13.1/msvc2017_64/bin/windeployqt ${TRAVIS_BUILD_DIR}/bin/nxi/nxi
-      - cmake -DNXI_QT_ROOT=${PWD}/5.13.1/msvc2017_64 .
-      - cmake --build . --target nxi_deploy --config Release
+      - ${TRAVIS_BUILD_DIR}/5.13.1/msvc2017_64/bin/windeployqt ${TRAVIS_BUILD_DIR}/bin/nxi/nxi
+      - ./bin/windeployqt ${TRAVIS_BUILD_DIR}/bin/nxi/nxi
+      - windeployqt ${TRAVIS_BUILD_DIR}/bin/nxi/nxi
       - 7z a -r ${RELEASE_FILENAME} ./bin/*
     deploy:
       provider: releases
