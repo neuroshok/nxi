@@ -65,13 +65,12 @@ matrix:
   - os: osx
     osx_image: xcode11
     env:
-      - QT_PATH=/usr/local/Cellar/qt/5.13.1
+      - QT_VERSION=5.14.1
+      - QT_PATH=/usr/local/Cellar/qt/${QT_VERSION}
     before_install:
       - brew install qt5
       - brew link qt5 --force
       - brew install p7zip
-      - ls /usr/local/Cellar/qt/
-      - ls /usr/local/Cellar/qt/5.13.1
     script:
     - cmake -DNXI_QT_ROOT=${QT_PATH} -DSTZ_FILESYSTEM=ON .
     - cmake --build . --target nxi --config Release
