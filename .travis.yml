@@ -51,7 +51,6 @@ matrix:
       - /c/Python37/python.exe ci/qt_downloader windows desktop ${QT_VERSION} win64_msvc2017_64
       - cmake -DNXI_QT_ROOT=${PWD}/${QT_VERSION}/msvc2017_64 .
       - cmake --build . --target nxi_deploy --config Release
-      - cd ${PWD}/${QT_VERSION}/msvc2017_64
       - 7z a -r ${RELEASE_FILENAME} ./bin/*
     deploy:
       provider: releases
