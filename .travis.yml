@@ -39,6 +39,7 @@ matrix:
     dist: 1803-containers
     env:
       - VERSION=1.11 VARIANT=windows/windowsservercore-1803
+      - PATH="${PATH}:${TRAVIS_BUILD_DIR}/5.13.1/msvc2017_64/bin:${TRAVIS_BUILD_DIR}/5.13.1/msvc2017_64"
     script:
       - choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
       - curl https://download.visualstudio.microsoft.com/download/pr/5446351f-19f5-4b09-98c6-a4bfacc732d7/3cec278012466e87b76be170de3f881e3c14be52bf8eaa3b8c464dbeee3b4fef/vs_BuildTools.exe --output vs.exe
@@ -47,7 +48,11 @@ matrix:
       - choco install python3 --params "/InstallDir:C:\Python37"
       - /c/Python37/python.exe -m pip install requests semantic_version lxml
       - /c/Python37/python.exe ci/qt_downloader windows desktop 5.13.1 win64_msvc2017_64
-      - ${PWD}/5.13.1/msvc2017_64/bin/qtenv2.bat
+      - echo ${PATH}
+      - ls ${PWD}/5.13.1/msvc2017_64/bin
+      - ls ${TRAVIS_BUILD_DIR}/bin/nxi
+      - cd ${PWD}/5.13.1/msvc2017_64
+      - ${PWD}/5.13.1/msvc2017_64/bin/windeployqt ${TRAVIS_BUILD_DIR}/bin/nxi/nxi
       - cmake -DNXI_QT_ROOT=${PWD}/5.13.1/msvc2017_64 .
       - cmake --build . --target nxi_deploy --config Release
       - 7z a -r ${RELEASE_FILENAME} ./bin/*
