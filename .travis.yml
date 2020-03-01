@@ -51,9 +51,6 @@ matrix:
       - /c/Python37/python.exe ci/qt_downloader windows desktop ${QT_VERSION} win64_msvc2017_64
       - cmake -DNXI_QT_ROOT=${PWD}/${QT_VERSION}/msvc2017_64 .
       - cmake --build . --target nxi_deploy --config Release
-      - cd ${PWD}/${QT_VERSION}/msvc2017_64
-      - windeployqt
-      - windeployqt ${TRAVIS_BUILD_DIR}/bin/nxi
       - 7z a -r ${RELEASE_FILENAME} ./bin/*
     deploy:
       provider: releases
@@ -68,7 +65,7 @@ matrix:
   - os: osx
     osx_image: xcode11
     env:
-      - QT_VERSION=5.14.1
+      - QT_VERSION=5.13.1
       - QT_PATH=/usr/local/Cellar/qt/${QT_VERSION}
     before_install:
       - brew install qt5
