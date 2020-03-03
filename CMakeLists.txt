@@ -165,12 +165,18 @@ if (NXI_TARGET_DESKTOP)
     target_compile_definitions(nxi PUBLIC ${NXI_DEFINITIONS})
     target_link_libraries(nxi lib_ndb lib_nds lib_speedlog ${NXI_MODULES} ${NXI_QT_LIBS})
 
+    # console
+    if (NXI_CONSOLE)
+        set_target_properties(nxi PROPERTIES WIN32_EXECUTABLE false)
+    else()
+        set_target_properties(nxi PROPERTIES WIN32_EXECUTABLE true)
+    endif()
+
     set_target_properties(nxi
             PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY "${NXI_BIN_ROOT}/nxi"
             RUNTIME_OUTPUT_DIRECTORY_RELEASE "${NXI_BIN_ROOT}/nxi"
             OUTPUT_NAME "nxi"
-            WIN32_EXECUTABLE true
             )
 
     # deploy
