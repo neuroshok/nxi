@@ -91,6 +91,17 @@ namespace nxi
         return graph_.add(std::move(command), source);
     }
 
+    void command_system::exec(stz::observer_ptr<nxi::command> command)
+    {
+        if (command->params().size() > 0) emit event_param_required(command);
+        else exec(command, nxi::command_params{});
+    }
+
+    void command_system::exec(stz::observer_ptr<nxi::command> command, const nxi::command_params& params)
+    {
+        command->exec(params);
+    }
+
     void command_system::exec(const QString& str_command, command_context context)
     {
         nxi_trace("{}", str_command);
@@ -223,18 +234,22 @@ namespace nxi
             page_switch.shortcut = {{ Qt::Key_Control }, { Qt::Key_W, Qt::Key_S }};
             page_switch.function = [this](const nxi::command_params& params)
             {
-                auto id = params.get(0).toUInt();
-                nxi_core_.page_system().focus(id);
+                qDebug() << "___" << params.values_.size();
+                //auto id = params.get(0).toUInt();
+                //nxi_core_.page_system().focus(id);
             };
+
             init(std::move(page_switch));
                 init_param("id", [this](std::vector<QString>& suggestion)
                 {
+                    qDebug() << "pages";
                     qDebug() << "pages" << nxi_core_.page_system().get().size();
                     for (auto& page : nxi_core_.page_system().get())
                     {
                         suggestion.push_back(QString::number(page->id()));
                     }
                 });
+
             // close
             nxi::command_data page_close;
             page_close.action = "close";

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <QString>
+#include <nxi/log.hpp>
 
 namespace nxi
 {
@@ -13,10 +14,10 @@ namespace nxi
         command_params() = default;
 
         void add(const QString& value) { values_.push_back(value); }
-        auto get(int index) const { return values_[index]; }
+        auto get(int index) const { nxi_assert(index < values_.size()); return values_[index]; }
         void clear() { values_.clear(); }
 
-    private:
+    public:
         std::vector<QString> values_;
     };
 } // nxi

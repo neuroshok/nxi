@@ -35,6 +35,7 @@ namespace nxi
 
     void command::exec() const
     {
+        if (params_.size() > 0) nxi_error("command require parameters");
         if (function_) function_(nxi::command_params{});
     }
 

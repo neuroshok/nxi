@@ -41,6 +41,8 @@ namespace nxi
         template<class Callback>
         void for_each(Callback&&);
         nds::node<nxi::command>* add(nxi::command command, nds::node<nxi::command>* source = nullptr);
+        void exec(stz::observer_ptr<nxi::command>);
+        void exec(stz::observer_ptr<nxi::command>, const nxi::command_params&);
         void exec(const QString& command, command_context context = command_context::deduced);
         commands_view search(const QString&);
         nxi::command_input& command_input();
@@ -50,6 +52,7 @@ namespace nxi
         signals:
         void event_add(const nxi::command&);
         void event_root_update(nds::node<nxi::command>*);
+        void event_param_required(stz::observer_ptr<nxi::command>);
 
     private:
         void init_commands();

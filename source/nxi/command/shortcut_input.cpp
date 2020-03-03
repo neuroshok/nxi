@@ -61,14 +61,13 @@ namespace nxi
         input_.combo_keys.clear();
         input_.sequence_keys.clear();
         trigger_mode_ = trigger_mode::combo;
-        command_input_.reset();
     }
 
     void shortcut_input::search(Qt::Key key)
     {
         suggestions_.clear();
 
-        nxi::command* found_command = nullptr;
+        stz::observer_ptr<nxi::command> found_command = nullptr;
         bool combo_match = false;
         bool sequence_match = false;
 
@@ -80,7 +79,8 @@ namespace nxi
             if (trigger_mode_ == trigger_mode::combo && shortcut.combo_keys.size() > 0)
             {
                 // check previous input combo keys without the new key
-                bool combo_partial_match = std::equal(input_.combo_keys.begin(), input_.combo_keys.end(), shortcut.combo_keys.begin());
+
+                bool combo_partial_match = input_.combo_keys.size() <= shortcut.combo_keys.size() && std::equal(input_.combo_keys.begin(), input_.combo_keys.end(), shortcut.combo_keys.begin());
 
                 if (combo_partial_match)
                 {
@@ -99,7 +99,7 @@ namespace nxi
             if (shortcut.sequence_keys.size() > 0)
             {
                 // check previous input combo keys without the new key
-                bool sequence_partial_match = std::equal(input_.sequence_keys.begin(), input_.sequence_keys.end(), shortcut.sequence_keys.begin());
+                bool sequence_partial_match = input_.sequence_keys.size() <= shortcut.sequence_keys.size() && std::equal(input_.sequence_keys.begin(), input_.sequence_keys.end(), shortcut.sequence_keys.begin());
 
                 if (sequence_partial_match)
                 {
@@ -115,7 +115,7 @@ namespace nxi
                         bool combo_fullmatch = std::equal(input_.combo_keys.begin(), input_.combo_keys.end(), shortcut.combo_keys.begin(), shortcut.combo_keys.end());
                         if (combo_fullmatch && (input_.sequence_keys.size() + 1 == shortcut.sequence_keys.size()))
                         {
-                            found_command = std::addressof(node->get());
+                            found_command = stz::make_observer(std::addressof(node->get()));
                         }
                     }
                 }
@@ -137,8 +137,8 @@ namespace nxi
         if (found_command)
         {
             nxi_trace("execute shortcut {}", found_command->name());
-            found_command->exec();
             reset();
+            command_input_.command_system().exec(found_command);
             return;
         }
 

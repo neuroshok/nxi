@@ -14,7 +14,15 @@ namespace nxi
         , shortcut_input_{ *this }
         , state_{ states::command }
         , selected_suggestion_index_{ -1 }
-    {}
+    {
+        connect(&command_system_, &nxi::command_system::event_param_required, [this](stz::observer_ptr<nxi::command> command)
+        {
+            reset();
+            set_state(states::command_param);
+            qDebug() << "input required " << command->name() << state_text();
+            command_ = command;
+        });
+    }
 
     void command_input::add_param(const QString& param)
     {
@@ -24,6 +32,7 @@ namespace nxi
     void command_input::update(const QString& input, QKeyEvent* event)
     {
         input_ = input;
+        auto key = static_cast<Qt::Key>(event->key());
 
         // ignore autorepeat in shortcut mode
         if (state_ == states::shortcut && event->isAutoRepeat()) return;
@@ -32,7 +41,7 @@ namespace nxi
         {
             if (shortcut_input_.is_trigger_key(static_cast<Qt::Key>(event->key())))
             {
-                state_ = states::shortcut;
+                set_state(states::shortcut);
             }
 
             if (input_.isEmpty() && state_ == states::command)
@@ -51,7 +60,7 @@ namespace nxi
                 case states::command_param:
                     //command_->suggest_param(param_index_);
                     param_suggestions_.clear();
-                    command_->add_suggestion(param_suggestions_);
+                    //command_->add_suggestion(param_suggestions_);
                     break;
 
                 case states::shortcut:
@@ -75,8 +84,7 @@ namespace nxi
 
     void command_input::exec()
     {
-        nxi_trace(" exec {}", input_);
-        if (suggestion_count() == 0) return;
+        nxi_trace(" exec {} - {}", input_, state_text());
 
         if (state_ == states::command)
         {
@@ -86,18 +94,20 @@ namespace nxi
             if (command->params().size() > 0)
             {
                 reset();
-                state_ = states::command_param;
+                set_state(states::command_param);
                 command_ =  suggestion(0);
                 qDebug() << "wait params ";
             }
             else
             {
-                command->exec();
+                command_system().exec(command);
                 reset();
             }
         }
         else if (state_ == states::command_param)
         {
+            qDebug() << "exec param " << command_->name();
+            qDebug() << "exec param " << command_->params().size();
             qDebug() << "exec param " << command_->params()[param_index_];
             params_.add(input_);
             param_index_++;
@@ -118,14 +128,18 @@ namespace nxi
 
     QString command_input::state_text() const
     {
-        if (command_)
-        {
-            if (state_ == states::shortcut) return command_->name();
-            if (state_ == states::command_param && param_index_ < command_->params().size()) return command_->params()[param_index_];
-        }
+        if (state_ == states::command) return "command";
+        if (state_ == states::shortcut) return "shortcut";
+        if (state_ == states::command_param) return "command_param";
+        //if (state_ == states::command_param && param_index_ < command_->params().size()) return command_->params()[param_index_];
+
         return "no command";
     }
 
+    void command_input::set_state(states state)
+    {
+        state_ = state;
+    }
 
     nxi::command_system::commands_view command_input::suggestions() const
     {
@@ -187,7 +201,7 @@ namespace nxi
     {
         param_index_ = 0;
         selected_suggestion_index_ = -1;
-        state_ = states::command;
+        set_state(states::command);
         params_.clear();
         suggestions_.clear();
         emit event_reset();

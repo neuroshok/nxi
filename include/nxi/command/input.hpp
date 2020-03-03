@@ -63,6 +63,9 @@ namespace nxi
 
         void event_shortcut_input_update(const QString&);
 
+    protected:
+        void set_state(states);
+
     private:
         nxi::command_system& command_system_;
 
