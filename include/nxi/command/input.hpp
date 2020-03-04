@@ -62,6 +62,7 @@ namespace nxi
         void event_reset();
 
         void event_shortcut_input_update(const QString&);
+        void event_command_param_required(const QString&);
 
     protected:
         void set_state(states);

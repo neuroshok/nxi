@@ -28,11 +28,6 @@ namespace ui
             setText("");
         });
 
-        connect(this, &QLineEdit::editingFinished, [this]()
-        {
-            command_input().reset();
-        });
-
         connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), this, [this](nxi::page& page)
         {
             setText(page.name());
@@ -41,6 +36,16 @@ namespace ui
         connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_shortcut_input_update, this, [this](const QString& shortcut_input)
         {
             setPlaceholderText(shortcut_input);
+        });
+
+        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_command_param_required, this, [this](const QString& param_name)
+        {
+            setPlaceholderText("Enter parameter '" + param_name + "' : ");
+        });
+
+        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_reset, this, [this]()
+        {
+            setPlaceholderText("Enter command or use shortcut");
         });
     }
 

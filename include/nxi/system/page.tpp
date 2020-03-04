@@ -8,6 +8,8 @@ namespace nxi
         ndb::store(graph_node_page->get());
 
         auto& added_page = static_cast<nxi::page&>(graph_node_page->get());
+        pages_.emplace(added_page.id(), &added_page);
+
         emit event_add(added_page, 0);
         return graph_node_page->get();
     }

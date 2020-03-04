@@ -210,8 +210,7 @@ namespace nxi
             nxi::command_data page_new;
             page_new.action = "new";
             page_new.description = "Open new web_page";
-            //page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }};
-            page_new.shortcut = {{  }, { Qt::Key_Exclam, Qt::Key_N, Qt::Key_E, Qt::Key_W }};
+            page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }};
             page_new.function = [this](const nxi::command_params&){ nxi_core_.page_system().open<nxi::web_page>(0); };
             init(std::move(page_new));
 
@@ -234,16 +233,19 @@ namespace nxi
             page_switch.shortcut = {{ Qt::Key_Control }, { Qt::Key_W, Qt::Key_S }};
             page_switch.function = [this](const nxi::command_params& params)
             {
-                qDebug() << "___" << params.values_.size();
-                //auto id = params.get(0).toUInt();
-                //nxi_core_.page_system().focus(id);
+                if (params.values_.size() < 1)
+                {
+                    nxi_warning("command_param error : page_switch");
+                    return;
+                }
+                qDebug() << nxi_core_.page_system().get().size();
+                auto id = params.get(0).toUInt();
+                nxi_core_.page_system().focus(id);
             };
 
             init(std::move(page_switch));
                 init_param("id", [this](std::vector<QString>& suggestion)
                 {
-                    qDebug() << "pages";
-                    qDebug() << "pages" << nxi_core_.page_system().get().size();
                     for (auto& page : nxi_core_.page_system().get())
                     {
                         suggestion.push_back(QString::number(page->id()));
@@ -272,7 +274,11 @@ namespace nxi
                 nxi_core_.interface_system().load_style(name);
             };
             init(std::move(load_style));
-
+                init_param("name", [this](std::vector<QString>& suggestion)
+                {
+                    suggestion.push_back("ffx");
+                    suggestion.push_back("nebula_space");
+                });
 
             // shortcust test
             /*
