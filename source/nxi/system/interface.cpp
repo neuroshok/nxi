@@ -35,6 +35,7 @@ namespace nxi
         std::vector<QString> styles;
         QDir dir ("./module/theme/");
         QStringList list = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-        return list.toVector().toStdVector();
+        auto vec = list.toVector();
+        return std::vector<QString>(vec.begin(), vec.end());
     }
 } // nxi
