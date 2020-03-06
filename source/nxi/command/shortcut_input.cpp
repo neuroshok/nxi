@@ -1,5 +1,6 @@
 #include <nxi/command/shortcut_input.hpp>
 
+#include <nxi/command.hpp>
 #include <nxi/command/input.hpp>
 #include <nxi/system/command.hpp>
 

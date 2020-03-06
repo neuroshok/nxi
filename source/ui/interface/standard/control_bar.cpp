@@ -1,6 +1,7 @@
 #include <ui/interface/standard/control_bar.hpp>
 
 #include <ui/core.hpp>
+#include <nxi/command.hpp>
 #include <nxi/core.hpp>
 #include <nxi/system/command.hpp>
 
