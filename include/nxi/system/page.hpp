@@ -43,7 +43,7 @@ namespace nxi
 
         pages_view list(const nxi::page& source);
 
-        const pages_view& get() const;
+        pages_view get() const;
         const page_connections_type& connections() const;
         nxi::page& get(nxi::page_id id) const;
 

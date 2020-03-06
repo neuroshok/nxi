@@ -86,14 +86,14 @@ namespace nxi
         added_page.focus();
     }
 
-    const page_system::pages_view& page_system::get() const
+    page_system::pages_view page_system::get() const
     {
         pages_view pages;
         graph_.nodes([&pages](auto&& node)
         {
-            pages.push_back(stz::make_observer<nxi::page>(&node->get()));
+            pages.push_back(stz::make_observer(&node->get()));
         });
-        return pages_view_;
+        return pages;
     }
 
     const page_system::page_connections_type& page_system::connections() const
