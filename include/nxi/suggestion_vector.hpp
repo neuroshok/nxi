@@ -5,6 +5,7 @@
 #include <nxi/suggestion/basic.hpp>
 #include <nxi/utility/iterator.hpp>
 
+#include <memory>
 #include <vector>
 
 namespace nxi
