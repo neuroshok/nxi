@@ -36,15 +36,18 @@ namespace nxi
         void load();
 
         nxi::commands_view root_list();
+        void root_list(std::function<void(const nxi::command&)>);
+
         const nxi::command& get(const QString& module_action, const QString& module_name = "nxi") const;
         nxi::command* find(const QString& module_action, const QString& module_name = "nxi") const;
         template<class Callback>
         void for_each(Callback&&);
         nds::node<nxi::command>* add(nxi::command command, nds::node<nxi::command>* source = nullptr);
-        void exec(stz::observer_ptr<nxi::command>);
-        void exec(stz::observer_ptr<nxi::command>, const nxi::command_params&);
+        void exec(stz::observer_ptr<const nxi::command>);
+        void exec(stz::observer_ptr<const nxi::command>, const nxi::command_params&);
         void exec(const QString& command, command_context context = command_context::deduced);
         commands_view search(const QString&);
+        void search(const QString&, std::function<void(const nxi::command&)>);
         nxi::command_input& command_input();
 
         void set_root(nds::node<nxi::command>*);
@@ -52,14 +55,14 @@ namespace nxi
         signals:
         void event_add(const nxi::command&);
         void event_root_update(nds::node<nxi::command>*);
-        void event_param_required(stz::observer_ptr<nxi::command>);
+        void event_param_required(stz::observer_ptr<const nxi::command>);
 
     private:
         void init_commands();
         nds::node<nxi::command>* init_group(const QString& command_node, nds::node<nxi::command>* = nullptr);
         void init(nxi::command_data);
         void init(const QString& action, function_type, const QString& icon = "");
-        void init_param(const QString& name, std::function<void(std::vector<QString>&)>);
+        void init_param(const QString& name, std::function<void(nxi::suggestion_vector&)>);
 
         nds::node<nxi::command>* init_node_group_ = nullptr;
         nds::node<nxi::command>* init_node_command_ = nullptr;

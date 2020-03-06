@@ -16,7 +16,7 @@ namespace nxi
         , command_{ nullptr }
         , selected_suggestion_index_{ -1 }
     {
-        connect(&command_system_, &nxi::command_system::event_param_required, [this](stz::observer_ptr<nxi::command> command)
+        connect(&command_system_, &nxi::command_system::event_param_required, [this](stz::observer_ptr<const nxi::command> command)
         {
             reset();
             command_ = command;
@@ -50,34 +50,38 @@ namespace nxi
                 return;
             }
 
+            // add user input as first suggestion
+            suggestions_.clear();
+            if (!input_.isEmpty()) suggestions_.add(nxi::suggestion{ input_, ":/icon/search16", "search" });
+
             switch(state_)
             {
                 case states::command:
-                    suggestions_ = command_system_.search(input_);
+                    command_system_.search(input_, [this](const nxi::command& command)
+                    {
+                        suggestions_.add(command);
+                    });
                     // suggestions_ = history_system_.search(input_);
                     break;
 
                 case states::command_param:
-                    //command_->suggest_param(param_index_);
-                    param_suggestions_.clear();
-                    command_->add_suggestion(param_suggestions_);
+                    command_->add_suggestion(suggestions_);
                     break;
 
                 case states::shortcut:
-
-                    suggestions_ = shortcut_input_.update(event);
+                    //suggestions_.add(shortcut_input_.update(event));
                     emit event_shortcut_input_update(shortcut_input_.to_string());
                     break;
             }
 
             if (suggestion_count() > 0) select_suggestion(0);
-            emit event_suggestion_update(stz::make_observer<nxi::commands_view>(&suggestions_));
+            emit event_suggestion_update(stz::make_observer(&suggestions_));
         }
 
         // shortcut mode need release event
         if (event->type() == QEvent::KeyRelease && state_ == states::shortcut)
         {
-            suggestions_ = shortcut_input_.update(event);
+            //suggestions_.add(shortcut_input_.update(event));
             emit event_shortcut_input_update(shortcut_input_.to_string());
         }
     }
@@ -86,14 +90,18 @@ namespace nxi
     {
         nxi_trace(" exec {} - {}", input_, state_text());
 
+
         if (state_ == states::command)
         {
-            qDebug() << "exec action" << suggestion(selected_suggestion_index_)->name();
+            qDebug() << "exec action" << suggestion(selected_suggestion_index_).text();
 
-            command_ = suggestion(selected_suggestion_index_);
+            if (suggestion(selected_suggestion_index_).type() == nxi::suggestion_type::command)
+            {
+                const nxi::command& command = static_cast<const nxi::basic_suggestion<nxi::command>&>(suggestion(selected_suggestion_index_)).get();
+                command_ = stz::make_observer(&command);
+            }
             // required parameters
-            qDebug() << "params" << command_->params().size();
-            if (command_->params().size() > 0)
+            if (command_ && command_->params().size() > 0)
             {
                 reset();
                 set_state(states::command_param);
@@ -143,13 +151,9 @@ namespace nxi
         }
     }
 
-    nxi::command_system::commands_view command_input::suggestions() const
+    const nxi::suggestion_vector& command_input::suggestions() const
     {
         return suggestions_;
-    }
-    const std::vector<QString>& command_input::param_suggestions() const
-    {
-        return param_suggestions_;
     }
 
     const QString& command_input::text() const { return input_; }
@@ -169,7 +173,18 @@ namespace nxi
     void command_input::select_suggestion(int index)
     {
         selected_suggestion_index_ = index;
+
+        set_input(suggestion(selected_suggestion_index_).text());
         emit event_selection_update(index);
+
+        if (command_ && command_->preview())
+        {
+            nxi::command_params params;
+            auto z = input_;
+            params.add(input_);
+            command_system_.exec(command_, params);
+            set_input(z);
+        }
     }
 
     void command_input::select_previous_suggestion()
@@ -182,20 +197,24 @@ namespace nxi
         if (selected_suggestion_index_ + 1 < suggestions_.size()) select_suggestion(selected_suggestion_index_ + 1);
     }
 
-    stz::observer_ptr<nxi::command> command_input::suggestion(int index)
+    const nxi::suggestion& command_input::suggestion(int index)
     {
         nxi_assert(index >= 0 && index < suggestions_.size());
         return suggestions_[index];
     }
 
-    stz::observer_ptr<nxi::command> command_input::selected_suggestion()
+    const nxi::suggestion& command_input::selected_suggestion()
     {
         return suggestion(selected_suggestion_index_);
     }
 
     void command_input::suggest_command()
     {
-        suggestions_ = command_system_.root_list();
+        suggestions_.clear();
+        command_system_.root_list([this](const nxi::command& command)
+        {
+            suggestions_.add(command);
+        });
         emit event_suggestion_update(stz::make_observer(&suggestions_));
     }
 
@@ -233,5 +252,11 @@ namespace nxi
     nxi::shortcut_input& command_input::shortcut_input()
     {
         return shortcut_input_;
+    }
+
+    void command_input::set_input(const QString& input)
+    {
+        input_ = input;
+        emit event_input_update(input_);
     }
 } // nxi

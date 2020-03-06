@@ -91,13 +91,13 @@ namespace nxi
         return graph_.add(std::move(command), source);
     }
 
-    void command_system::exec(stz::observer_ptr<nxi::command> command)
+    void command_system::exec(stz::observer_ptr<const nxi::command> command)
     {
         if (command->params().size() > 0) emit event_param_required(command);
         else exec(command, nxi::command_params{});
     }
 
-    void command_system::exec(stz::observer_ptr<nxi::command> command, const nxi::command_params& params)
+    void command_system::exec(stz::observer_ptr<const nxi::command> command, const nxi::command_params& params)
     {
         command->exec(params);
     }
@@ -147,6 +147,14 @@ namespace nxi
         return commands;
     }
 
+    void command_system::search(const QString& search_string, std::function<void(const nxi::command&)> fn)
+    {
+        nds::algorithm::graph::for_each(graph_, [&search_string, &fn](auto&& node)
+        {
+            if (node->get().name().contains(search_string)) fn(node->get());
+        });
+    }
+
     nds::node<nxi::command>* command_system::init_group(const QString& command_node, nds::node<nxi::command>* source)
     {
         init_node_group_ = add(nxi::command("nxi", command_node, [](const nxi::command_params&){}, ":/icon/node"), source);
@@ -169,7 +177,7 @@ namespace nxi
         init_node_command_ = add(nxi::command(std::move(data)), init_node_group_);
     }
 
-    void command_system::init_param(const QString& name, std::function<void(std::vector<QString>&)> fn)
+    void command_system::init_param(const QString& name, std::function<void(nxi::suggestion_vector&)> fn)
     {
         init_node_command_->get().add_param(name, fn);
     }
@@ -215,14 +223,15 @@ namespace nxi
             init(std::move(page_new));
 
             // open
-            init("open", [this](const nxi::command_params&)
+            init("open", [this](const nxi::command_params& params)
             {
-                nxi_core_.page_system().open<nxi::web_page>(0);
+                auto url = params.get(0);
+                nxi_core_.page_system().open<nxi::web_page>(0, url);
             }, ":/image/nex");
-                init_param("command", [](std::vector<QString>& suggestion)
+                init_param("command", [](nxi::suggestion_vector& suggestion)
                 {
-                    suggestion.push_back("www.youtube.com");
-                    suggestion.push_back("www.google.com");
+                    suggestion.add("www.twitch.com");
+                    suggestion.add("www.google.com");
                 });
 
             // switch
@@ -231,6 +240,7 @@ namespace nxi
             page_switch.icon = ":/icon/switch";
             page_switch.description = "Switch between all pages";
             page_switch.shortcut = {{ Qt::Key_Control }, { Qt::Key_W, Qt::Key_S }};
+            page_switch.preview = true;
             page_switch.function = [this](const nxi::command_params& params)
             {
                 if (params.values_.size() < 1)
@@ -238,17 +248,16 @@ namespace nxi
                     nxi_warning("command_param error : page_switch");
                     return;
                 }
-                qDebug() << nxi_core_.page_system().get().size();
                 auto id = params.get(0).toUInt();
                 nxi_core_.page_system().focus(id);
             };
 
             init(std::move(page_switch));
-                init_param("id", [this](std::vector<QString>& suggestion)
+                init_param("id", [this](nxi::suggestion_vector& suggestion)
                 {
                     for (auto& page : nxi_core_.page_system().get())
                     {
-                        suggestion.push_back(QString::number(page->id()));
+                        suggestion.add(nxi::suggestion{ QString::number(page->id()), "", page->command() });
                     }
                 });
 
@@ -268,16 +277,18 @@ namespace nxi
             nxi::command_data load_style;
             load_style.action = "load_style";
             load_style.description = "Load style...";
+            load_style.preview = true;
             load_style.function = [this](const nxi::command_params& params)
             {
                 auto name = params.get(0);
                 nxi_core_.interface_system().load_style(name);
             };
             init(std::move(load_style));
-                init_param("name", [this](std::vector<QString>& suggestion)
+                init_param("name", [this](nxi::suggestion_vector& suggestion)
                 {
-                    suggestion.push_back("ffx");
-                    suggestion.push_back("nebula_space");
+                    suggestion.add(nxi::suggestion{ "nxi", "", "default style" });
+                    suggestion.add(nxi::suggestion{ "ffx", "", "test" });
+                    suggestion.add(nxi::suggestion{ "nebula_space" });
                 });
 
             // shortcust test
@@ -318,6 +329,14 @@ namespace nxi
             commands.push_back(stz::make_observer(&node->get()));
         });
         return commands;
+    }
+
+    void command_system::root_list(std::function<void(const nxi::command&)> fn)
+    {
+        graph_.targets(root_, [&fn](auto&& node)
+        {
+            fn(node->get());
+        });
     }
 } // nxi
 

@@ -38,6 +38,11 @@ namespace ui
             setPlaceholderText(shortcut_input);
         });
 
+        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_input_update, this, [this](const QString& input)
+        {
+            setText(input);
+        });
+
         connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_command_param_required, this, [this](const QString& param_name)
         {
             setPlaceholderText("Enter parameter '" + param_name + "' : ");

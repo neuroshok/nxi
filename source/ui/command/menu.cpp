@@ -41,6 +41,16 @@ namespace ui
         repaint();
     }
 
+    void command_menu::set_data(stz::observer_ptr<const nxi::suggestion_vector> suggestions)
+    {
+        suggestions_.swap(suggestions);
+
+        setContentsMargins(5, 5, 5, 5);
+        setFixedHeight(suggestions_->size() * (style_data.item_height + 1) + contentsMargins().top() + contentsMargins().bottom());
+
+        repaint();
+    }
+
     void command_menu::paintEvent(QPaintEvent* event)
     {
         QPainter painter(this);
@@ -51,23 +61,21 @@ namespace ui
         int item_x = contentsMargins().left();
         int item_index = 0;
 
-        if (commands_)
-        {
-            for (auto item : *commands_)
-            {
-                QRect item_rect{ item_x, item_y, width() - contentsMargins().left() - contentsMargins().right(), style_data.item_height };
-                bool selected = false;
-                if (item_index == selection_index_) selected = true;
 
-                draw_item(item, item_rect, selected);
-                item_y += style_data.item_height + 1;
-                item_index++;
-            }
+        for (const nxi::suggestion& item : *suggestions_)
+        {
+            QRect item_rect{ item_x, item_y, width() - contentsMargins().left() - contentsMargins().right(), style_data.item_height };
+            bool selected = false;
+            if (item_index == selection_index_) selected = true;
+            if (item.type() == nxi::suggestion_type::command) draw_item(static_cast<const nxi::basic_suggestion<nxi::command>&>(item).get(), item_rect, selected);
+            else draw_item(item, item_rect, selected);
+            item_y += style_data.item_height + 1;
+            item_index++;
         }
     }
 
     // draw command
-    void command_menu::draw_item(stz::observer_ptr<nxi::command> command,  QRect& item_rect, bool selected)
+    void command_menu::draw_item(const nxi::command& command,  QRect& item_rect, bool selected)
     {
         QPainter painter(this);
         if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
@@ -75,7 +83,7 @@ namespace ui
 
         // command icon
         QRect icon_rect{ item_rect.left(), item_rect.top(), style_data.item_height, style_data.item_height };
-        QPixmap icon{ command->icon() };
+        QPixmap icon{ command.icon() };
         QRect source_icon_rect = icon.rect();
         source_icon_rect.moveCenter(icon_rect.center());
 
@@ -84,37 +92,37 @@ namespace ui
 
         // command name
         painter.setPen(style_data.item_text_color);
-        painter.drawText(item_rect, Qt::AlignVCenter, command->name());
+        painter.drawText(item_rect, Qt::AlignVCenter, command.name());
 
         auto& command_input = ui_core_.nxi_core().command_system().command_input().text();
-        int hl_offset = command->name().indexOf(command_input);
+        int hl_offset = command.name().indexOf(command_input);
         if (hl_offset >= 0)
         {
             QRect hl_rect{ item_rect };
-            QString hl_text = command->name().mid(hl_offset, command_input.size());
-            hl_rect.setLeft(item_rect.left() + painter.fontMetrics().size(Qt::TextSingleLine, command->name().mid(0, hl_offset)).width());
+            QString hl_text = command.name().mid(hl_offset, command_input.size());
+            hl_rect.setLeft(item_rect.left() + painter.fontMetrics().size(Qt::TextSingleLine, command.name().mid(0, hl_offset)).width());
             painter.setPen(Qt::green);
             painter.drawText(hl_rect, Qt::AlignVCenter, hl_text);
         }
 
-        item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, command->name()).width());
+        item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, command.name()).width());
 
         // command desc
-        if (!command->description().isEmpty())
+        if (!command.description().isEmpty())
         {
             QFont font;
             font.setItalic(true);
             painter.setFont(font);
             painter.setPen(style_data.item_text_color.darker(120));
-            painter.drawText(item_rect, Qt::AlignVCenter, command->description());
-            item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, command->description()).width());
+            painter.drawText(item_rect, Qt::AlignVCenter, command.description());
+            item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, command.description()).width());
         }
 
         // command shortcut
-        if (!command->shortcut().is_empty())
+        if (!command.shortcut().is_empty())
         {
             QFont font;
-            QString shortcut_text = command->shortcut().to_string();
+            QString shortcut_text = command.shortcut().to_string();
             painter.setFont(font);
             painter.setPen(style_data.item_text_color.darker(80));
             painter.drawText(item_rect, Qt::AlignVCenter, shortcut_text);
@@ -124,5 +132,37 @@ namespace ui
         // sound icon
         //QPixmap currentFrame = movie_.currentPixmap();
         //painter.drawPixmap(item_rect.left(), item_rect.top(), currentFrame);
+    }
+
+    void command_menu::draw_item(const nxi::suggestion& suggestion,  QRect& item_rect, bool selected)
+    {
+        QPainter painter(this);
+        if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
+        else painter.fillRect(item_rect, style_data.background_color);
+
+        // suggestion icon
+        QRect icon_rect{ item_rect.left(), item_rect.top(), style_data.item_height, style_data.item_height };
+        QPixmap icon{ suggestion.icon() };
+        QRect source_icon_rect = icon.rect();
+        source_icon_rect.moveCenter(icon_rect.center());
+
+        painter.drawPixmap(source_icon_rect, icon);
+        item_rect.setLeft( item_rect.left() + icon_rect.width());
+
+        // suggestion name
+        painter.setPen(style_data.item_text_color);
+        painter.drawText(item_rect, Qt::AlignVCenter, suggestion.text());
+        item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, suggestion.text()).width());
+
+        // suggestion info
+        if (!suggestion.info().isEmpty())
+        {
+            QFont font;
+            font.setItalic(true);
+            painter.setFont(font);
+            painter.setPen(style_data.item_text_color.darker(120));
+            painter.drawText(item_rect, Qt::AlignVCenter, suggestion.info());
+            item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, suggestion.info()).width());
+        }
     }
 } // ui

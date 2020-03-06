@@ -1,6 +1,7 @@
 #include <nxi/command.hpp>
-
 #include <nxi/command/params.hpp>
+
+#include <nxi/suggestion_vector.hpp>
 
 #include <nxi/log.hpp>
 
@@ -15,9 +16,8 @@ namespace nxi
         , icon_ { std::move(data.icon) }
         , description_ { std::move(data.description) }
         , shortcut_ { std::move(data.shortcut) }
-    {
-
-    }
+        , preview_ { data.preview }
+    {}
 
     command::command(nds::node<nxi::command> *, nxi::command_data)
     {
@@ -31,6 +31,7 @@ namespace nxi
         , name_{ module_name_ + ":" + action_name_ }
         , icon_{ icon }
         , function_{ std::move(fn) }
+        , preview_ { false }
     {}
 
     void command::exec() const
@@ -44,13 +45,13 @@ namespace nxi
         if (function_) function_(params);
     }
 
-    void command::add_param(const QString& name, std::function<void(std::vector<QString>&)> fn)
+    void command::add_param(const QString& name, std::function<void(nxi::suggestion_vector&)> fn)
     {
         params_.push_back(name);
         param_suggestions_ = std::move(fn);
     }
 
-    void command::add_suggestion(std::vector<QString>& p)
+    void command::add_suggestion(nxi::suggestion_vector& p) const
     {
         param_suggestions_(p);
     }
@@ -104,5 +105,10 @@ namespace nxi
     const nxi::shortcut& command::shortcut() const
     {
         return shortcut_;
+    }
+
+    bool command::preview() const
+    {
+        return preview_;
     }
 } // nxi

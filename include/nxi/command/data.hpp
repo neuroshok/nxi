@@ -16,6 +16,7 @@ namespace nxi
         QString icon;
         QString description;
         nxi::shortcut shortcut;
+        bool preview = false;
     };
 } // nxi
 

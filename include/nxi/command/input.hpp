@@ -5,6 +5,8 @@
 #include <nxi/command/params.hpp>
 #include <nxi/command/shortcut_input.hpp>
 
+#include <nxi/suggestion_vector.hpp>
+
 #include <QObject>
 #include <QString>
 
@@ -27,12 +29,13 @@ namespace nxi
         void update(const QString& input, QKeyEvent*);
         void exec();
 
+        void set_input(const QString&);
+
         states state() const;
         QString state_text() const;
 
         const nxi::command_params& params();
-        std::vector<stz::observer_ptr<nxi::command>> suggestions() const;
-        const std::vector<QString>& param_suggestions() const;
+        const nxi::suggestion_vector& suggestions() const;
         const QString& text() const;
 
         void suggest_command();
@@ -40,8 +43,8 @@ namespace nxi
         void select_previous_suggestion();
         void select_next_suggestion();
         size_t suggestion_count() const;
-        stz::observer_ptr<nxi::command> suggestion(int index);
-        stz::observer_ptr<nxi::command> selected_suggestion();
+        const nxi::suggestion& suggestion(int index);
+        const nxi::suggestion& selected_suggestion();
         int selected_suggestion_index();
         bool has_selected_suggestion();
 
@@ -55,8 +58,8 @@ namespace nxi
         nxi::shortcut_input& shortcut_input();
 
     signals:
-        void event_suggestion_update(stz::observer_ptr<nxi::commands_view>);
-        //void event_suggestion_update(std::vector<stz::observer_ptr<nxi::page>>);
+        void event_suggestion_update(const stz::observer_ptr<const nxi::suggestion_vector>);
+        void event_input_update(const QString&);
         void event_state_update(states);
         void event_selection_update(int index);
         void event_reset();
@@ -74,12 +77,11 @@ namespace nxi
         QString input_;
         states state_;
         nxi::command_params params_;
-        stz::observer_ptr<nxi::command> command_;
+        stz::observer_ptr<const nxi::command> command_;
         int param_index_ = 0;
 
         int selected_suggestion_index_;
-        nxi::commands_view suggestions_;
-        std::vector<QString> param_suggestions_;
+        nxi::suggestion_vector suggestions_;
     };
 } // nxi
 

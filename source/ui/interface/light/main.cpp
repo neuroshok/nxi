@@ -66,9 +66,10 @@ namespace ui::interfaces::light
             command_menu_->hide();
         });
 
-        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_suggestion_update, [this](stz::observer_ptr<nxi::commands_view> cmds)
+        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_suggestion_update, [this]
+        (const stz::observer_ptr<const nxi::suggestion_vector> suggestions)
         {
-            command_menu_->set_data(cmds);
+            command_menu_->set_data(suggestions);
             command_menu_->exec();
         });
 

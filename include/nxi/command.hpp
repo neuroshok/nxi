@@ -15,13 +15,14 @@
 namespace nxi
 {
 	class core;
+	class suggestion_vector;
 
 	class command
 	{
 	public:
 	    using function_type = nxi::command_function_type;
 	    using params_type = std::vector<QString>;
-	    using param_suggestions_type = std::function<void(std::vector<QString>&)>;
+	    using param_suggestions_type = std::function<void(nxi::suggestion_vector&)>;
 
 		command(nxi::command_data);
 		command(nds::node<nxi::command>*, nxi::command_data);
@@ -36,7 +37,7 @@ namespace nxi
 		void exec(const nxi::command_params&) const;
 
 		void add_param(const QString&, param_suggestions_type);
-		void add_suggestion(std::vector<QString>&);
+		void add_suggestion(nxi::suggestion_vector&) const;
 
 		params_type params() const;
 
@@ -50,6 +51,7 @@ namespace nxi
         const QString& icon() const;
         const QString& description() const;
         const nxi::shortcut& shortcut() const;
+        bool preview() const;
 
         nds::node<nxi::command>* node() const;
 
@@ -62,6 +64,7 @@ namespace nxi
         QString description_;
         function_type function_;
         nxi::shortcut shortcut_;
+        bool preview_;
 
 		params_type params_;
 		param_suggestions_type param_suggestions_;

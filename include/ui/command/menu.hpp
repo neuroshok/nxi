@@ -2,6 +2,7 @@
 #define INCLUDE_UI_COMMAND_MENU_HPP_NXI
 
 #include <nxi/command/fwd.hpp>
+#include <nxi/suggestion_vector.hpp>
 
 #include <QColor>
 #include <QMovie>
@@ -41,6 +42,7 @@ namespace ui
         void select_next();
 
         void set_data(stz::observer_ptr<nxi::commands_view>);
+        void set_data(stz::observer_ptr<const nxi::suggestion_vector>);
 
         void exec();
 
@@ -48,7 +50,8 @@ namespace ui
         void paintEvent(QPaintEvent*) override;
 
     private:
-        void draw_item(stz::observer_ptr<nxi::command>, QRect&, bool selected);
+        void draw_item(const nxi::command&, QRect&, bool selected);
+        void draw_item(const nxi::suggestion& text,  QRect& item_rect, bool selected);
 
     private:
         ui::core& ui_core_;
@@ -56,6 +59,7 @@ namespace ui
         int selection_index_;
 
         stz::observer_ptr<nxi::commands_view> commands_;
+        stz::observer_ptr<const nxi::suggestion_vector> suggestions_;
         std::vector<stz::observer_ptr<nxi::page>> pages_;
 
         QMovie movie_;
