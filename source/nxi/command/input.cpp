@@ -52,7 +52,7 @@ namespace nxi
 
             // add user input as first suggestion
             suggestions_.clear();
-            if (!input_.isEmpty()) suggestions_.add(nxi::suggestion{ input_, ":/icon/search16", "search" });
+            if (!input_.isEmpty()) suggestions_.add(nxi::suggestion{ input_, ":/icon/search", "search" });
 
             switch(state_)
             {
