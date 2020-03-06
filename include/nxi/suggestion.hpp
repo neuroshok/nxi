@@ -2,6 +2,7 @@
 #define INCLUDE_NXI_SUGGESTION_HPP_NXI
 
 #include <nxi/command/fwd.hpp>
+#include <nxi/utility.hpp>
 
 #include <QString>
 
