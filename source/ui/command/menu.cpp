@@ -165,4 +165,17 @@ namespace ui
             item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, suggestion.info()).width());
         }
     }
+
+    void command_menu::leaveEvent(QEvent* event)
+    {
+        hide();
+    }
+
+    void command_menu::wheelEvent(QWheelEvent* event)
+    {
+        if (event->delta() > 0)
+            ui_core_.nxi_core().command_system().command_input().select_previous_suggestion();
+        else
+            ui_core_.nxi_core().command_system().command_input().select_next_suggestion();
+    }
 } // ui

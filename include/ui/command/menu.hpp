@@ -39,8 +39,6 @@ namespace ui
     public:
         command_menu(ui::core&, QWidget* parent);
 
-        void select_next();
-
         void set_data(stz::observer_ptr<nxi::commands_view>);
         void set_data(stz::observer_ptr<const nxi::suggestion_vector>);
 
@@ -48,6 +46,8 @@ namespace ui
 
     protected:
         void paintEvent(QPaintEvent*) override;
+        void leaveEvent(QEvent* event) override;
+        void wheelEvent(QWheelEvent* event) override;
 
     private:
         void draw_item(const nxi::command&, QRect&, bool selected);
