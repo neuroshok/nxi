@@ -1,6 +1,7 @@
 #include <nxi/command/input.hpp>
 
 #include <nxi/command.hpp>
+#include <nxi/core.hpp>
 #include <nxi/log.hpp>
 #include <nxi/system/command.hpp>
 
@@ -9,14 +10,15 @@
 namespace nxi
 {
 
-    command_input::command_input(nxi::command_system& command_system)
-        : command_system_{ command_system }
+    command_input::command_input(nxi::core& nxi_core)
+        : nxi_core_{ nxi_core }
+        , command_system_{ nxi_core_.command_system() }
         , shortcut_input_{ *this }
         , state_{ states::command }
         , command_{ nullptr }
         , selected_suggestion_index_{ -1 }
     {
-        connect(&command_system_, &nxi::command_system::event_param_required, [this](stz::observer_ptr<const nxi::command> command)
+        connect(&command_system_, &nxi::command_system::event_param_required, [this](const nds::node_ptr<nxi::command> command)
         {
             reset();
             command_ = command;
@@ -59,7 +61,7 @@ namespace nxi
                 case states::command:
                     command_system_.search(input_, [this](const nxi::command& command)
                     {
-                        suggestions_.add(command);
+                        suggestions_.add(command);qDebug() << "add " << command.name();
                     });
                     // suggestions_ = history_system_.search(input_);
                     break;
@@ -75,7 +77,7 @@ namespace nxi
             }
 
             if (suggestion_count() > 0) select_suggestion(0);
-            emit event_suggestion_update(stz::make_observer(&suggestions_));
+            emit event_suggestion_update(suggestions_);
         }
 
         // shortcut mode need release event
@@ -97,8 +99,8 @@ namespace nxi
 
             if (suggestion(selected_suggestion_index_).type() == nxi::suggestion_type::command)
             {
-                const nxi::command& command = static_cast<const nxi::basic_suggestion<nxi::command>&>(suggestion(selected_suggestion_index_)).get();
-                command_ = stz::make_observer(&command);
+                const nxi::command& command = static_cast<const nxi::basic_suggestion<const nxi::command>&>(suggestion(selected_suggestion_index_)).get();
+                //command_ = stz::make_observer(&command);
             }
             // required parameters
             if (command_ && command_->params().size() > 0)
@@ -215,7 +217,17 @@ namespace nxi
         {
             suggestions_.add(command);
         });
-        emit event_suggestion_update(stz::make_observer(&suggestions_));
+        emit event_suggestion_update(suggestions_);
+    }
+
+    void command_input::suggest_page()
+    {
+        suggestions_.clear();
+        for (const auto& page :  nxi_core_.page_system().list_root())
+        {
+            suggestions_.add(*page);
+        }
+        emit event_suggestion_update(suggestions_);
     }
 
     void command_input::reset()

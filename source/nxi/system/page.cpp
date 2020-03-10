@@ -11,12 +11,16 @@
 
 namespace nxi
 {
-    page_system::page_system(nxi::core& nxi_core) :
-            nxi_core_{ nxi_core }
+    page_system::page_system(nxi::core& nxi_core)
+        : nxi_core_{ nxi_core }
+        , root_{ nullptr }
     {}
 
     void page_system::load()
     {
+        // create root
+        root_ = graph_.emplace<nxi::page, nxi::page_node>(*this, "main");
+
         // nxi::message_system::send(nxi::messages::page_system_loaded)
         nxi_trace("");
 
@@ -105,21 +109,32 @@ namespace nxi
     {
         auto page_it = pages_.find(id);
         nxi_assert(page_it != pages_.end());
-
-        return *page_it->second;
+        auto [_, node_ptr] = *page_it;
+        return *node_ptr;
     }
 
-    page_system::pages_view page_system::list(const nxi::page& source)
+    page_system::pages_view page_system::list_root()
+    {
+        page_system::pages_view pages;
+        graph_.targets(root_, [&pages](auto&& node)
+        {
+            pages.push_back(node);
+        });
+        return pages;
+    }
+
+    page_system::pages_view page_system::list(nxi::page_id page_id)
     {
         const auto& pc = nxi_model.page_connection;
 
-        page_system::pages_view result;
-        for (auto& page : ndb::query<dbs::core>() << (ndb::get(pc.target_id) << ndb::source(pc) << ndb::filter(pc.source_id = source.id())))
+        page_system::pages_view pages;
+        /*
+        for (auto& page : ndb::query<dbs::core>() << (ndb::get(pc.target_id) << ndb::source(pc) << ndb::filter(pc.source_id = page_id)))
         {
-            result.push_back(stz::make_observer(&get(page[pc.target_id])));
-        }
+            pages.push_back(stz::make_observer(&get(page[pc.target_id])));
+        }*/
 
-        return result;
+        return pages;
     }
 
     void page_system::focus(nxi::web_page& page)
@@ -127,8 +142,7 @@ namespace nxi
         nxi_trace_event("nxi::page_system::event_focus");
         focus_ = stz::make_observer<nxi::page>(&page);
         emit event_focus(page);
-        emit event_focus(
-        static_cast<nxi::page&>(page));
+        emit event_focus(static_cast<nxi::page&>(page));
     }
     void page_system::focus(nxi::custom_page& page) { emit event_focus(page); emit event_focus(static_cast<nxi::page&>(page)); }
     void page_system::focus(nxi::page_node& node) { emit event_focus(node); }

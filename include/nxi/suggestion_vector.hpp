@@ -37,14 +37,19 @@ namespace nxi
             suggestions_.emplace_back(std::make_unique<nxi::suggestion>(std::move(suggestion)));
         }
 
+        void add(const nxi::command& item)
+        {
+            suggestions_.emplace_back(std::make_unique<nxi::basic_suggestion<nxi::command>>(item));
+        }
+        void add(const nxi::page& item)
+        {
+            suggestions_.emplace_back(std::make_unique<nxi::basic_suggestion<nxi::page>>(item));
+        }
+
         template<class T>
         void add(const T& item)
         {
-            if constexpr (std::is_same_v<T, nxi::command>)
-            {
-                suggestions_.emplace_back(std::make_unique<nxi::basic_suggestion<T>>(item));
-            }
-            else suggestions_.emplace_back(nxi::suggestion{ item });
+            suggestions_.emplace_back(nxi::suggestion{ item });
         }
 
         void clear();

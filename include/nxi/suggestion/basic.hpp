@@ -2,6 +2,7 @@
 #define INCLUDE_NXI_SUGGESTION_BASIC_HPP_NXI
 
 #include <nxi/suggestion.hpp>
+#include <nxi/command.hpp>
 
 namespace nxi
 {

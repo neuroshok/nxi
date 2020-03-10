@@ -29,8 +29,8 @@ namespace nxi
     {
         Q_OBJECT
     public:
-        using pages_type = std::unordered_map<nxi::page_id, stz::observer_ptr<nxi::page>>;
-        using pages_view = std::vector<stz::observer_ptr<nxi::page>>;
+        using pages_type = std::unordered_map<nxi::page_id, nds::node_ptr<nxi::page>>;
+        using pages_view = std::vector<nds::node_ptr<nxi::page>>;
 
         using page_connections_type = std::vector<ndb::objects::page_connection>;
 
@@ -41,7 +41,8 @@ namespace nxi
         void load(nxi::page_id page);
         void load(nxi::web_page& page);
 
-        pages_view list(const nxi::page& source);
+        pages_view list_root();
+        pages_view list(nxi::page_id);
 
         pages_view get() const;
         const page_connections_type& connections() const;
@@ -58,7 +59,7 @@ namespace nxi
 
         void focus(nxi::page_id id);
 
-        std::optional<stz::observer_ptr<nxi::page>> focus() { return focus_; }
+        stz::observer_ptr<nxi::page> focus() { return focus_; }
 
         template<class Page>
         void focus(nxi::page_id id)
@@ -101,7 +102,8 @@ namespace nxi
         //nxi::com::send(page_system::add)
 
         nxi::page* current_page_;
-        std::optional<stz::observer_ptr<nxi::page>> focus_;
+        nds::node_ptr<nxi::page> root_;
+        stz::observer_ptr<nxi::page> focus_;
         std::vector<nxi::page*> visible_pages_;
 
         pages_type pages_;

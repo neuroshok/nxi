@@ -36,7 +36,7 @@ namespace ui
         commands_ = data;
 
         setContentsMargins(5, 5, 5, 5);
-        setFixedHeight(commands_->size() * (style_data.item_height + 1) + contentsMargins().top() + contentsMargins().bottom());
+        setFixedHeight(static_cast<int>(commands_->size()) * (style_data.item_height + 1) + contentsMargins().top() + contentsMargins().bottom());
 
         repaint();
     }
@@ -68,6 +68,7 @@ namespace ui
             bool selected = false;
             if (item_index == selection_index_) selected = true;
             if (item.type() == nxi::suggestion_type::command) draw_item(static_cast<const nxi::basic_suggestion<nxi::command>&>(item).get(), item_rect, selected);
+            else if (item.type() == nxi::suggestion_type::page) draw_item(static_cast<const nxi::basic_suggestion<nxi::page>&>(item).get(), item_rect, selected);
             else draw_item(item, item_rect, selected);
             item_y += style_data.item_height + 1;
             item_index++;
@@ -132,6 +133,18 @@ namespace ui
         // sound icon
         //QPixmap currentFrame = movie_.currentPixmap();
         //painter.drawPixmap(item_rect.left(), item_rect.top(), currentFrame);
+    }
+
+    void command_menu::draw_item(const nxi::page& page, QRect& item_rect, bool selected)
+    {
+        QPainter painter(this);
+        if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
+        else painter.fillRect(item_rect, style_data.background_color);
+
+        // page name
+        painter.setPen(style_data.item_text_color);
+        painter.drawText(item_rect, Qt::AlignVCenter, page.name());
+        item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, page.name()).width());
     }
 
     void command_menu::draw_item(const nxi::suggestion& suggestion,  QRect& item_rect, bool selected)

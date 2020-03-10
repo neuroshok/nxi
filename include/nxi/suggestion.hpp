@@ -8,7 +8,9 @@
 
 namespace nxi
 {
-    enum class suggestion_type { text, command };
+    class page;
+
+    enum class suggestion_type { text, command, page };
 
     class suggestion
     {
@@ -32,8 +34,8 @@ namespace nxi
         QString text_;
     };
 
-    template<>
-    suggestion_type suggestion::get_type<nxi::command>();
+    template<> suggestion_type suggestion::get_type<nxi::command>();
+    template<> suggestion_type suggestion::get_type<nxi::page>();
 } // nxi
 
 #endif // INCLUDE_NXI_SUGGESTION_HPP_NXI

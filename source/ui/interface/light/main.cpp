@@ -67,9 +67,10 @@ namespace ui::interfaces::light
         });
 
         connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_suggestion_update, [this]
-        (const stz::observer_ptr<const nxi::suggestion_vector> suggestions)
+        (const nxi::suggestion_vector& suggestions)
         {
-            command_menu_->set_data(suggestions);
+            qDebug() << "___" << suggestions.size();
+            command_menu_->set_data(stz::make_observer(&suggestions));
             command_menu_->exec();
         });
 

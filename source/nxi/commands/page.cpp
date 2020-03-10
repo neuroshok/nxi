@@ -17,17 +17,23 @@ namespace nxi
         add(std::move(page_new));
 
         // open
-        add("open", [this](const nxi::command_params& params)
+        nxi::command_data page_open;
+        page_open.action = "new";
+        page_open.description = "Open a web_page";
+        page_open.function = [this](const nxi::command_params& params)
         {
             auto url = params.get(0);
             nxi_core_.page_system().open<nxi::web_page>(0, url);
-        }, ":/image/nex");
+        };
+        page_open.parameters = {
+        { "command", [](nxi::suggestion_vector& suggestion)
+            {
+                suggestion.add("www.twitch.com");
+                suggestion.add("www.google.com");
+            }
+        }};
 
-        add_param("command", [](nxi::suggestion_vector& suggestion)
-        {
-            suggestion.add("www.twitch.com");
-            suggestion.add("www.google.com");
-        });
+        add(std::move(page_open));
 
         // switch
         nxi::command_data page_switch;
@@ -46,15 +52,17 @@ namespace nxi
             auto id = params.get(0).toUInt();
             nxi_core_.page_system().focus(id);
         };
+        page_switch.parameters = {
+        { "id", [this](nxi::suggestion_vector& suggestion)
+            {
+                for (auto& page : nxi_core_.page_system().get())
+                {
+                    suggestion.add(nxi::suggestion{ QString::number(page->id()), "", page->command() });
+                }
+            }
+        }};
 
         add(std::move(page_switch));
-        add_param("id", [this](nxi::suggestion_vector& suggestion)
-        {
-            for (auto& page : nxi_core_.page_system().get())
-            {
-                suggestion.add(nxi::suggestion{ QString::number(page->id()), "", page->command() });
-            }
-        });
 
         // close
         nxi::command_data page_close;

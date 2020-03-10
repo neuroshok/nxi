@@ -26,7 +26,7 @@ namespace nxi
     command_system::command_system(nxi::core& nxi_core)
         : nxi_core_{ nxi_core }
         , command_initializer_{ nxi_core }
-        , command_input_{ *this }
+        , command_input_{ nxi_core }
         , root_{ nullptr }
     {}
 
@@ -38,7 +38,7 @@ namespace nxi
         // init trigger keys
         for_each([this](auto&& node)
         {
-            const nxi::shortcut& shortcut = node->get().shortcut();
+            const nxi::shortcut& shortcut = node->shortcut();
             if (shortcut.combo_keys.size() > 0) command_input().shortcut_input().add_trigger_key(shortcut.combo_keys[0]);
             else if (shortcut.sequence_keys.size() > 0) command_input().shortcut_input().add_trigger_key(shortcut.sequence_keys[0]);
         });
@@ -67,37 +67,37 @@ namespace nxi
         button { "nxi:quit" }*/
     }
 
-    nxi::command* command_system::find(const QString& module_action, const QString& module_name) const
+    nds::node_ptr<nxi::command> command_system::find(const QString& module_action, const QString& module_name) const
     {
-        nxi::command* command = nullptr;
+        nds::node_ptr<nxi::command> command;
 
-        nds::algorithm::graph::find_if(graph_
-        , [&module_action, &module_name](auto&& node){ return node->get().action_name() == module_action && node->get().module_name() == module_name ; }
-        , [&command](auto&& found_node){ command = std::addressof(found_node->get()); });
+        nds::algorithm::graph::find_first_if(graph_
+        , [&module_action, &module_name](auto&& node){ return node->action_name() == module_action && node->module_name() == module_name ; }
+        , [&command](auto&& found_node){ command = found_node; });
 
         return command;
     }
 
     const nxi::command& command_system::get(const QString& action_name, const QString& module_name) const
     {
-        nxi::command* command = find(action_name, module_name);
+        nds::node_ptr<nxi::command> command = find(action_name, module_name);
 
-        if (command == nullptr) nxi_error("nxi::command not found : {}", action_name);
+        if (!command) nxi_error("nxi::command not found : {}", action_name);
         return *command;
     }
 
-    nds::node<nxi::command>* command_system::add(nxi::command command, nds::node<nxi::command>* source)
+    nds::node_ptr<nxi::command> command_system::add(nxi::command command, nds::node_ptr<nxi::command> source)
     {
         return graph_.add(std::move(command), source);
     }
 
-    void command_system::exec(stz::observer_ptr<const nxi::command> command)
+    void command_system::exec(nds::node_ptr<nxi::command> command)
     {
-        if (command->params().size() > 0) emit event_param_required(command);
+        if (command->params().size() > 0) emit event_param_required(command); // command_input_.set_state(param)
         else exec(command, nxi::command_params{});
     }
 
-    void command_system::exec(stz::observer_ptr<const nxi::command> command, const nxi::command_params& params)
+    void command_system::exec(nds::node_ptr<nxi::command> command, const nxi::command_params& params)
     {
         command->exec(params);
     }
@@ -108,7 +108,7 @@ namespace nxi
 
         nds::algorithm::graph::for_each(graph_, [&commands, &search_string](auto&& node)
         {
-            if (node->get().name().contains(search_string)) commands.emplace_back(std::addressof(node->get()));
+            if (node->name().contains(search_string)) commands.emplace_back(node);
         });
 
         return commands;
@@ -116,9 +116,15 @@ namespace nxi
 
     void command_system::search(const QString& search_string, std::function<void(const nxi::command&)> fn)
     {
+        qDebug() << "_" << search_string ;
         nds::algorithm::graph::for_each(graph_, [&search_string, &fn](auto&& node)
         {
-            if (node->get().name().contains(search_string)) fn(node->get());
+            qDebug() << "_" << search_string << " _ " << node->name();
+            if (node->name().contains(search_string))
+            {
+                fn(*node);
+
+            }
         });
     }
 
@@ -127,7 +133,7 @@ namespace nxi
         return command_input_;
     }
 
-    void command_system::set_root(nds::node<nxi::command>* node)
+    void command_system::set_root(nds::node_ptr<nxi::command> node)
     {
         root_ = node;
         emit event_root_update(root_);
@@ -135,21 +141,21 @@ namespace nxi
 
     nxi::commands_view command_system::root_list()
     {
-        nxi_assert(root_ != nullptr);
+        nxi_assert(root_);
         nxi::commands_view commands;
-        graph_.targets(root_, [&commands](auto&& node)
+        graph_.targets(root_, [&commands](const auto& node)
         {
-            commands.push_back(stz::make_observer(&node->get()));
+            commands.push_back(node);
         });
         return commands;
     }
 
     void command_system::root_list(std::function<void(const nxi::command&)> fn)
     {
-        nxi_assert(root_ != nullptr);
+        nxi_assert(root_);
         graph_.targets(root_, [&fn](auto&& node)
         {
-            fn(node->get());
+            fn(*node);
         });
     }
 } // nxi

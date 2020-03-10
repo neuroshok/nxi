@@ -18,6 +18,7 @@ namespace ui
         : ui_core_{ ui_core }
     {
         setPlaceholderText("Enter command or use shortcut");
+        setStyleSheet("font-weight:bold");
 
         info_ = new QLabel(this);
         header_ = new QLabel(this);
@@ -28,6 +29,7 @@ namespace ui
             setText("");
         });
 
+        // use only base
         connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), this, [this](nxi::page& page)
         {
             setText(page.name());
@@ -101,7 +103,7 @@ namespace ui
     {
         QLineEdit::focusOutEvent(event);
         auto focused_page = ui_core_.nxi_core().page_system().focus();
-        if (focused_page.has_value()) setText(focused_page.value()->name());
+        if (focused_page) setText(focused_page->name());
     }
 
     void command::enterEvent(QEvent* event)
@@ -109,7 +111,7 @@ namespace ui
         if (hasFocus()) return;
         //if (!input_.is_empty()) return;
         auto focused_page = ui_core_.nxi_core().page_system().focus();
-        if (focused_page.has_value()) setText(focused_page.value()->command());
+        if (focused_page) setText(focused_page->name());
     }
 
     void command::leaveEvent(QEvent* event)
@@ -117,7 +119,7 @@ namespace ui
         if (hasFocus()) return;
         //if (!input_.is_empty()) return;
         auto focused_page = ui_core_.nxi_core().page_system().focus();
-        if (focused_page.has_value()) setText(focused_page.value()->name());
+        if (focused_page) setText(focused_page->name());
     }
 
     void command::paintEvent(QPaintEvent* event)

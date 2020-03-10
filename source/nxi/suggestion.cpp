@@ -2,6 +2,8 @@
 
 namespace nxi
 {
+    class page;
+
     suggestion::suggestion(suggestion_type type)
          : type_{ type }
          , icon_{ ":/image/nex" }
@@ -20,6 +22,6 @@ namespace nxi
     const QString& suggestion::text() const { return text_; };
     suggestion_type suggestion::type() const { return type_; }
 
-    template<>
-    suggestion_type suggestion::get_type<nxi::command>() { return suggestion_type::command; }
+    template<> suggestion_type suggestion::get_type<nxi::command>() { return suggestion_type::command; }
+    template<> suggestion_type suggestion::get_type<nxi::page>() { return suggestion_type::page; }
 } // nxi

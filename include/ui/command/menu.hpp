@@ -3,6 +3,7 @@
 
 #include <nxi/command/fwd.hpp>
 #include <nxi/suggestion_vector.hpp>
+#include <stz/observer_ptr.hpp>
 
 #include <QColor>
 #include <QMovie>
@@ -51,6 +52,7 @@ namespace ui
 
     private:
         void draw_item(const nxi::command&, QRect&, bool selected);
+        void draw_item(const nxi::page&, QRect&, bool selected);
         void draw_item(const nxi::suggestion& text,  QRect& item_rect, bool selected);
 
     private:
@@ -58,9 +60,8 @@ namespace ui
 
         int selection_index_;
 
-        stz::observer_ptr<nxi::commands_view> commands_;
+        stz::observer_ptr<const nxi::commands_view> commands_;
         stz::observer_ptr<const nxi::suggestion_vector> suggestions_;
-        std::vector<stz::observer_ptr<nxi::page>> pages_;
 
         QMovie movie_;
     };

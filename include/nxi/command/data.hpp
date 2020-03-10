@@ -10,9 +10,16 @@ namespace nxi
 {
 	struct command_data
     {
+	    struct parameter
+        {
+	        QString name;
+	        nxi::command_function_parameters_type parameters;
+        };
+
 	    QString module = "nxi";
 		QString action = "none";
 		nxi::command_function_type function;
+		std::vector<parameter> parameters;
         QString icon;
         QString description;
         nxi::shortcut shortcut;

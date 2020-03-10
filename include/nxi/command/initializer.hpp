@@ -1,13 +1,10 @@
 #ifndef INCLUDE_NXI_COMMAND_INITIALIZER_HPP_NXI
 #define INCLUDE_NXI_COMMAND_INITIALIZER_HPP_NXI
 
-#include <nxi/command/fwd.hpp>
 #include <nxi/command/data.hpp>
+#include <nxi/command/fwd.hpp>
 
-namespace nds
-{
-    template<class> class node;
-} // nds
+#include <nds/graph/node.hpp>
 
 class QString;
 
@@ -23,20 +20,19 @@ namespace nxi
         void load();
 
     private:
-        nds::node<nxi::command>* add(nxi::command_data data);
-        nds::node<nxi::command>* add(const QString& action, nxi::command_function_type fn, const QString& icon = "");
-        nds::node<nxi::command>* add_node(const QString& command_node);
-        void add_param(const QString& name, std::function<void(nxi::suggestion_vector&)> fn);
+        nds::node_ptr<nxi::command> add(nxi::command_data data);
+        nds::node_ptr<nxi::command> add(const QString& action, nxi::command_function_type fn, const QString& icon = "");
+        nds::node_ptr<nxi::command> add_node(const QString& command_node);
 
         void init_main();
         void init_page();
 
-        void set_root(nds::node<nxi::command>*);
+        void set_root(nds::node_ptr<nxi::command>);
 
     private:
         nxi::core& nxi_core_;
-        nds::node<nxi::command>* command_;
-        nds::node<nxi::command>* node_;
+        nds::node_ptr<nxi::command> command_;
+        nds::node_ptr<nxi::command> node_;
     };
 } // nxi
 

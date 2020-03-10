@@ -26,11 +26,10 @@
 #include <QLabel>
 #include <QPushButton>
 
+#include <nxi/config.hpp>
 
 namespace ui::interfaces::light
 {
-
-
     control_bar::control_bar(ui::core& ui_core, ui::window* window)
         : ui::interface("control_bar", window)
         , ui_core_{ ui_core }
@@ -43,14 +42,26 @@ namespace ui::interfaces::light
         command_root_ = new node_button(this);
         command_root_->setText("nxi");
         command_root_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #00BBFF; padding: 0 20 0 20;");
-        connect(command_root_, &node_button::event_enter, [this]() { ui_core_.nxi_core().command_system().command_input().suggest_command(); });
-        //connect(command_root_, &node_button::event_leave, [this]() { ui_core_.nxi_core().command_system().command_input().reset(); });
+        connect(command_root_, &node_button::event_enter, [this]()
+        {
+            ui_core_.nxi_core().command_system().command_input().suggest_command();
+            command_root_->setStyleSheet("font-weight: bold; background-color: #00FFFF; color: #00BBFF; padding: 0 20 0 20;");
+        });
+        connect(command_root_, &node_button::event_leave, [this]()
+        {
+            ui_core_.nxi_core().command_system().command_input().reset();
+            command_root_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #00BBFF; padding: 0 20 0 20;");
+        });
         connect(command_root_, &node_button::event_up, [this]() { ui_core_.nxi_core().command_system().command_input().select_previous_suggestion(); });
         connect(command_root_, &node_button::event_down, [this]() { ui_core_.nxi_core().command_system().command_input().select_next_suggestion(); });
 
         page_root_ = new node_button(this);
         page_root_->setText("dev");
         page_root_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #FFBB00; padding: 0 20 0 20;");
+        connect(page_root_, &node_button::event_enter, [this]()
+        {
+            ui_core_.nxi_core().command_system().command_input().suggest_page();
+        });
 
         command_input_ = new ui::command(ui_core_);
         command_input_->setFocus();
@@ -58,10 +69,16 @@ namespace ui::interfaces::light
         layout->addWidget(page_root_);
         layout->addWidget(command_input_);
 
+        // test
+        auto test_module = new node_button(this);
+        test_module->setText("mod");
+        test_module->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #00BB99; padding: 0 20 0 20;");
+        layout->addWidget(test_module);
+
         connect(&ui_core_.nxi_core().command_system(), &nxi::command_system::event_root_update,
-        [this](nds::node<nxi::command>* command)
+        [this](nds::node_ptr<nxi::command> command)
         {
-            command_root_->setText(command->get().action_name());
+            command_root_->setText(command->action_name());
         });
     }
 

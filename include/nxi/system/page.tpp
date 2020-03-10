@@ -4,14 +4,14 @@ namespace nxi
     template<class Page, class... Args>
     Page& page_system::add(nxi::page_id source_id, Args&&... args)
     {
-        auto graph_node_page = graph_.emplace<nxi::page, Page>(*this, std::forward<Args>(args)...);
-        ndb::store(graph_node_page->get());
+        auto graph_node_page = graph_.emplace<nxi::page, Page>(root_, *this, std::forward<Args>(args)...);
+        ndb::store(*graph_node_page);
 
-        auto& added_page = static_cast<nxi::page&>(graph_node_page->get());
-        pages_.emplace(added_page.id(), &added_page);
+        auto& added_page = static_cast<nxi::page&>(*graph_node_page);
+        //pages_.emplace(added_page.id(), &added_page);
 
         emit event_add(added_page, 0);
-        return graph_node_page->get();
+        return static_cast<Page&>(*graph_node_page);
     }
 
     template<class Page, class... Args>
