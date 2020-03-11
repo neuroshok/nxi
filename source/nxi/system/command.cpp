@@ -91,13 +91,13 @@ namespace nxi
         return graph_.add(std::move(command), source);
     }
 
-    void command_system::exec(nds::node_ptr<nxi::command> command)
+    void command_system::exec(nds::node_ptr<const nxi::command> command)
     {
         if (command->params().size() > 0) emit event_param_required(command); // command_input_.set_state(param)
         else exec(command, nxi::command_params{});
     }
 
-    void command_system::exec(nds::node_ptr<nxi::command> command, const nxi::command_params& params)
+    void command_system::exec(nds::node_ptr<const nxi::command> command, const nxi::command_params& params)
     {
         command->exec(params);
     }
@@ -114,16 +114,13 @@ namespace nxi
         return commands;
     }
 
-    void command_system::search(const QString& search_string, std::function<void(const nxi::command&)> fn)
+    void command_system::search(const QString& search_string, callback_type fn)
     {
-        qDebug() << "_" << search_string ;
         nds::algorithm::graph::for_each(graph_, [&search_string, &fn](auto&& node)
         {
-            qDebug() << "_" << search_string << " _ " << node->name();
             if (node->name().contains(search_string))
             {
-                fn(*node);
-
+                fn(node);
             }
         });
     }
@@ -150,12 +147,12 @@ namespace nxi
         return commands;
     }
 
-    void command_system::root_list(std::function<void(const nxi::command&)> fn)
+    void command_system::root_list(callback_type fn)
     {
         nxi_assert(root_);
         graph_.targets(root_, [&fn](auto&& node)
         {
-            fn(*node);
+            fn(node);
         });
     }
 } // nxi

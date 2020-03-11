@@ -57,7 +57,7 @@ namespace nxi
             {
                 for (auto& page : nxi_core_.page_system().get())
                 {
-                    suggestion.add(nxi::suggestion{ QString::number(page->id()), "", page->command() });
+                    suggestion.add(nxi::text_suggestion{ QString::number(page->id()), "", page->command() });
                 }
             }
         }};

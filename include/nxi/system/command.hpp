@@ -21,6 +21,7 @@ namespace nxi
     public:
         using commands_view = std::vector<nds::node_ptr<nxi::command>>;
         using function_type = std::function<void(const nxi::command_params&)>;
+        using callback_type = std::function<void(nds::node_ptr<const nxi::command>)>;
 
         command_system(nxi::core&);
         command_system(const command_system&) = delete;
@@ -29,17 +30,17 @@ namespace nxi
         void load();
 
         nxi::commands_view root_list();
-        void root_list(std::function<void(const nxi::command&)>);
+        void root_list(callback_type);
 
         const nxi::command& get(const QString& module_action, const QString& module_name = "nxi") const;
         nds::node_ptr<nxi::command> find(const QString& module_action, const QString& module_name = "nxi") const;
         template<class Callback>
         void for_each(Callback&&);
         nds::node_ptr<nxi::command> add(nxi::command command, nds::node_ptr<nxi::command> source = {});
-        void exec(nds::node_ptr<nxi::command>);
-        void exec(nds::node_ptr<nxi::command>, const nxi::command_params&);
+        void exec(nds::node_ptr<const nxi::command>);
+        void exec(nds::node_ptr<const nxi::command>, const nxi::command_params&);
         commands_view search(const QString&);
-        void search(const QString&, std::function<void(const nxi::command&)>);
+        void search(const QString&, callback_type);
         nxi::command_input& command_input();
 
         void set_root(nds::node_ptr<nxi::command>);
@@ -47,7 +48,7 @@ namespace nxi
     signals:
         void event_add(const nxi::command&);
         void event_root_update(nds::node_ptr<nxi::command>);
-        void event_param_required(const nds::node_ptr<nxi::command>);
+        void event_param_required(nds::node_ptr<const nxi::command>);
 
     private:
         nxi::core& nxi_core_;

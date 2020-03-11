@@ -46,7 +46,7 @@ namespace ui
         suggestions_.swap(suggestions);
 
         setContentsMargins(5, 5, 5, 5);
-        setFixedHeight(suggestions_->size() * (style_data.item_height + 1) + contentsMargins().top() + contentsMargins().bottom());
+        setFixedHeight(static_cast<int>(suggestions_->size()) * (style_data.item_height + 1) + contentsMargins().top() + contentsMargins().bottom());
 
         repaint();
     }
@@ -61,23 +61,25 @@ namespace ui
         int item_x = contentsMargins().left();
         int item_index = 0;
 
-
-        for (const nxi::suggestion& item : *suggestions_)
+        for (const auto& suggestion : *suggestions_)
         {
             QRect item_rect{ item_x, item_y, width() - contentsMargins().left() - contentsMargins().right(), style_data.item_height };
             bool selected = false;
             if (item_index == selection_index_) selected = true;
-            if (item.type() == nxi::suggestion_type::command) draw_item(static_cast<const nxi::basic_suggestion<nxi::command>&>(item).get(), item_rect, selected);
-            else if (item.type() == nxi::suggestion_type::page) draw_item(static_cast<const nxi::basic_suggestion<nxi::page>&>(item).get(), item_rect, selected);
-            else draw_item(item, item_rect, selected);
+
+            suggestion.apply([this, &item_rect, &selected](auto&& s) { draw_item(s, item_rect, selected); } );
+
             item_y += style_data.item_height + 1;
             item_index++;
         }
     }
 
+
+
     // draw command
-    void command_menu::draw_item(const nxi::command& command,  QRect& item_rect, bool selected)
+    void command_menu::draw_item(nds::node_ptr<const nxi::command> node_command,  QRect& item_rect, bool selected)
     {
+        const nxi::command& command = *node_command;
         QPainter painter(this);
         if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
         else painter.fillRect(item_rect, style_data.background_color);
@@ -135,8 +137,9 @@ namespace ui
         //painter.drawPixmap(item_rect.left(), item_rect.top(), currentFrame);
     }
 
-    void command_menu::draw_item(const nxi::page& page, QRect& item_rect, bool selected)
+    void command_menu::draw_item(nds::node_ptr<const nxi::page> node_page, QRect& item_rect, bool selected)
     {
+        const nxi::page& page = *node_page;
         QPainter painter(this);
         if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
         else painter.fillRect(item_rect, style_data.background_color);
@@ -147,7 +150,7 @@ namespace ui
         item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, page.name()).width());
     }
 
-    void command_menu::draw_item(const nxi::suggestion& suggestion,  QRect& item_rect, bool selected)
+    void command_menu::draw_item(const nxi::text_suggestion& suggestion,  QRect& item_rect, bool selected)
     {
         QPainter painter(this);
         if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);

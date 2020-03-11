@@ -4,7 +4,7 @@
 #include <nxi/command/fwd.hpp>
 #include <nxi/command/params.hpp>
 #include <nxi/command/shortcut_input.hpp>
-#include <nxi/suggestion_vector.hpp>
+#include <nxi/suggestion/vector.hpp>
 
 #include <nds/graph/node.hpp>
 
@@ -47,8 +47,8 @@ namespace nxi
         void select_previous_suggestion();
         void select_next_suggestion();
         size_t suggestion_count() const;
-        const nxi::suggestion& suggestion(int index);
-        const nxi::suggestion& selected_suggestion();
+        const suggestion_vector::suggestion_type& suggestion(int index);
+        const suggestion_vector::suggestion_type& selected_suggestion();
         int selected_suggestion_index();
         bool has_selected_suggestion();
 
@@ -82,7 +82,7 @@ namespace nxi
         QString input_;
         states state_;
         nxi::command_params params_;
-        nds::node_ptr<nxi::command> command_;
+        nds::node_ptr<const nxi::command> command_;
         int param_index_ = 0;
 
         int selected_suggestion_index_;

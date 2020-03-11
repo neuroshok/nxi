@@ -30,7 +30,7 @@ namespace nxi
         Q_OBJECT
     public:
         using pages_type = std::unordered_map<nxi::page_id, nds::node_ptr<nxi::page>>;
-        using pages_view = std::vector<nds::node_ptr<nxi::page>>;
+        using pages_view = std::vector<nds::node_ptr<const nxi::page>>;
 
         using page_connections_type = std::vector<ndb::objects::page_connection>;
 

@@ -2,6 +2,7 @@
 
 #include <nxi/core.hpp>
 #include <nxi/command.hpp>
+#include <nxi/suggestion/text.hpp>
 
 namespace nxi
 {
@@ -60,9 +61,9 @@ namespace nxi
         load_style.parameters = {
         { "name", [](nxi::suggestion_vector& suggestion)
             {
-                suggestion.add(nxi::suggestion{ "nxi", "", "default style" });
-                suggestion.add(nxi::suggestion{ "ffx", "", "test" });
-                suggestion.add(nxi::suggestion{ "nebula_space" });
+                suggestion.add(nxi::text_suggestion{ "nxi", "", "default style" });
+                suggestion.add(nxi::text_suggestion{ "ffx", "", "test" });
+                suggestion.add(nxi::text_suggestion{ "nebula_space" });
             }
         }};
 

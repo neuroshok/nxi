@@ -9,12 +9,10 @@
 #include <ui/core.hpp>
 #include <nxi/core.hpp>
 #include <nxi/config.hpp>
+#include <nxi/utility.hpp>
 
 namespace ui::views
 {
-    template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-    template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
-
     class config : public QWidget
     {
     public:

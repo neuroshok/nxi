@@ -1,7 +1,7 @@
 #include <nxi/command.hpp>
 #include <nxi/command/params.hpp>
 
-#include <nxi/suggestion_vector.hpp>
+#include <nxi/suggestion/vector.hpp>
 
 #include <nxi/log.hpp>
 

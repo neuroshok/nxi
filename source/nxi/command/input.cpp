@@ -18,7 +18,7 @@ namespace nxi
         , command_{ nullptr }
         , selected_suggestion_index_{ -1 }
     {
-        connect(&command_system_, &nxi::command_system::event_param_required, [this](const nds::node_ptr<nxi::command> command)
+        connect(&command_system_, &nxi::command_system::event_param_required, [this](nds::node_ptr<const nxi::command> command)
         {
             reset();
             command_ = command;
@@ -54,14 +54,14 @@ namespace nxi
 
             // add user input as first suggestion
             suggestions_.clear();
-            if (!input_.isEmpty()) suggestions_.add(nxi::suggestion{ input_, ":/icon/search", "search" });
+            if (!input_.isEmpty()) suggestions_.add(nxi::text_suggestion{ input_, ":/icon/search", "search" });
 
             switch(state_)
             {
                 case states::command:
-                    command_system_.search(input_, [this](const nxi::command& command)
+                    command_system_.search(input_, [this](nds::node_ptr<const nxi::command> command)
                     {
-                        suggestions_.add(command);qDebug() << "add " << command.name();
+                        suggestions_.add(std::move(command));
                     });
                     // suggestions_ = history_system_.search(input_);
                     break;
@@ -95,13 +95,12 @@ namespace nxi
 
         if (state_ == states::command)
         {
-            qDebug() << "exec action" << suggestion(selected_suggestion_index_).text();
+            //qDebug() << "exec action" << suggestion(selected_suggestion_index_).text();
 
-            if (suggestion(selected_suggestion_index_).type() == nxi::suggestion_type::command)
-            {
-                const nxi::command& command = static_cast<const nxi::basic_suggestion<const nxi::command>&>(suggestion(selected_suggestion_index_)).get();
+            //if (suggestion(selected_suggestion_index_).type() == nxi::suggestion_type::command)            {
+                //const nxi::command& command = static_cast<const nxi::basic_suggestion<const nxi::command>&>(suggestion(selected_suggestion_index_)).get();
                 //command_ = stz::make_observer(&command);
-            }
+            //}
             // required parameters
             if (command_ && command_->params().size() > 0)
             {
@@ -176,7 +175,7 @@ namespace nxi
     {
         selected_suggestion_index_ = index;
 
-        set_input(suggestion(selected_suggestion_index_).text());
+        //set_input(suggestion(selected_suggestion_index_).text());
         emit event_selection_update(index);
 
         if (command_ && command_->preview())
@@ -199,13 +198,13 @@ namespace nxi
         if (selected_suggestion_index_ + 1 < suggestions_.size()) select_suggestion(selected_suggestion_index_ + 1);
     }
 
-    const nxi::suggestion& command_input::suggestion(int index)
+    const suggestion_vector::suggestion_type& command_input::suggestion(int index)
     {
         nxi_assert(index >= 0 && index < suggestions_.size());
         return suggestions_[index];
     }
 
-    const nxi::suggestion& command_input::selected_suggestion()
+    const suggestion_vector::suggestion_type& command_input::selected_suggestion()
     {
         return suggestion(selected_suggestion_index_);
     }
@@ -213,9 +212,9 @@ namespace nxi
     void command_input::suggest_command()
     {
         suggestions_.clear();
-        command_system_.root_list([this](const nxi::command& command)
+        command_system_.root_list([this](nds::node_ptr<const nxi::command> command)
         {
-            suggestions_.add(command);
+            suggestions_.add(std::move(command));
         });
         emit event_suggestion_update(suggestions_);
     }
@@ -225,7 +224,7 @@ namespace nxi
         suggestions_.clear();
         for (const auto& page :  nxi_core_.page_system().list_root())
         {
-            suggestions_.add(*page);
+            suggestions_.add(page);
         }
         emit event_suggestion_update(suggestions_);
     }

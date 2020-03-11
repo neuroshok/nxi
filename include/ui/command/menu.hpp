@@ -2,7 +2,7 @@
 #define INCLUDE_UI_COMMAND_MENU_HPP_NXI
 
 #include <nxi/command/fwd.hpp>
-#include <nxi/suggestion_vector.hpp>
+#include <nxi/suggestion/vector.hpp>
 #include <stz/observer_ptr.hpp>
 
 #include <QColor>
@@ -51,9 +51,9 @@ namespace ui
         void wheelEvent(QWheelEvent* event) override;
 
     private:
-        void draw_item(const nxi::command&, QRect&, bool selected);
-        void draw_item(const nxi::page&, QRect&, bool selected);
-        void draw_item(const nxi::suggestion& text,  QRect& item_rect, bool selected);
+        void draw_item(nds::node_ptr<const nxi::command>, QRect&, bool selected);
+        void draw_item(nds::node_ptr<const nxi::page>, QRect&, bool selected);
+        void draw_item(const nxi::text_suggestion& text,  QRect& item_rect, bool selected);
 
     private:
         ui::core& ui_core_;
