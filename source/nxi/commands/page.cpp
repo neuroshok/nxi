@@ -28,8 +28,8 @@ namespace nxi
         page_open.parameters = {
         { "command", [](nxi::suggestion_vector& suggestion)
             {
-                suggestion.add("www.twitch.com");
-                suggestion.add("www.google.com");
+                suggestion.push_back("www.twitch.com");
+                suggestion.push_back("www.google.com");
             }
         }};
 
@@ -57,7 +57,7 @@ namespace nxi
             {
                 for (auto& page : nxi_core_.page_system().get())
                 {
-                    suggestion.add(nxi::text_suggestion{ QString::number(page->id()), "", page->command() });
+                    suggestion.push_back(nxi::text_suggestion{ QString::number(page->id()), "", page->command() });
                 }
             }
         }};

@@ -9,14 +9,14 @@ namespace nxi
     suggestion_vector::suggestions_type::const_iterator suggestion_vector::begin() const { return suggestions_.begin(); }
     suggestion_vector::suggestions_type::const_iterator suggestion_vector::end() const { return suggestions_.end(); }
 
-    void suggestion_vector::add(QString text)
+    void suggestion_vector::push_back(QString text)
     {
         suggestions_.emplace_back(nxi::text_suggestion{ std::move(text) });
     }
 
-    void suggestion_vector::add(const char* text)
+    void suggestion_vector::push_back(const char* text)
     {
-        add(QString{ text });
+        push_back(QString{ text });
     }
 
     void suggestion_vector::clear()

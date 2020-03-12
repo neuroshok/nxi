@@ -28,11 +28,11 @@ namespace nxi
         suggestions_type::const_iterator begin() const;
         suggestions_type::const_iterator end() const;
 
-        void add(QString text);
-        void add(const char* text);
+        void push_back(QString text);
+        void push_back(const char* text);
 
         template<class T>
-        void add(T item)
+        void push_back(T item)
         {
             suggestions_.emplace_back(nxi::suggestion{ std::move(item) });
         }

@@ -61,9 +61,9 @@ namespace nxi
         load_style.parameters = {
         { "name", [](nxi::suggestion_vector& suggestion)
             {
-                suggestion.add(nxi::text_suggestion{ "nxi", "", "default style" });
-                suggestion.add(nxi::text_suggestion{ "ffx", "", "test" });
-                suggestion.add(nxi::text_suggestion{ "nebula_space" });
+                suggestion.push_back(nxi::text_suggestion{ "nxi", "", "default style" });
+                suggestion.push_back(nxi::text_suggestion{ "ffx", "", "test" });
+                suggestion.push_back(nxi::text_suggestion{ "nebula_space" });
             }
         }};
 
