@@ -67,7 +67,11 @@ namespace ui
             bool selected = false;
             if (item_index == selection_index_) selected = true;
 
-            suggestion.apply([this, &item_rect, &selected](auto&& s) { draw_item(s, item_rect, selected); } );
+            suggestion.visit(
+              [this, &item_rect, &selected](nds::node_ptr<const nxi::command> s) { draw_item(s, item_rect, selected); }
+            , [this, &item_rect, &selected](nds::node_ptr<const nxi::page> s) { draw_item(s, item_rect, selected); }
+            , [this, &item_rect, &selected, &suggestion](auto&& s) { draw_item(suggestion, item_rect, selected); }
+            );
 
             item_y += style_data.item_height + 1;
             item_index++;
@@ -150,9 +154,10 @@ namespace ui
         item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, page.name()).width());
     }
 
-    void command_menu::draw_item(const nxi::text_suggestion& suggestion,  QRect& item_rect, bool selected)
+    void command_menu::draw_item(const nxi::suggestion& suggestion,  QRect& item_rect, bool selected)
     {
         QPainter painter(this);
+
         if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
         else painter.fillRect(item_rect, style_data.background_color);
 

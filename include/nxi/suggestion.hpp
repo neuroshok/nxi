@@ -6,6 +6,7 @@
 #include <nxi/command.hpp>
 #include <nxi/page.hpp>
 #include <nxi/suggestion/text.hpp>
+#include <nxi/suggestion/search.hpp>
 #include <nxi/utility.hpp>
 
 #include <variant>
@@ -22,7 +23,9 @@ namespace nxi
         using suggestion_type = std::variant
             < nds::node_ptr<const nxi::command>
             , nds::node_ptr<const nxi::page>
-            , nxi::text_suggestion>;
+            , nxi::search_suggestion
+            , nxi::text_suggestion
+            >;
 
         template<class T>
         suggestion(T&& v) : suggestion_{ std::forward<T>(v) } {}
@@ -38,6 +41,12 @@ namespace nxi
             {
                 [&f](auto&& s) -> decltype(auto) { return f(s); }
             }, suggestion_);
+        }
+
+        template<class... Fs>
+        decltype(auto) visit(Fs&&... fs) const
+        {
+            return std::visit(overloaded{ fs... }, suggestion_);
         }
 
     private:
@@ -56,6 +65,10 @@ namespace nxi
         const QString& icon(const nxi::text_suggestion& data) const { return data.icon(); }
         const QString& info(const nxi::text_suggestion& data) const { return data.info(); }
         const QString& text(const nxi::text_suggestion& data) const { return data.text(); }
+
+        const QString& icon(const nxi::search_suggestion& data) const { return data.icon(); }
+        const QString& info(const nxi::search_suggestion& data) const { return data.name(); }
+        const QString& text(const nxi::search_suggestion& data) const { return data.text(); }
 
     private:
         suggestion_type suggestion_;

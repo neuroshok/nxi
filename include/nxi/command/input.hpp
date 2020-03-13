@@ -22,7 +22,17 @@ namespace nxi
     {
         Q_OBJECT
     public:
+        enum class mode {
+            display //! display text when ui::command_input is not focus, input is shown on hover
+            , input //! accept user input, can trigger shortcut mode
+            , shortcut //! triggered by shortcut trigger_keys
+        };
         enum class states { command, command_param, shortcut };
+
+        enum class context
+        {
+            command, page, history
+        };
 
         command_input(nxi::core&);
 
@@ -58,7 +68,7 @@ namespace nxi
         bool is_empty() const;
         bool is_valid() const;
 
-        nxi::command_system& command_system();
+        const nxi::command_system& command_system() const;
         nxi::shortcut_input& shortcut_input();
 
     signals:
@@ -73,6 +83,7 @@ namespace nxi
 
     protected:
         void set_state(states);
+        void set_mode(mode);
 
     private:
         nxi::core& nxi_core_;
@@ -81,6 +92,7 @@ namespace nxi
         nxi::shortcut_input shortcut_input_;
         QString input_;
         states state_;
+        mode mode_;
         nxi::command_params params_;
         nds::node_ptr<const nxi::command> command_;
         int param_index_ = 0;

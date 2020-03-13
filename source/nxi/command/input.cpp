@@ -15,6 +15,7 @@ namespace nxi
         , command_system_{ nxi_core_.command_system() }
         , shortcut_input_{ *this }
         , state_{ states::command }
+        , mode_{ mode::input }
         , command_{ nullptr }
         , selected_suggestion_index_{ -1 }
     {
@@ -37,62 +38,89 @@ namespace nxi
         auto key = static_cast<Qt::Key>(event->key());
 
         // ignore autorepeat in shortcut mode
-        if (state_ == states::shortcut && event->isAutoRepeat()) return;
+        if (mode_ == mode::shortcut && event->isAutoRepeat()) return;
 
         if (event->type() == QEvent::KeyPress)
         {
-            if (shortcut_input_.is_trigger_key(static_cast<Qt::Key>(event->key())))
-            {
-                set_state(states::shortcut);
-            }
-
-            if (input_.isEmpty() && state_ == states::command)
-            {
-                reset();
-                return;
-            }
-
-            // add user input as first suggestion
             suggestions_.clear();
-            if (!input_.isEmpty()) suggestions_.add(nxi::text_suggestion{ input_, ":/icon/search", "search" });
 
-            switch(state_)
+            if (mode_ != mode::shortcut && shortcut_input_.is_trigger_key(static_cast<Qt::Key>(event->key())))
             {
-                case states::command:
-                    command_system_.search(input_, [this](nds::node_ptr<const nxi::command> command)
-                    {
-                        suggestions_.add(std::move(command));
-                    });
-                    // suggestions_ = history_system_.search(input_);
-                    break;
+                set_mode(mode::shortcut);
+            }
 
-                case states::command_param:
-                    command_->add_suggestion(suggestions_);
-                    break;
+            if (mode_ == mode::shortcut)
+            {
+                shortcut_input_.update(event, suggestions_);
+                emit event_shortcut_input_update(shortcut_input_.to_string());
+            }
+            if (mode_ == mode::input)
+            {
+                // add user input as first suggestion
+                if (!input_.isEmpty())
+                {
+                    suggestions_.push_back(nxi::search_suggestion{ input_, "Google", "https://www.google.com/search?q=", ":/icon/search" } );
+                    suggestions_.push_back(nxi::search_suggestion{ input_, "CppReference", "https://en.cppreference.com/mwiki/index.php?search=", ":/icon/search" } );
+                }
 
-                case states::shortcut:
-                    //suggestions_.add(shortcut_input_.update(event));
-                    emit event_shortcut_input_update(shortcut_input_.to_string());
-                    break;
+                command_system_.search(input_, [this](nds::node_ptr<const nxi::command> command)
+                {
+                    suggestions_.push_back(std::move(command));
+                });
             }
 
             if (suggestion_count() > 0) select_suggestion(0);
             emit event_suggestion_update(suggestions_);
+
+            /*
+            switch (nxi_core_.context().active())
+            {
+                case nxi::context::command:
+                    suggestion_.add(cmd);
+                    break;
+                case nxi::context::page:
+                    suggestion_.add(cmd);
+                    break;
+            }*/
         }
 
         // shortcut mode need release event
-        if (event->type() == QEvent::KeyRelease && state_ == states::shortcut)
+        if (mode_ == mode::shortcut && event->type() == QEvent::KeyRelease)
         {
-            //suggestions_.add(shortcut_input_.update(event));
+            shortcut_input_.update(event, suggestions_);
+            if (!shortcut_input_.is_triggered()) set_mode(mode::input);
             emit event_shortcut_input_update(shortcut_input_.to_string());
+            emit event_suggestion_update(suggestions_);
         }
     }
 
     void command_input::exec()
     {
+        nxi_assert(has_selected_suggestion());
         nxi_trace(" exec {} - {}", input_, state_text());
 
+        selected_suggestion().apply([this](auto&& suggestion)
+        {
+            using suggestion_type = std::decay_t<decltype(suggestion)>;
+            if constexpr (std::is_same_v<suggestion_type, nds::node_ptr<const nxi::command>>)
+            {
+                nxi_core_.command_system().exec(suggestion);
+            }
+            else if constexpr (std::is_same_v<suggestion_type, nds::node_ptr<const nxi::page>>)
+            {
+                //nxi_core_.page_system().load(suggestion);
+            }
+            else if constexpr (std::is_same_v<suggestion_type, nxi::search_suggestion>)
+            {
+                nxi_core_.page_system().open<nxi::web_page>(0, suggestion.url() + suggestion.text());
+                //nxi_core_.search(suggestion.text());
+            }
+            else nxi_warning("unknown suggestion");
+        });
 
+        reset();
+
+        /*
         if (state_ == states::command)
         {
             //qDebug() << "exec action" << suggestion(selected_suggestion_index_).text();
@@ -128,6 +156,7 @@ namespace nxi
                 reset();
             }
         }
+         */
     }
 
     command_input::states command_input::state() const { return state_; }
@@ -140,6 +169,11 @@ namespace nxi
         //if (state_ == states::command_param && param_index_ < command_->params().size()) return command_->params()[param_index_];
 
         return "no command";
+    }
+
+    void command_input::set_mode(command_input::mode mode)
+    {
+        mode_ = mode;
     }
 
     void command_input::set_state(states state)
@@ -214,7 +248,7 @@ namespace nxi
         suggestions_.clear();
         command_system_.root_list([this](nds::node_ptr<const nxi::command> command)
         {
-            suggestions_.add(std::move(command));
+            suggestions_.push_back(std::move(command));
         });
         emit event_suggestion_update(suggestions_);
     }
@@ -224,7 +258,7 @@ namespace nxi
         suggestions_.clear();
         for (const auto& page :  nxi_core_.page_system().list_root())
         {
-            suggestions_.add(page);
+            suggestions_.push_back(page);
         }
         emit event_suggestion_update(suggestions_);
     }
@@ -236,6 +270,7 @@ namespace nxi
         set_state(states::command);
         params_.clear();
         suggestions_.clear();
+        set_mode(mode::input);
         emit event_reset();
     }
 
@@ -255,7 +290,7 @@ namespace nxi
         reset();
     }
 
-    nxi::command_system& command_input::command_system()
+    const nxi::command_system& command_input::command_system() const
     {
         return command_system_;
     }
