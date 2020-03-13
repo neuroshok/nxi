@@ -2,6 +2,7 @@
 
 #include <nxi/command.hpp>
 #include <nxi/command/input.hpp>
+#include <nxi/suggestion/vector.hpp>
 #include <nxi/system/command.hpp>
 
 #include <sstream>
@@ -10,15 +11,14 @@
 
 namespace nxi
 {
-    shortcut_input::shortcut_input(nxi::command_input& command_input)
+    shortcut_input::shortcut_input(const nxi::command_input& command_input)
         : command_input_{ command_input }
+        , is_triggered_{ false }
         , trigger_mode_{ trigger_mode::combo }
     {}
 
-    nxi::commands_view shortcut_input::update(QKeyEvent* event)
+    void shortcut_input::update(QKeyEvent* event, nxi::suggestion_vector& suggestions)
     {
-        if (event->isAutoRepeat()) return suggestions_;
-
         Qt::Key key = static_cast<Qt::Key>(event->key());
 
         if (event->type() == QEvent::KeyRelease)
@@ -28,51 +28,53 @@ namespace nxi
 
             if (input_.combo_keys.size() < ck && trigger_mode_ == trigger_mode::sequence)
             {
+                suggestions.clear();
                 reset();
-                return suggestions_;
+                return;
             }
 
             if (input_.combo_keys.empty() && input_.sequence_keys.empty())
             {
+                suggestions.clear();
                 reset();
-                return suggestions_;
+                return;
             }
 
             // search with new combos keys
             if (trigger_mode_ == trigger_mode::combo)
             {
+                suggestions.clear();
                 // shift the keys
                 key = input_.combo_keys.back();
                 input_.combo_keys.pop_back();
-                search(key);
+                search(key, suggestions);
             }
         }
 
         if (event->type() == QEvent::KeyPress)
         {
-            search(key);
+            is_triggered_ = true;
+            search(key, suggestions);
         }
 
-        return suggestions_;
+        return;
     }
 
     void shortcut_input::reset()
     {
-        suggestions_.clear();
+        is_triggered_ = false;
         input_.combo_keys.clear();
         input_.sequence_keys.clear();
         trigger_mode_ = trigger_mode::combo;
     }
 
-    void shortcut_input::search(Qt::Key key)
+    void shortcut_input::search(Qt::Key key, nxi::suggestion_vector& suggestions)
     {
-        suggestions_.clear();
-
         nds::node_ptr<nxi::command> found_command;
         bool combo_match = false;
         bool sequence_match = false;
 
-        command_input_.command_system().for_each([this, &key, &found_command, &combo_match, &sequence_match](auto&& node)
+        command_input_.command_system().for_each([&, this](auto&& node)
         {
             const nxi::shortcut& shortcut = node->shortcut();
 
@@ -90,7 +92,7 @@ namespace nxi
                     // combo + key match
                     if (next < shortcut.combo_keys.size() && key == shortcut.combo_keys[next])
                     {
-                        suggestions_.push_back(node);
+                        suggestions.push_back(node);
                         combo_match = true;
                     }
                 }
@@ -109,7 +111,7 @@ namespace nxi
                     // sequence + key match
                     if (next < shortcut.sequence_keys.size() && key == shortcut.sequence_keys[next])
                     {
-                        suggestions_.push_back(node);
+                        suggestions.push_back(node);
                         sequence_match = true;
 
                         // combo + sequence match
@@ -151,7 +153,7 @@ namespace nxi
         }
     }
 
-    QString shortcut_input::to_string()
+    QString shortcut_input::to_string() const
     {
         return input_.to_string();
     }
@@ -161,8 +163,13 @@ namespace nxi
         trigger_keys_.insert(key);
     }
 
-    bool shortcut_input::is_trigger_key(Qt::Key key)
+    bool shortcut_input::is_trigger_key(Qt::Key key) const
     {
         return std::find(trigger_keys_.begin(), trigger_keys_.end(), key) != trigger_keys_.end();
+    }
+
+    bool shortcut_input::is_triggered() const
+    {
+        return is_triggered_;
     }
 } // nxi
