@@ -35,10 +35,10 @@ namespace nxi
         const nxi::command& get(const QString& module_action, const QString& module_name = "nxi") const;
         nds::node_ptr<nxi::command> find(const QString& module_action, const QString& module_name = "nxi") const;
         template<class Callback>
-        void for_each(Callback&&);
+        void for_each(Callback&&) const;
         nds::node_ptr<nxi::command> add(nxi::command command, nds::node_ptr<nxi::command> source = {});
-        void exec(nds::node_ptr<const nxi::command>);
-        void exec(nds::node_ptr<const nxi::command>, const nxi::command_params&);
+        void exec(nds::node_ptr<const nxi::command>) const;
+        void exec(nds::node_ptr<const nxi::command>, const nxi::command_params&) const;
         commands_view search(const QString&);
         void search(const QString&, callback_type);
         nxi::command_input& command_input();
@@ -48,7 +48,7 @@ namespace nxi
     signals:
         void event_add(const nxi::command&);
         void event_root_update(nds::node_ptr<nxi::command>);
-        void event_param_required(nds::node_ptr<const nxi::command>);
+        void event_param_required(nds::node_ptr<const nxi::command>) const;
 
     private:
         nxi::core& nxi_core_;
@@ -63,7 +63,7 @@ namespace nxi
 namespace nxi
 {
     template<class Callback>
-    void command_system::for_each(Callback&& fn)
+    void command_system::for_each(Callback&& fn) const
     {
         nds::algorithm::graph::for_each(graph_, [&fn](auto&& node)
         {

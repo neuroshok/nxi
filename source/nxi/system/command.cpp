@@ -91,13 +91,13 @@ namespace nxi
         return graph_.add(std::move(command), source);
     }
 
-    void command_system::exec(nds::node_ptr<const nxi::command> command)
+    void command_system::exec(nds::node_ptr<const nxi::command> command) const
     {
         if (command->params().size() > 0) emit event_param_required(command); // command_input_.set_state(param)
         else exec(command, nxi::command_params{});
     }
 
-    void command_system::exec(nds::node_ptr<const nxi::command> command, const nxi::command_params& params)
+    void command_system::exec(nds::node_ptr<const nxi::command> command, const nxi::command_params& params) const
     {
         command->exec(params);
     }
