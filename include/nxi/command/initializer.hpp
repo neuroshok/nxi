@@ -26,6 +26,7 @@ namespace nxi
 
         void init_main();
         void init_page();
+        void init_settings();
 
         void set_root(nds::node_ptr<nxi::command>);
 
