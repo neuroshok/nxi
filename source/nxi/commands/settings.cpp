@@ -24,9 +24,9 @@ namespace nxi
         };
 
         command_edit.parameters = {
-        { "command", [](nxi::suggestion_vector& suggestion)
+        { "command", [this](nxi::suggestion_vector& suggestion)
             {
-                nxi_core_.command_system().for_each([this](nds::node_ptr<const nxi::command> command)
+                nxi_core_.command_system().for_each([this, &suggestion](nds::node_ptr<const nxi::command> command)
                 {
                     suggestion.push_back(std::move(command));
                 });
