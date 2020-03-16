@@ -81,7 +81,7 @@ namespace nxi
     void web_module::on_load()
     {
         // add module commands
-        auto f = [this](const nxi::command_params&)
+        auto f = [this](const nxi::values&)
         {
             if (browser_action_.default_popup.isEmpty()) nxi_core_.page_system().add<nxi::web_page>(0);
             else nxi_core_.command_system().get("quit").exec();

@@ -21,11 +21,10 @@ namespace nxi
 	{
 	public:
 	    using function_type = nxi::command_function_type;
-	    using params_type = std::vector<QString>;
+	    using params_type = std::vector<command_parameter>;
 	    using param_suggestions_type = std::function<void(nxi::suggestion_vector&)>;
 
 		command(nxi::command_data);
-		command(nds::node<nxi::command>*, nxi::command_data);
 		command(const QString& module_name, const QString& action_name, function_type fn, const QString& icon = ":/image/nex");
         command(command&&) = default;
         command& operator=(command&&) = default;
@@ -34,15 +33,15 @@ namespace nxi
         command& operator=(const command&) = delete;
 
 		void exec() const;
-		void exec(const nxi::command_params&) const;
+		void exec(const nxi::values&) const;
 
 		void add_param(const QString&, param_suggestions_type);
-		void add_suggestion(nxi::suggestion_vector&) const;
 
-		params_type params() const;
+		const command_parameter& parameter(unsigned int index) const;
+		unsigned int parameters_count() const;
 
 		void set_function(function_type);
-		void set_node(nds::node<nxi::command>*);
+		void set_node(nds::node_ptr<const nxi::command>);
 
         const QString& name() const;
         const QString& module_name() const;
@@ -53,10 +52,10 @@ namespace nxi
         const nxi::shortcut& shortcut() const;
         bool preview() const;
 
-        nds::node<nxi::command>* node() const;
+        nds::node_ptr<const nxi::command> node() const;
 
 	private:
-	    nds::node<nxi::command>* node_;
+	    nds::node_ptr<const nxi::command> node_;
 		QString module_name_;
 		QString action_name_;
 		QString name_;
@@ -67,7 +66,6 @@ namespace nxi
         bool preview_;
 
 		params_type params_;
-		param_suggestions_type param_suggestions_;
 
 
         // shortcut

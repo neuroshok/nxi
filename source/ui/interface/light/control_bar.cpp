@@ -52,8 +52,8 @@ namespace ui::interfaces::light
             ui_core_.nxi_core().command_system().command_input().reset();
             command_root_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #00BBFF; padding: 0 20 0 20;");
         });
-        connect(command_root_, &node_button::event_up, [this]() { ui_core_.nxi_core().command_system().command_input().select_previous_suggestion(); });
-        connect(command_root_, &node_button::event_down, [this]() { ui_core_.nxi_core().command_system().command_input().select_next_suggestion(); });
+        connect(command_root_, &node_button::event_up, [this]() { ui_core_.nxi_core().command_system().command_input().suggestions().select_previous(); });
+        connect(command_root_, &node_button::event_down, [this]() { ui_core_.nxi_core().command_system().command_input().suggestions().select_next(); });
 
         page_root_ = new node_button(this);
         page_root_->setText("dev");

@@ -7,6 +7,7 @@
 #include <nxi/system/interface.hpp>
 #include <nxi/system/module.hpp>
 #include <nxi/system/page.hpp>
+#include <nxi/values.hpp>
 
 #include <nds/algorithm/graph.hpp>
 #include <nds/encoder/graph.hpp>
@@ -43,7 +44,7 @@ namespace nxi
             else if (shortcut.sequence_keys.size() > 0) command_input().shortcut_input().add_trigger_key(shortcut.sequence_keys[0]);
         });
 
-        //auto cmd_page = add(nxi::command("nxi", "page", [this](const nxi::command_params&){ nxi_core_.page_system().focus(); }), main_cmd);
+        //auto cmd_page = add(nxi::command("nxi", "page", [this](const nxi::values&){ nxi_core_.page_system().focus(); }), main_cmd);
         //cmd_page->get().add_param("page_id", nxi_core_.page_system().get());
 
         //nds::encoders::dot<>::encode<nds::console>(graph_);
@@ -93,11 +94,12 @@ namespace nxi
 
     void command_system::exec(nds::node_ptr<const nxi::command> command) const
     {
-        if (command->params().size() > 0) emit event_param_required(command); // command_input_.set_state(param)
-        else exec(command, nxi::command_params{});
+        // emit event_execution_request( nxi::command_executor{ command } )
+        if (command->parameters_count() > 0) emit event_param_required(command);
+        else exec(command, nxi::values{});
     }
 
-    void command_system::exec(nds::node_ptr<const nxi::command> command, const nxi::command_params& params) const
+    void command_system::exec(nds::node_ptr<const nxi::command> command, const nxi::values& params) const
     {
         command->exec(params);
     }

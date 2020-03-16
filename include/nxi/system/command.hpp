@@ -20,7 +20,7 @@ namespace nxi
         Q_OBJECT
     public:
         using commands_view = std::vector<nds::node_ptr<nxi::command>>;
-        using function_type = std::function<void(const nxi::command_params&)>;
+        using function_type = std::function<void(const nxi::values&)>;
         using callback_type = std::function<void(nds::node_ptr<const nxi::command>)>;
 
         command_system(nxi::core&);
@@ -38,7 +38,7 @@ namespace nxi
         void for_each(Callback&&) const;
         nds::node_ptr<nxi::command> add(nxi::command command, nds::node_ptr<nxi::command> source = {});
         void exec(nds::node_ptr<const nxi::command>) const;
-        void exec(nds::node_ptr<const nxi::command>, const nxi::command_params&) const;
+        void exec(nds::node_ptr<const nxi::command>, const nxi::values&) const;
         commands_view search(const QString&);
         void search(const QString&, callback_type);
         nxi::command_input& command_input();

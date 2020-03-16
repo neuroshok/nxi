@@ -1,6 +1,7 @@
 #include <nxi/command/initializer.hpp>
 
 #include <nxi/core.hpp>
+#include <nxi/values.hpp>
 
 namespace nxi
 {
@@ -13,14 +14,14 @@ namespace nxi
         page_new.action = "new";
         page_new.description = "Open new web_page";
         page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }};
-        page_new.function = [this](const nxi::command_params&){ nxi_core_.page_system().open<nxi::web_page>(0); };
+        page_new.function = [this](const nxi::values&){ nxi_core_.page_system().open<nxi::web_page>(0); };
         add(std::move(page_new));
 
         // open
         nxi::command_data page_open;
         page_open.action = "new";
         page_open.description = "Open a web_page";
-        page_open.function = [this](const nxi::command_params& params)
+        page_open.function = [this](const nxi::values& params)
         {
             auto url = params.get(0);
             nxi_core_.page_system().open<nxi::web_page>(0, url);
@@ -42,7 +43,7 @@ namespace nxi
         page_switch.description = "Switch between all pages";
         page_switch.shortcut = {{ Qt::Key_Control }, { Qt::Key_W, Qt::Key_S }};
         page_switch.preview = true;
-        page_switch.function = [this](const nxi::command_params& params)
+        page_switch.function = [this](const nxi::values& params)
         {
             if (params.values_.size() < 1)
             {
@@ -69,7 +70,7 @@ namespace nxi
         page_close.action = "close";
         page_close.description = "Close active page";
         page_close.shortcut = {{ Qt::Key_Control }, { Qt::Key_W, Qt::Key_X }};
-        page_close.function = [this](const nxi::command_params& params)
+        page_close.function = [this](const nxi::values& params)
         {
             // close
         };

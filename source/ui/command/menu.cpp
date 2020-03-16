@@ -19,7 +19,7 @@ namespace ui
         connect(&movie_, &QMovie::frameChanged, [this](int){ repaint(); });
         movie_.start();
 
-        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_selection_update, [this](int index)
+        connect(&ui_core_.nxi_core().command_system().command_input().suggestions(), &nxi::suggestion_vector::event_selection_update, [this](int index)
         {
             selection_index_ = index;
             repaint();
@@ -195,8 +195,8 @@ namespace ui
     void command_menu::wheelEvent(QWheelEvent* event)
     {
         if (event->delta() > 0)
-            ui_core_.nxi_core().command_system().command_input().select_previous_suggestion();
+            ui_core_.nxi_core().command_system().command_input().suggestions().select_previous();
         else
-            ui_core_.nxi_core().command_system().command_input().select_next_suggestion();
+            ui_core_.nxi_core().command_system().command_input().suggestions().select_next();
     }
 } // ui

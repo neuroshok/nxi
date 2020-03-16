@@ -11,14 +11,14 @@ namespace nxi
         nxi::command_data config;
         config.action = "config";
         config.shortcut = {{ Qt::Key_Control, Qt::Key_Alt }, { Qt::Key_S }};
-        config.function = [this](const nxi::command_params&){ nxi_core_.page_system().open_static("nxi/config", nxi::renderer_type::widget); };
+        config.function = [this](const nxi::values&){ nxi_core_.page_system().open_static("nxi/config", nxi::renderer_type::widget); };
         add(std::move(config));
 
         // command_edit
         nxi::command_data command_edit;
         command_edit.action = "command_edit";
         command_edit.description = "Edit command";
-        command_edit.function = [this](const nxi::command_params&)
+        command_edit.function = [this](const nxi::values&)
         {
             // nxi_core_.command_system().command_update()
         };

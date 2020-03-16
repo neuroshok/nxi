@@ -1,8 +1,9 @@
-#ifndef INCLUDE_NXI_SUGGESTION_VECTOR_HPP_NXI
-#define INCLUDE_NXI_SUGGESTION_VECTOR_HPP_NXI
+#ifndef INCLUDE_NXI_VECTOR_HPP_NXI
+#define INCLUDE_NXI_VECTOR_HPP_NXI
 
 #include <nxi/suggestion.hpp>
 
+#include <QObject>
 #include <QString>
 
 #include <vector>
@@ -13,8 +14,9 @@ namespace nxi
     class page;
     class suggestion;
 
-    class suggestion_vector
+    class suggestion_vector : public QObject
     {
+        Q_OBJECT
     public:
         using suggestion_type = nxi::suggestion;
         using suggestions_type = std::vector<suggestion_type>;
@@ -36,14 +38,28 @@ namespace nxi
         {
             suggestions_.emplace_back(nxi::suggestion{ std::move(item) });
         }
+        
+        void select(int index) const;
+        void select_previous() const;
+        void select_next() const;
+        size_t suggestion_count() const;
+        const suggestion_type& suggestion(int index) const;
+        const suggestion_type& selected() const;
+        int selected_index() const;
+        bool has_selection() const;
 
         void clear();
         std::size_t size() const;
         const suggestion_type& operator[](unsigned int index) const;
 
+    signals:
+        void event_selection_update(int index) const;
+
     private:
         suggestions_type suggestions_;
+
+        mutable int selected_index_;
     };
 } // nxi
 
-#endif // INCLUDE_NXI_SUGGESTION_VECTOR_HPP_NXI
+#endif // INCLUDE_NXI_VECTOR_HPP_NXI

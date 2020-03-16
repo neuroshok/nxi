@@ -1,5 +1,6 @@
 #include <ui/command.hpp>
 
+#include <nxi/command/executor.hpp>
 #include <nxi/core.hpp>
 
 #include <ui/core.hpp>
@@ -16,6 +17,7 @@ namespace ui
 {
     command::command(ui::core& ui_core)
         : ui_core_{ ui_core }
+        , state_{ state::global }
     {
         setPlaceholderText("Enter command or use shortcut");
         setStyleSheet("font-weight:bold");
@@ -23,10 +25,28 @@ namespace ui
         info_ = new QLabel(this);
         header_ = new QLabel(this);
 
+        connect(&ui_core_.nxi_core().command_system(), &nxi::command_system::event_param_required, [this](nds::node_ptr<const nxi::command> command)
+        {
+            state_ = state::executing;
+            //command_input().reset();
+            command_executor_.emplace( command );
+            setText("");
+            setPlaceholderText("enter parameter : " + command_executor_->active_parameter().name);
+        });
+
         connect(this, &QLineEdit::returnPressed, [this]()
         {
-            command_input().exec();
-            setText("");
+            if (state_ == state::global) command_input().exec();
+            else if (state_ == state::executing && command_executor_)
+            {
+                command_executor_->add_value(command_input().text());
+                command_executor_->exec();
+                if (command_executor_->is_complete())
+                {
+                    command_input().reset();
+                    state_ = state::global;
+                }
+            }
         });
 
         // use only base
@@ -43,11 +63,6 @@ namespace ui
         connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_input_update, this, [this](const QString& input)
         {
             setText(input);
-        });
-
-        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_command_param_required, this, [this](const QString& param_name)
-        {
-            setPlaceholderText("Enter parameter '" + param_name + "' : ");
         });
 
         connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_reset, this, [this]()
@@ -72,17 +87,17 @@ namespace ui
                 command_input().reset();
                 break;
             case Qt::Key_Up:
-                command_input().select_previous_suggestion();
+                command_input().suggestions().select_previous();
                 break;
             case Qt::Key_Down:
-                if (!command_input().has_selected_suggestion())
+                if (!command_input().suggestions().has_selection())
                 {
                     if (command_input().is_empty()) command_input().suggest_command();
                     else command_input().update(text(), event);
 
-                    command_input().select_next_suggestion();
+                    command_input().suggestions().select_next();
                 }
-                else command_input().select_next_suggestion();
+                else command_input().suggestions().select_next();
                 break;
 
             default:

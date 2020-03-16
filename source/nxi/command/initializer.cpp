@@ -3,6 +3,7 @@
 #include <nxi/core.hpp>
 #include <nxi/command.hpp>
 #include <nxi/suggestion/text.hpp>
+#include <nxi/values.hpp>
 
 namespace nxi
 {
@@ -27,7 +28,7 @@ namespace nxi
     nds::node_ptr<nxi::command> command_initializer::add_node(const QString& command_node)
     {
         nds::node_ptr<nxi::command> tmp_node;
-        auto fn = [this, &tmp_node](const nxi::command_params&)
+        auto fn = [this, &tmp_node](const nxi::values&)
         {
             //nxi_core_.command_system().set_root(node);
         };
@@ -53,8 +54,9 @@ namespace nxi
         load_style.action = "load_style";
         load_style.description = "Load style...";
         load_style.preview = true;
-        load_style.function = [this](const nxi::command_params& params)
+        load_style.function = [this](const nxi::values& params)
         {
+            nxi_assert(params.size() == 1);
             auto name = params.get(0);
             nxi_core_.interface_system().load_style(name);
         };

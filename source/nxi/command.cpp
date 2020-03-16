@@ -1,9 +1,8 @@
 #include <nxi/command.hpp>
-#include <nxi/command/params.hpp>
-
-#include <nxi/suggestion/vector.hpp>
 
 #include <nxi/log.hpp>
+#include <nxi/suggestion/vector.hpp>
+#include <nxi/values.hpp>
 
 namespace nxi
 {
@@ -12,17 +11,13 @@ namespace nxi
         , node_{ nullptr }
         , action_name_ { std::move(data.action) }
         , name_ { module_name_ + ":" + action_name_ }
+        , params_ { std::move(data.parameters) }
         , function_{ std::move(data.function) }
         , icon_ { std::move(data.icon) }
         , description_ { std::move(data.description) }
         , shortcut_ { std::move(data.shortcut) }
         , preview_ { data.preview }
     {}
-
-    command::command(nds::node<nxi::command> *, nxi::command_data)
-    {
-
-    }
 
     command::command(const QString& module_name, const QString& action_name, function_type fn, const QString& icon)
         : module_name_{ module_name }
@@ -37,23 +32,17 @@ namespace nxi
     void command::exec() const
     {
         if (params_.size() > 0) nxi_error("command require parameters");
-        if (function_) function_(nxi::command_params{});
+        exec(nxi::values{});
     }
 
-    void command::exec(const nxi::command_params& params) const
+    void command::exec(const nxi::values& params) const
     {
         if (function_) function_(params);
     }
 
     void command::add_param(const QString& name, std::function<void(nxi::suggestion_vector&)> fn)
     {
-        params_.push_back(name);
-        param_suggestions_ = std::move(fn);
-    }
-
-    void command::add_suggestion(nxi::suggestion_vector& p) const
-    {
-        param_suggestions_(p);
+        params_.emplace_back(nxi::command_parameter{ name, std::move(fn) });
     }
 
 
@@ -62,14 +51,20 @@ namespace nxi
         function_ = std::move(fn);
     }
 
-    void command::set_node(nds::node<nxi::command>* node)
+    void command::set_node(nds::node_ptr<const nxi::command> node)
     {
         node_ = node;
     }
 
-    command::params_type command::params() const
+    const command_parameter& command::parameter(unsigned int index) const
     {
-        return params_;
+        nxi_assert(index < params_.size());
+        return params_[index];
+    }
+
+    unsigned int command::parameters_count() const
+    {
+        return params_.size();
     }
 
     const QString& command::name() const
