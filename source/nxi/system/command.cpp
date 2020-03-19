@@ -94,8 +94,7 @@ namespace nxi
 
     void command_system::exec(nds::node_ptr<const nxi::command> command) const
     {
-        // emit event_execution_request( nxi::command_executor{ command } )
-        if (command->parameters_count() > 0) emit event_param_required(command);
+        if (command->parameters_count() > 0) emit event_execution_request(command);
         else exec(command, nxi::values{});
     }
 

@@ -4,6 +4,7 @@
 #include <nxi/command.hpp>
 #include <nxi/core.hpp>
 #include <nxi/system/command.hpp>
+#include <nxi/system/context.hpp>
 
 #include <QComboBox>
 #include <QLineEdit>
@@ -70,15 +71,21 @@ namespace ui::interfaces::light
         layout->addWidget(command_input_);
 
         // test
-        auto test_module = new node_button(this);
-        test_module->setText("mod");
-        test_module->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #00BB99; padding: 0 20 0 20;");
-        layout->addWidget(test_module);
+        context_ = new node_button(this);
+        context_->setText("context");
+        context_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #00BB99; padding: 0 20 0 20;");
+        layout->addWidget(context_);
 
         connect(&ui_core_.nxi_core().command_system(), &nxi::command_system::event_root_update,
         [this](nds::node_ptr<nxi::command> command)
         {
             command_root_->setText(command->action_name());
+        });
+
+        connect(&ui_core_.nxi_core().context_system(), &nxi::context_system::event_context_update,
+        [this](const nxi::context& context)
+        {
+            context_->setText(context.name());
         });
     }
 

@@ -56,30 +56,16 @@ namespace nxi
 
 	private:
 	    nds::node_ptr<const nxi::command> node_;
-		QString module_name_;
-		QString action_name_;
-		QString name_;
-        QString icon_;
+
+        QString action_name_;
         QString description_;
         function_type function_;
-        nxi::shortcut shortcut_;
+        QString icon_;
+        QString module_name_;
+        QString name_;
+        params_type params_;
         bool preview_;
-
-		params_type params_;
-
-
-        // shortcut
-
-		/*
-		enum class interface_location{ none, page_bar, control_bar, content, custom };
-
-		url_pattern{"http://.com"};
-
-		location
-		matches
-
-		webext : [](){ nxi_core.page_system().load(nxi::popup_page{path}) }
-		 */
+        nxi::shortcut shortcut_;
 	};
 
     class web_module_command : public nxi::command

@@ -10,6 +10,7 @@ namespace nxi
     core::core()
         : ndb_init_{}
         , command_system_{ *this }
+        , context_system_{ *this }
         , interface_system_{ *this }
         , module_system_{ *this }
         , page_system_{ *this }
@@ -30,6 +31,7 @@ namespace nxi
         window_system_.load();
         page_system_.load();
         interface_system_.load();
+        context_system_.load();
     }
 
     void core::quit() const
@@ -40,6 +42,11 @@ namespace nxi
     nxi::command_system& core::command_system()
     {
         return command_system_;
+    }
+
+    nxi::context_system& core::context_system()
+    {
+        return context_system_;
     }
 
     nxi::interface_system& core::interface_system()

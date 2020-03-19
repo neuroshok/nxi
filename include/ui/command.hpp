@@ -26,8 +26,6 @@ namespace ui
     class command : public QLineEdit
     {
     public:
-        enum class state { global, executing };
-
         command(ui::core& ui_core);
 
         void resizeEvent(QResizeEvent* event) override;
@@ -49,7 +47,6 @@ namespace ui
 
         QLabel* info_;
         QLabel* header_;
-        state state_;
         std::optional<nxi::command_executor> command_executor_;
     };
 } // ui

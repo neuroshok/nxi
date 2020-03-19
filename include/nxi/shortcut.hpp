@@ -1,15 +1,12 @@
 #ifndef INCLUDE_NXI_SHORTCUT_HPP_NXI
 #define INCLUDE_NXI_SHORTCUT_HPP_NXI
 
+#include <nxi/context.hpp>
+
 #include <vector>
 
-#include <QWidget>
-#include <QDebug>
-#include <QKeyEvent>
-#include <QListWidget>
-#include <QLabel>
+#include <QKeySequence>
 #include <QString>
-#include <QChar>
 
 namespace nxi
 {
@@ -17,6 +14,7 @@ namespace nxi
     {
         std::vector<Qt::Key> combo_keys;
         std::vector<Qt::Key> sequence_keys;
+        nxi::context_id context_id;
 
         bool is_empty() const
         {

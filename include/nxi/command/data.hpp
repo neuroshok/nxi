@@ -3,6 +3,7 @@
 
 #include <nxi/command/fwd.hpp>
 #include <nxi/command/parameter.hpp>
+#include <nxi/context.hpp>
 #include <nxi/shortcut.hpp>
 
 #include <QString>
@@ -18,6 +19,7 @@ namespace nxi
         QString icon;
         QString description;
         nxi::shortcut shortcut;
+        nxi::context_id context_id;
         bool preview = false;
     };
 } // nxi

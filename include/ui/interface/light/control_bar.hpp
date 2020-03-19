@@ -47,6 +47,7 @@ namespace ui::interfaces::light
 
         ui::command* command_input_;
         node_button* command_root_;
+        node_button* context_;
         node_button* page_root_;
     };
 } // ui::interfaces::light

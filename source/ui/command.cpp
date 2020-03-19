@@ -17,37 +17,43 @@ namespace ui
 {
     command::command(ui::core& ui_core)
         : ui_core_{ ui_core }
-        , state_{ state::global }
     {
-        setPlaceholderText("Enter command or use shortcut");
         setStyleSheet("font-weight:bold");
 
         info_ = new QLabel(this);
         header_ = new QLabel(this);
 
-        connect(&ui_core_.nxi_core().command_system(), &nxi::command_system::event_param_required, [this](nds::node_ptr<const nxi::command> command)
+        connect(&ui_core_.nxi_core().command_system(), &nxi::command_system::event_execution_request, [this](nds::node_ptr<const nxi::command> command)
         {
-            state_ = state::executing;
-            //command_input().reset();
             command_executor_.emplace( command );
+            ui_core_.nxi_core().context_system().add<nxi::context::command_executor>(command_executor_.value());
             setText("");
-            setPlaceholderText("enter parameter : " + command_executor_->active_parameter().name);
         });
 
         connect(this, &QLineEdit::returnPressed, [this]()
         {
-            if (state_ == state::global) command_input().exec();
-            else if (state_ == state::executing && command_executor_)
+            if (command_executor_ && ui_core_.nxi_core().context_system().is_active<nxi::context::command_executor>())
             {
                 command_executor_->add_value(command_input().text());
                 command_executor_->exec();
                 if (command_executor_->is_complete())
                 {
                     command_input().reset();
-                    state_ = state::global;
+                    ui_core_.nxi_core().context_system().del<nxi::context::command_executor>();
                 }
             }
+            else command_input().exec();
         });
+
+        connect(&ui_core_.nxi_core().context_system(), &nxi::context_system::event_context_update,
+        [this](const nxi::context& context)
+        {
+            context.apply(
+            [this](const nxi::context::command_executor& ex){ setPlaceholderText("Enter parameter `" + ex.data.active_parameter().name + "`"); }
+            , [this](auto&&) { setPlaceholderText("Enter command or use shortcut"); }
+            );
+        });
+
 
         // use only base
         connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), this, [this](nxi::page& page)
@@ -63,11 +69,6 @@ namespace ui
         connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_input_update, this, [this](const QString& input)
         {
             setText(input);
-        });
-
-        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_reset, this, [this]()
-        {
-            setPlaceholderText("Enter command or use shortcut");
         });
     }
 
@@ -92,7 +93,7 @@ namespace ui
             case Qt::Key_Down:
                 if (!command_input().suggestions().has_selection())
                 {
-                    if (command_input().is_empty()) command_input().suggest_command();
+                    if (command_input().is_empty()) command_input().context_suggest();
                     else command_input().update(text(), event);
 
                     command_input().suggestions().select_next();

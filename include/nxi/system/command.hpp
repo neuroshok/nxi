@@ -48,7 +48,7 @@ namespace nxi
     signals:
         void event_add(const nxi::command&);
         void event_root_update(nds::node_ptr<nxi::command>);
-        void event_param_required(nds::node_ptr<const nxi::command>) const;
+        void event_execution_request(nds::node_ptr<const nxi::command>) const;
 
     private:
         nxi::core& nxi_core_;

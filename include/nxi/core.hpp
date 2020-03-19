@@ -5,6 +5,7 @@
 #include <ndb/initializer.hpp>
 
 #include <nxi/system/command.hpp>
+#include <nxi/system/context.hpp>
 #include <nxi/system/page.hpp>
 #include <nxi/system/module.hpp>
 #include <nxi/system/interface.hpp>
@@ -36,6 +37,7 @@ namespace nxi
         nxi::config& config() { return config_; }
 
         nxi::command_system& command_system();
+        nxi::context_system& context_system();
         nxi::interface_system& interface_system();
         nxi::module_system& module_system();
         nxi::page_system& page_system();
@@ -55,6 +57,7 @@ namespace nxi
         nxi::config config_;
 
         nxi::command_system command_system_;
+        nxi::context_system context_system_;
         nxi::interface_system interface_system_;
         nxi::module_system module_system_;
         nxi::page_system page_system_;

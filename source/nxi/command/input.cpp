@@ -2,6 +2,7 @@
 
 #include <nxi/command.hpp>
 #include <nxi/command/executor.hpp>
+#include <nxi/context.hpp>
 #include <nxi/core.hpp>
 #include <nxi/log.hpp>
 #include <nxi/system/command.hpp>
@@ -44,7 +45,7 @@ namespace nxi
 
             if (input_.isEmpty() && mode_ == mode::input)
             {
-                //reset();
+                reset();
                 return;
             }
             suggestions_.clear();
@@ -56,17 +57,30 @@ namespace nxi
             }
             if (mode_ == mode::input)
             {
-                // add user input as first suggestion
-                if (!input_.isEmpty())
+                if (!input_.isEmpty() && !nxi_core_.context_system().is_active<nxi::context::command_executor>())
                 {
                     suggestions_.push_back(nxi::search_suggestion{ input_, "Google", "https://www.google.com/search?q=", ":/icon/search" } );
                     suggestions_.push_back(nxi::search_suggestion{ input_, "CppReference", "https://en.cppreference.com/mwiki/index.php?search=", ":/icon/search" } );
                 }
 
-                command_system_.search(input_, [this](nds::node_ptr<const nxi::command> command)
-                {
-                    suggestions_.push_back(std::move(command));
-                });
+                nxi_core_.context_system().apply_on_active
+                (
+                    [this](const nxi::context::command&)
+                    {
+                        command_system_.search(input_, [this](nds::node_ptr<const nxi::command> command)
+                        {
+                            suggestions_.push_back(std::move(command));
+                        });
+                    }
+                    , [this](const nxi::context::page&) { suggestions_.push_back("todo // search page"); }
+                    , [this](const nxi::context::command_executor& ctx)
+                    {
+                        decltype(suggestions_) suggestions;
+                        ctx.data.active_parameter().suggestion_callback(suggestions);
+                        for (const auto& s : suggestions) { if (s.text().contains(input_)) suggestions_.push_back(s); }
+                        }
+                    , [this](auto&&) { nxi_warning("no suggestion"); }
+                );
             }
 
             if (suggestions_.size() > 0) suggestions_.select(0);
@@ -137,6 +151,31 @@ namespace nxi
         return true;
     }
 
+    void command_input::context_suggest()
+    {
+        suggestions_.clear();
+        nxi_core_.context_system().apply_on_active
+        (
+            [this](const nxi::context::command&)
+            {
+                command_system_.root_list([this](nds::node_ptr<const nxi::command> command)
+                {
+                    suggestions_.push_back(std::move(command));
+                });
+            }
+            , [this](const nxi::context::page&)
+            {
+                for (const auto& page :  nxi_core_.page_system().list_root())
+                {
+                    suggestions_.push_back(page);
+                }
+            }
+            , [this](const nxi::context::command_executor& ctx) { ctx.data.active_parameter().suggestion_callback(suggestions_); }
+            , [this](auto&&) { nxi_warning("no suggestion"); }
+        );
+        emit event_suggestion_update(suggestions_);
+    }
+
     void command_input::suggest_command()
     {
         suggestions_.clear();
@@ -167,6 +206,7 @@ namespace nxi
     void command_input::clear()
     {
         input_ = "";
+        emit event_input_update(input_);
         suggestions_.clear();
     }
 
