@@ -25,12 +25,15 @@ namespace ndb
     ndb_type_map(nxi::module_type, int64_, scope::global);
 }
 
+#include <nxi/database/context.hpp>
 #include <nxi/database/module.hpp>
 #include <nxi/database/page.hpp>
 #include <nxi/database/window.hpp>
 
 ndb_model(
     nxi_model
+    , context
+    , context_available
     , module
     , page
     , page_connection

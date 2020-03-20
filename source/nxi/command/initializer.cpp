@@ -72,7 +72,7 @@ namespace nxi
         add(std::move(load_style));
 
 
-
+        init_context();
         init_settings();
     }
 } // nxi

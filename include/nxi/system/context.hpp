@@ -2,14 +2,17 @@
 #define INCLUDE_NXI_SYSTEM_CONTEXT_HPP_NXI
 
 #include <nxi/context.hpp>
+#include <nxi/database.hpp>
 
 #include <vector>
-
 #include <QObject>
 
 namespace nxi
 {
     class core;
+
+    struct available_context : ndb::object<dbs::core, ndb::objects::context_available>    {    };
+    //using available_context = ndb::objects::context_available;
 
     class context_system : public QObject
     {
@@ -20,9 +23,13 @@ namespace nxi
         void operator=(const context_system&) = delete;
 
         void load();
+        void reset();
 
-        // enter
-        // leave
+        std::vector<nxi::available_context> available_contexts();
+
+        unsigned int active_priority() const;
+
+        void add(const QString& id);
 
         template<class Context, class... Args>
         void add(Args&&... args)
@@ -65,6 +72,8 @@ namespace nxi
             return false;
         }
 
+
+
 /*
         void add(const nxi::context&);
         void add(nxi::context, int priority);
@@ -79,6 +88,7 @@ namespace nxi
 		nxi::core& nxi_core_;
 
 		std::vector<std::unique_ptr<nxi::context>> contexts_;
+		std::vector<nxi::available_context> available_contexts_;
     };
 } // nxi
 

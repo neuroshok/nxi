@@ -57,7 +57,7 @@ namespace nxi
             }
             if (mode_ == mode::input)
             {
-                if (!input_.isEmpty() && !nxi_core_.context_system().is_active<nxi::context::command_executor>())
+                if (!input_.isEmpty() && !nxi_core_.context_system().is_active<nxi::contexts::command_executor>())
                 {
                     suggestions_.push_back(nxi::search_suggestion{ input_, "Google", "https://www.google.com/search?q=", ":/icon/search" } );
                     suggestions_.push_back(nxi::search_suggestion{ input_, "CppReference", "https://en.cppreference.com/mwiki/index.php?search=", ":/icon/search" } );
@@ -65,15 +65,15 @@ namespace nxi
 
                 nxi_core_.context_system().apply_on_active
                 (
-                    [this](const nxi::context::command&)
+                    [this](const nxi::contexts::command&)
                     {
                         command_system_.search(input_, [this](nds::node_ptr<const nxi::command> command)
                         {
                             suggestions_.push_back(std::move(command));
                         });
                     }
-                    , [this](const nxi::context::page&) { suggestions_.push_back("todo // search page"); }
-                    , [this](const nxi::context::command_executor& ctx)
+                    , [this](const nxi::contexts::page&) { suggestions_.push_back("todo // search page"); }
+                    , [this](const nxi::contexts::command_executor& ctx)
                     {
                         decltype(suggestions_) suggestions;
                         ctx.data.active_parameter().suggestion_callback(suggestions);
@@ -156,21 +156,21 @@ namespace nxi
         suggestions_.clear();
         nxi_core_.context_system().apply_on_active
         (
-            [this](const nxi::context::command&)
+            [this](const nxi::contexts::command&)
             {
                 command_system_.root_list([this](nds::node_ptr<const nxi::command> command)
                 {
                     suggestions_.push_back(std::move(command));
                 });
             }
-            , [this](const nxi::context::page&)
+            , [this](const nxi::contexts::page&)
             {
                 for (const auto& page :  nxi_core_.page_system().list_root())
                 {
                     suggestions_.push_back(page);
                 }
             }
-            , [this](const nxi::context::command_executor& ctx) { ctx.data.active_parameter().suggestion_callback(suggestions_); }
+            , [this](const nxi::contexts::command_executor& ctx) { ctx.data.active_parameter().suggestion_callback(suggestions_); }
             , [this](auto&&) { nxi_warning("no suggestion"); }
         );
         emit event_suggestion_update(suggestions_);

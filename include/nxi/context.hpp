@@ -33,25 +33,27 @@ namespace nxi
         unsigned int priority_;
     };
 
-    class context
+    namespace contexts
     {
-    public:
         struct custom : basic_context
         {
-            static inline QString ID = "custom_";
-            custom(QString name, unsigned int priority = 1) : basic_context(ID + name, name, priority) {}
+            static inline const QString ID = "custom_";
+            static inline const int PRIORITY = 1;
+            custom(QString name, unsigned int priority = PRIORITY) : basic_context(ID + name, name, priority) {}
         };
 
         struct page : basic_context
         {
-            static inline QString ID = "page";
-            page(unsigned int priority = 1) : basic_context(ID, "Page", priority) {}
+            static inline const QString ID = "page";
+            static inline const int PRIORITY = 1;
+            page(unsigned int priority = PRIORITY) : basic_context(ID, "Page", priority) {}
         };
 
         struct command : basic_context
         {
-            static inline QString ID = "command";
-            command(unsigned int priority = 1) : basic_context(ID, "Command", priority) {}
+            static inline const QString ID = "command";
+            static inline const int PRIORITY = 1;
+            command(unsigned int priority = PRIORITY) : basic_context(ID, "Command", priority) {}
         };
 
         struct command_executor : basic_context
@@ -62,12 +64,16 @@ namespace nxi
 
             const nxi::command_executor& data;
         };
+    } // contexts
 
+    class context
+    {
+    public:
         using context_type = std::variant
-            < context::custom
-            , context::page
-            , context::command
-            , context::command_executor
+            < contexts::custom
+            , contexts::page
+            , contexts::command
+            , contexts::command_executor
             >;
 
         template<class... Ts>

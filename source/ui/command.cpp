@@ -26,20 +26,25 @@ namespace ui
         connect(&ui_core_.nxi_core().command_system(), &nxi::command_system::event_execution_request, [this](nds::node_ptr<const nxi::command> command)
         {
             command_executor_.emplace( command );
-            ui_core_.nxi_core().context_system().add<nxi::context::command_executor>(command_executor_.value());
+            ui_core_.nxi_core().context_system().add<nxi::contexts::command_executor>(command_executor_.value());
             setText("");
         });
 
         connect(this, &QLineEdit::returnPressed, [this]()
         {
-            if (command_executor_ && ui_core_.nxi_core().context_system().is_active<nxi::context::command_executor>())
+            if (command_executor_ && ui_core_.nxi_core().context_system().is_active<nxi::contexts::command_executor>())
             {
                 command_executor_->add_value(command_input().text());
                 command_executor_->exec();
                 if (command_executor_->is_complete())
                 {
                     command_input().reset();
-                    ui_core_.nxi_core().context_system().del<nxi::context::command_executor>();
+                    ui_core_.nxi_core().context_system().del<nxi::contexts::command_executor>();
+                }
+                else
+                {
+                    setPlaceholderText("Enter parameter `" + command_executor_->active_parameter().name() + "`");
+                    setText("");
                 }
             }
             else command_input().exec();
@@ -49,7 +54,7 @@ namespace ui
         [this](const nxi::context& context)
         {
             context.apply(
-            [this](const nxi::context::command_executor& ex){ setPlaceholderText("Enter parameter `" + ex.data.active_parameter().name + "`"); }
+            [this](const nxi::contexts::command_executor& ex){ setPlaceholderText("Enter parameter `" + ex.data.active_parameter().name() + "`"); }
             , [this](auto&&) { setPlaceholderText("Enter command or use shortcut"); }
             );
         });

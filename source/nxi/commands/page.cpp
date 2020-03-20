@@ -13,9 +13,9 @@ namespace nxi
         nxi::command_data page_new;
         page_new.action = "new";
         page_new.description = "Open new page";
-        page_new.context_id = nxi::context::id<nxi::context::command>();
-        page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }, nxi::context::id<nxi::context::page>() };
-        //page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }, nxi::context::page };
+        page_new.context_id = nxi::context::id<nxi::contexts::command>();
+        page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }, nxi::context::id<nxi::contexts::page>() };
+        //page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }, nxi::contexts::page };
         page_new.function = [this](const nxi::values&){ nxi_core_.page_system().open<nxi::web_page>(0); };
         add(std::move(page_new));
 

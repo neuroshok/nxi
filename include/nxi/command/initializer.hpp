@@ -24,6 +24,7 @@ namespace nxi
         nds::node_ptr<nxi::command> add(const QString& action, nxi::command_function_type fn, const QString& icon = "");
         nds::node_ptr<nxi::command> add_node(const QString& command_node);
 
+        void init_context();
         void init_main();
         void init_page();
         void init_settings();
