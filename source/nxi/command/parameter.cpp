@@ -2,7 +2,7 @@
 
 namespace nxi
 {
-    command_parameter::command_parameter(QString name, nxi::command_function_parameters_type suggestion_callback = nullptr)
+    command_parameter::command_parameter(QString name, nxi::command_function_parameters_type suggestion_callback)
         : name_{ std::move(name) }
         , suggestion_callback_{ std::move(suggestion_callback) }
     {}
