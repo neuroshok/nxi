@@ -29,13 +29,13 @@ namespace nxi
 
     void command_executor::exec()
     {
-        parameter_index_++;
-
         if (complete_)
         {
             nxi_warning("command already executed");
             return;
         }
+
+        ++parameter_index_;
         if (is_ready())
         {
             command_->exec(values_);
