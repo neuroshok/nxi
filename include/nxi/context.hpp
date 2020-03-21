@@ -109,7 +109,7 @@ namespace nxi
         template<class Context>
         static QString id(const QString& id)
         {
-            static_assert(std::is_same_v<Context, context::custom>);
+            static_assert(std::is_same_v<Context, contexts::custom>);
             return Context::ID + id;
         }
 
