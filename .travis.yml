@@ -1,88 +1,78 @@
 services: docker
 language: cpp
 sudo: required
-
 env:
   global:
-    - RELEASE_FILENAME=release_${TRAVIS_TAG}_${TRAVIS_OS_NAME}.7z
-
+  - RELEASE_FILENAME=release_${TRAVIS_TAG}_${TRAVIS_OS_NAME}.7z
 matrix:
   include:
   - os: linux
     env:
-      - CC=gcc-8 CXX=g++-8
-      - QT_PATH=/5.13.1/gcc_64
+    - CC=gcc-8 CXX=g++-8
+    - QT_PATH=/5.13.1/gcc_64
     before_install:
     - docker build -t nxi_image ./ci
     script:
-    - docker run --name nxi -w /nxi -v `pwd`:/nxi nxi_image
-            bash -c "
-                mkdir build && cd build &&
-                cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} -DNXI_QT_ROOT=${QT_PATH} -DSTZ_FILESYSTEM=ON .. &&
-                cmake --build . --target nxi --config Release &&
-                cd .. &&
-                7z a -r ${RELEASE_FILENAME} ./bin/*
-            "
+    - docker run --name nxi -w /nxi -v `pwd`:/nxi nxi_image bash -c " mkdir build
+      && cd build && cmake -DCMAKE_C_COMPILER=${CC} -DCMAKE_CXX_COMPILER=${CXX} -DNXI_QT_ROOT=${QT_PATH}
+      -DSTZ_FILESYSTEM=ON .. && cmake --build . --target nxi --config Release && cd
+      .. && 7z a -r ${RELEASE_FILENAME} ./bin/* "
     deploy:
       provider: releases
       api_key:
-        secure: HCgCGYpg8cxbiKKPSj+j+i1hC3Rle5ne1eZnKLa0+aVFWpZ1O09nsdHjdyoG4mxNpTO77rC9i+AJq2AeMymhWIDkmGwnE/1t12+zJ1LSZ36ktEgoFzu3N00oZKwn9AIfe3rAOrxfAsS26v0vgqf4oZHoc3uoAW/YdD9diZ3JXZowUxHZ86KvV3SAbyS9HHBTTrGzQSCmHjtgCKshm/mib35lDiaaQR+p7HFGrB8bC15q7CPxs102BRA+umsiGeIf8IDQDAxiab4pPkE6I8pBJ5jtkKNwXMMnaxEcbJ11t83MV6B8E4aOW3QQI92P4A9m5q8ZVNUPfEkTwXGnshCz8jnd1bsmlk3pVcZmKASqNcGnguSWSDxBvuAve7gSXv5f9ysiN3BUzVRQoPNghkpE/RDOiosDuysBHRvD5X0aUKPhNCLrfgz4eHAmER6wLE9Z452qUm7XyRTryks6k/vH+DJpRdOInxKZsCkHf+W7k5tHW5fl91DJ/NxtyJRLDM6a54ceGGcb2GfWOpcV795JVv/H7dSBnRxYXMYVQgMjqnBIt0bIP8Mff2CJEIkUGcYhn4DkSO6QWv5/iEwHXY/R+v4aULSP9WTnFHSCNhtJW0nyVvFORZCVP/snr1Y/VbqvithQHVWG7xCmLstKOrZCbGpeI8iRrvA3P5cL57OJ6oM=
-      file: ${RELEASE_FILENAME}
+        secure: OXWY6arIJPK6TGZdgNadGEAegx4OdamKc7cjdsYAZWjg0NWFtLCZQ31MBPmZ3Y5afrJn9lQeUM/5eMR27LLja9wvTeoUowE/VEoSU7XmvSnNEeOc1rca/1i/1R0I+l8PFS+f5Okl4FqgMnQOKrm3dQwEfNmdngWScqw44bQVLArVditpZSjbelw0mKcZBjkwXjSW+4TYalSwAR4fPRFy4DlAvRdKll4uUMgOJrS0TE5/wH9bZux1bce1GBVE3dBmoad1jw55xcdjN30OUmgddCOOtSyMENT5RzLPk37qamYRZZ2boD9jpuOC75vz9A6zzXFhTUM0cL7Qed9eaN6ybDgV6KxfTRYcIwt07JKLUM84ViiD8I4YS4gaBj4lq0NLrmYFq70dXvLoU9JQE6lXARZ1cOaHffuX3e0SXnJ3YdXDcy40+tDWL+7/ZGo7O703R8LNr0J+bGAc4raI7kJp2mZEJyz5n5nZftk2f1LMOoHD+k9Nwotx/aCY/Ge8zTzXl3Gc+uYOpYUZqbxQys1A7rDwp+z81m+7zpgr6iy3Mq05RLCoNwvooNN2ERrf1WV/L1FXeDn/8eqdxVBO4Dl01VxeprzFcmqwH7irMQ1hDfTYZ9wC4GTpo0h97OsT82rNtPLPtqLEmBcnbUDR5FjawtKvSgBR39JO09IlYUSC//s=
+      file: "${RELEASE_FILENAME}"
       skip_cleanup: true
       on:
         tags: true
         all_branches: true
-
-  # --ignore-package-exit-codes ignore error on reboot
-  # VS2019 16.3.10 https://docs.microsoft.com/en-us/visualstudio/releases/2019/history // https://download.visualstudio.microsoft.com/download/pr/5446351f-19f5-4b09-98c6-a4bfacc732d7/3cec278012466e87b76be170de3f881e3c14be52bf8eaa3b8c464dbeee3b4fef/vs_BuildTools.exe
   - os: windows
     dist: 1803-containers
     env:
-      - QT_VERSION=5.14.1
-      - VERSION=1.11 VARIANT=windows/windowsservercore-1803
-      - PATH="${PATH}:${TRAVIS_BUILD_DIR}/${QT_VERSION}/msvc2017_64/bin:${TRAVIS_BUILD_DIR}/${QT_VERSION}/msvc2017_64"
-      - VSINSTALLDIR="/c/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC"
+    - QT_VERSION=5.14.1
+    - VERSION=1.11 VARIANT=windows/windowsservercore-1803
+    - PATH="${PATH}:${TRAVIS_BUILD_DIR}/${QT_VERSION}/msvc2017_64/bin:${TRAVIS_BUILD_DIR}/${QT_VERSION}/msvc2017_64"
+    - VSINSTALLDIR="/c/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC"
     script:
-      - choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-      - curl https://download.visualstudio.microsoft.com/download/pr/5446351f-19f5-4b09-98c6-a4bfacc732d7/3cec278012466e87b76be170de3f881e3c14be52bf8eaa3b8c464dbeee3b4fef/vs_BuildTools.exe --output vs.exe
-      - ./vs --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --quiet --norestart --wait
-      #- choco install visualstudio2019buildtools --ignore-package-exit-codes --package-parameters '--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --quiet --norestart'
-      - choco install python3 --params "/InstallDir:C:\Python37"
-      - /c/Python37/python.exe -m pip install requests semantic_version lxml
-      - /c/Python37/python.exe ci/qt_downloader windows desktop ${QT_VERSION} win64_msvc2017_64
-      - cmake -DNXI_QT_ROOT=${PWD}/${QT_VERSION}/msvc2017_64 -DNXI_WINDOW_GENERIC=ON .
-      - cmake --build . --target nxi_deploy --config Release
-      - 7z a -r ${RELEASE_FILENAME} ./bin/*
-
+    - choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+    - curl https://download.visualstudio.microsoft.com/download/pr/5446351f-19f5-4b09-98c6-a4bfacc732d7/3cec278012466e87b76be170de3f881e3c14be52bf8eaa3b8c464dbeee3b4fef/vs_BuildTools.exe
+      --output vs.exe
+    - "./vs --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --quiet
+      --norestart --wait"
+    - choco install python3 --params "/InstallDir:C:\Python37"
+    - "/c/Python37/python.exe -m pip install requests semantic_version lxml"
+    - "/c/Python37/python.exe ci/qt_downloader windows desktop ${QT_VERSION} win64_msvc2017_64"
+    - cmake -DNXI_QT_ROOT=${PWD}/${QT_VERSION}/msvc2017_64 -DNXI_WINDOW_GENERIC=ON
+      .
+    - cmake --build . --target nxi_deploy --config Release
+    - 7z a -r ${RELEASE_FILENAME} ./bin/*
     deploy:
       provider: releases
       api_key:
-        secure: HCgCGYpg8cxbiKKPSj+j+i1hC3Rle5ne1eZnKLa0+aVFWpZ1O09nsdHjdyoG4mxNpTO77rC9i+AJq2AeMymhWIDkmGwnE/1t12+zJ1LSZ36ktEgoFzu3N00oZKwn9AIfe3rAOrxfAsS26v0vgqf4oZHoc3uoAW/YdD9diZ3JXZowUxHZ86KvV3SAbyS9HHBTTrGzQSCmHjtgCKshm/mib35lDiaaQR+p7HFGrB8bC15q7CPxs102BRA+umsiGeIf8IDQDAxiab4pPkE6I8pBJ5jtkKNwXMMnaxEcbJ11t83MV6B8E4aOW3QQI92P4A9m5q8ZVNUPfEkTwXGnshCz8jnd1bsmlk3pVcZmKASqNcGnguSWSDxBvuAve7gSXv5f9ysiN3BUzVRQoPNghkpE/RDOiosDuysBHRvD5X0aUKPhNCLrfgz4eHAmER6wLE9Z452qUm7XyRTryks6k/vH+DJpRdOInxKZsCkHf+W7k5tHW5fl91DJ/NxtyJRLDM6a54ceGGcb2GfWOpcV795JVv/H7dSBnRxYXMYVQgMjqnBIt0bIP8Mff2CJEIkUGcYhn4DkSO6QWv5/iEwHXY/R+v4aULSP9WTnFHSCNhtJW0nyVvFORZCVP/snr1Y/VbqvithQHVWG7xCmLstKOrZCbGpeI8iRrvA3P5cL57OJ6oM=
-      file: ${RELEASE_FILENAME}
+        secure: OXWY6arIJPK6TGZdgNadGEAegx4OdamKc7cjdsYAZWjg0NWFtLCZQ31MBPmZ3Y5afrJn9lQeUM/5eMR27LLja9wvTeoUowE/VEoSU7XmvSnNEeOc1rca/1i/1R0I+l8PFS+f5Okl4FqgMnQOKrm3dQwEfNmdngWScqw44bQVLArVditpZSjbelw0mKcZBjkwXjSW+4TYalSwAR4fPRFy4DlAvRdKll4uUMgOJrS0TE5/wH9bZux1bce1GBVE3dBmoad1jw55xcdjN30OUmgddCOOtSyMENT5RzLPk37qamYRZZ2boD9jpuOC75vz9A6zzXFhTUM0cL7Qed9eaN6ybDgV6KxfTRYcIwt07JKLUM84ViiD8I4YS4gaBj4lq0NLrmYFq70dXvLoU9JQE6lXARZ1cOaHffuX3e0SXnJ3YdXDcy40+tDWL+7/ZGo7O703R8LNr0J+bGAc4raI7kJp2mZEJyz5n5nZftk2f1LMOoHD+k9Nwotx/aCY/Ge8zTzXl3Gc+uYOpYUZqbxQys1A7rDwp+z81m+7zpgr6iy3Mq05RLCoNwvooNN2ERrf1WV/L1FXeDn/8eqdxVBO4Dl01VxeprzFcmqwH7irMQ1hDfTYZ9wC4GTpo0h97OsT82rNtPLPtqLEmBcnbUDR5FjawtKvSgBR39JO09IlYUSC//s=
+      file: "${RELEASE_FILENAME}"
       skip_cleanup: true
       on:
         tags: true
         all_branches: true
-
   - os: osx
     osx_image: xcode11
     env:
-      - QT_VERSION=5.13.1
-      - QT_PATH=/usr/local/Cellar/qt/${QT_VERSION}
+    - QT_VERSION=5.13.1
+    - QT_PATH=/usr/local/Cellar/qt/${QT_VERSION}
     before_install:
-      - brew install qt5
-      - brew link qt5 --force
-      - brew install p7zip
+    - brew install qt5
+    - brew link qt5 --force
+    - brew install p7zip
     script:
     - cmake -DNXI_QT_ROOT=${QT_PATH} -DSTZ_FILESYSTEM=ON .
     - cmake --build . --target nxi_deploy --config Release
     - 7z a -r ${RELEASE_FILENAME} ./bin/*
-
     deploy:
       provider: releases
       api_key:
-        secure: HCgCGYpg8cxbiKKPSj+j+i1hC3Rle5ne1eZnKLa0+aVFWpZ1O09nsdHjdyoG4mxNpTO77rC9i+AJq2AeMymhWIDkmGwnE/1t12+zJ1LSZ36ktEgoFzu3N00oZKwn9AIfe3rAOrxfAsS26v0vgqf4oZHoc3uoAW/YdD9diZ3JXZowUxHZ86KvV3SAbyS9HHBTTrGzQSCmHjtgCKshm/mib35lDiaaQR+p7HFGrB8bC15q7CPxs102BRA+umsiGeIf8IDQDAxiab4pPkE6I8pBJ5jtkKNwXMMnaxEcbJ11t83MV6B8E4aOW3QQI92P4A9m5q8ZVNUPfEkTwXGnshCz8jnd1bsmlk3pVcZmKASqNcGnguSWSDxBvuAve7gSXv5f9ysiN3BUzVRQoPNghkpE/RDOiosDuysBHRvD5X0aUKPhNCLrfgz4eHAmER6wLE9Z452qUm7XyRTryks6k/vH+DJpRdOInxKZsCkHf+W7k5tHW5fl91DJ/NxtyJRLDM6a54ceGGcb2GfWOpcV795JVv/H7dSBnRxYXMYVQgMjqnBIt0bIP8Mff2CJEIkUGcYhn4DkSO6QWv5/iEwHXY/R+v4aULSP9WTnFHSCNhtJW0nyVvFORZCVP/snr1Y/VbqvithQHVWG7xCmLstKOrZCbGpeI8iRrvA3P5cL57OJ6oM=
-      file: ${RELEASE_FILENAME}
+        secure: OXWY6arIJPK6TGZdgNadGEAegx4OdamKc7cjdsYAZWjg0NWFtLCZQ31MBPmZ3Y5afrJn9lQeUM/5eMR27LLja9wvTeoUowE/VEoSU7XmvSnNEeOc1rca/1i/1R0I+l8PFS+f5Okl4FqgMnQOKrm3dQwEfNmdngWScqw44bQVLArVditpZSjbelw0mKcZBjkwXjSW+4TYalSwAR4fPRFy4DlAvRdKll4uUMgOJrS0TE5/wH9bZux1bce1GBVE3dBmoad1jw55xcdjN30OUmgddCOOtSyMENT5RzLPk37qamYRZZ2boD9jpuOC75vz9A6zzXFhTUM0cL7Qed9eaN6ybDgV6KxfTRYcIwt07JKLUM84ViiD8I4YS4gaBj4lq0NLrmYFq70dXvLoU9JQE6lXARZ1cOaHffuX3e0SXnJ3YdXDcy40+tDWL+7/ZGo7O703R8LNr0J+bGAc4raI7kJp2mZEJyz5n5nZftk2f1LMOoHD+k9Nwotx/aCY/Ge8zTzXl3Gc+uYOpYUZqbxQys1A7rDwp+z81m+7zpgr6iy3Mq05RLCoNwvooNN2ERrf1WV/L1FXeDn/8eqdxVBO4Dl01VxeprzFcmqwH7irMQ1hDfTYZ9wC4GTpo0h97OsT82rNtPLPtqLEmBcnbUDR5FjawtKvSgBR39JO09IlYUSC//s=
+      file: "${RELEASE_FILENAME}"
       skip_cleanup: true
       on:
         tags: true
