@@ -6,11 +6,8 @@
 
 namespace nxw
 {
-    class web_view;
     class explorer_view;
 } // nxw
-
-namespace ui { class core; class web_view; }
 
 class QStackedWidget;
 
