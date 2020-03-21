@@ -50,7 +50,16 @@ namespace ui
             else command_input().exec();
         });
 
-        connect(&ui_core_.nxi_core().context_system(), &nxi::context_system::event_context_update,
+        connect(&ui_core_.nxi_core().context_system(), &nxi::context_system::event_context_add,
+        [this](const nxi::context& context)
+        {
+            context.apply(
+            [this](const nxi::contexts::command_executor& ex){ setPlaceholderText("Enter parameter `" + ex.data.active_parameter().name() + "`"); }
+            , [this](auto&&) { setPlaceholderText("Enter command or use shortcut"); }
+            );
+        });
+
+        connect(&ui_core_.nxi_core().context_system(), &nxi::context_system::event_focus_context_update,
         [this](const nxi::context& context)
         {
             context.apply(

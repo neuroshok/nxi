@@ -43,6 +43,7 @@ namespace nxi
         const nxi::suggestion_vector& suggestions() const;
         void context_suggest();
         void suggest_command();
+        void suggest_context();
         void suggest_page();
 
         const QString& text() const;

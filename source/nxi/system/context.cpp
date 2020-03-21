@@ -3,6 +3,7 @@
 #include <nxi/database.hpp>
 
 #include <QDebug>
+#include <include/stz/observer_ptr.hpp>
 
 namespace nxi
 {
@@ -23,7 +24,7 @@ namespace nxi
 
         // add contexts
         add<nxi::contexts::command>();
-        add<nxi::contexts::page>();
+        //add<nxi::contexts::page>();
         //focus(contexts.command);
     }
 
@@ -41,19 +42,46 @@ namespace nxi
 
     void context_system::add(const QString& id)
     {
-        /*
         for (const auto& ctx : available_contexts_)
         {
-            if (ctx.name == id) add
-        }*/
+            if (ctx.name == id)
+            {
+                if (ctx.name == nxi::contexts::command::ID) add<nxi::contexts::command>();
+                else if (ctx.name == nxi::contexts::page::ID) add<nxi::contexts::page>();
+                break;
+            }
+        }
     }
 
-    std::vector<nxi::available_context> context_system::available_contexts()
+    void context_system::del(const QString& id)
+    {
+        for (const auto& ctx : available_contexts_)
+        {
+            if (ctx.name == id)
+            {
+                if (ctx.name == nxi::contexts::command::ID) del<nxi::contexts::command>();
+                else if (ctx.name == nxi::contexts::page::ID) del<nxi::contexts::page>();
+                break;
+            }
+        }
+    }
+
+    std::vector<nxi::available_context> context_system::available_contexts() const
     {
         std::vector<nxi::available_context> contexts;
         for (const auto& context : available_contexts_)
         {
             contexts.push_back(context);
+        }
+        return contexts;
+    }
+
+    std::vector<stz::observer_ptr<nxi::context>> context_system::contexts() const
+    {
+        std::vector<stz::observer_ptr<nxi::context>> contexts;
+        for (const auto& context : contexts_)
+        {
+            contexts.push_back(stz::make_observer(context.get()));
         }
         return contexts;
     }
@@ -64,35 +92,10 @@ namespace nxi
     }
 
     /*
-    void context_system::add(const nxi::context& ctx)
-    {
-        //add(ctx, ctx.priority);
-    }
-
-    void context_system::add(nxi::context context, int priority)
-    {
-        context.priority = priority;
-        contexts_.push_back(context);
-        std::sort(contexts_.begin(), contexts_.end(), [](const nxi::context& c1, const nxi::context& c2){ return c1.priority > c2.priority; });
-        emit event_context_update(contexts_.front());
-    }
-
-    void context_system::del(const nxi::context& context)
-    {
-        contexts_.erase(std::find_if(contexts_.begin(), contexts_.end(), [&context](const nxi::context& c) { return c.name == context.name; }));
-        std::sort(contexts_.begin(), contexts_.end(), [](const nxi::context& c1, const nxi::context& c2){ return c1.priority > c2.priority; });
-        emit event_context_update(contexts_.front());
-    }
-
     void context_system::focus(const nxi::context& context)
     {
         auto context_it = std::find_if(contexts_.begin(), contexts_.end(), [&context](const nxi::context& c) { return c.name == context.name; });
         std::iter_swap(contexts_.begin(), context_it);
         //qDebug() << "focus: " << context.name;
-    }
-
-    bool context_system::is_active(const nxi::context& context) const
-    {
-
     }*/
 } // nxi

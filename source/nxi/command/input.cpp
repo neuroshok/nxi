@@ -186,6 +186,16 @@ namespace nxi
         emit event_suggestion_update(suggestions_);
     }
 
+    void command_input::suggest_context()
+    {
+        suggestions_.clear();
+        for (const auto& context : nxi_core_.context_system().contexts())
+        {
+            suggestions_.push_back(nxi::text_suggestion{ context->name(), "", QString::number(context->priority()) });
+        };
+        emit event_suggestion_update(suggestions_);
+    }
+
     void command_input::suggest_page()
     {
         suggestions_.clear();

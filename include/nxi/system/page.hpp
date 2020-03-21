@@ -94,6 +94,8 @@ namespace nxi
         void event_update(const nxi::page&);
         void event_update(const nxi::web_page&);
 
+        //void event_root_update(nds::node_ptr<>);
+
 
     public:
         nxi::core& nxi_core_;

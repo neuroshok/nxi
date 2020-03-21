@@ -45,6 +45,8 @@ namespace nxi
 
     void command_initializer::load()
     {
+        nxi_trace("");
+
         init_main();
         init_page();
 

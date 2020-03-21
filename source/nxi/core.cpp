@@ -27,8 +27,9 @@ namespace nxi
         // load modules before other systems
         module_system_.load();
 
+        window_system_.load(); // window create interface
+
         command_system_.load();
-        window_system_.load();
         page_system_.load();
         interface_system_.load();
         context_system_.load();
