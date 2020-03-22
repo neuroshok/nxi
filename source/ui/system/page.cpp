@@ -27,19 +27,27 @@ namespace ui
         connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, this, [this](nxi::page_system::page_ptr page, nxi::page_system::page_ptr)
         {
             // todo replace by page->make_ui(this);
-            if (page->type() == nxi::page_type::node) pages_.emplace(page->id(), std::make_unique<ui::node_page>(ui_core_, static_cast<nxi::page_node&>(*page)));
-            else if (page->renderer_type() == nxi::renderer_type::web) pages_.emplace(page->id(), std::make_unique<ui::web_page>(ui_core_, static_cast<nxi::web_page&>(*page)));
-            else if (page->renderer_type() == nxi::renderer_type::widget) pages_.emplace(page->id(), std::make_unique<ui::widget_page>(ui_core_, static_cast<nxi::custom_page&>(*page)));
+            if (page->type() == nxi::page_type::node) pages_.emplace(page->id(), QPointer{ new ui::node_page(ui_core_, static_cast<nxi::page_node&>(*page))});
+            else if (page->renderer_type() == nxi::renderer_type::web) pages_.emplace(page->id(), QPointer{ new ui::web_page(ui_core_, static_cast<nxi::web_page&>(*page))});
+            else if (page->renderer_type() == nxi::renderer_type::widget) pages_.emplace(page->id(), QPointer{ new ui::widget_page(ui_core_, static_cast<nxi::custom_page&>(*page))});
             else nxi_error("fail");
         });
     }
 
+    page_system::~page_system()
+    {
+        for (auto [id, page_ptr] : pages_)
+        {
+            // check if page has been deleted by Qt
+            if (page_ptr) delete page_ptr;
+        }
+    }
 
     stz::observer_ptr<ui::page> page_system::get(const nxi::page& page)
     {
         auto it = pages_.find(page.id());
         nxi_assert(it != pages_.end());
-        return stz::make_observer(it->second.get());
+        return stz::make_observer(it->second.data());
     }
 
     QWidget* page_system::get(const QString& page_path)
