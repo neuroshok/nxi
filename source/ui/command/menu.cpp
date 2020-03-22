@@ -54,8 +54,14 @@ namespace ui
     void command_menu::paintEvent(QPaintEvent* event)
     {
         QPainter painter(this);
-
+        // background image
         painter.fillRect(rect(), style_data.background_color);
+        auto& image = style_data.background_image;
+
+        auto d_x = image.width() - width();
+        QRectF source(0.0, 0.0, image.width(), image.height());
+        QRectF target(d_x, 0, image.width(), image.height());
+        painter.drawImage(source, image, target);
 
         int item_y = contentsMargins().top();
         int item_x = contentsMargins().left();
@@ -86,7 +92,7 @@ namespace ui
         const nxi::command& command = *node_command;
         QPainter painter(this);
         if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
-        else painter.fillRect(item_rect, style_data.background_color);
+        else painter.fillRect(item_rect, style_data.item_background_color_hover);
 
         // command icon
         QRect icon_rect{ item_rect.left(), item_rect.top(), style_data.item_height, style_data.item_height };
@@ -141,17 +147,29 @@ namespace ui
         //painter.drawPixmap(item_rect.left(), item_rect.top(), currentFrame);
     }
 
-    void command_menu::draw_item(nds::node_ptr<const nxi::page> node_page, QRect& item_rect, bool selected)
+    void command_menu::draw_item(nds::node_ptr<const nxi::page> page, QRect& item_rect, bool selected)
     {
-        const nxi::page& page = *node_page;
         QPainter painter(this);
         if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
-        else painter.fillRect(item_rect, style_data.background_color);
+        else painter.fillRect(item_rect, style_data.item_background_color_hover);
+
+        // todo icon
+        QRect icon_rect{ item_rect.left(), item_rect.top(), style_data.item_height, style_data.item_height };
+
+        item_rect.setLeft( item_rect.left() + icon_rect.width());
 
         // page name
+        QString page_name = "#" + QString::number(page->id()) + " " + page->name();
         painter.setPen(style_data.item_text_color);
-        painter.drawText(item_rect, Qt::AlignVCenter, page.name());
-        item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, page.name()).width());
+        painter.drawText(item_rect, Qt::AlignVCenter, page_name);
+        item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, page_name).width());
+
+        // page command
+        QFont font;
+        font.setItalic(true);
+        painter.setFont(font);
+        painter.setPen(style_data.item_text_color.darker(180));
+        painter.drawText(item_rect, Qt::AlignVCenter, page->command());
     }
 
     void command_menu::draw_item(const nxi::suggestion& suggestion,  QRect& item_rect, bool selected)
@@ -159,7 +177,7 @@ namespace ui
         QPainter painter(this);
 
         if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
-        else painter.fillRect(item_rect, style_data.background_color);
+        else painter.fillRect(item_rect, style_data.item_background_color_hover);
 
         // suggestion icon
         QRect icon_rect{ item_rect.left(), item_rect.top(), style_data.item_height, style_data.item_height };

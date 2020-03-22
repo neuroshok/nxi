@@ -27,6 +27,7 @@ namespace ui
     public:
         struct style_type
         {
+            QImage background_image;
             QColor background_color{ 200, 200, 200 };
             QColor item_text_color{ 0, 0, 0 };
             QColor item_text_color_hover{ 0, 0, 0 };

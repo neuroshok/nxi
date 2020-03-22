@@ -51,6 +51,7 @@ namespace nxi
         {}
 
         const T& get() const { return value_; }
+        T& get() { return value_; }
         void set(const T& v) { value_ = v; }
         bool is_null() const { return is_null_; }
 
