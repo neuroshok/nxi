@@ -34,12 +34,13 @@ namespace nxi
 
     void page::load()
     {
+        nxi_warning("page::load should be overloaded");
         emit event_load();
     }
 
     void page::focus()
     {
-        emit page_system_.event_focus(*this);
+        //emit event_focus(*this);
     }
 
     nxi::page_id page::id() const

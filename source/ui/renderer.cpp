@@ -12,6 +12,11 @@ namespace ui
     renderer::~renderer() { qDebug() << "DELETE renderer"; }
 
 
+    void renderer::display(node_page* p)
+    {
+        static_cast<widget_renderer*>(this)->display(p);
+    }
+
     void renderer::display(web_page* p)
     {
         static_cast<web_renderer*>(this)->display(p);

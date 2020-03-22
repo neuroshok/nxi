@@ -58,9 +58,9 @@ namespace nxi
         page_switch.parameters = {
         { "id", [this](nxi::suggestion_vector& suggestion)
             {
-                for (auto& page : nxi_core_.page_system().get())
+                for (auto& page : nxi_core_.page_system().pages())
                 {
-                    suggestion.push_back(nxi::text_suggestion{ QString::number(page->id()), "", page->command() });
+                    suggestion.push_back(page);
                 }
             }
         }};
@@ -77,5 +77,16 @@ namespace nxi
             // close
         };
         add(std::move(page_close));
+
+        // fullscreen
+        nxi::command_data fullscreen;
+        fullscreen.action = "fullscreen";
+        fullscreen.description = "fullscreen";
+        fullscreen.shortcut = {{ Qt::Key_Control }, { Qt::Key_Enter }};
+        fullscreen.function = [this](const nxi::values& params)
+        {
+            //nxi_core_.page_system().focus()->run("document.documentElement.requestFullscreen();");
+        };
+        add(std::move(fullscreen));
     }
 } // nxi

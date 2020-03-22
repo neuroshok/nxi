@@ -37,9 +37,9 @@ namespace ui::interfaces::standard
 
         page_tree_ = new ui::views::page_tree(ui_core_);
 
-        connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&, nxi::page_id>(&nxi::page_system::event_add), [this](nxi::page& page,  nxi::page_id source_id)
+        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, [this](nxi::page_system::page_ptr page, nxi::page_system::page_ptr)
         {
-            page_tree_->add(page, source_id);
+            //page_tree_->add(*page, source_id);
         });
 
         auto btn_web_new = new nxw::icon_button(this, ":/button/page_web_new");

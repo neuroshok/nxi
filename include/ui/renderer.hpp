@@ -9,6 +9,8 @@
 namespace ui
 {
     class page;
+
+    class node_page;
     class web_page;
     class widget_page;
 
@@ -22,6 +24,7 @@ namespace ui
 
         virtual nxi::renderer_type type() const = 0;
 
+        void display(node_page*);
         void display(web_page*);
         void display(widget_page*);
 

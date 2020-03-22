@@ -31,6 +31,7 @@ namespace nxi
     public:
         using pages_type = std::unordered_map<nxi::page_id, nds::node_ptr<nxi::page>>;
         using pages_view = std::vector<nds::node_ptr<const nxi::page>>;
+        using page_ptr = nds::node_ptr<nxi::page>;
 
         using page_connections_type = std::vector<ndb::objects::page_connection>;
 
@@ -42,32 +43,25 @@ namespace nxi
         void load(nxi::web_page& page);
 
         pages_view list_root();
+        pages_view pages() const;
         pages_view list(nxi::page_id);
 
-        pages_view get() const;
         const page_connections_type& connections() const;
-        nxi::page& get(nxi::page_id id) const;
+        page_ptr get(nxi::page_id id) const;
 
-        nxi::page& add_static(const QString& path, nxi::renderer_type renderer_type = nxi::renderer_type::web);
+        page_ptr add_static(const QString& path, nxi::renderer_type renderer_type = nxi::renderer_type::web);
         void open_static(const QString& path, nxi::renderer_type renderer_type = nxi::renderer_type::web);
 
         template<class Page, class... Args>
-        Page& add(nxi::page_id source_id, Args&&... args);
+        page_ptr add(page_ptr source, Args&&... args);
 
         template<class Page, class... Args>
-        void open(nxi::page_id source_id, Args&&... args);
+        void open(page_ptr source, Args&&... args);
 
         void focus(nxi::page_id id);
+        void focus(page_ptr);
 
-        stz::observer_ptr<nxi::page> focus() { return focus_; }
-
-        template<class Page>
-        void focus(nxi::page_id id)
-        {
-            nxi_trace_event("{}", id);
-            emit event_focus(static_cast<Page&>(get(id)));
-            emit event_focus(get(id));
-        }
+        page_ptr focus() { return focus_; }
 
         void focus(nxi::web_page&);
         void focus(nxi::page_node&);
@@ -78,21 +72,14 @@ namespace nxi
         void update(nxi::page_id id);
 
     signals:
-        void event_add(nxi::page&, nxi::page_id source_id);
+        void event_add(page_ptr, page_ptr source) const;
         void event_init_static(nxi::page&);
 
-        void event_focus(nxi::page&);
-        void event_focus(nxi::page_node&);
-        void event_focus(nxi::web_page&);
-        void event_focus(nxi::explorer_page&);
-        void event_focus(nxi::custom_page&);
-
-        void event_load(nxi::web_page&);
+        void event_focus(page_ptr);
+        void event_load(page_ptr);
 
         void event_move(nxi::page_id page_id, nxi::page_id source_id, nxi::page_id target_id);
-
-        void event_update(const nxi::page&);
-        void event_update(const nxi::web_page&);
+        void event_update(page_ptr);
 
         //void event_root_update(nds::node_ptr<>);
 
@@ -100,18 +87,12 @@ namespace nxi
     public:
         nxi::core& nxi_core_;
         nds::graph<nxi::page> graph_;
-        //nxi::com::connect(source, target)
-        //nxi::com::send(page_system::add)
 
-        nxi::page* current_page_;
-        nds::node_ptr<nxi::page> root_;
-        stz::observer_ptr<nxi::page> focus_;
-        std::vector<nxi::page*> visible_pages_;
+        page_ptr root_;
+        page_ptr focus_;
 
-        pages_type pages_;
-        pages_view pages_view_;
-
-        page_connections_type page_connections_;
+        //std::vector<page_ptr> actives_;
+        std::vector<page_ptr> visible_pages_;
     };
 } // nxi
 

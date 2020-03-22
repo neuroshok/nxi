@@ -2,23 +2,20 @@
 namespace nxi
 {
     template<class Page, class... Args>
-    Page& page_system::add(nxi::page_id source_id, Args&&... args)
+    page_system::page_ptr page_system::add(page_system::page_ptr source, Args&&... args)
     {
-        auto graph_node_page = graph_.emplace<nxi::page, Page>(root_, *this, std::forward<Args>(args)...);
-        ndb::store(*graph_node_page);
+        auto page = graph_.emplace<nxi::page, Page>(root_, *this, std::forward<Args>(args)...);
+        ndb::store(*page);
 
-        auto& added_page = static_cast<nxi::page&>(*graph_node_page);
-        //pages_.emplace(added_page.id(), &added_page);
-
-        emit event_add(added_page, 0);
-        return static_cast<Page&>(*graph_node_page);
+        emit event_add(page, source);
+        return page;
     }
 
     template<class Page, class... Args>
-    void page_system::open(nxi::page_id source_id, Args&&... args)
+    void page_system::open(page_system::page_ptr source, Args&&... args)
     {
-        Page& added_page = add<Page>(source_id, std::forward<Args>(args)...);
-        added_page.load();
-        added_page.focus();
+        auto added_page = add<Page>(source, std::forward<Args>(args)...);
+        added_page->load();
+        focus(added_page);
     }
 } // nxi

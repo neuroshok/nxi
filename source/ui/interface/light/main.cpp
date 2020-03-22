@@ -101,7 +101,7 @@ namespace ui::interfaces::light
 
         QPainter painter(this);
         painter.fillRect(0, 0 ,width(), height(), style_data.background_color);
-        painter.drawImage(target, image, source);
+        //painter.drawImage(target, image, source);
 
         // insane design drawing
         auto& design_color = ui_core_.nxi_core().interface_system().style().data().field.background_color.get();

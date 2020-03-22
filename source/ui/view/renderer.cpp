@@ -22,12 +22,12 @@ namespace ui
         setLayout(layout_);
     }
 
-    void renderer_view::display(nxi::page& page)
+    void renderer_view::display(const nxi::page& page)
     {
         nxi_trace("display {}", page.name());
         auto ui_page = ui_core_.page_system().get(page);
 
-        auto get_renderer = [this, &ui_page](nxi::page& page)
+        auto get_renderer = [this, &ui_page](const nxi::page& page)
         {
             for (auto renderer : renderers_) renderer->hide();
             for (auto renderer : renderers_)
@@ -49,7 +49,7 @@ namespace ui
         ui_page->display(page_renderer);
     }
 
-    void renderer_view::display(nxi::page_system::pages_view pages)
+    void renderer_view::display(const nxi::page_system::pages_view pages)
     {
         /*
         for (auto page : pages)
@@ -61,5 +61,4 @@ namespace ui
         }
          */
     }
-
 } // ui

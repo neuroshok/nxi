@@ -28,7 +28,7 @@ namespace ui
         page_system(ui::core& ui_core);
 
         QWidget* get(const QString& page_path);
-        stz::observer_ptr<ui::page> get(nxi::page& page);
+        stz::observer_ptr<ui::page> get(const nxi::page&);
 
         template<class Widget>
         auto make_widget(const QString& path)

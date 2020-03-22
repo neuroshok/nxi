@@ -20,6 +20,8 @@ namespace nxi
     {
         // create root
         root_ = graph_.emplace<nxi::page, nxi::page_node>(*this, "main");
+        ndb::store(*root_);
+        emit event_add(root_, nullptr);
 
         // nxi::message_system::send(nxi::messages::page_system_loaded)
         nxi_trace("");
@@ -74,10 +76,10 @@ namespace nxi
     void page_system::load(nxi::web_page& page)
     {
         // set loaded
-        emit event_load(page);
+        //emit event_load(page);
     }
 
-    nxi::page& page_system::add_static(const QString& path, nxi::renderer_type renderer_type)
+    page_system::page_ptr page_system::add_static(const QString& path, nxi::renderer_type renderer_type)
     {
         if (renderer_type == nxi::renderer_type::web) return add<nxi::page>(0, path, nxi::core::page_path(path), nxi::page_type::static_ , renderer_type);
         else return add<nxi::page>(0, path, path, nxi::page_type::static_ , renderer_type);
@@ -85,33 +87,22 @@ namespace nxi
 
     void page_system::open_static(const QString& path, nxi::renderer_type renderer_type)
     {
-        nxi::page& added_page = add_static(path, renderer_type);
-        added_page.load();
-        added_page.focus();
+        auto added_page = add_static(path, renderer_type);
+        added_page->load();
+        added_page->focus();
     }
 
-    page_system::pages_view page_system::get() const
+    page_system::pages_view page_system::pages() const
     {
         pages_view pages;
         graph_.nodes([&pages](auto&& node)
         {
-            pages.push_back(stz::make_observer(&node->get()));
+            pages.push_back(node);
         });
         return pages;
     }
 
-    const page_system::page_connections_type& page_system::connections() const
-    {
-        return page_connections_;
-    }
 
-    nxi::page& page_system::get(nxi::page_id id) const
-    {
-        auto page_it = pages_.find(id);
-        nxi_assert(page_it != pages_.end());
-        auto [_, node_ptr] = *page_it;
-        return *node_ptr;
-    }
 
     page_system::pages_view page_system::list_root()
     {
@@ -137,24 +128,41 @@ namespace nxi
         return pages;
     }
 
-    void page_system::focus(nxi::web_page& page)
+    page_system::page_ptr page_system::get(nxi::page_id id) const
     {
-        nxi_trace_event("nxi::page_system::event_focus");
-        focus_ = stz::make_observer<nxi::page>(&page);
-        emit event_focus(page);
-        emit event_focus(static_cast<nxi::page&>(page));
+        nds::node_ptr<nxi::page> found_node;
+        nds::algorithm::graph::find_first_if(graph_,
+            [&id](auto&& node) { return node->id() == id; }
+            , [&found_node](auto&& node) { found_node = node; }
+        );
+
+        nxi_assert(found_node);
+
+        return found_node;
     }
-    void page_system::focus(nxi::custom_page& page) { emit event_focus(page); emit event_focus(static_cast<nxi::page&>(page)); }
-    void page_system::focus(nxi::page_node& node) { emit event_focus(node); }
 
     void page_system::focus(nxi::page_id id)
     {
-        //nxi_log << "FOCUS " << id;
-        current_page_ = &get(id);
-        current_page_->focus();
-        // emit event_change(static_cast<Page*>(current_page_));
-        //emit event_focus(*current_page_);
+        focus(get(id));
     }
+
+    void page_system::focus(page_ptr page)
+    {
+        focus_ = page;
+        emit event_focus(focus_);
+    }
+
+    void page_system::focus(nxi::web_page& page)
+    {
+        nxi_trace_event("nxi::page_system::event_focus");
+        //focus_ = stz::make_observer<nxi::page>(&page);
+        //emit event_focus(page);
+        //emit event_focus(static_cast<nxi::page&>(page));
+    }
+    void page_system::focus(nxi::custom_page& page) { /*emit event_focus(page); emit event_focus(static_cast<nxi::page&>(page));*/ }
+    void page_system::focus(nxi::page_node& node) { /*emit event_focus(node);*/ }
+
+
 
     void page_system::move(nxi::page_id page_id, nxi::page_id source_id, nxi::page_id target_id)
     {

@@ -6,6 +6,7 @@
 
 #include <ui/core.hpp>
 #include <ui/page.hpp>
+#include <ui/page/node.hpp>
 #include <ui/page/web.hpp>
 #include <ui/page/widget.hpp>
 
@@ -18,18 +19,23 @@ namespace ui
 {
     page_system::page_system(ui::core& ui_core) : ui_core_{ ui_core }
     {
+        // todo rename views to pages
         // init static widget page
         make_widget<ui::views::config>("nxi/config");
         make_widget<ui::views::aboutgl>("nxi/aboutgl");
 
-        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, this, [this](nxi::page& page, nxi::page_id)
+        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, this, [this](nxi::page_system::page_ptr page, nxi::page_system::page_ptr)
         {
-            if (page.renderer_type() == nxi::renderer_type::web) pages_.emplace(page.id(), std::make_unique<ui::web_page>(ui_core_, static_cast<nxi::web_page&>(page)));
-            else if (page.renderer_type() == nxi::renderer_type::widget) pages_.emplace(page.id(), std::make_unique<ui::widget_page>(ui_core_, static_cast<nxi::custom_page&>(page)));
+            // todo replace by page->make_ui(this);
+            if (page->type() == nxi::page_type::node) pages_.emplace(page->id(), std::make_unique<ui::node_page>(ui_core_, static_cast<nxi::page_node&>(*page)));
+            else if (page->renderer_type() == nxi::renderer_type::web) pages_.emplace(page->id(), std::make_unique<ui::web_page>(ui_core_, static_cast<nxi::web_page&>(*page)));
+            else if (page->renderer_type() == nxi::renderer_type::widget) pages_.emplace(page->id(), std::make_unique<ui::widget_page>(ui_core_, static_cast<nxi::custom_page&>(*page)));
+            else nxi_error("fail");
         });
     }
 
-    stz::observer_ptr<ui::page> page_system::get(nxi::page& page)
+
+    stz::observer_ptr<ui::page> page_system::get(const nxi::page& page)
     {
         auto it = pages_.find(page.id());
         nxi_assert(it != pages_.end());

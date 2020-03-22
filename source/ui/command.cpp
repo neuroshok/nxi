@@ -70,9 +70,9 @@ namespace ui
 
 
         // use only base
-        connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), this, [this](nxi::page& page)
+        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_focus, this, [this](nxi::page_system::page_ptr page)
         {
-            setText(page.name());
+            setText(page->name());
         });
 
         connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_shortcut_input_update, this, [this](const QString& shortcut_input)

@@ -13,7 +13,8 @@ namespace ui
     public:
         widget_renderer();
 
-        void display(widget_page* p);
+        void display(node_page*);
+        void display(widget_page*);
         nxi::renderer_type type() const override;
 
     private:

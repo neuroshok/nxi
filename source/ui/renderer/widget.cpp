@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QLineEdit>
 #include <ui/page/widget.hpp>
+#include <ui/page/node.hpp>
 #include <QHBoxLayout>
 
 namespace ui
@@ -12,6 +13,12 @@ namespace ui
         layout_ = new QHBoxLayout;
         setLayout(layout_);
     }
+
+    void widget_renderer::display(node_page* p)
+    {
+        layout_->addWidget(p);
+    }
+
     void widget_renderer::display(widget_page* p)
     {
         layout_->addWidget(p->widget());

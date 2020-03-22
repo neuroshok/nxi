@@ -14,7 +14,6 @@
 #include <nxw/menu.hpp>
 #include <nxw/menu/item.hpp>
 #include <include/ui/interface/standard/control_bar.hpp>
-#include <ui/view/web.hpp>
 #include <QWebEngineView>
 #include <include/nxi/module/web.hpp>
 #include <include/nxi/log.hpp>

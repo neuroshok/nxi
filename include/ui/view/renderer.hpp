@@ -19,8 +19,8 @@ namespace ui
     public:
         renderer_view(ui::core& ui_core, QWidget* parent);
 
-        void display(nxi::page& page);
-        void display(nxi::page_system::pages_view pages);
+        void display(const nxi::page&);
+        void display(const nxi::page_system::pages_view pages);
 
     private:
         ui::core& ui_core_;

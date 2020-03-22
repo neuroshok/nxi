@@ -152,12 +152,13 @@ namespace ui::views
             if (item) source_id = static_cast<ui::tree_page_item*>(item)->page().id();
 
             auto menu = new ui::menu(this);
+            /*
             menu->add("new node", [this, source_id](){ ui_core_.nxi_core().page_system().add<nxi::page_node>(source_id); });
             menu->add("new web_page", [this, source_id](){ ui_core_.nxi_core().page_system().open<nxi::web_page>(source_id); });
 
             menu->add("new cfg", [this, source_id](){ ui_core_.nxi_core().page_system().open<nxi::custom_page>(source_id, "nxi:config", "nxi/config", nxi::renderer_type::widget); });
             menu->add("new web page custom", [this, source_id](){ ui_core_.nxi_core().page_system().add<nxi::custom_page>(source_id, "nxi:test", "file:///C:/Users/ads/Desktop/test.html", nxi::renderer_type::web); });
-
+*/
             menu->exec();
         });
 

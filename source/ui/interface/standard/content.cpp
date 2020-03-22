@@ -5,7 +5,6 @@
 #include <nxi/system/command.hpp>
 
 #include <nxw/hbox_layout.hpp>
-#include <ui/view/web.hpp>
 #include <ui/view/explorer.hpp>
 
 #include <QStackedWidget>
@@ -27,16 +26,9 @@ namespace ui::interfaces::standard
         layout->addWidget(renderer_view_);
 
         // connect(page_focus) render_view_->focus(page)
-        connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&>(&nxi::page_system::event_focus), [this](nxi::page& page)
+        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_focus, [this](nxi::page_system::page_ptr page)
         {
-            renderer_view_->display(page);
+            renderer_view_->display(*page);
         });
-
-        connect(&ui_core_.nxi_core().page_system(), qOverload<nxi::page&, nxi::page_id>(&nxi::page_system::event_add), [this](nxi::page& page,  nxi::page_id)
-        {
-
-        });
-
-
     }
 } // ui::interfaces
