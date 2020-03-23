@@ -25,6 +25,7 @@
 #include <ui/command.hpp>
 #include <ui/command/menu.hpp>
 #include <ui/window.hpp>
+#include <ui/interface/standard/window_control.hpp>
 #include <include/nxi/style_data.hpp>
 
 namespace ui::interfaces::light
@@ -46,10 +47,13 @@ namespace ui::interfaces::light
         content_ = new interfaces::standard::content(ui_core_, window);
         control_bar_ = new ui::interfaces::light::control_bar(ui_core_, window);
 
+        auto window_control = new ui::interfaces::standard::window_control(ui_core, window);
+
         static_cast<ui::window*>(this->window())->set_grip(this);
 
         top_layout->addSpacing(120);
         top_layout->addWidget(control_bar_);
+        // top_layout->addWidget(window_control);
         top_layout->addSpacing(120);
         middle_layout->addWidget(content_);
 
