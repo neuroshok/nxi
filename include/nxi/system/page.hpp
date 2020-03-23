@@ -44,6 +44,7 @@ namespace nxi
 
         pages_view list_root();
         pages_view pages() const;
+        pages_view targets(nds::node_ptr<const nxi::page> source) const;
         pages_view list(nxi::page_id);
 
         const page_connections_type& connections() const;

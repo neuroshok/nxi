@@ -29,6 +29,7 @@ namespace ui::interfaces::standard
         connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_focus, [this](nxi::page_system::page_ptr page)
         {
             renderer_view_->display(*page);
+            // if node_mode renderer_view_->display_node($page)
         });
     }
 } // ui::interfaces

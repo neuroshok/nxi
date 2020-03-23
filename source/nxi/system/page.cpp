@@ -102,7 +102,15 @@ namespace nxi
         return pages;
     }
 
-
+    page_system::pages_view page_system::targets(nds::node_ptr<const nxi::page> source) const
+    {
+        pages_view pages;
+        graph_.targets(source, [&pages](auto&& node)
+        {
+            pages.push_back(node);
+        });
+        return pages;
+    }
 
     page_system::pages_view page_system::list_root()
     {

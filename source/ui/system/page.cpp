@@ -27,7 +27,7 @@ namespace ui
         connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, this, [this](nxi::page_system::page_ptr page, nxi::page_system::page_ptr)
         {
             // todo replace by page->make_ui(this);
-            if (page->type() == nxi::page_type::node) pages_.emplace(page->id(), QPointer{ new ui::node_page(ui_core_, static_cast<nxi::page_node&>(*page))});
+            if (page->type() == nxi::page_type::node) pages_.emplace(page->id(), QPointer{ new ui::node_page(ui_core_, page) });
             else if (page->renderer_type() == nxi::renderer_type::web) pages_.emplace(page->id(), QPointer{ new ui::web_page(ui_core_, static_cast<nxi::web_page&>(*page))});
             else if (page->renderer_type() == nxi::renderer_type::widget) pages_.emplace(page->id(), QPointer{ new ui::widget_page(ui_core_, static_cast<nxi::custom_page&>(*page))});
             else nxi_error("fail");

@@ -42,6 +42,7 @@ namespace ui
 
         ui::renderer* page_renderer = get_renderer(page);
         page_renderer->show();
+        // if mode == multi, new ui::node_renderer, page.display(node_renderer)
 
         while (layout_->takeAt(0)) {}
         layout_->addWidget(page_renderer);
