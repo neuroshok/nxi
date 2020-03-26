@@ -11,6 +11,7 @@
 #include <nxw/icon_button.hpp>
 #include <include/ui/interface/standard/page_bar.hpp>
 #include <include/nxi/log.hpp>
+#include <nxi/page/web.hpp>
 
 
 namespace ui::interfaces::standard
@@ -54,7 +55,7 @@ namespace ui::interfaces::standard
 
         connect(btn_web_new, &QPushButton::clicked, this, [this]()
         {
-            ui_core_.nxi_core().page_system().add<nxi::web_page>(0);
+            ui_core_.nxi_core().page_system().add<nxi::web_page>();
         });
 
         connect(btn_explorer_new, &QPushButton::clicked, this, [this]()

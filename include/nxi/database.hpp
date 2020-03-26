@@ -5,13 +5,12 @@
 
 #include <ndb/preprocessor.hpp>
 
-#include <ndb/query.hpp>
 #include <ndb/expression.hpp>
 #include <ndb/function.hpp>
+#include <ndb/query.hpp>
 
 // include type_mapped types
 #include <QString>
-#include <nxi/page/id.hpp>
 #include <nxi/type.hpp>
 
 // ndb type_maps
@@ -37,6 +36,7 @@ ndb_model(
     , module
     , page
     , page_connection
+    , page_system
     , window
 )
 

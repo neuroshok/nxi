@@ -153,10 +153,13 @@ namespace ui
         if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
         else painter.fillRect(item_rect, style_data.item_background_color_hover);
 
-        // todo icon
+        // page icon
         QRect icon_rect{ item_rect.left(), item_rect.top(), style_data.item_height, style_data.item_height };
-
-        item_rect.setLeft( item_rect.left() + icon_rect.width());
+        icon_rect = icon_rect.marginsRemoved(QMargins(2, 2, 2, 2));
+        //icon_rect.moveLeft(10);
+        QPixmap icon{ page->icon().pixmap(icon_rect.width(), icon_rect.height()) };
+        painter.drawPixmap(icon_rect, icon);
+        item_rect.setLeft( item_rect.left() + icon_rect.width() + 2);
 
         // page name
         QString page_name = "#" + QString::number(page->id()) + " " + page->name();

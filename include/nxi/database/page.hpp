@@ -8,6 +8,13 @@ ndb_object(page
     , ndb_field(command, QString)
     , ndb_field(type, nxi::page_type)
     , ndb_field(renderer_type, nxi::renderer_type)
+    , ndb_field(loaded, bool)
+    , ndb_field(muted, bool)
+)
+
+ndb_object(page_system
+    , ndb_field(focus, nxi::page_id)
+    , ndb_field(active, std::vector<nxi::page_id>)
 )
 
 ndb_table(

@@ -20,7 +20,7 @@ namespace nxi
         command_edit.description = "Edit command";
         command_edit.function = [this](const nxi::values&)
         {
-            // nxi_core_.command_system().command_update()
+            // nxi_core_.command_system().update_command()
         };
 
         command_edit.parameters = {

@@ -11,12 +11,8 @@ namespace nxi
     {
         Q_OBJECT
     public:
-        web_page(nxi::page_system& ps);
-        web_page(nxi::page_system& ps, const QString& url) : nxi::page(ps, "new_page", url) {}
-
-        void focus();
-        void load();
-
+        web_page(nds::node_ptr<nxi::page>, nxi::page_system& ps);
+        web_page(nds::node_ptr<nxi::page> ptr, nxi::page_system& ps, const QString& url) : nxi::page(ptr, ps, "new_page", url) {}
 
     private:
 

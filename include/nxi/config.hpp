@@ -40,6 +40,10 @@ namespace nxi
             nxi_config_key(autoexec, bool, false, "exec command on single match");
         nxi_config_close(command)
 
+        nxi_config_open(page)
+            nxi_config_key(root, int, 0, "Page root");
+        nxi_config_close(page)
+
         nxi_config_open(browser)
             nxi_config_key(home, std::string, "www.google.com");
             nxi_config_key(download_path, std::string, "d:/incoming");

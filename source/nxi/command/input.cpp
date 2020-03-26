@@ -5,6 +5,7 @@
 #include <nxi/context.hpp>
 #include <nxi/core.hpp>
 #include <nxi/log.hpp>
+#include <nxi/page/web.hpp>
 #include <nxi/system/command.hpp>
 
 #include <QKeyEvent>
@@ -119,7 +120,7 @@ namespace nxi
             }
             else if constexpr (std::is_same_v<suggestion_type, nxi::search_suggestion>)
             {
-                nxi_core_.page_system().open<nxi::web_page>(0, suggestion.url() + suggestion.text());
+                nxi_core_.page_system().open<nxi::web_page>(suggestion.url() + suggestion.text());
                 //nxi_core_.search(suggestion.text());
             }
             else nxi_warning("unknown suggestion");
@@ -165,7 +166,7 @@ namespace nxi
             }
             , [this](const nxi::contexts::page&)
             {
-                for (const auto& page :  nxi_core_.page_system().list_root())
+                for (const auto& page :  nxi_core_.page_system().root_targets())
                 {
                     suggestions_.push_back(page);
                 }
@@ -199,7 +200,7 @@ namespace nxi
     void command_input::suggest_page()
     {
         suggestions_.clear();
-        for (const auto& page :  nxi_core_.page_system().list_root())
+        for (const auto& page :  nxi_core_.page_system().root_targets())
         {
             suggestions_.push_back(page);
         }

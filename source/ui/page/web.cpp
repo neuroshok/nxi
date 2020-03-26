@@ -36,7 +36,7 @@ namespace ui
         connect(native_page_, &QWebEnginePage::urlChanged, this, [this](const QUrl& url)
         {
             nxi_debug("{}",  url.toString());
-            page_.command_update(url.toString());
+            page_.update_command(url.toString());
         });
 
         connect(native_page_, &QWebEnginePage::loadFinished, this, [this](bool n)
@@ -46,18 +46,18 @@ namespace ui
 
         connect(native_page_, &QWebEnginePage::titleChanged, this, [this](const QString& name)
         {
-            page_.name_update(name);
+            page_.update_name(name);
         });
 
         connect(native_page_, &QWebEnginePage::iconChanged, this, [this](const QIcon& icon)
         {
-            emit page_.event_update_icon(icon);
+            page_.update_icon(icon);
         });
-
 
 
         connect(&page_, &nxi::web_page::event_load, this, [this]()
         {
+            qDebug() << "dbg event_load";
             load(page_.command());
         });
     }

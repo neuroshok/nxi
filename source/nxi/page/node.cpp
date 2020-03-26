@@ -6,7 +6,7 @@ namespace nxi
 {
     void page_node::focus()
     {
-        page_system_.focus(*this);
+        //page_system_.focus(*this);
     }
 
     void page_node::load()

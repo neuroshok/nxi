@@ -12,12 +12,12 @@ namespace nxi
     {
         Q_OBJECT
     public:
-        custom_page(nxi::page_system& ps, QString name = "custom_page", QString command = "", nxi::renderer_type renderer_type = nxi::renderer_type::widget)
-            : nxi::page(ps, std::move(name), std::move(command), nxi::page_type::custom, renderer_type)
+        custom_page(nds::node_ptr<nxi::page> node_ptr, nxi::page_system& ps, QString name = "custom_page", QString command = "", nxi::renderer_type renderer_type = nxi::renderer_type::widget)
+            : nxi::page(node_ptr, ps, std::move(name), std::move(command), nxi::page_type::custom, renderer_type)
             , renderer_type_{ renderer_type }
         {}
 
-        void focus() { page_system_.focus(*this); }
+        void focus() { /*page_system_.focus(*this);*/ }
 
     private:
         nxi::renderer_type renderer_type_;

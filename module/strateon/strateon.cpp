@@ -33,7 +33,7 @@ namespace nxi::modules
             auto win = new MainWindow;
             win->show();
             nxi_core_.test(win);
-            //page.name_update("document.txt");
+            //page.update_name("document.txt");
         });
 
 

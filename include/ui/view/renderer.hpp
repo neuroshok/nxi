@@ -1,8 +1,10 @@
 #ifndef UI_VIEW_RENDERER_H_NXI
 #define UI_VIEW_RENDERER_H_NXI
 
-#include <QWidget>
 #include <nxi/system/page.hpp>
+#include <stz/observer_ptr.hpp>
+
+#include <QWidget>
 
 namespace nxw { class vbox_layout; }
 namespace nxi { class page; }

@@ -6,18 +6,9 @@
 
 namespace nxi
 {
-    web_page::web_page(nxi::page_system& ps)
-        : nxi::page(ps, "web_page", ps.nxi_core_.config().browser.home.get().c_str(), nxi::page_type::web, nxi::renderer_type::web)
+    web_page::web_page(nds::node_ptr<nxi::page> page_ptr, nxi::page_system& ps)
+        : nxi::page(page_ptr, ps, "web_page", ps.nxi_core_.config().browser.home.get().c_str(), nxi::page_type::web, nxi::renderer_type::web)
     {}
 
-    void web_page::focus()
-    {
-        page_system_.focus(*this);
-    }
 
-    void web_page::load()
-    {
-        emit event_load();
-        page_system_.load(*this);
-    }
 } // nxi

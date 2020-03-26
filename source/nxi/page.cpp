@@ -1,46 +1,58 @@
 #include <nxi/page.hpp>
 
-#include <nxi/database.hpp>
 #include <nxi/log.hpp>
-
 #include <nxi/system/page.hpp>
+
+#include <QString>
+#include <QDebug>
 
 namespace nxi
 {
-    page::page(page_system& ps, QString name, QString command, nxi::page_type type, nxi::renderer_type renderer_type)
+    page::page(nds::node_ptr<nxi::page> node_ptr, page_system& ps, QString name, QString command, nxi::page_type type, nxi::renderer_type renderer_type)
         : page_system_{ ps }
+        , node_ptr_{ std::move(node_ptr) }
     {
         ndb_object::name = std::move(name);
         ndb_object::command = std::move(command);
         ndb_object::type = std::move(type);
         ndb_object::renderer_type = std::move(renderer_type);
+        ndb_object::loaded = false;
+        ndb_object::muted = false;
     }
 
-    void page::name_update(const QString& name)
+    void page::update_name(const QString& name)
     {
         ndb_object::name = name;
-
-        //ndb::query<dbs::core>() << (ndb::set(nxi_model.page.name = name_) << ndb::filter(nxi_model.page.id == id_));
-
+        ndb::store(*this);
         emit event_update_name(ndb_object::name);
     }
 
-    void page::command_update(const QString& command)
+    void page::update_command(const QString& command)
     {
         ndb_object::command = command;
+        ndb::store(*this);
+        emit event_update_command(ndb_object::command);
+        emit page_system_.event_update_command(node_ptr_);
+    }
 
-        //emit event_command_update(ndb_object::name);
+    void page::update_icon(const QIcon& icon)
+    {
+        icon_ = icon;
     }
 
     void page::load()
     {
-        nxi_warning("page::load should be overloaded");
+        ndb_object::loaded = true;
+        ndb::store(*this);
         emit event_load();
+        emit page_system_.event_load(node_ptr_);
     }
 
     void page::focus()
     {
-        //emit event_focus(*this);
+        if (!is_loaded()) load();
+        emit event_focus();
+        emit page_system_.event_focus(node_ptr_);
     }
 
     nxi::page_id page::id() const
@@ -54,18 +66,10 @@ namespace nxi
         return ndb_object::name;
     }
 
-    const QString& page::command() const
-    {
-        return ndb_object::command;
-    }
-
-    nxi::page_type page::type() const
-    {
-        return ndb_object::type;
-    }
-
-    nxi::renderer_type page::renderer_type() const
-    {
-        return ndb_object::renderer_type;
-    }
+    const QString& page::command() const { return ndb_object::command; }
+    bool page::is_loaded() const { return ndb_object::loaded; }
+    bool page::is_muted() const { return ndb_object::muted; }
+    nxi::page_type page::type() const { return ndb_object::type; }
+    nxi::renderer_type page::renderer_type() const { return ndb_object::renderer_type; }
+    const QIcon& page::icon() const { return icon_; }
 } // nxi

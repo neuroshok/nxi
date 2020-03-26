@@ -1,6 +1,7 @@
 #include <nxi/command/initializer.hpp>
 
 #include <nxi/core.hpp>
+#include <nxi/page/web.hpp>
 #include <nxi/values.hpp>
 
 namespace nxi
@@ -16,7 +17,7 @@ namespace nxi
         page_new.context_id = nxi::context::id<nxi::contexts::command>();
         page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }, nxi::context::id<nxi::contexts::page>() };
         //page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }, nxi::contexts::page };
-        page_new.function = [this](const nxi::values&){ nxi_core_.page_system().open<nxi::web_page>(0); };
+        page_new.function = [this](const nxi::values&){ nxi_core_.page_system().open<nxi::web_page>(); };
         add(std::move(page_new));
 
         // open
@@ -26,7 +27,7 @@ namespace nxi
         page_open.function = [this](const nxi::values& params)
         {
             auto url = params.get(0);
-            nxi_core_.page_system().open<nxi::web_page>(0, url);
+            nxi_core_.page_system().open<nxi::web_page>(url);
         };
         page_open.parameters = {
         { "command", [](nxi::suggestion_vector& suggestion)

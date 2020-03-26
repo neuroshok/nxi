@@ -3,6 +3,7 @@
 #include <nxi/core.hpp>
 #include <nxi/page/custom.hpp>
 #include <nxi/page/node.hpp>
+#include <nxi/page/web.hpp>
 
 #include <ui/core.hpp>
 #include <ui/page.hpp>
@@ -11,7 +12,7 @@
 #include <ui/page/widget.hpp>
 
 #include <QObject>
-#include <include/nxi/log.hpp>
+#include <nxi/log.hpp>
 #include <ui/view/config.hpp>
 #include <ui/view/aboutgl.hpp>
 
@@ -24,7 +25,7 @@ namespace ui
         make_widget<ui::views::config>("nxi/config");
         make_widget<ui::views::aboutgl>("nxi/aboutgl");
 
-        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, this, [this](nxi::page_system::page_ptr page, nxi::page_system::page_ptr)
+        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, this, [this](nds::node_ptr<nxi::page> page, nds::node_ptr<nxi::page>)
         {
             // todo replace by page->make_ui(this);
             if (page->type() == nxi::page_type::node) pages_.emplace(page->id(), QPointer{ new ui::node_page(ui_core_, page) });

@@ -90,8 +90,8 @@ namespace ui::interfaces::light
     void main::toggle_fullmode()
     {
         main_interface::toggle_fullmode();
-        if (main_interface::fullmode()) control_bar_->hide();
-        else control_bar_->show();
+        //if (main_interface::fullmode()) control_bar_->hide();
+        //else control_bar_->show();
     }
 
     void main::paintEvent(QPaintEvent*)

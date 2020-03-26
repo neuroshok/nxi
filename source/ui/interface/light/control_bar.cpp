@@ -28,12 +28,24 @@ namespace ui::interfaces::light
         });
         connect(command_root_, &light::button::event_mousewheel_up, [this]() { ui_core_.nxi_core().command_system().command_input().suggestions().select_previous(); });
         connect(command_root_, &light::button::event_mousewheel_down, [this]() { ui_core_.nxi_core().command_system().command_input().suggestions().select_next(); });
+        connect(&ui_core_.nxi_core().command_system(), &nxi::command_system::event_root_update,
+        [this](nds::node_ptr<nxi::command> command)
+        {
+            command_root_->setText(command->action_name());
+        });
 
         // page_root
         page_root_ = new light::button("page_root_", this);
         connect(page_root_, &light::button::event_enter, [this]()
         {
             ui_core_.nxi_core().command_system().command_input().suggest_page();
+        });
+        connect(page_root_, &light::button::event_mousewheel_up, [this]() { ui_core_.nxi_core().command_system().command_input().suggestions().select_previous(); });
+        connect(page_root_, &light::button::event_mousewheel_down, [this]() { ui_core_.nxi_core().command_system().command_input().suggestions().select_next(); });
+        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_update_root,
+        [this](nds::node_ptr<const nxi::page> page)
+        {
+            page_root_->setText(page->name());
         });
 
         command_input_ = new ui::command(ui_core_);
@@ -50,11 +62,7 @@ namespace ui::interfaces::light
         });
         layout->addWidget(context_);
 
-        connect(&ui_core_.nxi_core().command_system(), &nxi::command_system::event_root_update,
-        [this](nds::node_ptr<nxi::command> command)
-        {
-            command_root_->setText(command->action_name());
-        });
+
 
         /*
         connect(&ui_core_.nxi_core().command_system(), &nxi::page_system::event_root_update,

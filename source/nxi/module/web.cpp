@@ -1,6 +1,7 @@
 #include <nxi/module/web.hpp>
 
 #include <nxi/log.hpp>
+#include <nxi/page/web.hpp>
 
 #include <QString>
 #include <QFile>
@@ -83,7 +84,7 @@ namespace nxi
         // add module commands
         auto f = [this](const nxi::values&)
         {
-            if (browser_action_.default_popup.isEmpty()) nxi_core_.page_system().add<nxi::web_page>(0);
+            if (browser_action_.default_popup.isEmpty()) nxi_core_.page_system().add<nxi::web_page>();
             else nxi_core_.command_system().get("quit").exec();
         };
         nxi::command command{ "wm-" + name(), "main", f, "./module/webextension/"+ name() +"/" + browser_action_.default_icon };
