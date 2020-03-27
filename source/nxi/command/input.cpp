@@ -137,6 +137,11 @@ namespace nxi
         return suggestions_;
     }
 
+    nxi::suggestion_vector& command_input::suggestions()
+    {
+        return suggestions_;
+    }
+
     const QString& command_input::text() const
     {
         return input_;

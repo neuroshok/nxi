@@ -3,10 +3,10 @@
 
 #include <nxi/suggestion.hpp>
 
+#include <stz/observer_ptr.hpp>
+#include <vector>
 #include <QObject>
 #include <QString>
-
-#include <vector>
 
 namespace nxi
 {
@@ -38,7 +38,10 @@ namespace nxi
         {
             suggestions_.emplace_back(nxi::suggestion{ std::move(item) });
         }
-        
+
+        void erase(int index);
+        void erase(nds::node_ptr<const nxi::page>);
+
         void select(int index) const;
         void select_previous() const;
         void select_next() const;
@@ -54,6 +57,7 @@ namespace nxi
 
     signals:
         void event_selection_update(int index) const;
+        void event_update(stz::observer_ptr<const nxi::suggestion_vector> suggestions) const;
 
     private:
         suggestions_type suggestions_;

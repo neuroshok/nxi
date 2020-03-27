@@ -37,8 +37,6 @@ namespace nxi
             auto page_id = page_data.oid;
             auto page_type = page_data.type;
 
-            qDebug() << "load page : " << page_data.name;
-
             // make_page(page_type, args...)
             switch(page_type)
             {
@@ -47,6 +45,8 @@ namespace nxi
                     auto page = graph_.emplace<nxi::page, nxi::page_node>(*this);
                     ndb::load(*page, page_id);
                     emit event_add(page, nullptr);
+                    emit page->event_load();
+                    emit event_load(page);
                     break;
                 }
 
@@ -55,6 +55,8 @@ namespace nxi
                     auto page = graph_.emplace<nxi::page, nxi::web_page>(*this);
                     ndb::load(*page, page_id); // ndb::load(*page, page_data)
                     emit event_add(page, nullptr);
+                    emit page->event_load();
+                    emit event_load(page);
                     break;
                 }
 
@@ -71,7 +73,7 @@ namespace nxi
             }
         }
 
-        // load page connections, move pages from root to real source
+        // load page connections, move pages from nullptr to real source
         for (auto& edge : ndb::oget<dbs::core>(nxi_model.page_connection))
         {
             graph_.connect(get(edge.source_id), get(edge.target_id));
@@ -99,6 +101,12 @@ namespace nxi
         auto added_page = add_static(path, renderer_type);
         added_page->load();
         added_page->focus();
+    }
+
+    void page_system::close(nds::node_ptr<nxi::page> page)
+    {
+        graph_.erase(page);
+        emit event_close(page);
     }
 
     page_system::page_ptr page_system::focus() const

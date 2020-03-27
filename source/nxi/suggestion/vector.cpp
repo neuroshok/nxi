@@ -20,6 +20,31 @@ namespace nxi
         push_back(QString{ text });
     }
 
+    void suggestion_vector::erase(int index)
+    {
+        nxi_assert(index >= 0 && index < suggestions_.size());
+        suggestions_.erase(suggestions_.begin() + index);
+        emit event_update(stz::make_observer(this));
+    }
+
+    void suggestion_vector::erase(nds::node_ptr<const nxi::page> erase_page)
+    {
+        auto it = std::find_if(suggestions_.begin(), suggestions_.end(),
+        [&erase_page](auto& s)
+        {
+            return s.apply(
+            [&erase_page](nds::node_ptr<nxi::page> page)
+            {
+                 return page->id() == erase_page->id();
+            }
+            , [](auto&&) { return false; });
+        });
+
+        nxi_assert(it != suggestions_.end());
+        suggestions_.erase(it);
+        emit event_update(stz::make_observer(this));
+    }
+
     void suggestion_vector::select(int index) const
     {
         selected_index_ = index;

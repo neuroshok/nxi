@@ -44,7 +44,7 @@ namespace nxi
         }
 
         template<class... Fs>
-        decltype(auto) visit(Fs&&... fs) const
+        decltype(auto) apply(Fs&&... fs) const
         {
             return std::visit(overloaded{ fs... }, suggestion_);
         }

@@ -48,6 +48,13 @@ namespace nxi
         emit page_system_.event_load(node_ptr_);
     }
 
+    void page::close()
+    {
+        emit event_close();
+        page_system_.close(node_ptr_);
+        ndb::unload(*this);
+    }
+
     void page::focus()
     {
         if (!is_loaded()) load();

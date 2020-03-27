@@ -22,6 +22,7 @@ namespace nxi
 
         Q_OBJECT
     public:
+        virtual void close();
         virtual void focus();
         virtual void load();
 
@@ -54,6 +55,7 @@ namespace nxi
         void event_update_command(const QString&);
         void event_update_icon(const QIcon&);
         void event_update_name(const QString&);
+        void event_close();
         void event_focus();
         void event_load();
     };

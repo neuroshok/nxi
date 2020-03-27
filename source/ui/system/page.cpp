@@ -33,6 +33,13 @@ namespace ui
             else if (page->renderer_type() == nxi::renderer_type::widget) pages_.emplace(page->id(), QPointer{ new ui::widget_page(ui_core_, static_cast<nxi::custom_page&>(*page))});
             else nxi_error("fail");
         });
+
+        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_close, this, [this](nds::node_ptr<nxi::page> page)
+        {
+            auto it = pages_.find(page->id());
+            nxi_assert(it != pages_.end());
+            if (it->second) delete it->second;
+        });
     }
 
     page_system::~page_system()

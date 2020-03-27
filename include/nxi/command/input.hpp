@@ -41,6 +41,7 @@ namespace nxi
         void update(const QString& input, QKeyEvent*);
 
         const nxi::suggestion_vector& suggestions() const;
+        nxi::suggestion_vector& suggestions();
         void context_suggest();
         void suggest_command();
         void suggest_context();

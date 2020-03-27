@@ -57,7 +57,6 @@ namespace ui
 
         connect(&page_, &nxi::web_page::event_load, this, [this]()
         {
-            qDebug() << "dbg event_load";
             load(page_.command());
         });
     }

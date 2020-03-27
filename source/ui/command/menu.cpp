@@ -18,6 +18,11 @@ namespace ui
         connect(&movie_, &QMovie::frameChanged, [this](int){ repaint(); });
         movie_.start();
 
+        connect(&ui_core_.nxi_core().command_system().command_input().suggestions(), &nxi::suggestion_vector::event_update, [this](stz::observer_ptr<const nxi::suggestion_vector> suggestions)
+        {
+            set_data(suggestions);
+        });
+
         connect(&ui_core_.nxi_core().command_system().command_input().suggestions(), &nxi::suggestion_vector::event_selection_update, [this](int index)
         {
             selection_index_ = index;
@@ -74,7 +79,7 @@ namespace ui
             bool selected = false;
             if (item_index == selection_index_) selected = true;
 
-            suggestion.visit(
+            suggestion.apply(
               [this, &item_rect, &selected](nds::node_ptr<const nxi::command> s) { draw_item(s, item_rect, selected); }
             , [this, &item_rect, &selected](nds::node_ptr<const nxi::page> s) { draw_item(s, item_rect, selected); }
             , [this, &item_rect, &selected, &suggestion](auto&& s) { draw_item(suggestion, item_rect, selected); }
@@ -238,7 +243,15 @@ namespace ui
 
     void command_menu::mousePressEvent(QMouseEvent* event)
     {
-        ui_core_.nxi_core().command_system().command_input().exec();
+        if (event->button() == Qt::LeftButton)
+            ui_core_.nxi_core().command_system().command_input().exec();
+        else if (event->button() == Qt::MiddleButton)
+            ui_core_.nxi_core().command_system().command_input().suggestions().selected().apply(
+            [this](nds::node_ptr<nxi::page> page) {
+                page->close();
+                ui_core_.nxi_core().command_system().command_input().suggestions().erase(page);
+            },
+            [this](auto&&) {});
     }
 
     void command_menu::wheelEvent(QWheelEvent* event)

@@ -42,6 +42,7 @@ namespace nxi
         template<class Page, class... Args>
         void open(Args&&... args);
 
+        void close(nds::node_ptr<nxi::page>);
         void focus(nxi::page_id id);
         void focus(nds::node_ptr<nxi::page>);
         page_ptr focus() const;
@@ -63,6 +64,7 @@ namespace nxi
         void event_add(page_ptr, page_ptr source) const;
         void event_init_static(nxi::page&);
 
+        void event_close(page_ptr);
         void event_focus(page_ptr);
         void event_load(page_ptr);
 
