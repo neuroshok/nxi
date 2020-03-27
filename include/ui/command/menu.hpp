@@ -47,9 +47,11 @@ namespace ui
         void exec();
 
     protected:
+        void leaveEvent(QEvent*) override;
+        void mouseMoveEvent(QMouseEvent*) override;
+        void mousePressEvent(QMouseEvent*) override;
         void paintEvent(QPaintEvent*) override;
-        void leaveEvent(QEvent* event) override;
-        void wheelEvent(QWheelEvent* event) override;
+        void wheelEvent(QWheelEvent*) override;
 
     private:
         void draw_item(nds::node_ptr<const nxi::command>, QRect&, bool selected);
@@ -59,6 +61,7 @@ namespace ui
     private:
         ui::core& ui_core_;
 
+        int hover_index_;
         int selection_index_;
 
         stz::observer_ptr<const nxi::commands_view> commands_;

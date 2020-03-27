@@ -114,9 +114,9 @@ namespace nxi
             {
                 nxi_core_.command_system().exec(suggestion);
             }
-            else if constexpr (std::is_same_v<suggestion_type, nds::node_ptr<const nxi::page>>)
+            else if constexpr (std::is_same_v<suggestion_type, nds::node_ptr<nxi::page>>)
             {
-                //nxi_core_.page_system().load(suggestion);
+                nxi_core_.page_system().focus(suggestion);
             }
             else if constexpr (std::is_same_v<suggestion_type, nxi::search_suggestion>)
             {
@@ -166,7 +166,7 @@ namespace nxi
             }
             , [this](const nxi::contexts::page&)
             {
-                for (const auto& page :  nxi_core_.page_system().root_targets())
+                for (auto& page :  nxi_core_.page_system().root_targets())
                 {
                     suggestions_.push_back(page);
                 }

@@ -22,7 +22,7 @@ namespace nxi
     public:
         using suggestion_type = std::variant
             < nds::node_ptr<const nxi::command>
-            , nds::node_ptr<const nxi::page>
+            , nds::node_ptr<nxi::page>
             , nxi::search_suggestion
             , nxi::text_suggestion
             >;
@@ -58,9 +58,9 @@ namespace nxi
         const QString& info(nds::node_ptr<const nxi::command> data) const { return data->description(); }
         const QString& text(nds::node_ptr<const nxi::command> data) const { return data->name(); }
 
-        const QString& icon(nds::node_ptr<const nxi::page> data) const { return data->name(); }
-        const QString& info(nds::node_ptr<const nxi::page> data) const { return data->command(); }
-        const QString& text(nds::node_ptr<const nxi::page> data) const { return data->name(); }
+        const QString& icon(nds::node_ptr<nxi::page> data) const { return data->name(); }
+        const QString& info(nds::node_ptr<nxi::page> data) const { return data->command(); }
+        const QString& text(nds::node_ptr<nxi::page> data) const { return data->name(); }
 
         const QString& icon(const nxi::text_suggestion& data) const { return data.icon(); }
         const QString& info(const nxi::text_suggestion& data) const { return data.info(); }

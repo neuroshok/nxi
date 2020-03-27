@@ -40,8 +40,14 @@ namespace ui::interfaces::light
         {
             ui_core_.nxi_core().command_system().command_input().suggest_page();
         });
-        connect(page_root_, &light::button::event_mousewheel_up, [this]() { ui_core_.nxi_core().command_system().command_input().suggestions().select_previous(); });
-        connect(page_root_, &light::button::event_mousewheel_down, [this]() { ui_core_.nxi_core().command_system().command_input().suggestions().select_next(); });
+        connect(page_root_, &light::button::event_mousewheel_up, [this]() {
+            ui_core_.nxi_core().command_system().command_input().suggestions().select_previous();
+            ui_core_.nxi_core().command_system().command_input().exec();
+        });
+        connect(page_root_, &light::button::event_mousewheel_down, [this]() {
+            ui_core_.nxi_core().command_system().command_input().suggestions().select_next();
+            ui_core_.nxi_core().command_system().command_input().exec();
+        });
         connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_update_root,
         [this](nds::node_ptr<const nxi::page> page)
         {

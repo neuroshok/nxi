@@ -1,11 +1,9 @@
 #include <ui/command/menu.hpp>
 
-#include <nxi/core.hpp>
-#include <nxi/command/input.hpp>
 #include <nxi/command.hpp>
-
+#include <nxi/command/input.hpp>
+#include <nxi/core.hpp>
 #include <ui/core.hpp>
-
 #include <QPainter>
 
 namespace ui
@@ -13,6 +11,7 @@ namespace ui
     command_menu::command_menu(ui::core& ui_core, QWidget* parent)
         : QWidget(parent)
         , ui_core_{ ui_core }
+        , hover_index_{ -1 }
         , selection_index_{ -1 }
         , movie_{ ":/image/sound" }
     {
@@ -24,6 +23,8 @@ namespace ui
             selection_index_ = index;
             repaint();
         });
+
+        setMouseTracking(true);
     }
 
     void command_menu::exec()
@@ -211,6 +212,33 @@ namespace ui
     void command_menu::leaveEvent(QEvent* event)
     {
         hide();
+    }
+
+    void command_menu::mouseMoveEvent(QMouseEvent* event)
+    {
+        hover_index_ = -1;
+        auto mouse_pos = mapFromGlobal(event->globalPos());
+        mouse_pos.setY(mouse_pos.y());
+
+        for (int i = 0; i < suggestions_->size(); ++i)
+        {
+            auto selected_top = contentsMargins().top() + style_data.item_height * i + (i * 1);
+            auto selected_bottom = selected_top + style_data.item_height;
+
+            if (mouse_pos.y() >= selected_top && mouse_pos.y() < selected_bottom)
+            {
+                hover_index_ = i;
+                break;
+            }
+        }
+
+        if (hover_index_ != -1 && hover_index_ != selection_index_)
+            ui_core_.nxi_core().command_system().command_input().suggestions().select(hover_index_);
+    }
+
+    void command_menu::mousePressEvent(QMouseEvent* event)
+    {
+        ui_core_.nxi_core().command_system().command_input().exec();
     }
 
     void command_menu::wheelEvent(QWheelEvent* event)

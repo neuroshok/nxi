@@ -111,8 +111,9 @@ namespace nxi
         focus(get(id));
     }
 
-    void page_system::focus(page_ptr page)
+    void page_system::focus(nds::node_ptr<nxi::page> page)
     {
+        nxi_assert(page);
         focus_ = page;
         focus_->focus();
     }

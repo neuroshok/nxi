@@ -23,7 +23,7 @@ namespace nxi
         Q_OBJECT
     public:
         using pages_type = std::unordered_map<nxi::page_id, nds::node_ptr<nxi::page>>;
-        using pages_view = std::vector<nds::node_ptr<const nxi::page>>;
+        using pages_view = std::vector<nds::node_ptr<nxi::page>>;
         using page_ptr = nds::node_ptr<nxi::page>;
 
     public:
@@ -43,7 +43,7 @@ namespace nxi
         void open(Args&&... args);
 
         void focus(nxi::page_id id);
-        void focus(page_ptr);
+        void focus(nds::node_ptr<nxi::page>);
         page_ptr focus() const;
         page_ptr get(nxi::page_id id) const;
         void load(nxi::page_id page);
