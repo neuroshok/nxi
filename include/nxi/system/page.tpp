@@ -9,7 +9,6 @@ namespace nxi
         auto page = graph_.emplace<nxi::page, Page>(source, *this, std::forward<Args>(args)...);
         ndb::store(*page);
 
-        graph_.connect(source, page);
         ndb::query<dbs::core>() << ndb::add( nxi_model.page_connection.source_id = source->id(), nxi_model.page_connection.target_id = page->id() );
 
         emit event_add(page, source);
