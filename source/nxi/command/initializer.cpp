@@ -63,11 +63,12 @@ namespace nxi
             nxi_core_.interface_system().load_style(name);
         };
         load_style.parameters = {
-        { "name", [](nxi::suggestion_vector& suggestion)
+        { "name", [this](nxi::suggestion_vector& suggestion)
             {
-                suggestion.push_back(nxi::text_suggestion{ "nxi", "", "default style" });
-                suggestion.push_back(nxi::text_suggestion{ "ffx", "", "test" });
-                suggestion.push_back(nxi::text_suggestion{ "nebula_space" });
+                for (auto style_name : nxi_core_.interface_system().styles())
+                {
+                    suggestion.push_back(nxi::text_suggestion{ style_name });
+                }
             }
         }};
 
