@@ -54,6 +54,7 @@ namespace nxi
                 {
                     auto page = graph_.emplace<nxi::page, nxi::web_page>(*this);
                     ndb::load(*page, page_id); // ndb::load(*page, page_data)
+                    qDebug() << "id : " << page->id();
                     emit event_add(page, nullptr);
                     emit page->event_load();
                     emit event_load(page);
@@ -106,7 +107,20 @@ namespace nxi
     void page_system::close(nds::node_ptr<nxi::page> page)
     {
         graph_.erase(page);
+        ndb::query<dbs::core>() << (
+        ndb::del
+        << ndb::source(nxi_model.page_connection)
+        << ndb::filter(
+            nxi_model.page_connection.source_id == page->id()
+            || nxi_model.page_connection.target_id == page->id()));
+
+        // get the next page to focus
+        nds::node_ptr<nxi::page> new_focus;
+        graph_.targets(root_, [&new_focus](auto&& page) { new_focus = page; });
+
         emit event_close(page);
+
+        new_focus->focus();
     }
 
     page_system::page_ptr page_system::focus() const
@@ -122,6 +136,8 @@ namespace nxi
     void page_system::focus(nds::node_ptr<nxi::page> page)
     {
         nxi_assert(page);
+
+        if (focus_ && page.id() == focus_.id()) return;
         focus_ = page;
         focus_->focus();
     }

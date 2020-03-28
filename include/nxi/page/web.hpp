@@ -12,7 +12,7 @@ namespace nxi
         Q_OBJECT
     public:
         web_page(nds::node_ptr<nxi::page>, nxi::page_system& ps);
-        web_page(nds::node_ptr<nxi::page> ptr, nxi::page_system& ps, const QString& url) : nxi::page(ptr, ps, "new_page", url) {}
+        web_page(nds::node_ptr<nxi::page> ptr, nxi::page_system& ps, const QString& url);
 
     private:
 
