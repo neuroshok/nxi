@@ -54,7 +54,6 @@ namespace nxi
                 {
                     auto page = graph_.emplace<nxi::page, nxi::web_page>(*this);
                     ndb::load(*page, page_id); // ndb::load(*page, page_data)
-                    qDebug() << "id : " << page->id();
                     emit event_add(page, nullptr);
                     emit page->event_load();
                     emit event_load(page);
@@ -174,6 +173,24 @@ namespace nxi
         return pages;
     }
 
+    page_system::pages_view page_system::root_targets() const
+    {
+        page_system::pages_view pages;
+        graph_.targets(root_, [&pages](auto&& node)
+        {
+            pages.push_back(node);
+        });
+        return pages;
+    }
+
+    void page_system::search(const QString& search_string, std::function<void(nds::node_ptr<nxi::page>)> callback) const
+    {
+        graph_.nodes([&callback, &search_string](auto&& node)
+        {
+            if (node->name().toLower().contains(search_string)) callback(node);
+        });
+    }
+
     page_system::pages_view page_system::targets(nds::node_ptr<const nxi::page> source) const
     {
         pages_view pages;
@@ -187,16 +204,6 @@ namespace nxi
     page_system::pages_view page_system::targets(nxi::page_id source) const
     {
         return targets(static_cast<nds::node_ptr<const nxi::page>>(get(source)));
-    }
-
-    page_system::pages_view page_system::root_targets() const
-    {
-        page_system::pages_view pages;
-        graph_.targets(root_, [&pages](auto&& node)
-        {
-            pages.push_back(node);
-        });
-        return pages;
     }
 
     void page_system::set_root(nds::node_ptr<nxi::page> page)

@@ -81,7 +81,7 @@ namespace ui
 
             suggestion.apply(
               [this, &item_rect, &selected](nds::node_ptr<const nxi::command> s) { draw_item(s, item_rect, selected); }
-            , [this, &item_rect, &selected](nds::node_ptr<const nxi::page> s) { draw_item(s, item_rect, selected); }
+            , [this, &item_rect, &selected](nds::node_ptr<nxi::page> s) { draw_item(nds::node_ptr<const nxi::page>{ s }, item_rect, selected); }
             , [this, &item_rect, &selected, &suggestion](auto&& s) { draw_item(suggestion, item_rect, selected); }
             );
 
@@ -113,12 +113,12 @@ namespace ui
         painter.setPen(style_data.item_text_color);
         painter.drawText(item_rect, Qt::AlignVCenter, command.name());
 
-        auto& command_input = ui_core_.nxi_core().command_system().command_input().text();
-        int hl_offset = command.name().indexOf(command_input);
-        if (hl_offset >= 0)
+        QString input_text = ui_core_.nxi_core().command_system().command_input().text();
+        int hl_offset = command.name().indexOf(input_text);
+        if (input_text.size() > 0 && hl_offset >= 0)
         {
             QRect hl_rect{ item_rect };
-            QString hl_text = command.name().mid(hl_offset, command_input.size());
+            QString hl_text = command.name().mid(hl_offset, input_text.size());
             hl_rect.setLeft(item_rect.left() + painter.fontMetrics().size(Qt::TextSingleLine, command.name().mid(0, hl_offset)).width());
             painter.setPen(Qt::green);
             painter.drawText(hl_rect, Qt::AlignVCenter, hl_text);
@@ -173,9 +173,21 @@ namespace ui
         painter.drawText(item_rect, Qt::AlignVCenter, page_name);
         item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, page_name).width());
 
+        // highlight
+        QString input_text = ui_core_.nxi_core().command_system().command_input().text();
+        int hl_offset = page_name.indexOf(input_text);
+        if (input_text.size() > 0 && hl_offset >= 0)
+        {
+            QRect hl_rect{ item_rect };
+            QString hl_text = page_name.mid(hl_offset, input_text.size());
+            hl_rect.setLeft(item_rect.left() + painter.fontMetrics().size(Qt::TextSingleLine, page_name.mid(0, hl_offset)).width());
+            painter.setPen(Qt::green);
+            painter.drawText(hl_rect, Qt::AlignVCenter, hl_text);
+        }
+
         // page command
         QFont font;
-        font.setItalic(true);
+        //font.setItalic(true);
         painter.setFont(font);
         painter.setPen(style_data.item_text_color.darker(180));
         painter.drawText(item_rect, Qt::AlignVCenter, page->command());

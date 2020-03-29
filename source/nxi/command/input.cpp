@@ -73,13 +73,19 @@ namespace nxi
                             suggestions_.push_back(std::move(command));
                         });
                     }
-                    , [this](const nxi::contexts::page&) { suggestions_.push_back("todo // search page"); }
+                    , [this](const nxi::contexts::page&)
+                    {
+                        nxi_core_.page_system().search(input_, [this](nds::node_ptr<nxi::page> page)
+                        {
+                            suggestions_.push_back(std::move(page));
+                        });
+                    }
                     , [this](const nxi::contexts::command_executor& ctx)
                     {
                         decltype(suggestions_) suggestions;
                         ctx.data.active_parameter().suggestion_callback(suggestions);
                         for (const auto& s : suggestions) { if (s.text().contains(input_)) suggestions_.push_back(s); }
-                        }
+                    }
                     , [this](auto&&) { nxi_warning("no suggestion"); }
                 );
             }

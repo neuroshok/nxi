@@ -53,9 +53,10 @@ namespace nxi
         void set_root(nds::node_ptr<nxi::page>);
 
         pages_view pages() const;
+        pages_view root_targets() const;
+        void search(const QString&, std::function<void(nds::node_ptr<nxi::page>)>) const;
         pages_view targets(nds::node_ptr<const nxi::page> source) const;
         pages_view targets(nxi::page_id source) const;
-        pages_view root_targets() const;
 
         void move(nxi::page_id page_id, nxi::page_id source_id, nxi::page_id target_id);
         void update(nxi::page_id id);
