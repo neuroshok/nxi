@@ -21,10 +21,11 @@ namespace ui::interfaces::light
 
         // command_root
         command_root_ = new light::button("command_root_", this);
+        command_root_->setStyleSheet("font-weight: bold; color: #00BBFF; padding: 0 20 0 20;");
+        command_root_->style_data.text_color = QColor{ 0, 187, 255 };
         connect(command_root_, &light::button::event_enter, [this]()
         {
             ui_core_.nxi_core().command_system().command_input().suggest_command();
-            //command_root_->setStyleSheet("font-weight: bold; background-color: #00FFFF; color: #00BBFF; padding: 0 20 0 20;");
         });
         connect(command_root_, &light::button::event_mousewheel_up, [this]() { ui_core_.nxi_core().command_system().command_input().suggestions().select_previous(); });
         connect(command_root_, &light::button::event_mousewheel_down, [this]() { ui_core_.nxi_core().command_system().command_input().suggestions().select_next(); });
@@ -36,6 +37,8 @@ namespace ui::interfaces::light
 
         // page_root
         page_root_ = new light::button("page_root_", this);
+        page_root_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #FFBB00; padding: 0 20 0 20;");
+        page_root_->style_data.text_color = QColor{ 255, 187, 0 };
         connect(page_root_, &light::button::event_enter, [this]()
         {
             ui_core_.nxi_core().command_system().command_input().suggest_page();
@@ -62,6 +65,7 @@ namespace ui::interfaces::light
 
         // context
         context_ = new light::button("context_", this);
+        context_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #00BB99; padding: 0 20 0 20;");
         connect(context_, &light::button::event_enter, [this]()
         {
             ui_core_.nxi_core().command_system().command_input().suggest_context();
@@ -80,7 +84,7 @@ namespace ui::interfaces::light
         connect(&ui_core_.nxi_core().context_system(), &nxi::context_system::event_focus_context_update,
         [this](const nxi::context& context)
         {
-            context_->setText(context.name());
+            context_->setText("[" + context.name() + "]");
         });
 
         connect(&ui_core_.nxi_core().context_system(), &nxi::context_system::event_context_add,

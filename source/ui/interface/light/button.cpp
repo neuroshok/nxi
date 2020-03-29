@@ -33,8 +33,8 @@ namespace ui::interfaces::light
         active_ = n;
 
         auto background_color = style_data.background_color;
-        if (active_) background_color = style_data.background_color.lighter();
+        if (active_) background_color = style_data.background_color.lighter(20);
 
-        setStyleSheet("font-weight: bold; padding: 0 20 0 20; color:" + style_data.text_color.name() + "; background-color:" + background_color.name());
+        setStyleSheet("font-weight: bold; padding: 0 20 0 20; color:" + style_data.text_color.name() + "; border-bottom: 2px solid " + background_color.name());
     }
 } // ui::interfaces::light

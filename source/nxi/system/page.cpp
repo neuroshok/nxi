@@ -25,7 +25,7 @@ namespace nxi
         auto res = ndb::query<dbs::core>() << (ndb::get(count_id) << ndb::source(nxi_model.page));
         if (res[0][count_id] == 0)
         {
-            auto main = graph_.emplace<nxi::page, nxi::page_node>(*this, "main");
+            auto main = graph_.emplace<nxi::page, nxi::page_node>(*this, "page");
             ndb::store(*main);
             set_root(main);
             nxi_core_.config().page.root = main->id();

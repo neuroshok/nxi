@@ -171,7 +171,6 @@ namespace ui
         QString page_name = "#" + QString::number(page->id()) + " " + page->name();
         painter.setPen(style_data.item_text_color);
         painter.drawText(item_rect, Qt::AlignVCenter, page_name);
-        item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, page_name).width());
 
         // highlight
         QString input_text = ui_core_.nxi_core().command_system().command_input().text();
@@ -184,6 +183,7 @@ namespace ui
             painter.setPen(Qt::green);
             painter.drawText(hl_rect, Qt::AlignVCenter, hl_text);
         }
+        item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, page_name).width());
 
         // page command
         QFont font;
