@@ -89,5 +89,17 @@ namespace nxi
             //nxi_core_.page_system().focus()->run("document.documentElement.requestFullscreen();");
         };
         add(std::move(fullscreen));
+
+        // page_run_script
+        nxi::command_data page_run_script;
+        page_run_script.action = "run_script";
+        page_run_script.description = "Run javascript";
+        page_run_script.function = [this](const nxi::values& params)
+        {
+            //nxi_expect(params.size() == 1);
+            nxi_core_.page_system().focus()->run_script(params.get(0));
+        };
+        page_run_script.parameters = {{ "script" }};
+        add(std::move(page_run_script));
     }
 } // nxi

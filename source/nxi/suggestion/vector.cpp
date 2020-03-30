@@ -29,13 +29,15 @@ namespace nxi
 
     void suggestion_vector::erase(nds::node_ptr<const nxi::page> erase_page)
     {
+        nxi_assert(erase_page);
+
         auto it = std::find_if(suggestions_.begin(), suggestions_.end(),
         [&erase_page](auto& s)
         {
             return s.apply(
             [&erase_page](nds::node_ptr<nxi::page> page)
             {
-                 return page->id() == erase_page->id();
+                 return page.get() == erase_page.get();
             }
             , [](auto&&) { return false; });
         });

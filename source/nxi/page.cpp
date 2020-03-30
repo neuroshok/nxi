@@ -40,14 +40,6 @@ namespace nxi
         icon_ = icon;
     }
 
-    void page::load()
-    {
-        ndb_object::loaded = true;
-        ndb::store(*this);
-        emit event_load();
-        emit page_system_.event_load(node_ptr_);
-    }
-
     void page::close()
     {
         emit event_close();
@@ -60,6 +52,19 @@ namespace nxi
         if (!is_loaded()) load();
         emit event_focus();
         emit page_system_.event_focus(node_ptr_);
+    }
+
+    void page::load()
+    {
+        ndb_object::loaded = true;
+        ndb::store(*this);
+        emit event_load();
+        emit page_system_.event_load(node_ptr_);
+    }
+
+    void page::run_script(const QString& script) const
+    {
+        emit event_run_script(script);
     }
 
     nxi::page_id page::id() const
