@@ -39,6 +39,7 @@ namespace ui
             auto it = pages_.find(page->id());
             nxi_assert(it != pages_.end());
             if (it->second) delete it->second;
+            pages_.erase(it);
         });
     }
 
@@ -54,7 +55,7 @@ namespace ui
     stz::observer_ptr<ui::page> page_system::get(const nxi::page& page)
     {
         auto it = pages_.find(page.id());
-        nxi_assert(it != pages_.end());
+        nxi_assert(it != pages_.end() && it->second.data());
         return stz::make_observer(it->second.data());
     }
 

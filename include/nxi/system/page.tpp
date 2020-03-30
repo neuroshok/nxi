@@ -25,7 +25,7 @@ namespace nxi
     void page_system::open(page_system::page_ptr source, Args&&... args)
     {
         auto added_page = add<Page>(source, std::forward<Args>(args)...);
-        added_page->load();
+        load(added_page);
         focus(added_page);
     }
 

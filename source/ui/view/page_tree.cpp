@@ -177,7 +177,7 @@ namespace ui::views
         connect(this, &QTreeWidget::currentItemChanged, [this](QTreeWidgetItem* base_item, QTreeWidgetItem* previous)
         {
             auto page_item = static_cast<ui::tree_page_item*>(base_item);
-            page_item->page().focus();
+            //page_item->page().focus();
         });
     }
 

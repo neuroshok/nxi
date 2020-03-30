@@ -22,11 +22,9 @@ namespace nxi
 
         Q_OBJECT
     public:
-        virtual void close();
-        virtual void focus();
-        virtual void load();
         virtual void run_script(const QString& script) const;
 
+        void set_loaded();
         void update_command(const QString& command);
         void update_icon(const QIcon&);
         void update_name(const QString& name);

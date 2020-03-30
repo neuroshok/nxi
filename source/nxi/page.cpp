@@ -40,24 +40,11 @@ namespace nxi
         icon_ = icon;
     }
 
-    void page::close()
-    {
 
-    }
-
-    void page::focus()
-    {
-        if (!is_loaded()) load();
-        emit event_focus();
-        emit page_system_.event_focus(node_ptr_);
-    }
-
-    void page::load()
+    void page::set_loaded()
     {
         ndb_object::loaded = true;
         ndb::store(*this);
-        emit event_load();
-        emit page_system_.event_load(node_ptr_);
     }
 
     void page::run_script(const QString& script) const

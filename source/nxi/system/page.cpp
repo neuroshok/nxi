@@ -99,8 +99,8 @@ namespace nxi
     void page_system::open_static(const QString& path, nxi::renderer_type renderer_type)
     {
         auto added_page = add_static(path, renderer_type);
-        added_page->load();
-        added_page->focus();
+        load(added_page);
+        focus(added_page);
     }
 
     void page_system::close(nds::node_ptr<nxi::page>& page)
@@ -148,7 +148,10 @@ namespace nxi
 
         if (focus_ && page == focus_) return;
         focus_ = page;
-        focus_->focus();
+
+        //if (!focus_->is_loaded()) load(focus_);
+        //emit focus_->event_focus();
+        emit event_focus(focus_);
     }
 
     page_system::page_ptr page_system::get(nxi::page_id id) const
@@ -170,7 +173,9 @@ namespace nxi
 
     void page_system::load(page_system::page_ptr page)
     {
-        page->load();
+        page->set_loaded();
+        emit page->event_load();
+        emit event_load(page);
     }
 
     page_system::pages_view page_system::pages() const
