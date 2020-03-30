@@ -160,6 +160,8 @@ if (NXI_TARGET_DESKTOP)
             "${PROJECT_SOURCE_DIR}/include/*.hpp")
     set(NXI_SOURCES ${NXI_SOURCES} ${NXI_PLATFORM_SOURCES} source/main.cpp)
 
+    list(APPEND NXI_DEFINITIONS QT_FORCE_ASSERTS)
+
     add_executable(nxi ${NXI_SOURCES} ${NXI_ICON})
     target_include_directories(nxi PUBLIC include)
     target_compile_definitions(nxi PUBLIC ${NXI_DEFINITIONS})
