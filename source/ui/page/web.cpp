@@ -54,10 +54,14 @@ namespace ui
             page_.update_icon(icon);
         });
 
-
         connect(&page_, &nxi::web_page::event_load, this, [this]()
         {
             load(page_.command());
+        });
+
+        connect(&page_, &nxi::web_page::event_run_script, this, [this](const QString& script)
+        {
+            native_page_->runJavaScript(script);
         });
     }
 

@@ -25,6 +25,7 @@ namespace nxi
         virtual void close();
         virtual void focus();
         virtual void load();
+        virtual void run_script(const QString& script) const;
 
         void update_command(const QString& command);
         void update_icon(const QIcon&);
@@ -55,9 +56,11 @@ namespace nxi
         void event_update_command(const QString&);
         void event_update_icon(const QIcon&);
         void event_update_name(const QString&);
+
         void event_close();
         void event_focus();
         void event_load();
+        void event_run_script(const QString&) const;
     };
 } // nxi
 
