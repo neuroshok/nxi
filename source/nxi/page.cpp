@@ -42,9 +42,7 @@ namespace nxi
 
     void page::close()
     {
-        emit event_close();
-        page_system_.close(node_ptr_);
-        ndb::unload(*this);
+
     }
 
     void page::focus()
