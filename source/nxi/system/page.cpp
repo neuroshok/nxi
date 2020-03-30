@@ -108,21 +108,28 @@ namespace nxi
         emit page->event_close();
         emit event_close(page);
 
-        ndb::query<dbs::core>() << (
-        ndb::del
-        << ndb::source(nxi_model.page_connection)
-        << ndb::filter(
-            nxi_model.page_connection.source_id == page->id()
-            || nxi_model.page_connection.target_id == page->id()));
+        bool had_focus = (focus_ == page);
+        erase(page);
+
+        if (had_focus)
+        {
+            // get the next page to focus
+            nds::node_ptr<nxi::page> new_focus;
+            graph_.targets(root_, [&new_focus](auto&& page) { new_focus = page; });
+
+            focus(new_focus);
+        }
+    }
+
+    void page_system::erase(nds::node_ptr<nxi::page>& page)
+    {
+        if (focus_ == page) focus_ = nullptr;
+
+        const auto& pc = nxi_model.page_connection;
+        ndb::query<dbs::core>() << (ndb::del << ndb::source(pc) << ndb::filter(pc.source_id == page->id() || pc.target_id == page->id()));
 
         ndb::unload(*page);
         graph_.erase(page);
-
-        // get the next page to focus
-        nds::node_ptr<nxi::page> new_focus;
-        graph_.targets(root_, [&new_focus](auto&& page) { new_focus = page; });
-
-        focus(new_focus);
     }
 
     page_system::page_ptr page_system::focus() const
@@ -139,7 +146,7 @@ namespace nxi
     {
         nxi_assert(page);
 
-        if (focus_ && page.id() == focus_.id()) return;
+        if (focus_ && page == focus_) return;
         focus_ = page;
         focus_->focus();
     }

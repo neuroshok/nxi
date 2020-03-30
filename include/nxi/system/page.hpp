@@ -43,6 +43,7 @@ namespace nxi
         void open(Args&&... args);
 
         void close(nds::node_ptr<nxi::page>&);
+        void erase(nds::node_ptr<nxi::page>&);
         void focus(nxi::page_id id);
         void focus(nds::node_ptr<nxi::page>);
         page_ptr focus() const;

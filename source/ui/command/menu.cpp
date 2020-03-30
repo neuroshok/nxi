@@ -260,6 +260,7 @@ namespace ui
         else if (event->button() == Qt::MiddleButton)
             ui_core_.nxi_core().command_system().command_input().suggestions().selected().apply(
             [this](nds::node_ptr<nxi::page> page) {
+                // todo suggestion_vector should use use event_close
                 ui_core_.nxi_core().command_system().command_input().suggestions().erase(page);
                 ui_core_.nxi_core().page_system().close(page);
                 //page->close();
