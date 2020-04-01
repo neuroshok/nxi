@@ -39,8 +39,8 @@ set(CMAKE_PREFIX_PATH  ${NXI_QT_ROOT})
 ## PLATFORM
 # windows
 if (NXI_TARGET_DESKTOP)
-    set(NXI_QT_COMPONENTS Core Widgets Gui WebEngine WebEngineWidgets 3DCore 3DRender 3DInput 3DExtras)
-    set(NXI_QT_LIBS Qt5::Core Qt5::Widgets Qt5::Gui Qt5::WebEngine Qt5::WebEngineWidgets
+    set(NXI_QT_COMPONENTS Core Widgets Gui WebEngine WebEngineWidgets WebChannel 3DCore 3DRender 3DInput 3DExtras)
+    set(NXI_QT_LIBS Qt5::Core Qt5::Widgets Qt5::Gui Qt5::WebEngine Qt5::WebEngineWidgets Qt5::WebChannel
             Qt5::3DCore Qt5::3DRender Qt5::3DInput Qt5::3DExtras)
 endif()
 
@@ -156,6 +156,7 @@ if (NXI_TARGET_DESKTOP)
             "${PROJECT_SOURCE_DIR}/source/nxi/*.cpp"
             "${PROJECT_SOURCE_DIR}/source/nxw/*.cpp"
             "${PROJECT_SOURCE_DIR}/source/ui/*.cpp"
+            "${PROJECT_SOURCE_DIR}/source/w3c/*.cpp"
             "${PROJECT_SOURCE_DIR}/resource/*.qrc"
             "${PROJECT_SOURCE_DIR}/include/*.hpp")
     set(NXI_SOURCES ${NXI_SOURCES} ${NXI_PLATFORM_SOURCES} source/main.cpp)
