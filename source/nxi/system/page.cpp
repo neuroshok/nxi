@@ -149,8 +149,8 @@ namespace nxi
         if (focus_ && page == focus_) return;
         focus_ = page;
 
-        //if (!focus_->is_loaded()) load(focus_);
-        //emit focus_->event_focus();
+        if (!focus_->is_loaded()) load(focus_);
+        emit focus_->event_focus();
         emit event_focus(focus_);
     }
 
