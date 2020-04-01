@@ -3,10 +3,15 @@
 namespace nxi
 {
     json_object::json_object(QJsonValueRef value)
-        : value_{ value }
+        : value_{ value.toObject() }
     {}
+
+    json_object::json_object(QJsonObject value)
+        : value_{ std::move(value) }
+    {}
+
     json_object::json_object(json_object* parent, const QString& key)
-        : value_{ parent->value_.toObject()[key] }
+        : value_{ parent->value_.toObject()[key].toObject() }
     {}
 
     template<>
@@ -27,5 +32,16 @@ namespace nxi
     QImage json_load_value<QImage>(const QJsonValue& value)
     {
         return QImage{ value.toString() };
+    }
+
+    template<>
+    std::vector<QString> json_load_value<std::vector<QString>>(const QJsonValue& values)
+    {
+        std::vector<QString> vector;
+        for (auto& value : values.toArray())
+        {
+            vector.push_back(value.toString());
+        }
+        return vector;
     }
 } // nxi

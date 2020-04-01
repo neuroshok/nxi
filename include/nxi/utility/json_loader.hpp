@@ -37,7 +37,9 @@ namespace nxi
     public:
         json_object() = default;
         json_object(QJsonValueRef value);
+        json_object(QJsonObject value);
         json_object(json_object* parent, const QString& key);
+
     private:
         QJsonValue value_;
     };
@@ -72,6 +74,7 @@ namespace nxi
     template<> int json_load_value<int>(const QJsonValue&);
     template<> QSize json_load_value<QSize>(const QJsonValue&);
     template<> QImage json_load_value<QImage>(const QJsonValue&);
+    template<> std::vector<QString> json_load_value<std::vector<QString>>(const QJsonValue&);
 } // nxi
 
 #endif // INCLUDE_NXI_CONFIG_JSON_LOADER_HPP_NXI
