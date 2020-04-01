@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/script/js">
+        <file alias="nxi">./script/nxi.js</file>
+    </qresource>
+</RCC>
