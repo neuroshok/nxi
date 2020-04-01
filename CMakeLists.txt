@@ -114,8 +114,8 @@ endforeach()
 
 # create container file
 configure_file(
-        "${NXI_MODULE_ROOT}/static_module.hpp.in"
-        "${NXI_MODULE_ROOT}/static_module.hpp"
+        "${NXI_ROOT}/include/nxi/module/static.hpp.in"
+        "${NXI_ROOT}/include/nxi/module/static.generated.hpp"
 )
 
 #-------------------------------------------------------

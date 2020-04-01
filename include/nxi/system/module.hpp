@@ -5,7 +5,7 @@
 
 #include <QObject>
 #include <QString>
-#include <module/static_module.hpp>
+#include <nxi/module/static.generated.hpp>
 
 namespace nxi
 {
