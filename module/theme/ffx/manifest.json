@@ -1,0 +1,18 @@
+{
+    "name": "FFX Developer Ayu Dark",
+    "manifest_version": 2,
+    "version": "1.0",
+    "theme": {
+        "images": {
+            "theme_frame": "FFX-Developer-Ayu_Dark-Top.png"
+        },
+        "colors": {
+            "frame": "rgba(15, 20, 25, 1)",
+            "tab_background_text": "rgba(72, 194, 255, 1)",
+            "toolbar": "rgba(15, 20, 25, 0.8)",
+            "bookmark_text": "rgba(255, 119, 43, 1)",
+            "toolbar_field": "rgba(7, 13, 20, 1)",
+            "toolbar_field_text": "rgba(194, 217, 76, 1)"
+        }
+    }
+}
