@@ -7,6 +7,12 @@
 **bin/
 build/
 
+# local resources
+resource/local/
+
+# generated files
+**.generated.hpp
+
 # cmake build folders
 **cmake-*/
 
