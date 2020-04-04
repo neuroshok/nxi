@@ -7,7 +7,7 @@
 
 namespace nxi
 {
-    QString read_file(const QString& path)
+    inline QString read_file(const QString& path)
     {
         QString result;
         QFile file(path);
