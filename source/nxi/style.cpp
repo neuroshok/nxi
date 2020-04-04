@@ -1,5 +1,7 @@
 #include <nxi/style.hpp>
 
+#include <nxi/core.hpp>
+
 #include <QString>
 #include <QFile>
 
@@ -26,7 +28,7 @@ namespace nxi
 {
     style::style(const QString& name)
         : name_{ name }
-        , path_{ "./module/theme/"+ name_ + "/" }
+        , path_{ nxi::core::module_path() + "/theme/"+ name_ }
     {}
     style::style() : style("nxi") {}
 
@@ -36,7 +38,7 @@ namespace nxi
 
     void style::load()
     {
-        QFile module_file(path() + "manifest.json");
+        QFile module_file(path() + "/manifest.json");
         if (!module_file.open(QFile::ReadOnly)) nxi_error("read error : {}", module_file.fileName());
         else
         {
@@ -104,7 +106,7 @@ namespace nxi
     #define map_color(NXI_KEY, W3C_KEY) if (!W3C_KEY.is_null()) NXI_KEY.set(W3C_KEY.get());
     void style::from_w3c(w3c::theme& theme)
     {
-        data_.background_image.set(QImage(path() + theme.images.theme_frame.get()));
+        data_.background_image.set(QImage(path() + "/" + theme.images.theme_frame.get()));
         map_color(data_.background_color, theme.colors.frame);
 
         map_color(data_.menu.background_color, theme.colors.popup);
