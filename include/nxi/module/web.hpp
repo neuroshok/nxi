@@ -3,6 +3,9 @@
 
 #include <nxi/database.hpp>
 #include <nxi/module.hpp>
+#include <w3c/module/manifest.hpp>
+
+#include <QWebEngineScript>
 
 namespace nxi
 {
@@ -10,6 +13,7 @@ namespace nxi
 
     class web_module : public module
     {
+    public:
         struct background
         {
             std::vector<QString> scripts;
@@ -31,19 +35,33 @@ namespace nxi
 
         struct content_script
         {
-            std::vector<QString> matches;
+            enum class run_at_type { document_start, document_end, document_idle };
+            bool all_frames;
+            std::vector<QString> css;
+            std::vector<QString> exclude_globs;
+            std::vector<QString> exclude_matches;
+            std::vector<QString> include_globs;
             std::vector<QString> js;
+            bool match_about_blank;
+            std::vector<QString> matches;
+            run_at_type run_at;
         };
 
     public:
         web_module(nxi::core&, const QString& name);
+        void init_scripts();
 
         void on_load() override;
+
+        void process(nxi::web_page&) override;
 
         auto& browser_action() const { return browser_action_; }
 
     private:
         nxi::core& nxi_core_;
+
+        w3c::manifest manifest_;
+        std::unordered_map<QString, QWebEngineScript> scripts_;
 
         // applications
         QString author_;

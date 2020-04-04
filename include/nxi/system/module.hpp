@@ -10,6 +10,7 @@
 namespace nxi
 {
 	class core;
+	class web_page;
 
     class module_system : public QObject
     {
@@ -22,11 +23,15 @@ namespace nxi
         const std::vector<std::unique_ptr<nxi::module>>& get() const;
         void load();
 
+        void process(nxi::web_page&);
+
+        const QString& js_api() const;
+
     private:
 		nxi::core& nxi_core_;
         std::vector<std::unique_ptr<nxi::module>> modules_;
-
         nxi::static_module_container static_modules_;
+        QString js_api_;
     };
 } // nxi
 

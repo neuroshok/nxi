@@ -22,6 +22,7 @@ namespace nxi
 
     void module::on_load() {}
     void module::on_unload() {}
+    void module::process(nxi::web_page&) {}
 
     const QString& module::name() const
     {

@@ -4,10 +4,13 @@
 #include <ui/renderer.hpp>
 #include <ui/renderer/web.hpp>
 
+#include <QWebChannel>
 #include <QWebEngineFullScreenRequest>
 #include <QWebEnginePage>
+#include <QWebEngineProfile>
+#include <QWebEngineScript>
+#include <QWebEngineScriptCollection>
 #include <QWebEngineSettings>
-
 
 #include <nxi/config.hpp>
 #include <nxi/core.hpp>
@@ -16,6 +19,9 @@
 #include <ui/window.hpp>
 #include <ui/interface/main.hpp>
 
+#include <nxi/module/js_api/core.hpp>
+#include <nxi/module/js_api/page_system.hpp>
+
 namespace ui
 {
     web_page::web_page(ui::core& ui_core, nxi::web_page& page) :
@@ -23,9 +29,20 @@ namespace ui
         , page_{ page }
         , ui_core_{ ui_core }
     {
-        native_page_ = new QWebEnginePage(this);
-        native_page_->settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
-        native_page_->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
+        QWebEngineProfile::defaultProfile()->settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
+        QWebEngineProfile::defaultProfile()->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
+
+        native_page_ = new QWebEnginePage(QWebEngineProfile::defaultProfile(), this);
+
+        auto w = new QWebChannel{ this };
+        native_page_->setWebChannel(w);
+        w->registerObject("core", new nxi::js_api::core{ ui_core_.nxi_core(), *this });
+        w->registerObject("page_system", new nxi::js_api::page_system{ ui_core_.nxi_core(), *this });
+
+        connect(&page, &nxi::web_page::event_add_script, [this](const QWebEngineScript& script)
+        {
+            native_page_->scripts().insert(script);
+        });
 
         connect(native_page_, &QWebEnginePage::fullScreenRequested, [this](QWebEngineFullScreenRequest request)
         {
@@ -42,27 +59,15 @@ namespace ui
         connect(native_page_, &QWebEnginePage::loadFinished, this, [this](bool n)
         {
             nxi_debug("load complete");
+            //ui_core_.nxi_core().module_system().process(page_);
         });
 
-        connect(native_page_, &QWebEnginePage::titleChanged, this, [this](const QString& name)
-        {
-            page_.update_name(name);
-        });
+        connect(native_page_, &QWebEnginePage::titleChanged, this, [this](const QString& name) { page_.update_name(name); });
+        connect(native_page_, &QWebEnginePage::iconChanged, this, [this](const QIcon& icon) { page_.update_icon(icon); });
+        connect(&page_, &nxi::web_page::event_load, this, [this]() { load(page_.command()); });
+        connect(&page_, &nxi::web_page::event_run_script, this, [this](const QString& script) { native_page_->runJavaScript(script); });
 
-        connect(native_page_, &QWebEnginePage::iconChanged, this, [this](const QIcon& icon)
-        {
-            page_.update_icon(icon);
-        });
-
-        connect(&page_, &nxi::web_page::event_load, this, [this]()
-        {
-            load(page_.command());
-        });
-
-        connect(&page_, &nxi::web_page::event_run_script, this, [this](const QString& script)
-        {
-            native_page_->runJavaScript(script);
-        });
+        ui_core_.nxi_core().module_system().process(page_);
     }
 
     void web_page::display(ui::renderer* renderer)

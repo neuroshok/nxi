@@ -8,6 +8,8 @@ class QString;
 
 namespace nxi
 {
+    class web_page;
+
     class module
     {
     public:
@@ -18,6 +20,7 @@ namespace nxi
 
         virtual void on_load();
         virtual void on_unload();
+        virtual void process(nxi::web_page&);
 
         const QString& name() const;
         module_type type() const;
