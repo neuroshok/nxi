@@ -43,6 +43,8 @@ namespace nxi
         nxi::page_system& page_system();
         nxi::window_system& window_system();
 
+        static QString module_path();
+        static QString module_path(const QString& name, nxi::module_type);
         static QString page_path(const QString&);
 
     signals:

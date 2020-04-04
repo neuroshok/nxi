@@ -75,6 +75,25 @@ namespace nxi
         emit event_error(message);
     }
 
+    QString core::module_path()
+    {
+        return QCoreApplication::applicationDirPath() + "/module";
+    }
+
+    QString core::module_path(const QString& name, nxi::module_type module_type)
+    {
+        QString path;
+        switch(module_type)
+        {
+            case nxi::module_type::web:
+                path = module_path() +"/webextension/" + name;
+                break;
+            default:
+                nxi_warning("unknown module type");
+        }
+        return path;
+    }
+
     QString core::page_path(const QString& path)
     {
         return "qrc:/page/" + path;
