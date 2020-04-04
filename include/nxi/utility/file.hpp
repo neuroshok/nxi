@@ -11,7 +11,7 @@ namespace nxi
     {
         QString result;
         QFile file(path);
-        if(!file.open(QIODevice::ReadOnly)) nxi_warning("webchannel_api_file not found");
+        if(!file.open(QIODevice::ReadOnly)) nxi_warning("{} not found", path);
         else
         {
             result = file.readAll();
