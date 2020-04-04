@@ -49,7 +49,7 @@ namespace nxi
 
     void page::run_script(const QString& script) const
     {
-        emit event_run_script(script);
+        nxi_warning("unimplemented");
     }
 
     nxi::page_id page::id() const

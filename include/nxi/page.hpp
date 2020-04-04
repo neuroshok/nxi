@@ -11,6 +11,7 @@
 #include <QObject>
 
 class QString;
+class QWebEngineScript;
 
 namespace nxi
 {
@@ -58,7 +59,6 @@ namespace nxi
         void event_close();
         void event_focus();
         void event_load();
-        void event_run_script(const QString&) const;
     };
 } // nxi
 
