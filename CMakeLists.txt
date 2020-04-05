@@ -95,7 +95,7 @@ message("Qt path : ${NXI_QT_ROOT}")
 #-------------------------------------------------------
 message("Module build")
 
-SUBDIRLIST(SUBDIRS ${NXI_MODULE_ROOT})
+SUBDIRLIST(SUBDIRS ${NXI_MODULE_ROOT}/static)
 
 # add modules
 foreach(module ${SUBDIRS})
@@ -103,9 +103,9 @@ foreach(module ${SUBDIRS})
     message("- ${module} : ${NXI_MODULE_${module}}")
     if (NXI_MODULE_${module})
         set(NXI_MODULE_CURRENT ${module})
-        add_subdirectory(${NXI_MODULE_ROOT}/${module})
+        add_subdirectory(${NXI_MODULE_ROOT}/static/${module})
         # create variables for generated file
-        string(APPEND  NXI_MODULE_STATIC_INCLUDE "#include \"module/${module}/${module}.hpp\"\n")
+        string(APPEND  NXI_MODULE_STATIC_INCLUDE "#include \"module/static/${module}/${module}.hpp\"\n")
         string(APPEND  NXI_MODULE_STATIC_INIT ", ${module}_{ nxi_core }\n")
         string(APPEND  NXI_MODULE_STATIC_LOAD "${module}_.load();\n")
         string(APPEND  NXI_MODULE_STATIC_MEMBER "nxi::modules::${module} ${module}_;\n")

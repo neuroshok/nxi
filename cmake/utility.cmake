@@ -17,7 +17,7 @@ endmacro()
 # module_add
 macro(module_add name)
     add_library(module_${name} INTERFACE)
-    target_include_directories(module_${name} INTERFACE ${NXI_MODULE_ROOT}/${name})
+    target_include_directories(module_${name} INTERFACE ${NXI_MODULE_ROOT}/static/${name})
     set(NXI_MODULES ${NXI_MODULES} "module_${name};" PARENT_SCOPE)
 endmacro()
 
@@ -29,7 +29,7 @@ endmacro()
 # module_source
 macro(module_source)
     foreach (SRC ${ARGN})
-        list (APPEND NXI_MODULE_SOURCES "${NXI_MODULE_ROOT}/${NXI_MODULE_CURRENT}/${SRC}")
+        list (APPEND NXI_MODULE_SOURCES "${NXI_MODULE_ROOT}/static/${NXI_MODULE_CURRENT}/${SRC}")
     endforeach()
     target_sources(module_${NXI_MODULE_CURRENT} INTERFACE ${NXI_MODULE_SOURCES})
 endmacro()

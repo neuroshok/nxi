@@ -7,10 +7,10 @@ namespace nxi { class core; }
 
 namespace nxi::modules
 {
-    class test : public nxi::module
+    class nxi_static : public nxi::module
     {
     public:
-        explicit test(nxi::core& nxi_core);
+        explicit nxi_static(nxi::core& nxi_core);
 
         void on_load();
 
