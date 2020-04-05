@@ -64,6 +64,7 @@ namespace nxi
             }
 
             // if (state == enable)
+            nxi_trace("load {}", module_ptr->name());
             module_ptr->load();
 
             modules_.push_back(std::move(module_ptr));

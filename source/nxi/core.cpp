@@ -24,15 +24,14 @@ namespace nxi
     {
         nxi_trace("");
 
-        // load modules before other systems
-        module_system_.load();
-
         window_system_.load(); // window create interface
 
         command_system_.load();
         page_system_.load();
         interface_system_.load();
         context_system_.load();
+
+        module_system_.load();
     }
 
     void core::quit() const
@@ -87,6 +86,9 @@ namespace nxi
         {
             case nxi::module_type::web:
                 path = module_path() +"/webextension/" + name;
+                break;
+            case nxi::module_type::dynamic:
+                path = module_path() +"/dynamic/" + name;
                 break;
             default:
                 nxi_warning("unknown module type");
