@@ -14,9 +14,10 @@ namespace nxi::modules
 
     void nxi_static::on_load()
     {
-        nxi_core_.error("nxi_static module loaded");
-
-        auto cmd = nxi::command("nxi_static", "action", std::bind(&nxi::core::quit, &nxi_core_));
+        auto cmd = nxi::command("nxi_static", "action", [this](const nxi::values&)
+        {
+            nxi_core_.error("nxi_static module is loaded");
+        });
 
         nxi_core_.command_system().add(std::move(cmd));
     }
