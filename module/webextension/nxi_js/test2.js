@@ -1,0 +1,1 @@
+//document.body.innerHTML +='<div style="color:darkred"><b>THIS PAGE HAS BEEN HACKED BY A MALICIOUS HACKER</b></div>';
