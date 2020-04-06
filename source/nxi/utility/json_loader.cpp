@@ -38,7 +38,7 @@ namespace nxi
     std::vector<QString> json_load_value<std::vector<QString>>(const QJsonValue& values)
     {
         std::vector<QString> vector;
-        for (auto& value : values.toArray())
+        for (const auto& value : values.toArray())
         {
             vector.push_back(value.toString());
         }
