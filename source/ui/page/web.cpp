@@ -1,26 +1,24 @@
 #include <ui/page/web.hpp>
 
+#include <nxi/config.hpp>
+#include <nxi/core.hpp>
+#include <nxi/log.hpp>
+#include <nxi/module/api/core.hpp>
+#include <nxi/module/api/page_system.hpp>
 #include <nxi/page/web.hpp>
+
+#include <ui/core.hpp>
+#include <ui/interface/main.hpp>
+#include <ui/page/web_engine.hpp>
 #include <ui/renderer.hpp>
 #include <ui/renderer/web.hpp>
+#include <ui/window.hpp>
 
-#include <QWebChannel>
 #include <QWebEngineFullScreenRequest>
-#include <QWebEnginePage>
 #include <QWebEngineProfile>
 #include <QWebEngineScript>
 #include <QWebEngineScriptCollection>
 #include <QWebEngineSettings>
-
-#include <nxi/config.hpp>
-#include <nxi/core.hpp>
-#include <ui/core.hpp>
-#include <include/nxi/log.hpp>
-#include <ui/window.hpp>
-#include <ui/interface/main.hpp>
-
-#include <nxi/module/api/core.hpp>
-#include <nxi/module/api/page_system.hpp>
 
 namespace ui
 {
@@ -32,7 +30,7 @@ namespace ui
         QWebEngineProfile::defaultProfile()->settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
         QWebEngineProfile::defaultProfile()->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
 
-        native_page_ = new QWebEnginePage(QWebEngineProfile::defaultProfile(), this);
+        native_page_ = new ui::web_engine_page(QWebEngineProfile::defaultProfile(), this);
         native_page_->setWebChannel(ui_core_.nxi_core().module_system().web_channel());
 
         connect(&page, &nxi::web_page::event_add_script, [this](const QWebEngineScript& script)
@@ -84,6 +82,6 @@ namespace ui
 
     QWebEnginePage* web_page::native()
     {
-        return native_page_;
+        return static_cast<QWebEnginePage*>(native_page_);
     }
 } // ui

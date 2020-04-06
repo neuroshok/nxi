@@ -3,13 +3,14 @@
 
 #include <ui/page.hpp>
 
-class QWebEnginePage;
-
 namespace nxi { class web_page; }
+
+class QWebEnginePage;
 
 namespace ui
 {
     class core;
+    class web_engine_page;
 
     class web_page : public ui::page
     {
@@ -28,7 +29,7 @@ namespace ui
         ui::core& ui_core_;
         nxi::web_page& page_;
 
-        QWebEnginePage* native_page_;
+        ui::web_engine_page* native_page_;
     };
 
 } // ui

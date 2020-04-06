@@ -16,7 +16,7 @@ OStream& operator<<(OStream &os, const QString& c)
 {
     return os << c.toStdString();
 }
-
+//todo add log category
 #define nxi_assert(C) Q_ASSERT(C)
 #define nxi_debug(...) SPDLOG_LOGGER_DEBUG(spdlog::get("debug"), __VA_ARGS__)
 #define nxi_error(...) SPDLOG_LOGGER_ERROR(spdlog::default_logger_raw(), __VA_ARGS__)
