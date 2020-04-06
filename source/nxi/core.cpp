@@ -4,6 +4,8 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QWebEngineProfile>
+#include <QWebEngineSettings>
 
 namespace nxi
 {
@@ -17,7 +19,12 @@ namespace nxi
         , module_system_{ *this }
         , page_system_{ *this }
         , window_system_{ *this }
-    {}
+    {
+        // apply config
+        QWebEngineProfile::defaultProfile()->settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
+        QWebEngineProfile::defaultProfile()->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
+        QWebEngineProfile::defaultProfile()->setHttpUserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0) Gecko/20100101 Firefox/74.0.1");
+    }
 
     core::~core() = default;
 

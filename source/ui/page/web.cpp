@@ -27,9 +27,6 @@ namespace ui
         , page_{ page }
         , ui_core_{ ui_core }
     {
-        QWebEngineProfile::defaultProfile()->settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
-        QWebEngineProfile::defaultProfile()->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
-
         native_page_ = new ui::web_engine_page(QWebEngineProfile::defaultProfile(), this);
         native_page_->setWebChannel(ui_core_.nxi_core().module_system().web_channel());
 
