@@ -13,6 +13,15 @@ namespace w3c
     {
         QString name;
 
+        struct browser_action_t
+        {
+            bool browser_style = false;
+            QString default_area;
+            QString default_icon;
+            QString default_popup;
+            QString default_title;
+        } browser_action;
+
         struct content_scripts_t
         {
             enum class run_at_type { document_start, document_end, document_idle };

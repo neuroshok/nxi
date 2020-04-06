@@ -29,11 +29,19 @@ namespace w3c
             auto root = doc.object();
             name = root["name"].toString();
 
-            for (auto& obj : root["content_scripts"].toArray())
+            auto browser_action_obj = root["browser_action"].toObject();
+            browser_action.browser_style = browser_action_obj["browser_style"].toBool();
+            browser_action.default_area = browser_action_obj["default_area"].toString();
+            browser_action.default_icon = browser_action_obj["default_icon"].toString();
+            browser_action.default_popup = browser_action_obj["default_popup"].toString();
+            browser_action.default_title = browser_action_obj["default_title"].toString();
+
+            for (auto& item : root["content_scripts"].toArray())
             {
                 content_scripts_t cs;
-                for (auto& value : obj.toObject()["matches"].toArray()) cs.matches.push_back(value.toString());
-                for (auto& value : obj.toObject()["js"].toArray()) cs.js.push_back(value.toString());
+                auto content_script_item = item.toObject();
+                for (auto& value : content_script_item["matches"].toArray()) cs.matches.push_back(value.toString());
+                for (auto& value : content_script_item["js"].toArray()) cs.js.push_back(value.toString());
                 content_scripts.push_back(std::move(cs));
             }
         }
