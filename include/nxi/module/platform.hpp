@@ -19,9 +19,9 @@
 #else
 #include <dlfcn.h>
 
-    #define NXS_OS_MODULE_FUNCTION dlsym
-    #define NXS_OS_MODULE_LOAD(path) dlopen(path, RTLD_LAZY)
-    #define NXS_OS_MODULE_UNLOAD dlclose
+    #define nxi_os_module_function dlsym
+    #define nxi_os_module_load(path) dlopen(path, RTLD_LAZY)
+    #define nxi_os_module_unload dlclose
     namespace nxi { typedef void* os_module_handle; }
     #define nxi_os_sharelibext "so"
 

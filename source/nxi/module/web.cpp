@@ -35,10 +35,14 @@ namespace nxi
         // add module commands
         auto f = [this](const nxi::values&)
         {
-            if (browser_action_.default_popup.isEmpty()) nxi_core_.page_system().add<nxi::web_page>();
-            else nxi_core_.command_system().get("quit").exec();
+            if (manifest_.browser_action.default_popup.isEmpty()) nxi_core_.error("module has no page");
+            else
+            {
+                auto page_path = nxi::core::module_path(name(), nxi::module_type::web) + "/" + manifest_.browser_action.default_popup;
+                nxi_core_.page_system().open<nxi::web_page>("file:///" + page_path);
+            }
         };
-        nxi::command command{ "wm-" + name(), "main", f, nxi::core::module_path(name(), nxi::module_type::web) + browser_action_.default_icon };
+        nxi::command command{ name(), "main", f, nxi::core::module_path(name(), nxi::module_type::web) + browser_action_.default_icon };
         nxi_core_.command_system().add(std::move(command));
     }
 

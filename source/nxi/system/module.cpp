@@ -51,23 +51,29 @@ namespace nxi
 
             switch(module.type)
             {
+                case nxi::module_type::compiled:
+                    // all modules are loaded by default
+                    break;
+
                 case nxi::module_type::dynamic:
                     module_ptr = std::make_unique<nxi::dynamic_module>(nxi_core_, module.name);
+                    nxi_trace("load {}", module_ptr->name());
+                    module_ptr->load();
+                    modules_.push_back(std::move(module_ptr));
                     break;
 
                 case nxi::module_type::web:
                     module_ptr = std::make_unique<nxi::web_module>(nxi_core_, module.name);
+                    nxi_trace("load {}", module_ptr->name());
+                    module_ptr->load();
+                    modules_.push_back(std::move(module_ptr));
                     break;
 
                 default:
-                    nxi_error("module load type");
+                    nxi_error("unknokwn module type");
             }
 
             // if (state == enable)
-            nxi_trace("load {}", module_ptr->name());
-            module_ptr->load();
-
-            modules_.push_back(std::move(module_ptr));
         }
         //emit event_load(module_name);
 

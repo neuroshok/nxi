@@ -8,8 +8,8 @@
 #include <nxi/type.hpp>
 #include <nxi/core.hpp>
 
-using Module_main_ptr = int (*)(nxi::core&);
-using Module_load_ptr = int (*)(nxi::core&);
+using Module_main_ptr = int (*)(nxi::api::core&);
+using Module_load_ptr = int (*)(nxi::api::core&);
 
 #include <nxi/log.hpp>
 #include <exception>
@@ -31,24 +31,22 @@ namespace nxi
 
       void on_load() override
       {
-          try
+          QString module_path = nxi::core::module_path(name_ + "." + nxi_os_sharelibext, nxi::module_type::dynamic);
+          nxi::os_module_handle handle = nxi_os_module_load(module_path.toStdString().c_str());
+          if (!handle) nxi_error("unable to load module : {}", module_path);
+          else
           {
-              QString module_path = nxi::core::module_path(name_ + "." + nxi_os_sharelibext, nxi::module_type::dynamic);
-              nxi::os_module_handle handle = nxi_os_module_load(module_path.toStdString().c_str());
-              if (!handle) nxi_error("file not found : " + module_path);
-
               // get main pointer
               auto main_ptr = reinterpret_cast<Module_main_ptr>(nxi_os_module_function(handle, "nxi_module"));
-              if (!main_ptr)
+              if (!main_ptr) nxi_error("function nxi_module missing");
+              else
               {
-                  nxi_error("function nxi_module missing");
+                  // get load pointer and call
+                  auto load_ptr = reinterpret_cast<Module_load_ptr>(nxi_os_module_function(handle, "nxi_module_load"));
+                  if (load_ptr) load_ptr(nxi_core_.api());
               }
-              // get load pointer and call
-              auto load_ptr = reinterpret_cast<Module_load_ptr>(nxi_os_module_function(handle, "nxi_module_load"));
-              if (load_ptr) load_ptr(nxi_core_);
           }
-          catch (const std::exception& e){ nxi_warning("can t load module : {}", e.what()); }
-        }
+      }
 
         QString name_;
         nxi::core& nxi_core_;
