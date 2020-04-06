@@ -1,4 +1,5 @@
-#include <nxi/module/js_api/page_system.hpp>
+#include <nxi/module/api/page_system.hpp>
+#include <nxi/module/api/js.hpp>
 
 #include <nxi/core.hpp>
 #include <nxi/page/web.hpp>
@@ -9,7 +10,7 @@ struct tab
 
 };
 
-namespace nxi::js_api
+namespace nxi::api
 {
 
     void page_system::add()
@@ -29,16 +30,15 @@ namespace nxi::js_api
                 connect(&nxi_core_.page_system(), &nxi::page_system::event_focus, this, [this](nds::node_ptr<nxi::page> page)
                 {
                     QJsonObject activeInfo;
-                    activeInfo["previousTabId"] = QJsonValue(0);
+                    activeInfo["previousTabId"] = 0;
                     activeInfo["tabId"] = static_cast<int>(page->id());
-                    activeInfo["windowId"] = QJsonValue(0);
+                    activeInfo["windowId"] = 0;
 
                     QJsonDocument doc{ activeInfo };
 
                     for(const auto& callback : focus_callbacks_)
                     {
-                        qDebug() << callback + "(" + doc.toJson(QJsonDocument::Compact) + ");";
-                        ui_page_.native()->runJavaScript("(" + callback + ")(" + doc.toJson(QJsonDocument::Compact) + ");");
+                        nxi::api::js_call(*page, callback, activeInfo);
                     }
                 });
                 break;
@@ -46,4 +46,4 @@ namespace nxi::js_api
                 nxi_warning("unknown event {}", event_id);
         }
     }
-} // nxi::js_api
+} // nxi::api
