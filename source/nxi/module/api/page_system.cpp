@@ -20,7 +20,7 @@ namespace nxi::api
 
     void page_system::add_listener(int event_id, const QString& js_callback_source)
     {
-        switch(event_id)
+        switch(static_cast<event>(event_id))
         {
             case event::add:
 
