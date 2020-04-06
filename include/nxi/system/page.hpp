@@ -5,6 +5,7 @@
 #include <nxi/type.hpp>
 
 #include <unordered_map>
+#include <functional>
 #include <vector>
 
 #include <QObject>
