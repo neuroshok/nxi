@@ -22,7 +22,7 @@ const page_event = { add: 0, focus: 1 };
 
 let browser_tabs = {
     create() { nxi.page_system.add(); },
-    onCreated: { addListener(callback) { nxi.page_system.add_listener(page_event.add, callback.name); } },
+    onCreated: { addListener(callback) { nxi.page_system.add_listener(page_event.add, callback.toString()); } },
     onActivated: { addListener(callback) { nxi.page_system.add_listener(page_event.focus, callback.toString() ); } },
 };
 
