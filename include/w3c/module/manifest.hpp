@@ -14,7 +14,6 @@ namespace w3c
     struct manifest
     {
         QString author;
-        QString name;
 
         struct background_t
         {
