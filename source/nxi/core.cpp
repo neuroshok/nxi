@@ -9,14 +9,14 @@ namespace nxi
 {
     core::core()
         : ndb_init_{}
+        , api_{ *this } // init before systems
+        , config_{ "nxi" }
         , command_system_{ *this }
         , context_system_{ *this }
         , interface_system_{ *this }
         , module_system_{ *this }
         , page_system_{ *this }
         , window_system_{ *this }
-        , api_{ *this }
-        , config_{ "nxi" }
     {}
 
     core::~core() = default;

@@ -30,11 +30,6 @@ namespace nxi
 
         void error(const QString& message) const;
 
-        void test(QWidget* w)
-        {
-            emit event_test(w);
-        }
-
         nxi::api::core& api();
         nxi::config& config();
 

@@ -20,7 +20,11 @@ namespace nxi
     module_system::module_system(nxi::core& nxi_core) :
 		nxi_core_{ nxi_core }
 		, static_modules_{ nxi_core_ }
-	{}
+		, web_channel_{ new QWebChannel{ this } }
+	{
+	    web_channel_->registerObject("core", &nxi_core_.api());
+        web_channel_->registerObject("page_system", &nxi_core_.api().page_system());
+	}
 
     const std::vector<std::unique_ptr<nxi::module>>& module_system::get() const
     {
@@ -90,5 +94,10 @@ namespace nxi
     const QString& module_system::js_api() const
     {
         return js_api_;
+    }
+
+    QWebChannel* module_system::web_channel() const
+    {
+        return web_channel_;
     }
 } // nxi

@@ -33,12 +33,7 @@ namespace ui
         QWebEngineProfile::defaultProfile()->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
 
         native_page_ = new QWebEnginePage(QWebEngineProfile::defaultProfile(), this);
-
-        // todo: store 1 webchannel instance somewhere
-        auto w = new QWebChannel{ this };
-        native_page_->setWebChannel(w);
-        w->registerObject("core", &ui_core_.nxi_core().api());
-        w->registerObject("page_system", &ui_core_.nxi_core().api().page_system());
+        native_page_->setWebChannel(ui_core_.nxi_core().module_system().web_channel());
 
         connect(&page, &nxi::web_page::event_add_script, [this](const QWebEngineScript& script)
         {
