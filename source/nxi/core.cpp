@@ -15,6 +15,7 @@ namespace nxi
         , module_system_{ *this }
         , page_system_{ *this }
         , window_system_{ *this }
+        , api_{ *this }
         , config_{ "nxi" }
     {}
 
@@ -31,6 +32,9 @@ namespace nxi
         interface_system_.load();
         context_system_.load();
 
+        // todo session system
+        // session_system_.load();
+
         module_system_.load();
     }
 
@@ -39,35 +43,15 @@ namespace nxi
         emit event_quit();
     }
 
-    nxi::command_system& core::command_system()
-    {
-        return command_system_;
-    }
+    nxi::api::core& core::api() { return api_; }
+    nxi::config& core::config() { return config_; }
 
-    nxi::context_system& core::context_system()
-    {
-        return context_system_;
-    }
-
-    nxi::interface_system& core::interface_system()
-    {
-        return interface_system_;
-    }
-
-    nxi::module_system& core::module_system()
-    {
-        return module_system_;
-    }
-
-    nxi::page_system& core::page_system()
-    {
-        return page_system_;
-    }
-
-    nxi::window_system& core::window_system()
-    {
-        return window_system_;
-    }
+    nxi::command_system& core::command_system() { return command_system_; }
+    nxi::context_system& core::context_system() { return context_system_; }
+    nxi::interface_system& core::interface_system() { return interface_system_; }
+    nxi::module_system& core::module_system() { return module_system_; }
+    nxi::page_system& core::page_system() { return page_system_; }
+    nxi::window_system& core::window_system() { return window_system_; }
 
     void core::error(const QString& message) const
     {

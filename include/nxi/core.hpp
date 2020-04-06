@@ -4,6 +4,7 @@
 #include <ndb/connector.hpp>
 #include <ndb/initializer.hpp>
 
+#include <nxi/module/api/core.hpp>
 #include <nxi/system/command.hpp>
 #include <nxi/system/context.hpp>
 #include <nxi/system/page.hpp>
@@ -34,7 +35,8 @@ namespace nxi
             emit event_test(w);
         }
 
-        nxi::config& config() { return config_; }
+        nxi::api::core& api();
+        nxi::config& config();
 
         nxi::command_system& command_system();
         nxi::context_system& context_system();
@@ -56,6 +58,7 @@ namespace nxi
         ndb::initializer<ndb::sqlite> ndb_init_;
         ndb::connector<dbs::core> ndb_connector_;
 
+        nxi::api::core api_;
         nxi::config config_;
 
         nxi::command_system command_system_;

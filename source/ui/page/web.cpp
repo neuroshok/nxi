@@ -19,8 +19,8 @@
 #include <ui/window.hpp>
 #include <ui/interface/main.hpp>
 
-#include <nxi/module/js_api/core.hpp>
-#include <nxi/module/js_api/page_system.hpp>
+#include <nxi/module/api/core.hpp>
+#include <nxi/module/api/page_system.hpp>
 
 namespace ui
 {
@@ -34,10 +34,11 @@ namespace ui
 
         native_page_ = new QWebEnginePage(QWebEngineProfile::defaultProfile(), this);
 
+        // todo: store 1 webchannel instance somewhere
         auto w = new QWebChannel{ this };
         native_page_->setWebChannel(w);
-        w->registerObject("core", new nxi::js_api::core{ ui_core_.nxi_core(), *this });
-        w->registerObject("page_system", new nxi::js_api::page_system{ ui_core_.nxi_core(), *this });
+        w->registerObject("core", &ui_core_.nxi_core().api());
+        w->registerObject("page_system", &ui_core_.nxi_core().api().page_system());
 
         connect(&page, &nxi::web_page::event_add_script, [this](const QWebEngineScript& script)
         {
