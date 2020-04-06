@@ -70,7 +70,7 @@ namespace nxi
                 using run_at_type = w3c::manifest::content_scripts_t::run_at_type;
                 if (content_script.run_at == run_at_type::document_idle) script.setInjectionPoint(QWebEngineScript::DocumentReady);
                 script.setWorldId(QWebEngineScript::MainWorld);
-                scripts_.emplace(js_source_path, std::move(script));
+                scripts_.insert(js_source_path, std::move(script));
             }
         }
     }

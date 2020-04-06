@@ -5,6 +5,7 @@
 #include <nxi/module.hpp>
 #include <w3c/module/manifest.hpp>
 
+#include <QHash>
 #include <QWebEngineScript>
 
 namespace nxi
@@ -61,7 +62,7 @@ namespace nxi
         nxi::core& nxi_core_;
 
         w3c::manifest manifest_;
-        std::unordered_map<QString, QWebEngineScript> scripts_;
+        QHash<QString, QWebEngineScript> scripts_;
 
         // applications
         QString author_;
