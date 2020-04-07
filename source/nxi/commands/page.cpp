@@ -6,9 +6,9 @@
 
 namespace nxi
 {
-    void command_initializer::init_page()
+    nds::node_ptr<nxi::command> command_initializer::init_page()
     {
-        add_node("page");
+        auto node = add_node("page");
 
         // new
         nxi::command_data page_new;
@@ -101,5 +101,7 @@ namespace nxi
         };
         page_run_script.parameters = {{ "script" }};
         add(std::move(page_run_script));
+
+        return node;
     }
 } // nxi

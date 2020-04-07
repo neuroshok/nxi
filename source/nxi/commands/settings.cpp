@@ -4,9 +4,9 @@
 
 namespace nxi
 {
-    void command_initializer::init_settings()
+    nds::node_ptr<nxi::command> command_initializer::init_settings()
     {
-        add_node("settings");
+        auto node = add_node("settings");
 
         nxi::command_data config;
         config.action = "config";
@@ -34,5 +34,7 @@ namespace nxi
         }};
 
         add(std::move(command_edit));
+
+        return node;
     }
 } // nxi

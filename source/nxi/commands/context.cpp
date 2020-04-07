@@ -5,9 +5,9 @@
 
 namespace nxi
 {
-    void command_initializer::init_context()
+    nds::node_ptr<nxi::command> command_initializer::init_context()
     {
-        add_node("context");
+        auto node = add_node("context");
 
         // context_add
         nxi::command_data context_add;
@@ -60,5 +60,7 @@ namespace nxi
             }
         };
         add(std::move(context_del));
+
+        return node;
     }
 } // nxi

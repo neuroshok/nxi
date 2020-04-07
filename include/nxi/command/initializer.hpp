@@ -24,16 +24,16 @@ namespace nxi
         nds::node_ptr<nxi::command> add(const QString& action, nxi::command_function_type fn, const QString& icon = "");
         nds::node_ptr<nxi::command> add_node(const QString& command_node);
 
-        void init_context();
-        void init_main();
-        void init_page();
-        void init_settings();
+        nds::node_ptr<nxi::command> init_context();
+        nds::node_ptr<nxi::command> init_main();
+        nds::node_ptr<nxi::command> init_page();
+        nds::node_ptr<nxi::command> init_settings();
 
+        void set_node(nds::node_ptr<nxi::command>);
         void set_root(nds::node_ptr<nxi::command>);
 
     private:
         nxi::core& nxi_core_;
-        nds::node_ptr<nxi::command> command_;
         nds::node_ptr<nxi::command> node_;
     };
 } // nxi

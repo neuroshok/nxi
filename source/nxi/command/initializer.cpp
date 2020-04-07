@@ -9,34 +9,39 @@ namespace nxi
 {
     command_initializer::command_initializer(nxi::core& nxi_core)
         : nxi_core_{ nxi_core }
-        , command_{ nullptr }
         , node_{ nullptr }
     {}
 
     nds::node_ptr<nxi::command> command_initializer::add(nxi::command_data data)
     {
-        command_ = nxi_core_.command_system().add(nxi::command(std::move(data)), node_);
-        return command_;
+        auto command = nxi_core_.command_system().add(nxi::command(std::move(data)), node_);
+        return command;
     }
 
     nds::node_ptr<nxi::command> command_initializer::add(const QString& action, command_system::function_type fn, const QString& icon)
     {
-        command_ = nxi_core_.command_system().add(nxi::command("nxi", action, std::move(fn), icon), node_);
-        return command_;
+        auto command = nxi_core_.command_system().add(nxi::command("nxi", action, std::move(fn), icon), node_);
+        return command;
     }
 
-    nds::node_ptr<nxi::command> command_initializer::add_node(const QString& command_node)
+    nds::node_ptr<nxi::command> command_initializer::add_node(const QString& str_command_node)
     {
-        auto command = nxi::command("nxi", command_node, [](const nxi::values&){}, ":/icon/node");
-        node_ = nxi_core_.command_system().add(std::move(command), node_);
+        auto command = nxi::command("nxi", str_command_node, [](const nxi::values&){}, ":/icon/node");
+        auto command_node = nxi_core_.command_system().add(std::move(command), node_);
 
-        auto fn = [this, node = node_](const nxi::values&)
+        auto fn = [this, command_node](const nxi::values&)
         {
-            nxi_core_.command_system().set_root(node);
+            nxi_core_.command_system().set_root(command_node);
         };
-        node_->function_ = std::move(fn);
+        command_node->function_ = std::move(fn);
 
-        return node_;
+        set_node(command_node);
+        return command_node;
+    }
+
+    void command_initializer::set_node(nds::node_ptr<nxi::command> node)
+    {
+        node_ = std::move(node);
     }
 
     void command_initializer::set_root(nds::node_ptr<nxi::command> node)
@@ -49,35 +54,41 @@ namespace nxi
     {
         nxi_trace("");
 
-        init_main();
-        init_page();
+        auto main = init_main();
+        set_root(main);
 
-        add_node("interface");
+        set_node(main);
+            init_page();
 
-        nxi::command_data load_style;
-        load_style.action = "load_style";
-        load_style.description = "Load style...";
-        load_style.preview = true;
-        load_style.function = [this](const nxi::values& params)
-        {
-            nxi_assert(params.size() == 1);
-            auto name = params.get(0);
-            nxi_core_.interface_system().load_style(name);
-        };
-        load_style.parameters = {
-        { "name", [this](nxi::suggestion_vector& suggestion)
+        set_node(main);
+            add_node("interface");
+
+            nxi::command_data load_style;
+            load_style.action = "load_style";
+            load_style.description = "Load style...";
+            load_style.preview = true;
+            load_style.function = [this](const nxi::values& params)
             {
-                for (auto style_name : nxi_core_.interface_system().styles())
+                nxi_assert(params.size() == 1);
+                auto name = params.get(0);
+                nxi_core_.interface_system().load_style(name);
+            };
+            load_style.parameters = {
+            { "name", [this](nxi::suggestion_vector& suggestion)
                 {
-                    suggestion.push_back(nxi::text_suggestion{ style_name });
+                    for (auto style_name : nxi_core_.interface_system().styles())
+                    {
+                        suggestion.push_back(nxi::text_suggestion{ style_name });
+                    }
                 }
-            }
-        }};
+            }};
 
-        add(std::move(load_style));
+            add(std::move(load_style));
 
 
-        init_context();
-        init_settings();
+        set_node(main);
+            init_context();
+        set_node(main);
+            init_settings();
     }
 } // nxi

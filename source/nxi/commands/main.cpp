@@ -4,10 +4,11 @@
 
 namespace nxi
 {
-    void command_initializer::init_main()
+    nds::node_ptr<nxi::command> command_initializer::init_main()
     {
-        auto main = add_node("main");
-        set_root(main);
+        auto node = add_node("main");
+        set_node(node);
+        set_root(node);
 
         // quit
         nxi::command_data quit;
@@ -23,5 +24,7 @@ namespace nxi
         add("test", [this](const nxi::values&){ qDebug() << "TEST PAGE"; });
         // about
         add("about", [this](const nxi::values&){ nxi_core_.page_system().open_static("nxi/about"); });
+
+        return node;
     }
 } // nxi
