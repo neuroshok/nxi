@@ -64,12 +64,19 @@ namespace nxi
                     //page = std::make_unique<nxi::explorer_page>(*this, page_id);
                     break;
 
-                case page_type::custom:
+                case page_type::static_:
+                {
+                    auto page = graph_.emplace<nxi::page, nxi::custom_page>(*this);
+                    ndb::load(*page, page_id);
+                    emit event_add(page, nullptr);
+                    emit page->event_load();
+                    emit event_load(page);
 
                     break;
+                }
 
-                default:
-                    nxi_assert("unknown page type");
+            default:
+                nxi_assert("unknown page type");
             }
         }
 
