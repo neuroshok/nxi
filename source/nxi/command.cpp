@@ -45,17 +45,6 @@ namespace nxi
         params_.emplace_back(nxi::command_parameter{ name, std::move(fn) });
     }
 
-
-    void command::set_function(command::function_type fn)
-    {
-        function_ = std::move(fn);
-    }
-
-    void command::set_node(nds::node_ptr<const nxi::command> node)
-    {
-        node_ = node;
-    }
-
     const command_parameter& command::parameter(unsigned int index) const
     {
         nxi_assert(index < params_.size());

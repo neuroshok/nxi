@@ -14,34 +14,35 @@
 
 namespace nxi
 {
-	class core;
-	class suggestion_vector;
+    class command_initializer;
+    class core;
+    class suggestion_vector;
 
-	class command
-	{
-	public:
-	    using function_type = nxi::command_function_type;
-	    using params_type = std::vector<command_parameter>;
-	    using param_suggestions_type = std::function<void(nxi::suggestion_vector&)>;
+    class command
+    {
+        friend class command_initializer;
 
-		command(nxi::command_data);
-		command(const QString& module_name, const QString& action_name, function_type fn, const QString& icon = ":/image/nex");
+    public:
+        using function_type = nxi::command_function_type;
+        using params_type = std::vector<command_parameter>;
+        using param_suggestions_type = std::function<void(nxi::suggestion_vector&)>;
+
+        command(nxi::command_data);
+        command(const QString& module_name, const QString& action_name, function_type fn, const QString& icon = ":/image/nex");
+
         command(command&&) = default;
         command& operator=(command&&) = default;
 
         command(const command&) = delete;
         command& operator=(const command&) = delete;
 
-		void exec() const;
-		void exec(const nxi::values&) const;
+        void exec() const;
+        void exec(const nxi::values&) const;
 
-		void add_param(const QString&, param_suggestions_type);
+        void add_param(const QString&, param_suggestions_type);
 
-		const command_parameter& parameter(unsigned int index) const;
-		unsigned int parameters_count() const;
-
-		void set_function(function_type);
-		void set_node(nds::node_ptr<const nxi::command>);
+        const command_parameter& parameter(unsigned int index) const;
+        unsigned int parameters_count() const;
 
         const QString& name() const;
         const QString& module_name() const;
@@ -54,8 +55,8 @@ namespace nxi
 
         nds::node_ptr<const nxi::command> node() const;
 
-	private:
-	    nds::node_ptr<const nxi::command> node_;
+    private:
+        nds::node_ptr<const nxi::command> node_;
 
         QString action_name_;
         QString description_;
@@ -66,13 +67,7 @@ namespace nxi
         params_type params_;
         bool preview_;
         nxi::shortcut shortcut_;
-	};
-
-    class web_module_command : public nxi::command
-    {
-	    //void exec()
     };
-
 } // nxi
 
 #endif // NXI_COMMAND_H_NXI

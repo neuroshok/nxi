@@ -27,13 +27,15 @@ namespace nxi
 
     nds::node_ptr<nxi::command> command_initializer::add_node(const QString& command_node)
     {
-        nds::node_ptr<nxi::command> tmp_node;
-        auto fn = [this, &tmp_node](const nxi::values&)
+        auto command = nxi::command("nxi", command_node, [](const nxi::values&){}, ":/icon/node");
+        node_ = nxi_core_.command_system().add(std::move(command), node_);
+
+        auto fn = [this, node = node_](const nxi::values&)
         {
-            //nxi_core_.command_system().set_root(node);
+            nxi_core_.command_system().set_root(node);
         };
-        node_ = nxi_core_.command_system().add(nxi::command("nxi", command_node, fn, ":/icon/node"), node_);
-        tmp_node.reset(node_.get());
+        node_->function_ = std::move(fn);
+
         return node_;
     }
 
