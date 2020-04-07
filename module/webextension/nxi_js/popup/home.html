@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>nxi_js module home page</title>
+</head>
+<body style="background-color: #0f1419; color: white">
+<b>nxi_js home page</b>
+<button onclick="browser.tabs.create()">new web page</button>
+
+<h1>js module</h1>
+<pre style = "border:1px solid #888888;background-color:#383838">
+document.body.style.border = "5px solid blue";
+document.body.innerHTML = "<div id = 'zeta'>prout</div>" + document.body.innerHTML;
+
+function test(activeInfo) {
+    document.getElementById("zeta").innerHTML = "current page id : " + activeInfo.tabId;
+}
+
+browser.tabs.onActivated.addListener( test );
+</pre>
+
+<h1>dynamic module</h1>
+<pre style = "border:1px solid #888888;background-color:#383838">
+int nxi_module_load(nxi::api::core& nxi)
+{
+    nxi.command_system().add("nxi_dyn", [&](const nxi::values&)
+    {
+        nxi.error("dyn module command triggered");
+    });
+}
+</pre>
+
+<h1>compiled module</h1>
+<pre style = "border:1px solid #888888;background-color:#383838">
+void nxi_static::on_load()
+{
+    auto cmd = nxi::command("nxi_static", "action", [this](const nxi::values&)
+    {
+        nxi_core_.error("nxi_static module is loaded");
+    });
+
+    nxi_core_.command_system().add(std::move(cmd));
+}
+</pre>
+
+</body>
+</html>
