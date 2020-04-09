@@ -54,6 +54,7 @@ namespace ui
         void wheelEvent(QWheelEvent*) override;
 
     private:
+        void draw_header();
         void draw_item(nds::node_ptr<const nxi::command>, QRect&, bool selected);
         void draw_item(nds::node_ptr<const nxi::page>, QRect&, bool selected);
         void draw_item(const nxi::suggestion& text,  QRect& item_rect, bool selected);

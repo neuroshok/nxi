@@ -52,7 +52,7 @@ namespace ui
         suggestions_.swap(suggestions);
 
         setContentsMargins(5, 5, 5, 5);
-        setFixedHeight(static_cast<int>(suggestions_->size()) * (style_data.item_height + 1) + contentsMargins().top() + contentsMargins().bottom());
+        setFixedHeight(static_cast<int>(suggestions_->size()) * (style_data.item_height + 1) + contentsMargins().top() + style_data.item_height + contentsMargins().bottom());
 
         repaint();
     }
@@ -69,7 +69,9 @@ namespace ui
         QRectF target(d_x, 0, image.width(), image.height());
         painter.drawImage(source, image, target);
 
-        int item_y = contentsMargins().top();
+        draw_header();
+
+        int item_y = contentsMargins().top() + style_data.item_height;
         int item_x = contentsMargins().left();
         int item_index = 0;
 
@@ -90,7 +92,46 @@ namespace ui
         }
     }
 
+    // draw header
+    void command_menu::draw_header()
+    {
+        QPainter painter(this);
+        QRect header_rect{ contentsMargins().top(), contentsMargins().left(), width() - contentsMargins().left() - contentsMargins().right(), style_data.item_height };
+        painter.fillRect(header_rect, style_data.background_color.darker());
 
+        QRect item_rect = header_rect;
+        std::vector<QString> items{ "root", "item1", "item2" };
+        // header with items
+        QFont font;
+        font.setBold(true);
+        font.setPixelSize(20);
+        painter.setFont(font);
+        painter.setPen(style_data.item_text_color);
+        item_rect.setWidth(80);
+        item_rect.moveTo(QPoint( item_rect.topLeft().x() + 80 * (items.size() - 1), item_rect.topLeft().y() ));
+        int i = 0;
+        auto color1 = style_data.background_color.lighter();
+        auto color2 = style_data.background_color.darker();
+        for (const auto& item : items)
+        {
+            auto color = color1;
+            if (i++ % 2) color = color2;
+
+            QPainterPath path;
+            path.moveTo(item_rect.topLeft());
+            path.lineTo(item_rect.topRight());
+            path.lineTo(QPoint{ item_rect.bottomRight().x() + 12, (item_rect.bottomRight().y() + 5) / 2 });
+            path.lineTo(item_rect.bottomRight());
+            path.lineTo(item_rect.bottomLeft());
+
+            painter.fillPath(path, color);
+
+            QRect text_rect = item_rect;
+            text_rect.moveLeft(text_rect.left() + 20);
+            painter.drawText(text_rect, Qt::AlignVCenter, item);
+            item_rect.moveLeft(item_rect.left() - 80);
+        }
+    }
 
     // draw command
     void command_menu::draw_item(nds::node_ptr<const nxi::command> node_command,  QRect& item_rect, bool selected)
@@ -239,7 +280,7 @@ namespace ui
 
         for (int i = 0; i < suggestions_->size(); ++i)
         {
-            auto selected_top = contentsMargins().top() + style_data.item_height * i + (i * 1);
+            auto selected_top = contentsMargins().top() + style_data.item_height + style_data.item_height * i + (i * 1);
             auto selected_bottom = selected_top + style_data.item_height;
 
             if (mouse_pos.y() >= selected_top && mouse_pos.y() < selected_bottom)
