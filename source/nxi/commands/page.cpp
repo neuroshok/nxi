@@ -102,6 +102,45 @@ namespace nxi
         page_run_script.parameters = {{ "script" }};
         add(std::move(page_run_script));
 
+        // links
+        nxi::command_data links;
+        links.action = "links";
+        links.description = "Follow a link";
+        links.function = [this](const nxi::values& params)
+        {
+            //nxi_expect(params.size() == 1);
+            nxi_core_.error(params.get(0));
+        };
+        links.parameters = {
+        { "link", [this](nxi::suggestion_vector& suggestion)
+            {
+                auto script = R"__(
+                (() => {
+                    let output = [];
+                    var links = document.getElementsByTagName('a');
+                    for (let i = 0; i < links.length; ++i) {
+                        let link = links[i];
+                        let str = link.innerHTML + " - " + link.href;
+                        output.push( str );
+                    }
+                    return output;
+                })();
+                )__";
+
+                static_cast<nxi::web_page&>(*nxi_core_.page_system().focus()).run_script(script, [&suggestion](const QVariant& variant)
+                {
+                    for (const auto& item : variant.toList())
+                    {
+                        suggestion.push_back(item.toString());
+                    }
+                    emit suggestion.event_update(stz::make_observer(&suggestion));
+
+                    //nxi_core_.command_system().command_input().suggest(vector);
+                });
+            }
+        }};
+        add(std::move(links));
+
         return node;
     }
 } // nxi
