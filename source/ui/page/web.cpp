@@ -20,6 +20,7 @@
 #include <QWebEngineScriptCollection>
 #include <QWebEngineSettings>
 
+
 namespace ui
 {
     web_page::web_page(ui::core& ui_core, nxi::web_page& page) :
@@ -51,12 +52,24 @@ namespace ui
         {
             nxi_debug("load complete");
             //ui_core_.nxi_core().module_system().process(page_);
+
+
         });
 
         connect(native_page_, &QWebEnginePage::titleChanged, this, [this](const QString& name) { page_.update_name(name); });
         connect(native_page_, &QWebEnginePage::iconChanged, this, [this](const QIcon& icon) { page_.update_icon(icon); });
         connect(&page_, &nxi::web_page::event_load, this, [this]() { load(page_.command()); });
-        connect(&page_, &nxi::web_page::event_run_script, this, [this](const QString& script) { native_page_->runJavaScript(script); });
+
+        connect(&page_, &nxi::web_page::event_run_script, this, [this](const QString& script)
+        {
+            native_page_->runJavaScript(script);
+        });
+
+
+        connect(&page_, &nxi::web_page::event_call_script, this, [this](const QString& script, std::function<void(const QVariant&)> fn)
+        {
+            native_page_->runJavaScript(script, [f = std::move(fn)](const QVariant& result){ if (f) f(result); });
+        });
 
         ui_core_.nxi_core().module_system().process(page_);
     }

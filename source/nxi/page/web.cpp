@@ -25,4 +25,9 @@ namespace nxi
     {
         emit event_run_script(source_code);
     }
+
+    void web_page::run_script(const QString& source_code, std::function<void(const QVariant&)> fn) const
+    {
+        emit event_call_script(source_code, fn);
+    }
 } // nxi

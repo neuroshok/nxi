@@ -18,12 +18,15 @@ namespace nxi
 
         void add_script(const QWebEngineScript&) const;
         void run_script(const QString& source_code) const override;
+        void run_script(const QString& source_code, std::function<void(const QVariant&)>) const;
 
     private:
 
 
+        using const_qvariant = const QVariant; // nxi_bug_qt_moc
     signals:
         void event_add_script(const QWebEngineScript&) const;
+        void event_call_script(const QString&, std::function<void(const_qvariant&)>) const;
         void event_run_script(const QString&) const;
         //void event_load_begin();
         //void event_load_end();
