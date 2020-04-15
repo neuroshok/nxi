@@ -138,7 +138,7 @@ namespace ui
     {
         QLineEdit::focusOutEvent(event);
         auto focused_page = ui_core_.nxi_core().page_system().focus();
-        if (focused_page) setText(focused_page->name());
+        //if (focused_page) setText(focused_page->name());
     }
 
     void command::enterEvent(QEvent* event)
@@ -146,7 +146,7 @@ namespace ui
         if (hasFocus()) return;
         //if (!input_.is_empty()) return;
         auto focused_page = ui_core_.nxi_core().page_system().focus();
-        if (focused_page) setText(focused_page->name());
+        //if (focused_page) setText(focused_page->name());
     }
 
     void command::leaveEvent(QEvent* event)
@@ -154,7 +154,7 @@ namespace ui
         if (hasFocus()) return;
         //if (!input_.is_empty()) return;
         auto focused_page = ui_core_.nxi_core().page_system().focus();
-        if (focused_page) setText(focused_page->name());
+        //if (focused_page) setText(focused_page->name());
     }
 
     void command::paintEvent(QPaintEvent* event)

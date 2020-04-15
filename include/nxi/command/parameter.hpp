@@ -7,7 +7,7 @@
 
 namespace nxi
 {
-	class command_parameter
+    class command_parameter
     {
     public:
         command_parameter(QString name, nxi::command_function_parameters_type suggestion_callback = nullptr);
