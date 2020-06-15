@@ -17,7 +17,11 @@ namespace nxi
         , description_ { std::move(data.description) }
         , shortcut_ { std::move(data.shortcut) }
         , preview_ { data.preview }
-    {}
+    {
+        ndb_object::name = std::move(data.action);
+        ndb_object::shortcut = data.shortcut.to_string();
+        ndb_object::shortcut_context = std::move(data.shortcut.context_id);
+    }
 
     command::command(const QString& module_name, const QString& action_name, function_type fn, const QString& icon)
         : module_name_{ module_name }
@@ -38,11 +42,6 @@ namespace nxi
     void command::exec(const nxi::values& params) const
     {
         if (function_) function_(params);
-    }
-
-    void command::add_param(const QString& name, std::function<void(nxi::suggestion_vector&)> fn)
-    {
-        params_.emplace_back(nxi::command_parameter{ name, std::move(fn) });
     }
 
     const command_parameter& command::parameter(unsigned int index) const
