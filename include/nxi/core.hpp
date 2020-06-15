@@ -46,7 +46,6 @@ namespace nxi
 
     signals:
         void event_quit() const;
-        void event_test(QWidget*);
         void event_error(const QString&) const;
 
     private:
