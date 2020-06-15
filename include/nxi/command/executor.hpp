@@ -23,6 +23,7 @@ namespace nxi
         void exec();
 
         const nxi::command_parameter& active_parameter() const;
+        const nxi::command& command() const;
         bool is_complete() const;
         bool is_ready() const;
 

@@ -5,6 +5,8 @@
 #include <nxi/command/data.hpp>
 #include <nxi/shortcut.hpp>
 
+#include <nxi/database.hpp>
+
 #include <nds/graph/node.hpp>
 
 #include <functional>
@@ -18,8 +20,10 @@ namespace nxi
     class core;
     class suggestion_vector;
 
-    class command
+    class command : ndb::object<dbs::core, ndb::objects::command>
     {
+        using ndb_object = ndb::object<dbs::core, ndb::objects::command>;
+
         friend class command_initializer;
 
     public:
@@ -38,8 +42,6 @@ namespace nxi
 
         void exec() const;
         void exec(const nxi::values&) const;
-
-        void add_param(const QString&, param_suggestions_type);
 
         const command_parameter& parameter(unsigned int index) const;
         unsigned int parameters_count() const;

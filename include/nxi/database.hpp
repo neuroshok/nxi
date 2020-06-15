@@ -24,6 +24,7 @@ namespace ndb
     ndb_type_map(nxi::module_type, int64_, scope::global);
 }
 
+#include <nxi/database/command.hpp>
 #include <nxi/database/context.hpp>
 #include <nxi/database/module.hpp>
 #include <nxi/database/page.hpp>

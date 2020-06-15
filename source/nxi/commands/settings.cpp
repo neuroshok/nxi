@@ -14,16 +14,28 @@ namespace nxi
         config.function = [this](const nxi::values&){ nxi_core_.page_system().open_static("nxi/config", nxi::renderer_type::widget); };
         add(std::move(config));
 
-        // command_edit
-        nxi::command_data command_edit;
-        command_edit.action = "command_edit";
-        command_edit.description = "Edit command";
-        command_edit.function = [this](const nxi::values&)
+        // command_add
+        nxi::command_data command_add;
+        command_add.action = "command_add";
+        command_add.description = "Add JS command";
+        command_add.function = [this](const nxi::values&)
         {
-            // nxi_core_.command_system().update_command()
+            //auto command = nxi_core_.command_system().get()
+            //nxi_core_.command_system().update_command()
         };
 
-        command_edit.parameters = {
+        // set_shortcut
+        nxi::command_data set_shortcut;
+        set_shortcut.action = "set_shortcut";
+        set_shortcut.description = "Set a shortcut";
+        set_shortcut.function = [this](const nxi::values& params)
+        {
+            nxi_assert(params.size() == 2);
+            //auto command = nxi_core_.command_system().get(params.get(0));
+            //nxi_core_.command_system().update_command()
+        };
+
+        set_shortcut.parameters = {
         { "command", [this](nxi::suggestion_vector& suggestion)
             {
                 nxi_core_.command_system().for_each([this, &suggestion](nds::node_ptr<const nxi::command> command)
@@ -31,9 +43,15 @@ namespace nxi
                     suggestion.push_back(std::move(command));
                 });
             }
+        },
+        { "shortcut", [this](nxi::suggestion_vector& suggestion)
+            {
+                suggestion.push_back(nxi::text_suggestion("CTRL + E", "", "default value"));
+                suggestion.push_back(nxi::text_suggestion("CTRL + E", "", "current value"));
+            }
         }};
 
-        add(std::move(command_edit));
+        add(std::move(set_shortcut));
 
         return node;
     }

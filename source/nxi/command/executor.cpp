@@ -15,6 +15,8 @@ namespace nxi
         values_.add(value);
     }
 
+    const nxi::command& command_executor::command() const { return *command_; }
+
     const nxi::command_parameter& command_executor::active_parameter() const
     {
         return command_->parameter(parameter_index_);
