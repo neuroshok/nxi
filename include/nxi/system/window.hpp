@@ -15,7 +15,7 @@ namespace nxi
     {
         Q_OBJECT
     public:
-		window_system(nxi::core&);
+        window_system(nxi::core&);
         window_system(const window_system&) = delete;
         void operator=(const window_system&) = delete;
 

@@ -18,6 +18,7 @@ namespace nxi
         , interface_system_{ *this }
         , module_system_{ *this }
         , page_system_{ *this }
+        , session_system_{ *this }
         , window_system_{ *this }
     {
         // apply config
@@ -39,8 +40,7 @@ namespace nxi
         interface_system_.load();
         context_system_.load();
 
-        // todo session system
-        // session_system_.load();
+        session_system_.load();
 
         module_system_.load();
     }
@@ -58,6 +58,7 @@ namespace nxi
     nxi::interface_system& core::interface_system() { return interface_system_; }
     nxi::module_system& core::module_system() { return module_system_; }
     nxi::page_system& core::page_system() { return page_system_; }
+    nxi::session_system& core::session_system() { return session_system_; }
     nxi::window_system& core::window_system() { return window_system_; }
 
     void core::error(const QString& message) const
@@ -90,5 +91,9 @@ namespace nxi
     QString core::page_path(const QString& path)
     {
         return "qrc:/page/" + path;
+    }
+    uint64_t core::session_id() const
+    {
+        return 0;
     }
 } // nxi

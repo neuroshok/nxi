@@ -7,6 +7,7 @@
 
 #include <ndb/expression.hpp>
 #include <ndb/function.hpp>
+#include <ndb/prepared_query.hpp>
 #include <ndb/query.hpp>
 
 // include type_mapped types
@@ -28,6 +29,7 @@ namespace ndb
 #include <nxi/database/context.hpp>
 #include <nxi/database/module.hpp>
 #include <nxi/database/page.hpp>
+#include <nxi/database/session.hpp>
 #include <nxi/database/window.hpp>
 
 ndb_model(
@@ -38,6 +40,7 @@ ndb_model(
     , page
     , page_connection
     , page_system
+    , session
     , window
 )
 

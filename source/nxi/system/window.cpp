@@ -1,7 +1,7 @@
 #include <nxi/system/window.hpp>
 
 #include <nxi/core.hpp>
-#include <nxi/database.hpp>
+#include <nxi/database/queries/window.hpp>
 #include <nxi/log.hpp>
 
 #include <QGuiApplication>
@@ -10,11 +10,11 @@
 
 namespace nxi
 {
-	window_system::window_system(nxi::core& nxi_core) :
-		nxi_core_{ nxi_core }
-	{
-            //nxi_log << "init window_system";
-	}
+    window_system::window_system(nxi::core& nxi_core) :
+            nxi_core_{ nxi_core }
+    {
+        //nxi_log << "init window_system";
+    }
 
     void window_system::load()
     {
@@ -43,12 +43,7 @@ namespace nxi
 
     void window_system::add(nxi::window win)
     {
-        ndb::query<dbs::core>() << ndb::add(
-        nxi_model.window.x = win.x
-        , nxi_model.window.y = win.y
-        , nxi_model.window.w = win.w
-        , nxi_model.window.h = win.h
-        );
+        nxi::queries::add_window(win.x, win.y, win.w, win.h);
 
         win.id = ndb::last_id<dbs::core>();
 
@@ -59,12 +54,12 @@ namespace nxi
 
     void window_system::del(int id)
     {
-        ndb::query<dbs::core>() << (ndb::del << ndb::source(nxi_model.window) << ndb::filter(nxi_model.window.id == id));
+        nxi::queries::del_window(id);
     }
 
     void window_system::move(unsigned int id, int x, int y)
     {
-        ndb::query<dbs::core>() << ndb::set(nxi_model.window.x = x, nxi_model.window.y = y);
+        nxi::queries::move_window(nxi_core_.session_id(), id, x, y);
         emit event_position_update(x, y);
     }
 

@@ -10,6 +10,7 @@
 #include <nxi/system/page.hpp>
 #include <nxi/system/module.hpp>
 #include <nxi/system/interface.hpp>
+#include <nxi/system/session.hpp>
 #include <nxi/system/window.hpp>
 
 #include <nxi/config.hpp>
@@ -32,12 +33,14 @@ namespace nxi
 
         nxi::api::core& api();
         nxi::config& config();
+        uint64_t session_id() const;
 
         nxi::command_system& command_system();
         nxi::context_system& context_system();
         nxi::interface_system& interface_system();
         nxi::module_system& module_system();
         nxi::page_system& page_system();
+        nxi::session_system& session_system();
         nxi::window_system& window_system();
 
         static QString module_path();
@@ -60,6 +63,7 @@ namespace nxi
         nxi::interface_system interface_system_;
         nxi::module_system module_system_;
         nxi::page_system page_system_;
+        nxi::session_system session_system_;
         nxi::window_system window_system_;
     };
 } // nxi
