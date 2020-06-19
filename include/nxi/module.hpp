@@ -4,7 +4,7 @@
 #include <nxi/database.hpp>
 #include <nxi/type.hpp>
 
-class QString;
+#include <QString>
 
 namespace nxi
 {

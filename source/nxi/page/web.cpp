@@ -9,7 +9,7 @@
 namespace nxi
 {
     web_page::web_page(nds::node_ptr<nxi::page> page_ptr, nxi::page_system& ps)
-        : web_page(page_ptr, ps, ps.nxi_core_.config().browser.home.get().c_str())
+        : web_page(page_ptr, ps, ps.nxi_core_.config().browser.home)
     {}
 
     web_page::web_page(nds::node_ptr<nxi::page> page_ptr, nxi::page_system& ps, const QString& url)

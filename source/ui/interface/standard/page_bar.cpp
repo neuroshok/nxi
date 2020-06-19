@@ -26,7 +26,7 @@ namespace ui::interfaces::standard
             style.update(page_tree_);
         });*/
 
-        if (ui_core_.nxi_core().config().browser.interface.show_page_bar.get()) show();
+        //if (ui_core_.nxi_core().config().browser.interface.show_page_bar.get()) show();
         //else hide();
 
         auto layout = new nxw::vbox_layout;

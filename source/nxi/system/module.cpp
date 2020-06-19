@@ -49,7 +49,8 @@ namespace nxi
         static_modules_.load();
 
         nxi_trace("load db modules");
-        for (auto& module : ndb::oget<dbs::core>(nxi_model.module))
+        /*
+        for (auto& module : nxi::queries::get_modules())
         {
             std::unique_ptr<nxi::module> module_ptr;
 
@@ -80,7 +81,7 @@ namespace nxi
             // if (state == enable)
         }
         //emit event_load(module_name);
-
+*/
     }
 
     void module_system::process(nxi::web_page& page)

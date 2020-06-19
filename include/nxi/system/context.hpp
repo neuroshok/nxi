@@ -13,21 +13,20 @@ namespace nxi
 {
     class core;
 
-    struct available_context : ndb::object<dbs::core, ndb::objects::context_available>    {    };
-    //using available_context = ndb::objects::context_available;
+    struct context_data {  int priority; QString name;  };
 
     class context_system : public QObject
     {
         Q_OBJECT
     public:
-		context_system(nxi::core& );
-		context_system(const context_system&) = delete;
+        context_system(nxi::core& );
+        context_system(const context_system&) = delete;
         void operator=(const context_system&) = delete;
 
         void load();
         void reset();
 
-        std::vector<nxi::available_context> available_contexts() const;
+        std::vector<nxi::context_data> available_contexts() const;
         std::vector<stz::observer_ptr<nxi::context>> contexts() const;
 
         unsigned int active_priority() const;
@@ -108,10 +107,10 @@ namespace nxi
         //void event_active_context_update(std::vector<stz::observer_ptr<const nxi::context>) const;
 
     private:
-		nxi::core& nxi_core_;
+        nxi::core& nxi_core_;
 
-		std::vector<std::unique_ptr<nxi::context>> contexts_;
-		std::vector<nxi::available_context> available_contexts_;
+        std::vector<std::unique_ptr<nxi::context>> contexts_;
+        std::vector<nxi::context_data> available_contexts_;
     };
 } // nxi
 

@@ -39,8 +39,8 @@ set(CMAKE_PREFIX_PATH  ${NXI_QT_ROOT})
 ## PLATFORM
 # windows
 if (NXI_TARGET_DESKTOP)
-    set(NXI_QT_COMPONENTS Core Widgets Gui WebEngine WebEngineWidgets WebChannel 3DCore 3DRender 3DInput 3DExtras)
-    set(NXI_QT_LIBS Qt5::Core Qt5::Widgets Qt5::Gui Qt5::WebEngine Qt5::WebEngineWidgets Qt5::WebChannel
+    set(NXI_QT_COMPONENTS Core Widgets Gui Sql WebEngine WebEngineWidgets WebChannel 3DCore 3DRender 3DInput 3DExtras)
+    set(NXI_QT_LIBS Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Sql Qt5::WebEngine Qt5::WebEngineWidgets Qt5::WebChannel
             Qt5::3DCore Qt5::3DRender Qt5::3DInput Qt5::3DExtras)
 endif()
 
@@ -59,10 +59,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #-------------------------------------------------------
 #                     Dependencies
 #-------------------------------------------------------
-# NDB
-set(NDB_ENGINE_SQLITE ON)
-add_subdirectory(${NXI_THIRD_PARTY_ROOT}/ndb ${NXI_THIRD_PARTY_ROOT}/ndb/cmake-build)
-
 # NDS
 add_subdirectory(${NXI_THIRD_PARTY_ROOT}/nds)
 
@@ -125,7 +121,7 @@ configure_file(
 if (NXI_TARGET_SYSTEM STREQUAL "android")
     add_library(nxi SHARED ${NXI_SOURCES})
     target_include_directories(nxi PUBLIC include)
-    target_link_libraries(nxi lib_ndb lib_nds ${NXI_MODULES} ${NXI_QT_LIBS})
+    target_link_libraries(nxi lib_nds ${NXI_MODULES} ${NXI_QT_LIBS})
 
     nxi_android_apk_target(nxi)
 endif()
@@ -166,7 +162,7 @@ if (NXI_TARGET_DESKTOP)
     add_executable(nxi ${NXI_SOURCES} ${NXI_ICON})
     target_include_directories(nxi PUBLIC include)
     target_compile_definitions(nxi PUBLIC ${NXI_DEFINITIONS})
-    target_link_libraries(nxi lib_ndb lib_nds lib_speedlog ${NXI_MODULES} ${NXI_QT_LIBS})
+    target_link_libraries(nxi lib_nds lib_speedlog ${NXI_MODULES} ${NXI_QT_LIBS})
 
     # console
     if (NXI_CONSOLE)

@@ -18,6 +18,7 @@ namespace ui::views
     public:
         config(ui::core& ui_core);
 
+        /*
         template<class T>
         void add_row(ndb::persistent<T>& persistent)
         {
@@ -55,7 +56,8 @@ namespace ui::views
             label_key->setToolTip(QString::fromStdString(config_key.description()));
 
             form_->addRow(label_key, value);
-        }
+
+        }*/
 
     private:
         ui::core& ui_core_;

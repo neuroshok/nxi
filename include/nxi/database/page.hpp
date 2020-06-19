@@ -1,26 +1,22 @@
-#ifndef DATABASE_PAGE_H_NXI
-#define DATABASE_PAGE_H_NXI
+#include <nxi/type.hpp>
 
-#include <ndb/preprocessor.hpp>
+namespace nxi
+{
+    class core;
+    class database;
+}
 
-ndb_object(page
-    , ndb_field(name, QString)
-    , ndb_field(command, QString)
-    , ndb_field(type, nxi::page_type)
-    , ndb_field(renderer_type, nxi::renderer_type)
-    , ndb_field(loaded, bool)
-    , ndb_field(muted, bool)
-)
+class QString;
 
-ndb_object(page_system
-    , ndb_field(focus, nxi::page_id)
-    , ndb_field(active, std::vector<nxi::page_id>)
-)
+namespace nxi::data::page
+{
+    nxi::page_id add_page(nxi::core& core, const QString& name);
+    auto get_page(nxi::core& core, int id);
+    auto get_page(nxi::core& core, const QString& name);
+} // nxi::data::page
 
-ndb_table(
-    page_connection
-    , ndb_field(source_id, nxi::page_id)
-    , ndb_field(target_id, nxi::page_id)
-)
-
-#endif // DATABASE_PAGE_H_NXI
+namespace nxi::data::page::internal
+{
+    void make(nxi::database& db);
+    void prepare(nxi::database& db);
+} // nxi::data::page::internal

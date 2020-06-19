@@ -17,11 +17,12 @@ namespace ui::views
 
         form_ = new QFormLayout(this);
 
+        /*
         for (auto& key : cfg.list())
         {
             std::visit(overloaded{
             [this](auto config_key) { add_row(*config_key); }
             }, key);
-        }
+        }*/
     }
 } // nxi::views

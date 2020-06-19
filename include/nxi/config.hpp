@@ -1,38 +1,19 @@
 #ifndef INCLUDE_NXI_CONFIG_HPP_NXI
 #define INCLUDE_NXI_CONFIG_HPP_NXI
 
-#include <ndb/persistent.hpp>
-
-#include <nxi/preprocessor.hpp>
-
 #include <string>
-
-#define nxi_config_key3(NAME, TYPE, DEFAULT_VALUE) nxi::config_key<TYPE> NAME{ this, #NAME, DEFAULT_VALUE };
-#define nxi_config_key4(NAME, TYPE, DEFAULT_VALUE, DESCRIPTION) nxi::config_key<TYPE> NAME{ this, #NAME, DEFAULT_VALUE, DESCRIPTION };
-
-#define nxi_config_open(NAME) struct : ndb::persistent_group { using persistent_group::persistent_group;
-#define nxi_config_close(GROUP_NAME) } GROUP_NAME{ this, #GROUP_NAME };
-#define nxi_config_key(...) nxm_overload(nxi_config_key, __VA_ARGS__)
 
 namespace nxi
 {
-    template<class T>
-    class config_key : public ndb::persistent<T>
+    struct config
     {
-    public:
-        config_key(const ndb::persistent_group* group, std::string name, const T& default_value = T{}, std::string description = "")
-            : ndb::persistent<T>(group, name, default_value)
-            , description_{ std::move(description) }
-        {}
-
-        using ndb::persistent<T>::operator=;
-
-        const std::string& description() const { return description_; }
-    private:
-        std::string description_;
+        struct
+        {
+            QString home;
+        } browser;
     };
 
-    struct config : ndb::persistent_group
+    /*    struct config : // ndb::persistent_group
     {
         using persistent_group::persistent_group;
 
@@ -62,7 +43,7 @@ namespace nxi
             nxi_config_close(interface)
 
         nxi_config_close(browser)
-    };
+    };*/
 } // nxi
 
 #endif // INCLUDE_NXI_CONFIG_HPP_NXI

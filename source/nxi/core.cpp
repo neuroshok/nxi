@@ -10,9 +10,9 @@
 namespace nxi
 {
     core::core()
-        : ndb_init_{}
+        : database_{}
         , api_{ *this } // init before systems
-        , config_{ "nxi" }
+        , config_{}
         , command_system_{ *this }
         , context_system_{ *this }
         , interface_system_{ *this }
@@ -33,6 +33,9 @@ namespace nxi
     {
         nxi_trace("");
 
+        database_.connect(dbs::core);
+        database_.connect(dbs::module);
+
         window_system_.load(); // window create interface
 
         command_system_.load();
@@ -52,6 +55,8 @@ namespace nxi
 
     nxi::api::core& core::api() { return api_; }
     nxi::config& core::config() { return config_; }
+    nxi::database& core::database() { return database_ ; }
+    uint64_t core::session_id() const { return 0; }
 
     nxi::command_system& core::command_system() { return command_system_; }
     nxi::context_system& core::context_system() { return context_system_; }
@@ -91,9 +96,5 @@ namespace nxi
     QString core::page_path(const QString& path)
     {
         return "qrc:/page/" + path;
-    }
-    uint64_t core::session_id() const
-    {
-        return 0;
     }
 } // nxi

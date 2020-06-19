@@ -11,27 +11,22 @@ namespace nxi
     page::page(nds::node_ptr<nxi::page> node_ptr, page_system& ps, QString name, QString command, nxi::page_type type, nxi::renderer_type renderer_type)
         : page_system_{ ps }
         , node_ptr_{ std::move(node_ptr) }
+        , name_{ std::move(name) }
     {
-        ndb_object::name = std::move(name);
-        ndb_object::command = std::move(command);
-        ndb_object::type = std::move(type);
-        ndb_object::renderer_type = std::move(renderer_type);
-        ndb_object::loaded = false;
-        ndb_object::muted = false;
+
     }
 
     void page::update_name(const QString& name)
     {
-        ndb_object::name = name;
-        ndb::store(*this);
-        emit event_update_name(ndb_object::name);
+        // ndb::store(*this);
+        //emit event_update_name(name);
     }
 
     void page::update_command(const QString& command)
     {
-        ndb_object::command = command;
-        ndb::store(*this);
-        emit event_update_command(ndb_object::command);
+
+        // ndb::store(*this);
+        //emit event_update_command(command);
         emit page_system_.event_update_command(node_ptr_);
     }
 
@@ -43,8 +38,8 @@ namespace nxi
 
     void page::set_loaded()
     {
-        ndb_object::loaded = true;
-        ndb::store(*this);
+        //loaded = true;
+        // ndb::store(*this);
     }
 
     void page::run_script(const QString& script) const
@@ -54,19 +49,15 @@ namespace nxi
 
     nxi::page_id page::id() const
     {
-        nxi_assert(ndb::is_valid(*this));
-        return ndb_object::oid;
+        //nxi_assert(ndb::is_valid(*this));
+        return id_;
     }
 
-    const QString& page::name() const
-    {
-        return ndb_object::name;
-    }
-
-    const QString& page::command() const { return ndb_object::command; }
-    bool page::is_loaded() const { return ndb_object::loaded; }
-    bool page::is_muted() const { return ndb_object::muted; }
-    nxi::page_type page::type() const { return ndb_object::type; }
-    nxi::renderer_type page::renderer_type() const { return ndb_object::renderer_type; }
+    const QString& page::name() const { return name_; }
+    const QString& page::command() const { return command_; }
+    bool page::is_loaded() const { return is_loaded_; }
+    bool page::is_muted() const { return is_muted_; }
+    nxi::page_type page::type() const { return type_; }
+    nxi::renderer_type page::renderer_type() const { return renderer_type_; }
     const QIcon& page::icon() const { return icon_; }
 } // nxi

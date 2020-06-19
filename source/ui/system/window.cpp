@@ -16,7 +16,7 @@ namespace ui
 	{
             //nxi_log << "ui - init windows";
 
-        QObject::connect(&m_ui_core.nxi_core().window_system(), &nxi::window_system::event_add, [this](const nxi::window& window)
+        QObject::connect(&m_ui_core.nxi_core().window_system(), &nxi::window_system::event_add, [this](const nxi::window_data& window)
         {
             add(window);
         });
@@ -30,7 +30,7 @@ namespace ui
         }
     }
 
-    ui::window* window_system::add(const nxi::window& window)
+    ui::window* window_system::add(const nxi::window_data& window)
     {
         auto ui_window = new ui::window(m_ui_core, window.id);
         // make defaut interface

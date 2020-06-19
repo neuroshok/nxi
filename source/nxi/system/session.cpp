@@ -15,7 +15,7 @@ namespace nxi
         nxi_trace("");
 
         // load active session
-        ndb::result result = nxi::queries::get_active_sessions();
+        // ndb::result result = nxi::queries::get_active_sessions();
         //if (result)
 
     }

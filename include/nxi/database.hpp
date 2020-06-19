@@ -1,58 +1,42 @@
-#ifndef DATABASE_H_NXI
-#define DATABASE_H_NXI
+#ifndef INCLUDE_NXI_DATABASE_HPP_NXI
+#define INCLUDE_NXI_DATABASE_HPP_NXI
 
-#include <ndb/engine/sqlite/sqlite.hpp>
-
-#include <ndb/preprocessor.hpp>
-
-#include <ndb/expression.hpp>
-#include <ndb/function.hpp>
-#include <ndb/prepared_query.hpp>
-#include <ndb/query.hpp>
-
-// include type_mapped types
+#include <array>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 #include <QString>
-#include <nxi/type.hpp>
 
-// ndb type_maps
-namespace ndb
+namespace nxi
 {
-    ndb_bijective_type_map(string_, QString, scope::global);
+    enum class dbs { core, module, size_ };
+    enum class prepared_query
+    {
+        add_page,
+        get_page_id, get_page_name,
+        size_
+    };
 
-    ndb_type_map(nxi::page_id, int64_, scope::global);
-    ndb_type_map(nxi::page_type, int64_, scope::global);
-    ndb_type_map(nxi::renderer_type, int64_, scope::global);
-    ndb_type_map(nxi::module_type, int64_, scope::global);
-}
+    class database
+    {
+        inline static QString path = "./database/";
 
-#include <nxi/database/command.hpp>
-#include <nxi/database/context.hpp>
-#include <nxi/database/module.hpp>
-#include <nxi/database/page.hpp>
-#include <nxi/database/session.hpp>
-#include <nxi/database/window.hpp>
+    public:
+        database();
+        database(const database&) = delete;
+        database& operator=(const database&) = delete;
 
-ndb_model(
-    nxi_model
-    , context
-    , context_available
-    , module
-    , page
-    , page_connection
-    , page_system
-    , session
-    , window
-)
+        void connect(nxi::dbs);
+        QSqlDatabase& get(nxi::dbs);
+        void make(nxi::dbs);
+        void prepare(nxi::dbs, nxi::prepared_query, const QString& str_query);
+        QSqlQuery& prepared_query(nxi::prepared_query);
+        void query(nxi::dbs, const QString& str_query);
 
-ndb_project(nxi_project,
-            ndb_database(db_core, nxi_model, ndb::sqlite)
-)
-
-namespace dbs
-{
-    using core = ndb::databases::nxi_project::db_core_;
+    private:
+        bool make_required_;
+        std::array<QSqlDatabase, static_cast<size_t>(dbs::size_)> databases_;
+        std::array<QSqlQuery, static_cast<size_t>(nxi::prepared_query::size_)> queries_;
+    };
 } // nxi
 
-using ndb::models::nxi_model;
-
-#endif // DATABASE_H_NXI
+#endif // INCLUDE_NXI_DATABASE_HPP_NXI

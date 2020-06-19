@@ -18,9 +18,6 @@ namespace nxi
         , shortcut_ { std::move(data.shortcut) }
         , preview_ { data.preview }
     {
-        ndb_object::name = std::move(data.action);
-        ndb_object::shortcut = data.shortcut.to_string();
-        ndb_object::shortcut_context = std::move(data.shortcut.context_id);
     }
 
     command::command(const QString& module_name, const QString& action_name, function_type fn, const QString& icon)

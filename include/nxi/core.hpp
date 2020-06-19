@@ -1,9 +1,6 @@
 #ifndef CORE_H_NXI
 #define CORE_H_NXI
 
-#include <ndb/connector.hpp>
-#include <ndb/initializer.hpp>
-
 #include <nxi/module/api/core.hpp>
 #include <nxi/system/command.hpp>
 #include <nxi/system/context.hpp>
@@ -33,6 +30,7 @@ namespace nxi
 
         nxi::api::core& api();
         nxi::config& config();
+        nxi::database& database();
         uint64_t session_id() const;
 
         nxi::command_system& command_system();
@@ -52,9 +50,7 @@ namespace nxi
         void event_error(const QString&) const;
 
     private:
-        ndb::initializer<ndb::sqlite> ndb_init_;
-        ndb::connector<dbs::core> ndb_connector_;
-
+        nxi::database database_;
         nxi::api::core api_;
         nxi::config config_;
 

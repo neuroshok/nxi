@@ -4,7 +4,6 @@
 #include <nxi/database.hpp>
 #include <nxi/type.hpp>
 
-#include <ndb/object.hpp>
 #include <nds/graph/node.hpp>
 
 #include <QIcon>
@@ -17,10 +16,8 @@ namespace nxi
 {
     class page_system;
 
-    class page : public QObject, public ndb::object<dbs::core, ndb::objects::page>
+    class page : public QObject
     {
-        using ndb_object = ndb::object<dbs::core, ndb::objects::page>;
-
         Q_OBJECT
     public:
         virtual void run_script(const QString& script) const;
@@ -48,7 +45,15 @@ namespace nxi
         nxi::page_system& page_system_;
 
     private:
+        nxi::page_id id_;
+        QString name_;
+        QString command_;
+        bool is_loaded_;
+        bool is_muted_;
+        nxi::page_type type_;
+        nxi::renderer_type renderer_type_;
         QIcon icon_;
+
         nds::node_ptr<nxi::page> node_ptr_;
 
     signals:

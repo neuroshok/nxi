@@ -20,9 +20,8 @@ namespace nxi
     class core;
     class suggestion_vector;
 
-    class command : ndb::object<dbs::core, ndb::objects::command>
+    class command
     {
-        using ndb_object = ndb::object<dbs::core, ndb::objects::command>;
 
         friend class command_initializer;
 

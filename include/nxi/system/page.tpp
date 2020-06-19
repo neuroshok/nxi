@@ -1,4 +1,5 @@
 #include <nxi/database.hpp>
+#include <nxi/database/page.hpp>
 #include <nxi/page.hpp>
 
 namespace nxi
@@ -7,9 +8,10 @@ namespace nxi
     page_system::page_ptr page_system::add(page_system::page_ptr source, Args&&... args)
     {
         auto page = graph_.emplace<nxi::page, Page>(source, *this, std::forward<Args>(args)...);
-        ndb::store(*page);
+        //// ndb::store(*page);
 
-        ndb::query<dbs::core>() << ndb::add( nxi_model.page_connection.source_id = source->id(), nxi_model.page_connection.target_id = page->id() );
+        //// ndb::query<dbs::core>() << // ndb::add( nxi_model.page_connection.source_id = source->id(), nxi_model.page_connection.target_id = page->id() );
+        nxi::data::page::add_page(nxi_core_, page->name());
 
         emit event_add(page, source);
         return page;
