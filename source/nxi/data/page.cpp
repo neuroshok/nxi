@@ -1,4 +1,4 @@
-#include <nxi/database/page.hpp>
+#include <nxi/data/page.hpp>
 
 #include <nxi/core.hpp>
 
@@ -16,25 +16,20 @@ namespace nxi::data::page
         return query.lastInsertId().toInt();
     }
 
-    auto get_page(nxi::core& core, int id)
+    nxi::result get_page(nxi::core& core, int id)
     {
         auto& query = core.database().prepared_query(nxi::prepared_query::get_page_id);
         query.bindValue(0, id);
-        query.exec();
-        //if (!query.next()) query.valu
 
-        //nxi_model.page.name
+        return nxi::result{ query };
     }
 
-    //auto result = nxi::data::page::get_page(core, 3);
-    //result[nxi_model.page.id]
-
-    auto get_page(nxi::core& core, const QString& name)
+    nxi::result get_page(nxi::core& core, const QString& name)
     {
         auto& query = core.database().prepared_query(nxi::prepared_query::get_page_name);
         query.bindValue(0, name);
-        query.exec();
-        return query.next();
+
+        return nxi::result{ query };
     }
 } // nxi::data::page
 
@@ -42,25 +37,13 @@ namespace nxi::data::page::internal
 {
     void make(nxi::database& db)
     {
-        db.query(dbs::core, R"__(
-        CREATE TABLE `page`
-        (
-            `id` integer,
-            `name` text(8),
-            `command` text(8),
-            `type` integer,
-            `renderer_type` integer,
-            `loaded` integer,
-            `muted` integer,
-            PRIMARY KEY(`id`)
-        )
-        )__");
+        db.query(dbs::core, internal::str_table.data());
     }
 
     void prepare(nxi::database& db)
     {
         db.prepare(dbs::core, prepared_query::add_page, "INSERT INTO page(name) VALUES(?)");
-        db.prepare(dbs::core, prepared_query::get_page_id, "SELECT * FROM page WHERE page.id = ?");
-        db.prepare(dbs::core, prepared_query::get_page_name, "SELECT * FROM page WHERE page.name = ?");
+        db.prepare(dbs::core, prepared_query::get_page_id, "SELECT id, name, command FROM page WHERE page.id = ?");
+        db.prepare(dbs::core, prepared_query::get_page_name, "SELECT id, name, command FROM page WHERE page.name = ?");
     }
 } // nxi::data::page::internal

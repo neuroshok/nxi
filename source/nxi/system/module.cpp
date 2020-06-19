@@ -1,7 +1,7 @@
 #include <nxi/system/module.hpp>
 
 #include <nxi/core.hpp>
-#include <nxi/database/module.hpp>
+#include <nxi/data/module.hpp>
 #include <nxi/log.hpp>
 #include <nxi/module/binary.hpp>
 #include <nxi/module/web.hpp>

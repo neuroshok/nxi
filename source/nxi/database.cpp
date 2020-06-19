@@ -1,6 +1,6 @@
 #include <nxi/database.hpp>
 
-#include <nxi/database/page.hpp>
+#include <nxi/data/page.hpp>
 #include <nxi/log.hpp>
 
 #include <filesystem>

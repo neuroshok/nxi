@@ -1,5 +1,4 @@
-#include <nxi/database.hpp>
-#include <nxi/database/page.hpp>
+#include <nxi/data/page.hpp>
 #include <nxi/page.hpp>
 
 namespace nxi

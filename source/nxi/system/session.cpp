@@ -1,7 +1,7 @@
 #include <nxi/system/session.hpp>
 
 #include <nxi/database.hpp>
-#include <nxi/database/queries/session.hpp>
+#include <nxi/data/session.hpp>
 #include <nxi/log.hpp>
 
 namespace nxi

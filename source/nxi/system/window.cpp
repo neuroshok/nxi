@@ -1,7 +1,7 @@
 #include <nxi/system/window.hpp>
 
 #include <nxi/core.hpp>
-#include <nxi/database/queries/window.hpp>
+#include <nxi/data/window.hpp>
 #include <nxi/log.hpp>
 
 #include <QGuiApplication>
