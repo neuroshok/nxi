@@ -26,16 +26,9 @@ namespace ui
         app_{ app }
         , nxi_core_{ nxi_core }
         , page_system_{ *this }
-        , window_system_{ *this }
+        , session_system_{ *this }
         , main_interface_{ [this](ui::window* window){ return new ui::interfaces::light::main(*this, window); } }
     {
-        // load qss
-        /*
-        QFile qss_file(":/style.qss");
-        qss_file.open(QFile::ReadOnly);
-        QString qss = QLatin1String(qss_file.readAll());
-        app_.setStyleSheet(qss);*/
-
         // systray
         systray_ = new QSystemTrayIcon;
         systray_->setIcon(QIcon(":/image/nex"));
@@ -46,7 +39,7 @@ namespace ui
 
     void core::quit()
     {
-        window_system_.unload();
+        //session_system_.unload();
 
         QApplication::quit();
     }
@@ -63,12 +56,6 @@ namespace ui
 
     ui::window_system& core::window_system()
     {
-        return window_system_;
+        return session_system_.focus().window_system();
     }
-
-    /*
-    ui::page_system& core::page_system()
-    {
-        return m_page_system;
-    }*/
 } // ui

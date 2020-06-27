@@ -2,15 +2,19 @@
 
 #include <nxi/log.hpp>
 
+#include <filesystem>
+
 #include <QCoreApplication>
 #include <QDir>
 #include <QWebEngineProfile>
 #include <QWebEngineSettings>
 
+namespace fs = std::filesystem;
+
 namespace nxi
 {
     core::core()
-        : database_{}
+        : global_database_{}
         , api_{ *this } // init before systems
         , config_{}
         , command_system_{ *this }
@@ -33,9 +37,11 @@ namespace nxi
     {
         nxi_trace("");
 
-        database_.connect(dbs::core);
-        database_.connect(dbs::module);
+        global_database_.connect();
 
+        session_system_.load();
+
+        /*
         window_system_.load(); // window create interface
 
         command_system_.load();
@@ -43,9 +49,7 @@ namespace nxi
         interface_system_.load();
         context_system_.load();
 
-        session_system_.load();
-
-        module_system_.load();
+        module_system_.load();*/
     }
 
     void core::quit() const
@@ -55,8 +59,8 @@ namespace nxi
 
     nxi::api::core& core::api() { return api_; }
     nxi::config& core::config() { return config_; }
-    nxi::database& core::database() { return database_ ; }
-    uint64_t core::session_id() const { return 0; }
+    nxi::database& core::database() { return session_system_.focus()->core_database(); }
+    nxi::database& core::global_database() { return global_database_; }
 
     nxi::command_system& core::command_system() { return command_system_; }
     nxi::context_system& core::context_system() { return context_system_; }
@@ -64,7 +68,7 @@ namespace nxi
     nxi::module_system& core::module_system() { return module_system_; }
     nxi::page_system& core::page_system() { return page_system_; }
     nxi::session_system& core::session_system() { return session_system_; }
-    nxi::window_system& core::window_system() { return window_system_; }
+    nxi::window_system& core::window_system() { return session_system_.focus()->window_system(); }
 
     void core::error(const QString& message) const
     {

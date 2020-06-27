@@ -1,7 +1,6 @@
 #include "nxi_static.hpp"
 
 #include <nxi/core.hpp>
-#include <nxi/window_data.hpp>
 #include <nxi/system/window.hpp>
 #include <nxi/log.hpp>
 

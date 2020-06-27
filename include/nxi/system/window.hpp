@@ -1,7 +1,7 @@
 #ifndef NXI_WINDOW_SYSTEM_H_NXI
 #define NXI_WINDOW_SYSTEM_H_NXI
 
-#include <nxi/window_data.hpp>
+#include <nxi/data/window.hpp>
 
 #include <QObject>
 
@@ -22,7 +22,7 @@ namespace nxi
         void load();
         void add(nxi::window_data);
         void del(int id);
-        std::map<unsigned int, nxi::window_data>& get();
+        std::unordered_map<unsigned int, nxi::window_data>& get();
 
         void move(unsigned int id, int x, int y);
         void resize(unsigned int id, int w, int h);
@@ -35,7 +35,7 @@ namespace nxi
 
     private:
         nxi::core& nxi_core_;
-        std::map<unsigned int, nxi::window_data> windows_;
+        std::unordered_map<unsigned int, nxi::window_data> windows_;
         unsigned int m_current;
     };
 } // nxi

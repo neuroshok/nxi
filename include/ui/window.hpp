@@ -1,7 +1,6 @@
 #ifndef UI_WINDOW_H_NXI
 #define UI_WINDOW_H_NXI
 
-#include <nxi/window_data.hpp>
 #include <stz/observer_ptr.hpp>
 
 #include <QWidget>

@@ -1,9 +1,12 @@
 #ifndef UI_SYSTEM_WINDOW_H_NXI
 #define UI_SYSTEM_WINDOW_H_NXI
 
-#include <nxi/window_data.hpp>
-
 #include <QObject>
+
+namespace nxi
+{
+    struct window_data;
+} // nxi
 
 namespace ui
 {
@@ -27,7 +30,7 @@ namespace ui
         size_t count() const;
 
     private:
-        ui::core& m_ui_core;
+        ui::core& ui_core_;
 
         std::vector<ui::window*> m_windows;
         //std::vector<std::pair<int, ui::window*> m_windows_storage_id;

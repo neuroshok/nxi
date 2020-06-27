@@ -2,6 +2,7 @@
 
 #include <nxi/core.hpp>
 #include <nxi/data/window.hpp>
+#include <nxi/database/model.hpp>
 #include <nxi/log.hpp>
 
 #include <QGuiApplication>
@@ -21,12 +22,18 @@ namespace nxi
         nxi_trace("");
 
         // load stored windows
-        /*
-        for (auto& window :  ndb::oget<dbs::core>(nxi_model.window))
+        auto result = nxi::data::window::get_windows(nxi_core_);
+        while(result.next())
         {
-            windows_.emplace(window.id, std::move(window));
+            nxi::window_data window;
+            window.id = result[nxi_model.window.id];
+            window.x = result[nxi_model.window.x];
+            window.y = result[nxi_model.window.y];
+            window.w = result[nxi_model.window.w];
+            window.h = result[nxi_model.window.h];
             emit event_add(window);
-        }*/
+            windows_.emplace(window.id, std::move(window));
+        }
 
         if (windows_.empty())
         {
@@ -38,19 +45,16 @@ namespace nxi
             window.x = (screen_size.width() - window.w) / 2;
             window.y = (screen_size.height() - window.h) / 2;
 
-            add(window);
+            add(std::move(window));
         }
     }
 
-    void window_system::add(nxi::window_data win)
+    void window_system::add(nxi::window_data window)
     {
-        //nxi::queries::add_window(win.x, win.y, win.w, win.h);
+        window.id = nxi::data::window::add_window(nxi_core_, window);
+        emit event_add(window);
 
-        //win.id = // ndb::last_id<dbs::core>();
-
-        windows_.emplace(win.id, std::move(win));
-
-        emit event_add((win));
+        windows_.emplace(window.id, std::move(window));
     }
 
     void window_system::del(int id)
@@ -69,7 +73,7 @@ namespace nxi
         //// ndb::query<dbs::core>() << // ndb::set(nxi_model.window.w = w, nxi_model.window.h = h);
     }
 
-    std::map<unsigned int, nxi::window_data>& window_system::get()
+    std::unordered_map<unsigned int, nxi::window_data>& window_system::get()
     {
         return windows_;
     }

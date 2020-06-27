@@ -90,5 +90,7 @@ namespace nxi
             init_context();
         set_node(main);
             init_settings();
+        set_node(main);
+            init_session();
     }
 } // nxi

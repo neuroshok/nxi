@@ -1,6 +1,8 @@
 #include <nxi/database.hpp>
 
 #include <nxi/data/page.hpp>
+#include <nxi/data/session.hpp>
+#include <nxi/data/window.hpp>
 #include <nxi/log.hpp>
 
 #include <filesystem>
@@ -16,50 +18,43 @@ namespace fs = std::filesystem;
 
 namespace nxi
 {
-    database::database()
+    database::database(QString name, const QString& subpath)
         : make_required_{ false }
+        , name_{ std::move(name) }
+        , path_{ path + subpath }
     {
-        if (!fs::exists(path.toStdString()))
+        if (!fs::exists(path_.toStdString()))
         {
-            fs::create_directory(path.toStdString());
+            fs::create_directory(path_.toStdString());
             make_required_ = true;
         }
 
-        databases_[static_cast<size_t>(dbs::core)] = QSqlDatabase::addDatabase("QSQLITE", "core");
-        get(dbs::core).setDatabaseName(path + "core");
-        databases_[static_cast<size_t>(dbs::module)] = QSqlDatabase::addDatabase("QSQLITE", "module");
-        get(dbs::module).setDatabaseName(path + "module");
+        database_ = QSqlDatabase::addDatabase("QSQLITE", path_ + name_);
+        database_.setDatabaseName(path_ + name_);
     }
 
-    void database::connect(nxi::dbs db_id)
+    void database::connect()
     {
-        auto& db = get(db_id);
-        nxi_trace("connect to database {}", db.databaseName());
+        nxi_trace("connect to database {}", database_.databaseName());
 
-        if(!db.open()) nxi_error("connection error : {}", db.lastError().text());
+        if(!database_.open()) nxi_error("connection error : {}", database_.lastError().text());
+        if (make_required_) make();
 
-        if (make_required_) make(db_id);
-
-        nxi::data::page::internal::prepare(*this);
+        prepare_queries();
     }
 
-    QSqlDatabase& database::get(nxi::dbs db_id)
+    void database::make()
     {
-        nxi_assert(static_cast<size_t>(db_id) < static_cast<size_t>(dbs::size_));
-        return databases_[static_cast<size_t>(db_id)];
+        nxi::data::session::internal::make(*this);
     }
 
-    void database::make(nxi::dbs db_id)
-    {
-        nxi::data::page::internal::make(*this);
-    }
+    void database::prepare_queries() {}
 
-    void database::prepare(nxi::dbs db_id, nxi::prepared_query pquery, const QString& str_query)
+    void database::prepare(nxi::prepared_query pquery, const QString& str_query)
     {
-        QSqlQuery query{ get(db_id) };
+        QSqlQuery query{ database_ };
         query.prepare(str_query);
-        prepared_query(pquery) = std::move(query);
-
+        queries_[static_cast<size_t>(pquery)] = std::move(query);
     }
 
     QSqlQuery& database::prepared_query(nxi::prepared_query pquery)
@@ -67,10 +62,43 @@ namespace nxi
         return queries_[static_cast<size_t>(pquery)];
     }
 
-    void database::query(nxi::dbs db_id, const QString& str_query)
+    void database::query(const QString& str_query)
     {
-        auto& db = get(db_id);
-        QSqlQuery query{ db };
+        QSqlQuery query{ database_ };
         if (!query.exec(str_query)) nxi_error("query error : {}", query.lastError().text());
+    }
+
+    //
+
+    global_database::global_database()
+        : database("global")
+    {}
+
+    void global_database::make()
+    {
+        nxi::data::session::internal::make(*this);
+    }
+
+    void global_database::prepare_queries()
+    {
+        nxi::data::session::internal::prepare(*this);
+    }
+
+    //
+
+    core_database::core_database(QString session_id)
+        : database("core", session_id + "/" )
+    {}
+
+    void core_database::make()
+    {
+        nxi::data::page::internal::make(*this);
+        nxi::data::window::internal::make(*this);
+    }
+
+    void core_database::prepare_queries()
+    {
+        nxi::data::page::internal::prepare(*this);
+        nxi::data::window::internal::prepare(*this);
     }
 } // nxi

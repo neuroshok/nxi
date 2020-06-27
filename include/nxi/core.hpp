@@ -31,7 +31,7 @@ namespace nxi
         nxi::api::core& api();
         nxi::config& config();
         nxi::database& database();
-        uint64_t session_id() const;
+        nxi::database& global_database();
 
         nxi::command_system& command_system();
         nxi::context_system& context_system();
@@ -50,7 +50,7 @@ namespace nxi
         void event_error(const QString&) const;
 
     private:
-        nxi::database database_;
+        nxi::global_database global_database_;
         nxi::api::core api_;
         nxi::config config_;
 
