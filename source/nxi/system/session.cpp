@@ -38,9 +38,7 @@ namespace nxi
 
         session.load();
 /*
-        nxi_core_.command_system().load();
         nxi_core_.page_system().load();
-        nxi_core_.interface_system().load();
         nxi_core_.context_system().load();
 
         nxi_core_.module_system().load();*/

@@ -64,7 +64,7 @@ namespace nxi
 
     void window_system::move(unsigned int id, int x, int y)
     {
-        //nxi::queries::move_window(nxi_core_.session_id(), id, x, y);
+        nxi::data::window::move_window(nxi_core_, id, x, y);
         emit event_position_update(x, y);
     }
 

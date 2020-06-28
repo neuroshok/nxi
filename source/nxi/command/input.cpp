@@ -15,7 +15,6 @@ namespace nxi
 
     command_input::command_input(nxi::core& nxi_core)
         : nxi_core_{ nxi_core }
-        , command_system_{ nxi_core_.command_system() }
         , mode_{ mode::input }
         , state_{ state::search }
         , shortcut_input_{ *this }
@@ -68,7 +67,7 @@ namespace nxi
                 (
                     [this](const nxi::contexts::command&)
                     {
-                        command_system_.search(input_, [this](nds::node_ptr<const nxi::command> command)
+                        command_system().search(input_, [this](nds::node_ptr<const nxi::command> command)
                         {
                             suggestions_.push_back(std::move(command));
                         });
@@ -170,7 +169,7 @@ namespace nxi
         (
             [this](const nxi::contexts::command&)
             {
-                command_system_.root_list([this](nds::node_ptr<const nxi::command> command)
+                command_system().root_list([this](nds::node_ptr<const nxi::command> command)
                 {
                     suggestions_.push_back(std::move(command));
                 });
@@ -191,7 +190,7 @@ namespace nxi
     void command_input::suggest_command()
     {
         suggestions_.clear();
-        command_system_.root_list([this](nds::node_ptr<const nxi::command> command)
+        command_system().root_list([this](nds::node_ptr<const nxi::command> command)
         {
             suggestions_.push_back(std::move(command));
         });
@@ -234,7 +233,11 @@ namespace nxi
 
     const nxi::command_system& command_input::command_system() const
     {
-        return command_system_;
+        return nxi_core_.command_system();
+    }
+    nxi::command_system& command_input::command_system()
+    {
+        return nxi_core_.command_system();
     }
 
     nxi::shortcut_input& command_input::shortcut_input()

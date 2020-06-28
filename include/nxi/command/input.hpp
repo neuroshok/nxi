@@ -56,6 +56,7 @@ namespace nxi
         bool is_valid() const;
 
         const nxi::command_system& command_system() const;
+        nxi::command_system& command_system();
         nxi::shortcut_input& shortcut_input();
 
     signals:
@@ -71,7 +72,6 @@ namespace nxi
 
     private:
         nxi::core& nxi_core_;
-        nxi::command_system& command_system_;
 
         QString input_;
         mode mode_;

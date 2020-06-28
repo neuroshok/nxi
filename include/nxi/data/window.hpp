@@ -23,6 +23,7 @@ namespace nxi::data::window
 {
     unsigned int add_window(nxi::core& core, nxi::window_data);
     nxi::result get_windows(nxi::core& core);
+    void move_window(nxi::core& core, unsigned int id, int x, int y);
 } // nxi::data::window
 
 namespace nxi::data::window::internal

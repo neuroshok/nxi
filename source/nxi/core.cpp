@@ -17,13 +17,9 @@ namespace nxi
         : global_database_{}
         , api_{ *this } // init before systems
         , config_{}
-        , command_system_{ *this }
-        , context_system_{ *this }
-        , interface_system_{ *this }
         , module_system_{ *this }
         , page_system_{ *this }
         , session_system_{ *this }
-        , window_system_{ *this }
     {
         // apply config
         QWebEngineProfile::defaultProfile()->settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
@@ -62,9 +58,9 @@ namespace nxi
     nxi::database& core::database() { return session_system_.focus()->core_database(); }
     nxi::database& core::global_database() { return global_database_; }
 
-    nxi::command_system& core::command_system() { return command_system_; }
-    nxi::context_system& core::context_system() { return context_system_; }
-    nxi::interface_system& core::interface_system() { return interface_system_; }
+    nxi::command_system& core::command_system() { return session_system_.focus()->command_system(); }
+    nxi::context_system& core::context_system() { return session_system_.focus()->context_system(); }
+    nxi::interface_system& core::interface_system() { return session_system_.focus()->interface_system(); }
     nxi::module_system& core::module_system() { return module_system_; }
     nxi::page_system& core::page_system() { return page_system_; }
     nxi::session_system& core::session_system() { return session_system_; }

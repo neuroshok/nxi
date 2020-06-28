@@ -13,7 +13,7 @@ namespace nxi
     {
         add_page, get_page_id, get_page_name,
         add_session, get_sessions,
-        add_window, get_windows,
+        add_window, get_windows, move_window,
         size_
     };
 

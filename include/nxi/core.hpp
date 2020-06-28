@@ -54,13 +54,9 @@ namespace nxi
         nxi::api::core api_;
         nxi::config config_;
 
-        nxi::command_system command_system_;
-        nxi::context_system context_system_;
-        nxi::interface_system interface_system_;
         nxi::module_system module_system_;
         nxi::page_system page_system_;
         nxi::session_system session_system_;
-        nxi::window_system window_system_;
     };
 } // nxi
 
