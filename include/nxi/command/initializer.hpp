@@ -10,13 +10,13 @@ class QString;
 
 namespace nxi
 {
-    class core;
+    class session;
     class suggestion_vector;
 
     class command_initializer
     {
     public:
-        command_initializer(nxi::core& nxi_core);
+        command_initializer(nxi::session&);
         void load();
 
     private:
@@ -34,7 +34,7 @@ namespace nxi
         void set_root(nds::node_ptr<nxi::command>);
 
     private:
-        nxi::core& nxi_core_;
+        nxi::session& session_;
         nds::node_ptr<nxi::command> node_;
     };
 } // nxi

@@ -8,9 +8,9 @@
 
 namespace nxi::data::window
 {
-    unsigned int add_window(nxi::core& core, nxi::window_data window)
+    unsigned int add_window(nxi::database& db, nxi::window_data window)
     {
-        auto& query = core.database().prepared_query(nxi::prepared_query::add_window);
+        auto& query = db.prepared_query(nxi::prepared_query::add_window);
         query.bindValue(0, window.x);
         query.bindValue(1, window.y);
         query.bindValue(2, window.w);
@@ -19,16 +19,16 @@ namespace nxi::data::window
         return query.lastInsertId().toInt();
     }
 
-    nxi::result get_windows(nxi::core& core)
+    nxi::result get_windows(nxi::database& db)
     {
-        auto& query = core.database().prepared_query(nxi::prepared_query::get_windows);
+        auto& query = db.prepared_query(nxi::prepared_query::get_windows);
         if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
         return nxi::result{ query };
     }
 
-    void move_window(nxi::core& core, unsigned int id, int x, int y)
+    void move_window(nxi::database& db, unsigned int id, int x, int y)
     {
-        auto& query = core.database().prepared_query(nxi::prepared_query::move_window);
+        auto& query = db.prepared_query(nxi::prepared_query::move_window);
         query.bindValue(0, x);
         query.bindValue(1, y);
         query.bindValue(2, id);

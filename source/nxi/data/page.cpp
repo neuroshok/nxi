@@ -8,25 +8,25 @@
 
 namespace nxi::data::page
 {
-    nxi::page_id add_page(nxi::core& core, const QString& name)
+    nxi::page_id add_page(nxi::database& db, const QString& name)
     {
-        auto& query = core.database().prepared_query(nxi::prepared_query::add_page);
+        auto& query = db.prepared_query(nxi::prepared_query::add_page);
         query.bindValue(0, name);
         if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
         return query.lastInsertId().toInt();
     }
 
-    nxi::result get_page(nxi::core& core, int id)
+    nxi::result get_page(nxi::database& db, int id)
     {
-        auto& query = core.database().prepared_query(nxi::prepared_query::get_page_id);
+        auto& query = db.prepared_query(nxi::prepared_query::get_page_id);
         query.bindValue(0, id);
 
         return nxi::result{ query };
     }
 
-    nxi::result get_page(nxi::core& core, const QString& name)
+    nxi::result get_page(nxi::database& db, const QString& name)
     {
-        auto& query = core.database().prepared_query(nxi::prepared_query::get_page_name);
+        auto& query = db.prepared_query(nxi::prepared_query::get_page_name);
         query.bindValue(0, name);
 
         return nxi::result{ query };

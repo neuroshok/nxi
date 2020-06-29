@@ -11,7 +11,7 @@
 
 namespace nxi
 {
-    class core;
+    class session;
 
     struct context_data {  int priority; QString name;  };
 
@@ -19,7 +19,7 @@ namespace nxi
     {
         Q_OBJECT
     public:
-        context_system(nxi::core& );
+        context_system(nxi::session&);
         context_system(const context_system&) = delete;
         void operator=(const context_system&) = delete;
 
@@ -107,7 +107,7 @@ namespace nxi
         //void event_active_context_update(std::vector<stz::observer_ptr<const nxi::context>) const;
 
     private:
-        nxi::core& nxi_core_;
+        nxi::session& session_;
 
         std::vector<std::unique_ptr<nxi::context>> contexts_;
         std::vector<nxi::context_data> available_contexts_;

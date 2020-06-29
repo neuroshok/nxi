@@ -22,9 +22,9 @@
 namespace nxi
 {
 
-    web_module::web_module(nxi::core& nxi_core, const QString& name)
+    web_module::web_module(nxi::session& session, const QString& name)
         : module(name, module_type::web)
-        , nxi_core_{ nxi_core }
+        , session_{ session }
         , manifest_ { name }
     {
         init_scripts();
@@ -35,15 +35,15 @@ namespace nxi
         // add module commands
         auto f = [this](const nxi::values&)
         {
-            if (manifest_.browser_action.default_popup.isEmpty()) nxi_core_.error("module has no page");
+            if (manifest_.browser_action.default_popup.isEmpty()) session_.error("module has no page");
             else
             {
                 auto page_path = nxi::core::module_path(name(), nxi::module_type::web) + "/" + manifest_.browser_action.default_popup;
-                nxi_core_.page_system().open<nxi::web_page>("file:///" + page_path);
+                session_.page_system().open<nxi::web_page>("file:///" + page_path);
             }
         };
         nxi::command command{ name(), "main", f, nxi::core::module_path(name(), nxi::module_type::web) + browser_action_.default_icon };
-        nxi_core_.command_system().add(std::move(command));
+        session_.command_system().add(std::move(command));
     }
 
     void web_module::process(nxi::web_page& page)

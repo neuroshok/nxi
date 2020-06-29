@@ -23,7 +23,7 @@ namespace nxi
         using function_type = std::function<void(const nxi::values&)>;
         using callback_type = std::function<void(nds::node_ptr<const nxi::command>)>;
 
-        command_system(nxi::core&);
+        command_system(nxi::session&);
         command_system(const command_system&) = delete;
         void operator=(const command_system&) = delete;
 
@@ -51,7 +51,7 @@ namespace nxi
         void event_execution_request(nds::node_ptr<const nxi::command>) const;
 
     private:
-        nxi::core& nxi_core_;
+        nxi::session& session_;
         nxi::command_initializer command_initializer_;
         nxi::command_input command_input_;
         nds::node_ptr<nxi::command> root_;

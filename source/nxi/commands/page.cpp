@@ -17,7 +17,7 @@ namespace nxi
         page_new.context_id = nxi::context::id<nxi::contexts::command>();
         page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }, nxi::context::id<nxi::contexts::page>() };
         //page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }, nxi::contexts::page };
-        page_new.function = [this](const nxi::values&){ nxi_core_.page_system().open<nxi::web_page>(); };
+        page_new.function = [this](const nxi::values&){ session_.page_system().open<nxi::web_page>(); };
         add(std::move(page_new));
 
         // open
@@ -27,7 +27,7 @@ namespace nxi
         page_open.function = [this](const nxi::values& params)
         {
             auto url = params.get(0);
-            nxi_core_.page_system().open<nxi::web_page>(url);
+            session_.page_system().open<nxi::web_page>(url);
         };
         page_open.parameters = {
         { "command", [](nxi::suggestion_vector& suggestion)
@@ -54,12 +54,12 @@ namespace nxi
                 return;
             }
             auto id = params.get(0).toUInt();
-            nxi_core_.page_system().focus(id);
+            session_.page_system().focus(id);
         };
         page_switch.parameters = {
         { "id", [this](nxi::suggestion_vector& suggestion)
             {
-                for (auto& page : nxi_core_.page_system().pages())
+                for (auto& page : session_.page_system().pages())
                 {
                     suggestion.push_back(page);
                 }
@@ -86,7 +86,7 @@ namespace nxi
         fullscreen.shortcut = {{ Qt::Key_Control }, { Qt::Key_Enter }};
         fullscreen.function = [this](const nxi::values& params)
         {
-            //nxi_core_.page_system().focus()->run("document.documentElement.requestFullscreen();");
+            //session_.page_system().focus()->run("document.documentElement.requestFullscreen();");
         };
         add(std::move(fullscreen));
 
@@ -97,7 +97,7 @@ namespace nxi
         page_run_script.function = [this](const nxi::values& params)
         {
             //nxi_expect(params.size() == 1);
-            nxi_core_.page_system().focus()->run_script(params.get(0));
+            session_.page_system().focus()->run_script(params.get(0));
         };
         page_run_script.parameters = {{ "script" }};
         add(std::move(page_run_script));
@@ -109,7 +109,7 @@ namespace nxi
         links.function = [this](const nxi::values& params)
         {
             //nxi_expect(params.size() == 1);
-            nxi_core_.error(params.get(0));
+            session_.error(params.get(0));
         };
         links.parameters = {
         { "link", [this](nxi::suggestion_vector& suggestion)
@@ -127,7 +127,7 @@ namespace nxi
                 })();
                 )__";
 
-                static_cast<nxi::web_page&>(*nxi_core_.page_system().focus()).run_script(script, [&suggestion](const QVariant& variant)
+                static_cast<nxi::web_page&>(*session_.page_system().focus()).run_script(script, [&suggestion](const QVariant& variant)
                 {
                     for (const auto& item : variant.toList())
                     {
@@ -135,7 +135,7 @@ namespace nxi
                     }
                     emit suggestion.event_update(stz::make_observer(&suggestion));
 
-                    //nxi_core_.command_system().command_input().suggest(vector);
+                    //session_.command_system().command_input().suggest(vector);
                 });
             }
         }};

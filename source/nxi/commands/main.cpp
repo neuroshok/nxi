@@ -16,14 +16,14 @@ namespace nxi
         quit.icon = ":/icon/quit";
         quit.description = "Quit application";
         quit.shortcut = {{ Qt::Key_Control }, { Qt::Key_Q }};
-        quit.function = [this](const nxi::values&){ nxi_core_.quit(); };
+        quit.function = [this](const nxi::values&){ session_.nxi_core().quit(); };
 
         add(std::move(quit));
 
         // test
         add("test", [this](const nxi::values&){ qDebug() << "TEST PAGE"; });
         // about
-        add("about", [this](const nxi::values&){ nxi_core_.page_system().open_static("nxi/about"); });
+        add("about", [this](const nxi::values&){ session_.page_system().open_static("nxi/about"); });
 
         return node;
     }

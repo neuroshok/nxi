@@ -16,10 +16,10 @@ namespace ui::interfaces::standard
         Q_OBJECT
     public:
 
-        explicit page_bar(ui::core& ui_core, ui::window*);
+        explicit page_bar(ui::session&, ui::window*);
 
     private:
-        ui::core& ui_core_;
+        ui::session& session_;
         ui::views::page_tree* page_tree_;
     };
 } // ui::interfaces::standard

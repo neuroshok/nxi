@@ -10,9 +10,9 @@
 
 namespace ui::interfaces::light
 {
-    control_bar::control_bar(ui::core& ui_core, ui::window* window)
+    control_bar::control_bar(ui::session& session, ui::window* window)
         : ui::interface("control_bar", window)
-        , ui_core_{ ui_core }
+        , session_{ session }
     {
         nxi_trace("");
 
@@ -25,11 +25,11 @@ namespace ui::interfaces::light
         command_root_->style_data.text_color = QColor{ 0, 187, 255 };
         connect(command_root_, &light::button::event_enter, [this]()
         {
-            ui_core_.nxi_core().command_system().command_input().suggest_command();
+            session_.nxi_session().command_system().command_input().suggest_command();
         });
-        connect(command_root_, &light::button::event_mousewheel_up, [this]() { ui_core_.nxi_core().command_system().command_input().suggestions().select_previous(); });
-        connect(command_root_, &light::button::event_mousewheel_down, [this]() { ui_core_.nxi_core().command_system().command_input().suggestions().select_next(); });
-        connect(&ui_core_.nxi_core().command_system(), &nxi::command_system::event_root_update,
+        connect(command_root_, &light::button::event_mousewheel_up, [this]() { session_.nxi_session().command_system().command_input().suggestions().select_previous(); });
+        connect(command_root_, &light::button::event_mousewheel_down, [this]() { session_.nxi_session().command_system().command_input().suggestions().select_next(); });
+        connect(&session_.nxi_session().command_system(), &nxi::command_system::event_root_update,
         [this](nds::node_ptr<nxi::command> command)
         {
             command_root_->setText(command->action_name());
@@ -41,23 +41,23 @@ namespace ui::interfaces::light
         page_root_->style_data.text_color = QColor{ 255, 187, 0 };
         connect(page_root_, &light::button::event_enter, [this]()
         {
-            ui_core_.nxi_core().command_system().command_input().suggest_page();
+            session_.nxi_session().command_system().command_input().suggest_page();
         });
         connect(page_root_, &light::button::event_mousewheel_up, [this]() {
-            ui_core_.nxi_core().command_system().command_input().suggestions().select_previous();
-            ui_core_.nxi_core().command_system().command_input().exec();
+            session_.nxi_session().command_system().command_input().suggestions().select_previous();
+            session_.nxi_session().command_system().command_input().exec();
         });
         connect(page_root_, &light::button::event_mousewheel_down, [this]() {
-            ui_core_.nxi_core().command_system().command_input().suggestions().select_next();
-            ui_core_.nxi_core().command_system().command_input().exec();
+            session_.nxi_session().command_system().command_input().suggestions().select_next();
+            session_.nxi_session().command_system().command_input().exec();
         });
-        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_update_root,
+        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_update_root,
         [this](nds::node_ptr<const nxi::page> page)
         {
             page_root_->setText(page->name());
         });
 
-        command_input_ = new ui::command(ui_core_);
+        command_input_ = new ui::command(session_);
         command_input_->setFocus();
         layout->addWidget(command_root_);
         layout->addWidget(page_root_);
@@ -68,26 +68,26 @@ namespace ui::interfaces::light
         context_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #00BB99; padding: 0 20 0 20;");
         connect(context_, &light::button::event_enter, [this]()
         {
-            ui_core_.nxi_core().command_system().command_input().suggest_context();
+            session_.nxi_session().command_system().command_input().suggest_context();
         });
         layout->addWidget(context_);
 
 
 
         /*
-        connect(&ui_core_.nxi_core().command_system(), &nxi::page_system::event_root_update,
+        connect(&session_.nxi_session().command_system(), &nxi::page_system::event_root_update,
         [this](nds::node_ptr<nxi::command> command)
         {
             command_root_->setText(command->action_name());
         });*/
 
-        connect(&ui_core_.nxi_core().context_system(), &nxi::context_system::event_focus_context_update,
+        connect(&session_.nxi_session().context_system(), &nxi::context_system::event_focus_context_update,
         [this](const nxi::context& context)
         {
             context_->setText("[" + context.name() + "]");
         });
 
-        connect(&ui_core_.nxi_core().context_system(), &nxi::context_system::event_context_add,
+        connect(&session_.nxi_session().context_system(), &nxi::context_system::event_context_add,
         [this](const nxi::context& context)
         {
             context.apply(
@@ -97,7 +97,7 @@ namespace ui::interfaces::light
             );
         });
 
-        connect(&ui_core_.nxi_core().context_system(), &nxi::context_system::event_context_del,
+        connect(&session_.nxi_session().context_system(), &nxi::context_system::event_context_del,
         [this](const nxi::context& context)
         {
             context.apply(

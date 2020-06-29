@@ -1,30 +1,48 @@
 #ifndef INCLUDE_UI_SYSTEM_SESSION_HPP_NXI
 #define INCLUDE_UI_SYSTEM_SESSION_HPP_NXI
 
+#include <ui/system/page.hpp>
 #include <ui/system/window.hpp>
 #include <stz/observer_ptr.hpp>
+#include <functional>
 #include <QObject>
+
+namespace nxi
+{
+    class core;
+    class session;
+} // nxi
 
 namespace ui
 {
     class core;
+    class main_interface;
+    class window;
 
     class session
     {
     public:
-        session(ui::core& ui_core, QString id)
-            : ui_core_{ ui_core }
-            , id_{ std::move(id) }
-            , window_system_{ ui_core_ }
-        {}
+        session(ui::core& ui_core, nxi::session&);
 
-        const QString& id() const { return id_; }
-        ui::window_system& window_system() { return window_system_; }
+        const QString& id() const;
+
+        nxi::core& nxi_core();
+        nxi::session& nxi_session();
+        ui::core& ui_core();
+        ui::page_system& page_system();
+        ui::window_system& window_system();
+
+        ui::main_interface* make_main_interface(ui::window*);
+        void set_main_interface(std::function<ui::main_interface*(ui::window*)>);
 
     private:
         ui::core& ui_core_;
-        QString id_;
+        nxi::core& nxi_core_;
+        nxi::session& nxi_session_;
+        ui::page_system page_system_;
         ui::window_system window_system_;
+
+        std::function<ui::main_interface*(ui::window*)> main_interface_;
     };
 
     class session_system : public QObject

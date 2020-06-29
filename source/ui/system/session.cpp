@@ -6,14 +6,37 @@
 #include <ui/core.hpp>
 #include <ui/system/window.hpp>
 
+#include <ui/interface/light/main.hpp>
+
 namespace ui
 {
+   session::session(ui::core& ui_core, nxi::session& nxi_session)
+        : ui_core_{ ui_core }
+        , nxi_core_{ ui_core_.nxi_core() }
+        , nxi_session_{ nxi_session }
+        , page_system_{ *this }
+        , window_system_{ *this }
+        , main_interface_{ [this](ui::window* window){ return new ui::interfaces::light::main(*this, window); } }
+    {}
+
+    const QString& session::id() const { return nxi_session_.id(); }
+
+    nxi::core& session::nxi_core() { return nxi_core_; }
+    ui::core& session::ui_core() { return ui_core_; }
+    nxi::session& session::nxi_session() { return nxi_session_; }
+    ui::page_system& session::page_system() { return page_system_; }
+    ui::window_system& session::window_system() { return window_system_; }
+    ui::main_interface* session::make_main_interface(ui::window* window) { return main_interface_(window); }
+    void session::set_main_interface(std::function<ui::main_interface*(ui::window*)> fn) { main_interface_ = std::move(fn); }
+
+    //
+
     session_system::session_system(ui::core& ui_core)
         : ui_core_{ ui_core }
     {
-        connect(&ui_core_.nxi_core().session_system(), &nxi::session_system::event_add, [this](const nxi::session& session)
+        connect(&ui_core_.nxi_core().session_system(), &nxi::session_system::event_add, [this](nxi::session& session)
         {
-            sessions_.emplace_back( std::make_unique<ui::session>(ui_core_, session.id()) );
+            sessions_.emplace_back( std::make_unique<ui::session>(ui_core_, session) );
         });
 
         connect(&ui_core_.nxi_core().session_system(), &nxi::session_system::event_focus_update, [this](const nxi::session& session)

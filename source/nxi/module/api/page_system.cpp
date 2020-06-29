@@ -15,7 +15,7 @@ namespace nxi::api
 
     void page_system::add()
     {
-        nxi_core_.page_system().open<nxi::web_page>();
+        session_.page_system().open<nxi::web_page>();
     }
 
     void page_system::add_listener(int event_id, const QString& js_callback_source)
@@ -27,7 +27,7 @@ namespace nxi::api
                 break;
             case event::focus:
                 focus_callbacks_.push_back(js_callback_source);
-                connect(&nxi_core_.page_system(), &nxi::page_system::event_focus, this, [this](nds::node_ptr<nxi::page> page)
+                connect(&session_.page_system(), &nxi::page_system::event_focus, this, [this](nds::node_ptr<nxi::page> page)
                 {
                     QJsonObject activeInfo;
                     activeInfo["previousTabId"] = 0;

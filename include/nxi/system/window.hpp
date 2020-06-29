@@ -7,7 +7,7 @@
 
 namespace nxi
 {
-    class core;
+    class session;
 
     enum class window_states { normal, minimized, maximized };
 
@@ -15,7 +15,7 @@ namespace nxi
     {
         Q_OBJECT
     public:
-        window_system(nxi::core&);
+        window_system(nxi::session&);
         window_system(const window_system&) = delete;
         void operator=(const window_system&) = delete;
 
@@ -34,7 +34,7 @@ namespace nxi
         void event_state_update(unsigned int id, window_states state);
 
     private:
-        nxi::core& nxi_core_;
+        nxi::session& session_;
         std::unordered_map<unsigned int, nxi::window_data> windows_;
         unsigned int m_current;
     };

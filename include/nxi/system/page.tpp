@@ -10,7 +10,7 @@ namespace nxi
         //// ndb::store(*page);
 
         //// ndb::query<dbs::core>() << // ndb::add( nxi_model.page_connection.source_id = source->id(), nxi_model.page_connection.target_id = page->id() );
-        nxi::data::page::add_page(nxi_core_, page->name());
+        nxi::data::page::add_page(session_.database(), page->name());
 
         emit event_add(page, source);
         return page;

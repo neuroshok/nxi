@@ -14,9 +14,9 @@
 
 namespace ui
 {
-    renderer_view::renderer_view(ui::core& ui_core, QWidget* parent)
+    renderer_view::renderer_view(ui::session& session, QWidget* parent)
         : QWidget(parent)
-        , ui_core_{ ui_core }
+        , session_{ session }
     {
         layout_ = new nxw::vbox_layout;
         setLayout(layout_);
@@ -25,7 +25,7 @@ namespace ui
     void renderer_view::display(const nxi::page& page)
     {
         nxi_trace("display {}", page.name());
-        auto ui_page = ui_core_.page_system().get(page);
+        auto ui_page = session_.page_system().get(page);
 
         auto get_renderer = [this, &ui_page](const nxi::page& page)
         {

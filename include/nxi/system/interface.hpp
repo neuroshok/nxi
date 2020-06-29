@@ -7,15 +7,15 @@
 
 namespace nxi
 {
-    class core;
+    class session;
     class style;
 
     class interface_system : public QObject
     {
         Q_OBJECT
     public:
-		interface_system(nxi::core&);
-		interface_system(const interface_system&) = delete;
+        interface_system(nxi::session&);
+        interface_system(const interface_system&) = delete;
         void operator=(const interface_system&) = delete;
 
         void load();
@@ -24,11 +24,11 @@ namespace nxi
 
         std::vector<QString> styles() const;
 
-        signals:
+    signals:
         void event_update_style(const nxi::style&);
 
     private:
-		nxi::core& nxi_core_;
+        nxi::session& session_;
     };
 } // nxi
 

@@ -67,6 +67,7 @@ namespace nxi
         QSqlQuery query{ database_ };
         if (!query.exec(str_query)) nxi_error("query error : {}", query.lastError().text());
     }
+    QSqlDatabase& database::get() { return database_; }
 
     //
 

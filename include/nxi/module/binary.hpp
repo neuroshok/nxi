@@ -5,8 +5,9 @@
 
 #include <nxi/database.hpp>
 #include <nxi/module.hpp>
-#include <nxi/type.hpp>
 #include <nxi/core.hpp>
+#include <nxi/session.hpp>
+#include <nxi/type.hpp>
 
 using Module_main_ptr = int (*)(nxi::api::core&);
 using Module_load_ptr = int (*)(nxi::api::core&);
@@ -18,14 +19,14 @@ using Module_load_ptr = int (*)(nxi::api::core&);
 
 namespace nxi
 {
-    class core;
+    class session;
 
     class dynamic_module : public module
     {
     public:
-      dynamic_module(nxi::core& nxi_core, const QString& name)
+      dynamic_module(nxi::session& session, const QString& name)
           : module(name, module_type::dynamic)
-          , nxi_core_{ nxi_core }
+          , session_{ session }
           , name_{ name }
       {}
 
@@ -43,13 +44,13 @@ namespace nxi
               {
                   // get load pointer and call
                   auto load_ptr = reinterpret_cast<Module_load_ptr>(nxi_os_module_function(handle, "nxi_module_load"));
-                  if (load_ptr) load_ptr(nxi_core_.api());
+                  if (load_ptr) load_ptr(session_.api());
               }
           }
       }
 
         QString name_;
-        nxi::core& nxi_core_;
+        nxi::session& session_;
     };
 } // nxi
 

@@ -9,8 +9,8 @@
 
 namespace ui
 {
-    window::window(ui::core& ui_core, unsigned int id)
-        : ui_core_{ ui_core }
+    window::window(ui::window_system& window_system, unsigned int id)
+        : window_system_{ window_system }
         , id_{ id }
         , interface_{ nullptr }
     {
@@ -59,7 +59,7 @@ namespace ui
 
     ui::window_system& window::window_system()
     {
-        return ui_core_.window_system();
+        return window_system_;
     }
 
     void window::set_grip(QWidget* widget)

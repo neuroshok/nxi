@@ -18,23 +18,24 @@
 
 namespace ui
 {
-    page_system::page_system(ui::core& ui_core) : ui_core_{ ui_core }
+    page_system::page_system(ui::session& session)
+        : session_{ session }
     {
         // todo rename views to pages
         // init static widget page
         make_widget<ui::views::config>("nxi/config");
         make_widget<ui::views::aboutgl>("nxi/aboutgl");
 
-        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, this, [this](nds::node_ptr<nxi::page> page, nds::node_ptr<nxi::page>)
+        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_add, this, [this](nds::node_ptr<nxi::page> page, nds::node_ptr<nxi::page>)
         {
             // todo replace by page->make_ui(this);
-            if (page->type() == nxi::page_type::node) pages_.emplace(page->id(), QPointer{ new ui::node_page(ui_core_, page) });
-            else if (page->renderer_type() == nxi::renderer_type::web) pages_.emplace(page->id(), QPointer{ new ui::web_page(ui_core_, static_cast<nxi::web_page&>(*page))});
-            else if (page->renderer_type() == nxi::renderer_type::widget) pages_.emplace(page->id(), QPointer{ new ui::widget_page(ui_core_, static_cast<nxi::custom_page&>(*page))});
+            if (page->type() == nxi::page_type::node) pages_.emplace(page->id(), QPointer{ new ui::node_page(session_, page) });
+            else if (page->renderer_type() == nxi::renderer_type::web) pages_.emplace(page->id(), QPointer{ new ui::web_page(session_, static_cast<nxi::web_page&>(*page))});
+            else if (page->renderer_type() == nxi::renderer_type::widget) pages_.emplace(page->id(), QPointer{ new ui::widget_page(session_, static_cast<nxi::custom_page&>(*page))});
             else nxi_error("fail");
         });
 
-        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_close, this, [this](nds::node_ptr<nxi::page> page)
+        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_close, this, [this](nds::node_ptr<nxi::page> page)
         {
             auto it = pages_.find(page->id());
             nxi_assert(it != pages_.end());

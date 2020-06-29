@@ -20,13 +20,13 @@ namespace nxi { class style; }
 
 namespace ui
 {
-    class core;
     class command_menu;
+    class session;
 
     class command : public QLineEdit
     {
     public:
-        command(ui::core& ui_core);
+        command(ui::session& ui_core);
 
         void resizeEvent(QResizeEvent* event) override;
         void keyPressEvent(QKeyEvent* event) override;
@@ -43,7 +43,7 @@ namespace ui
         nxi::command_input& command_input();
 
     private:
-        ui::core& ui_core_;
+        ui::session& session_;
 
         QLabel* info_;
         QLabel* header_;

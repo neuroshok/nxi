@@ -32,7 +32,7 @@ namespace nxi
         stz::observer_ptr<nxi::session> focus();
 
     signals:
-        void event_add(const nxi::session&);
+        void event_add(nxi::session&);
         void event_focus_update(const nxi::session&);
 
     private:

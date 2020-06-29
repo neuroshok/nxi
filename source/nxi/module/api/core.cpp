@@ -12,12 +12,12 @@ namespace nxi::api
 
     void core::log(const QString& message)
     {
-        nxi_core_.error(message);
+        session_.error(message);
     };
 
     void core::error(const std::string& message)
     {
-        nxi_core_.error(QString::fromStdString(message));
+        session_.error(QString::fromStdString(message));
     };
 
 

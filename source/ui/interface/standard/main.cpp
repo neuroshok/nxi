@@ -27,10 +27,10 @@
 
 namespace ui::interfaces::standard
 {
-    main::main(ui::core& ui_core, ui::window* window)
-        : ui_core_{ ui_core }
+    main::main(ui::session& session, ui::window* window)
+        : session_{ session }
     {
-        connect(&ui_core_.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style)
+        connect(&session_.nxi_session().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style)
         {
             style.update(this);
         });
@@ -42,9 +42,9 @@ namespace ui::interfaces::standard
         auto top_layout = new nxw::hbox_layout(this);
         auto middle_layout = new nxw::hbox_layout(this);
 
-        content_ = new content(ui_core_, window);
-        control_bar_ = new control_bar(ui_core_, window);
-        page_bar_ = new page_bar(ui_core_, window);
+        content_ = new content(session_, window);
+        //control_bar_ = new control_bar(session_, window);
+        //page_bar_ = new page_bar(session_, window);
 
         static_cast<ui::window*>(this->window())->set_grip(this);
 
@@ -54,15 +54,15 @@ namespace ui::interfaces::standard
 
         main_layout->addLayout(top_layout);
         main_layout->addLayout(middle_layout);
-
-        connect(&ui_core_.nxi_core(), &nxi::core::event_error, this, [](const QString& message)
+/*
+        connect(&session_.nxi_session()., &nxi::core::event_error, this, [](const QString& message)
         {
             auto* error = new QMessageBox;
             error->setAttribute(Qt::WA_DeleteOnClose, true);
             error->setWindowTitle("nxi error");
             error->setText(message);
             error->show();
-        });
+        });*/
     }
 
     void main::toggle_fullmode()

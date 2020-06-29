@@ -32,21 +32,12 @@ namespace ui
         void quit();
 
         nxi::core& nxi_core();
-        ui::page_system& page_system();
         ui::session_system& session_system();
-        ui::window_system& window_system();
-
-        ui::main_interface* make_main_interface(ui::window* window) { return main_interface_(window); }
-        void set_main_interface(std::function<ui::main_interface*(ui::window*)> fn) { main_interface_ = std::move(fn); }
 
     private:
         QApplication& app_;
         nxi::core& nxi_core_;
 
-        std::function<ui::main_interface*(ui::window*)> main_interface_;
-
-        ui::page_system page_system_;
-        // ui::window_system window_system_;
         ui::session_system session_system_;
 
         QSystemTrayIcon* systray_;

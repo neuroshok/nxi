@@ -16,7 +16,7 @@ namespace nxi
         add_session.function = [this](const nxi::values& params)
         {
             auto session_id = params.get(0);
-            nxi_core_.session_system().add(session_id);
+            session_.nxi_core().session_system().add(session_id);
         };
         add_session.parameters = {{ "name" }};
         add(std::move(add_session));

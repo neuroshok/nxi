@@ -7,8 +7,8 @@
 
 namespace nxi
 {
-    interface_system::interface_system(nxi::core& nxi_core)
-         : nxi_core_{ nxi_core }
+    interface_system::interface_system(nxi::session& session)
+         : session_{ session }
     {}
 
 

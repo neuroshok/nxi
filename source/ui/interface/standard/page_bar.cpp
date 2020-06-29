@@ -16,9 +16,9 @@
 
 namespace ui::interfaces::standard
 {
-    page_bar::page_bar(ui::core& ui_core, ui::window* window) :
+    page_bar::page_bar(ui::session& session, ui::window* window) :
         ui::interface("page_bar", window)
-        , ui_core_{ ui_core }
+        , session_{ session }
     {
         /*
         connect(&ui_core_.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style){
@@ -29,6 +29,7 @@ namespace ui::interfaces::standard
         //if (ui_core_.nxi_core().config().browser.interface.show_page_bar.get()) show();
         //else hide();
 
+        /*
         auto layout = new nxw::vbox_layout;
         setLayout(layout);
 
@@ -62,5 +63,6 @@ namespace ui::interfaces::standard
         {
             //ui_core_.nxi_core().page_system().add(nxi::explorer_page{}, 0);
         });
+         */
     }
 } // ui::interfaces

@@ -15,10 +15,7 @@ namespace nxi
 {
     core::core()
         : global_database_{}
-        , api_{ *this } // init before systems
         , config_{}
-        , module_system_{ *this }
-        , page_system_{ *this }
         , session_system_{ *this }
     {
         // apply config
@@ -34,18 +31,7 @@ namespace nxi
         nxi_trace("");
 
         global_database_.connect();
-
         session_system_.load();
-
-        /*
-        window_system_.load(); // window create interface
-
-        command_system_.load();
-        page_system_.load();
-        interface_system_.load();
-        context_system_.load();
-
-        module_system_.load();*/
     }
 
     void core::quit() const
@@ -53,23 +39,10 @@ namespace nxi
         emit event_quit();
     }
 
-    nxi::api::core& core::api() { return api_; }
     nxi::config& core::config() { return config_; }
-    nxi::database& core::database() { return session_system_.focus()->core_database(); }
     nxi::database& core::global_database() { return global_database_; }
 
-    nxi::command_system& core::command_system() { return session_system_.focus()->command_system(); }
-    nxi::context_system& core::context_system() { return session_system_.focus()->context_system(); }
-    nxi::interface_system& core::interface_system() { return session_system_.focus()->interface_system(); }
-    nxi::module_system& core::module_system() { return module_system_; }
-    nxi::page_system& core::page_system() { return page_system_; }
     nxi::session_system& core::session_system() { return session_system_; }
-    nxi::window_system& core::window_system() { return session_system_.focus()->window_system(); }
-
-    void core::error(const QString& message) const
-    {
-        emit event_error(message);
-    }
 
     QString core::module_path()
     {

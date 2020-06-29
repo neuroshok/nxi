@@ -11,7 +11,7 @@ namespace nxi { class page; }
 
 namespace ui
 {
-    class core;
+    class session;
     class page;
     class renderer;
 
@@ -19,13 +19,13 @@ namespace ui
     {
         Q_OBJECT
     public:
-        renderer_view(ui::core& ui_core, QWidget* parent);
+        renderer_view(ui::session&, QWidget* parent);
 
         void display(const nxi::page&);
         void display(const nxi::page_system::pages_view pages);
 
     private:
-        ui::core& ui_core_;
+        ui::session& session_;
         std::vector<stz::observer_ptr<ui::renderer>> renderers_;
 
         nxw::vbox_layout* layout_;

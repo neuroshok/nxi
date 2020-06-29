@@ -6,19 +6,19 @@
 
 namespace nxi::modules
 {
-    nxi_static::nxi_static(nxi::core& nxi_core)
+    nxi_static::nxi_static(nxi::session& session)
         : module("nxi_static", module_type::compiled)
-        , nxi_core_{ nxi_core }
+        , session_{ session }
     {}
 
     void nxi_static::on_load()
     {
         auto cmd = nxi::command("nxi_static", "action", [this](const nxi::values&)
         {
-            nxi_core_.error("nxi_static module is loaded");
+            session_.error("nxi_static module is loaded");
         });
 
-        nxi_core_.command_system().add(std::move(cmd));
+        session_.command_system().add(std::move(cmd));
     }
 
 } // nxi::modules

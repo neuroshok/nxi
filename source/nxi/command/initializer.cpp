@@ -1,37 +1,37 @@
 #include <nxi/command/initializer.hpp>
 
-#include <nxi/core.hpp>
+#include <nxi/session.hpp>
 #include <nxi/command.hpp>
 #include <nxi/suggestion/text.hpp>
 #include <nxi/values.hpp>
 
 namespace nxi
 {
-    command_initializer::command_initializer(nxi::core& nxi_core)
-        : nxi_core_{ nxi_core }
+    command_initializer::command_initializer(nxi::session& session)
+        : session_{ session }
         , node_{ nullptr }
     {}
 
     nds::node_ptr<nxi::command> command_initializer::add(nxi::command_data data)
     {
-        auto command = nxi_core_.command_system().add(nxi::command(std::move(data)), node_);
+        auto command = session_.command_system().add(nxi::command(std::move(data)), node_);
         return command;
     }
 
     nds::node_ptr<nxi::command> command_initializer::add(const QString& action, command_system::function_type fn, const QString& icon)
     {
-        auto command = nxi_core_.command_system().add(nxi::command("nxi", action, std::move(fn), icon), node_);
+        auto command = session_.command_system().add(nxi::command("nxi", action, std::move(fn), icon), node_);
         return command;
     }
 
     nds::node_ptr<nxi::command> command_initializer::add_node(const QString& str_command_node)
     {
         auto command = nxi::command("nxi", str_command_node, [](const nxi::values&){}, ":/icon/node");
-        auto command_node = nxi_core_.command_system().add(std::move(command), node_);
+        auto command_node = session_.command_system().add(std::move(command), node_);
 
         auto fn = [this, command_node](const nxi::values&)
         {
-            nxi_core_.command_system().set_root(command_node);
+            session_.command_system().set_root(command_node);
         };
         command_node->function_ = std::move(fn);
 
@@ -47,7 +47,7 @@ namespace nxi
     void command_initializer::set_root(nds::node_ptr<nxi::command> node)
     {
         node_ = std::move(node);
-        nxi_core_.command_system().set_root(node_);
+        session_.command_system().set_root(node_);
     }
 
     void command_initializer::load()
@@ -71,12 +71,12 @@ namespace nxi
             {
                 nxi_assert(params.size() == 1);
                 auto name = params.get(0);
-                nxi_core_.interface_system().load_style(name);
+                session_.interface_system().load_style(name);
             };
             load_style.parameters = {
             { "name", [this](nxi::suggestion_vector& suggestion)
                 {
-                    for (auto style_name : nxi_core_.interface_system().styles())
+                    for (auto style_name : session_.interface_system().styles())
                     {
                         suggestion.push_back(nxi::text_suggestion{ style_name });
                     }

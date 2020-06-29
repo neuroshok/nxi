@@ -5,8 +5,8 @@
 
 namespace ui
 {
-    class core;
     class command;
+    class session;
 } // ui
 
 namespace ui::interfaces::light
@@ -16,7 +16,7 @@ namespace ui::interfaces::light
     class control_bar : public ui::interface
     {
     public:
-        control_bar(ui::core& ui_core, ui::window* window);
+        control_bar(ui::session&, ui::window*);
 
         void enterEvent(QEvent* event) override;
         void leaveEvent(QEvent* event) override;
@@ -24,7 +24,7 @@ namespace ui::interfaces::light
         ui::command* command_input();
 
     private:
-        ui::core& ui_core_;
+        ui::session& session_;
 
         ui::command* command_input_;
         button* command_root_;

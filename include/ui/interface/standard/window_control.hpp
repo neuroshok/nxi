@@ -11,8 +11,9 @@ namespace ui::interfaces::standard
     class window_control : public ui::interface
         {
         public:
-            window_control(ui::core& ui_core, ui::window* w) : interface(w)
+            window_control(ui::session& session, ui::window* w) : interface(w)
             {
+                /*
                 auto layout = new nxw::hbox_layout;
                 setLayout(layout);
 
@@ -27,7 +28,7 @@ namespace ui::interfaces::standard
 
                 layout->addWidget(win_minimize);
                 layout->addWidget(new nxw::icon_button(this, ":/icon/maximize"));
-                layout->addWidget(win_close);
+                layout->addWidget(win_close);*/
             }
         };
 } // ui

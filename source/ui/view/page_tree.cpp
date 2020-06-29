@@ -108,7 +108,7 @@ private:
 
 namespace ui::views
 {
-    page_tree::page_tree(ui::core& ui_core) : ui_core_{ ui_core }
+    page_tree::page_tree(ui::session& session) : session_{ session }
     {
         init_ui();
         init_data();
@@ -153,11 +153,11 @@ namespace ui::views
 
             auto menu = new ui::menu(this);
             /*
-            menu->add("new node", [this, source_id](){ ui_core_.nxi_core().page_system().add<nxi::page_node>(source_id); });
-            menu->add("new web_page", [this, source_id](){ ui_core_.nxi_core().page_system().open<nxi::web_page>(source_id); });
+            menu->add("new node", [this, source_id](){ session_.nxi_session().page_system().add<nxi::page_node>(source_id); });
+            menu->add("new web_page", [this, source_id](){ session_.nxi_session().page_system().open<nxi::web_page>(source_id); });
 
-            menu->add("new cfg", [this, source_id](){ ui_core_.nxi_core().page_system().open<nxi::custom_page>(source_id, "nxi:config", "nxi/config", nxi::renderer_type::widget); });
-            menu->add("new web page custom", [this, source_id](){ ui_core_.nxi_core().page_system().add<nxi::custom_page>(source_id, "nxi:test", "file:///C:/Users/ads/Desktop/test.html", nxi::renderer_type::web); });
+            menu->add("new cfg", [this, source_id](){ session_.nxi_session().page_system().open<nxi::custom_page>(source_id, "nxi:config", "nxi/config", nxi::renderer_type::widget); });
+            menu->add("new web page custom", [this, source_id](){ session_.nxi_session().page_system().add<nxi::custom_page>(source_id, "nxi:test", "file:///C:/Users/ads/Desktop/test.html", nxi::renderer_type::web); });
 */
             menu->exec();
         });
@@ -167,7 +167,8 @@ namespace ui::views
 
 
         // connection move
-        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_move, this, [this](nxi::page_id page_id, nxi::page_id source_id, nxi::page_id target_id)
+        /*
+        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_move, this, [this](nxi::page_id page_id, nxi::page_id source_id, nxi::page_id target_id)
         {
             connection_del(source_id, page_id);
             connection_add(target_id, page_id);
@@ -179,6 +180,7 @@ namespace ui::views
             auto page_item = static_cast<ui::tree_page_item*>(base_item);
             //page_item->page().focus();
         });
+         */
     }
 
     ui::tree_page_item* page_tree::add(nxi::page& page, nxi::page_id source_id)
@@ -277,7 +279,7 @@ namespace ui::views
 
                 if (event->dropAction() == Qt::MoveAction)
                 {
-                    ui_core_.nxi_core().page_system().move(page_id, source_id, target_id);
+                    session_.nxi_session().page_system().move(page_id, source_id, target_id);
                 }
                 if (event->dropAction() == Qt::CopyAction)
                 {

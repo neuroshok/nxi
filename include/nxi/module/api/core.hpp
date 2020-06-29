@@ -15,10 +15,10 @@ namespace nxi::api
     {
         Q_OBJECT
     public:
-        core(nxi::core& nxi_core)
-            : nxi_core_{ nxi_core }
-            , command_system_{ nxi_core_ }
-            , page_system_{ nxi_core_ }
+        core(nxi::session& session)
+            : session_{ session }
+            , command_system_{ session }
+            , page_system_{ session }
         {}
 
         NXI_SHARED nxi::api::command_system& command_system();
@@ -30,7 +30,7 @@ namespace nxi::api
         void log(const QString& message);
 
     private:
-        nxi::core& nxi_core_;
+        nxi::session& session_;
 
         nxi::api::command_system command_system_;
         nxi::api::page_system page_system_;

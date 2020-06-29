@@ -12,10 +12,10 @@
 
 namespace ui
 {
-    window_system::window_system(ui::core& ui_core)
-        : ui_core_{ ui_core }
+    window_system::window_system(ui::session& session)
+        : session_{ session }
     {
-        QObject::connect(&ui_core_.nxi_core().window_system(), &nxi::window_system::event_add, [this](const nxi::window_data& window)
+        QObject::connect(&session_.nxi_session().window_system(), &nxi::window_system::event_add, [this](const nxi::window_data& window)
         {
             nxi_trace_event("");
             add(window);
@@ -32,13 +32,13 @@ namespace ui
 
     ui::window* window_system::add(const nxi::window_data& window)
     {
-        auto ui_window = new ui::window(ui_core_, window.id);
+        auto ui_window = new ui::window(*this, window.id);
         // make defaut interface
         ui_window->move(window.x, window.y);
         ui_window->resize(window.w, window.h);
         ui_window->show();
 
-        auto ui_interface = ui_core_.make_main_interface(ui_window);
+        auto ui_interface = session_.make_main_interface(ui_window);
         ui_window->set_interface(ui_interface);
 
         m_windows.push_back(ui_window);
@@ -47,27 +47,27 @@ namespace ui
 
     void window_system::close(ui::window* window)
     {
-	    if (count() == 1) ui_core_.quit();
-	    else
+        if (count() == 1) session_.ui_core().quit();
+        else
         {
-            ui_core_.nxi_core().window_system().del(window->id());
+            session_.nxi_session().window_system().del(window->id());
         }
         m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), window), m_windows.end());
     }
 
     void window_system::move(ui::window* window, int x, int y)
     {
-        ui_core_.nxi_core().window_system().move(window->id(), x, y);
+        session_.nxi_session().window_system().move(window->id(), x, y);
     }
 
     void window_system::resize(ui::window* window, int w, int h)
     {
-        ui_core_.nxi_core().window_system().resize(window->id(), w, h);
+        session_.nxi_session().window_system().resize(window->id(), w, h);
     }
 
     void window_system::minimize(ui::window* window)
     {
-        ui_core_.nxi_core().window_system().minimize(window->id());
+        session_.nxi_session().window_system().minimize(window->id());
         window->showMinimized();
     }
 

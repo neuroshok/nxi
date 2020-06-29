@@ -8,9 +8,9 @@
 
 namespace ui
 {
-    command_menu::command_menu(ui::core& ui_core, QWidget* parent)
+    command_menu::command_menu(ui::session& session, QWidget* parent)
         : QWidget(parent)
-        , ui_core_{ ui_core }
+        , session_{ session }
         , hover_index_{ -1 }
         , selection_index_{ -1 }
         , movie_{ ":/image/sound" }
@@ -18,12 +18,12 @@ namespace ui
         connect(&movie_, &QMovie::frameChanged, [this](int){ repaint(); });
         movie_.start();
 
-        connect(&ui_core_.nxi_core().command_system().command_input().suggestions(), &nxi::suggestion_vector::event_update, [this](stz::observer_ptr<const nxi::suggestion_vector> suggestions)
+        connect(&session_.nxi_session().command_system().command_input().suggestions(), &nxi::suggestion_vector::event_update, [this](stz::observer_ptr<const nxi::suggestion_vector> suggestions)
         {
             set_data(suggestions);
         });
 
-        connect(&ui_core_.nxi_core().command_system().command_input().suggestions(), &nxi::suggestion_vector::event_selection_update, [this](int index)
+        connect(&session_.nxi_session().command_system().command_input().suggestions(), &nxi::suggestion_vector::event_selection_update, [this](int index)
         {
             selection_index_ = index;
             repaint();
@@ -154,7 +154,7 @@ namespace ui
         painter.setPen(style_data.item_text_color);
         painter.drawText(item_rect, Qt::AlignVCenter, command.name());
 
-        QString input_text = ui_core_.nxi_core().command_system().command_input().text();
+        QString input_text = session_.nxi_session().command_system().command_input().text();
         int hl_offset = command.name().indexOf(input_text);
         if (input_text.size() > 0 && hl_offset >= 0)
         {
@@ -214,7 +214,7 @@ namespace ui
         painter.drawText(item_rect, Qt::AlignVCenter, page_name);
 
         // highlight
-        QString input_text = ui_core_.nxi_core().command_system().command_input().text();
+        QString input_text = session_.nxi_session().command_system().command_input().text();
         int hl_offset = page_name.indexOf(input_text);
         if (input_text.size() > 0 && hl_offset >= 0)
         {
@@ -291,19 +291,19 @@ namespace ui
         }
 
         if (hover_index_ != -1 && hover_index_ != selection_index_)
-            ui_core_.nxi_core().command_system().command_input().suggestions().select(hover_index_);
+            session_.nxi_session().command_system().command_input().suggestions().select(hover_index_);
     }
 
     void command_menu::mousePressEvent(QMouseEvent* event)
     {
         if (event->button() == Qt::LeftButton)
-            ui_core_.nxi_core().command_system().command_input().exec();
+            session_.nxi_session().command_system().command_input().exec();
         else if (event->button() == Qt::MiddleButton)
-            ui_core_.nxi_core().command_system().command_input().suggestions().selected().apply(
+            session_.nxi_session().command_system().command_input().suggestions().selected().apply(
             [this](nds::node_ptr<nxi::page> page) {
                 // todo suggestion_vector should use use event_close
-                ui_core_.nxi_core().command_system().command_input().suggestions().erase(page);
-                ui_core_.nxi_core().page_system().close(page);
+                session_.nxi_session().command_system().command_input().suggestions().erase(page);
+                session_.nxi_session().page_system().close(page);
                 //page->close();
             },
             [this](auto&&) {});
@@ -312,8 +312,8 @@ namespace ui
     void command_menu::wheelEvent(QWheelEvent* event)
     {
         if (event->delta() > 0)
-            ui_core_.nxi_core().command_system().command_input().suggestions().select_previous();
+            session_.nxi_session().command_system().command_input().suggestions().select_previous();
         else
-            ui_core_.nxi_core().command_system().command_input().suggestions().select_next();
+            session_.nxi_session().command_system().command_input().suggestions().select_next();
     }
 } // ui

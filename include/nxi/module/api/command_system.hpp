@@ -1,7 +1,7 @@
 #ifndef INCLUDE_NXI_MODULE_API_COMMAND_SYSTEM_HPP_NXI
 #define INCLUDE_NXI_MODULE_API_COMMAND_SYSTEM_HPP_NXI
 
-namespace nxi { class core; }
+namespace nxi { class session; }
 
 #include <nxi/module/platform.hpp>
 
@@ -19,14 +19,14 @@ namespace nxi::api
 
         Q_OBJECT
     public:
-        command_system(nxi::core& nxi_core)
-            : nxi_core_{ nxi_core }
+        command_system(nxi::session& session)
+            : session_{ session }
         {}
 
         NXI_SHARED void add(const std::string& name, std::function<void(const nxi::values&)> fn);
 
     private:
-        nxi::core& nxi_core_;
+        nxi::session& session_;
     };
 } // nxi::api
 

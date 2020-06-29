@@ -28,7 +28,7 @@ namespace nxi::modules
 
         // custom_page
         /*
-        QObject::connect(&nxi_core_.page_system(), qOverload<nxi::custom_page&, nxi::page_id>(&nxi::page_system::event_add), [this](nxi::custom_page& page, nxi::page_id source_id)
+        QObject::connect(&session_.page_system(), qOverload<nxi::custom_page&, nxi::page_id>(&nxi::page_system::event_add), [this](nxi::custom_page& page, nxi::page_id source_id)
         {
             auto win = new MainWindow;
             win->show();
@@ -41,14 +41,14 @@ namespace nxi::modules
         {
             //custom_page.on_add([](){ auto win = new MainWindow; })
             //custom_page.on_render([](){ auto win = new MainWindow; })
-            nxi_core_.page_system().add<custom_page>(0);
+            session_.page_system().add<custom_page>(0);
         };
 
         auto cmd = nxi::command("strateon", "main", action, ":/strateon/logo");
 
 
 
-        nxi_core_.command_system().add(std::move(cmd));
+        session_.command_system().add(std::move(cmd));
 
          */
     }

@@ -26,20 +26,10 @@ namespace nxi
         void load();
         void quit() const;
 
-        void error(const QString& message) const;
-
-        nxi::api::core& api();
         nxi::config& config();
-        nxi::database& database();
         nxi::database& global_database();
 
-        nxi::command_system& command_system();
-        nxi::context_system& context_system();
-        nxi::interface_system& interface_system();
-        nxi::module_system& module_system();
-        nxi::page_system& page_system();
         nxi::session_system& session_system();
-        nxi::window_system& window_system();
 
         static QString module_path();
         static QString module_path(const QString& name, nxi::module_type);
@@ -47,15 +37,11 @@ namespace nxi
 
     signals:
         void event_quit() const;
-        void event_error(const QString&) const;
 
     private:
         nxi::global_database global_database_;
-        nxi::api::core api_;
         nxi::config config_;
 
-        nxi::module_system module_system_;
-        nxi::page_system page_system_;
         nxi::session_system session_system_;
     };
 } // nxi

@@ -10,11 +10,11 @@
 
 namespace ui
 {
-    widget_page::widget_page(ui::core& ui_core, nxi::custom_page& page)
+    widget_page::widget_page(ui::session& session, nxi::custom_page& page)
         : ui::page{ page }
         , page_{ page }
-        , ui_core_{ ui_core }
-        , widget_{ ui_core_.page_system().get(page.command()) }
+        , session_{ session }
+        , widget_{ session_.page_system().get(page.command()) }
     {
         auto* l = new nxw::hbox_layout;
         setLayout(l);

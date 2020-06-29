@@ -17,14 +17,14 @@
 
 namespace nxi
 {
-    module_system::module_system(nxi::core& nxi_core) :
-		nxi_core_{ nxi_core }
-		, static_modules_{ nxi_core_ }
-		, web_channel_{ new QWebChannel{ this } }
-	{
-	    web_channel_->registerObject("core", &nxi_core_.api());
-        web_channel_->registerObject("page_system", &nxi_core_.api().page_system());
-	}
+    module_system::module_system(nxi::session& session) :
+        session_{ session }
+        , static_modules_{ session_ }
+        , web_channel_{ new QWebChannel{ this } }
+    {
+        web_channel_->registerObject("core", &session_.api());
+        web_channel_->registerObject("page_system", &session_.api().page_system());
+    }
 
     const std::vector<std::unique_ptr<nxi::module>>& module_system::get() const
     {

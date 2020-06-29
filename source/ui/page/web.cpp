@@ -23,13 +23,13 @@
 
 namespace ui
 {
-    web_page::web_page(ui::core& ui_core, nxi::web_page& page) :
+    web_page::web_page(ui::session& session, nxi::web_page& page) :
         ui::page{ page }
         , page_{ page }
-        , ui_core_{ ui_core }
+        , session_{ session }
     {
         native_page_ = new ui::web_engine_page(QWebEngineProfile::defaultProfile(), this);
-        native_page_->setWebChannel(ui_core_.nxi_core().module_system().web_channel());
+        native_page_->setWebChannel(session_.nxi_session().module_system().web_channel());
 
         connect(&page, &nxi::web_page::event_add_script, [this](const QWebEngineScript& script)
         {
@@ -71,7 +71,7 @@ namespace ui
             native_page_->runJavaScript(script, [f = std::move(fn)](const QVariant& result){ if (f) f(result); });
         });
 
-        ui_core_.nxi_core().module_system().process(page_);
+        session_.nxi_session().module_system().process(page_);
     }
 
     void web_page::display(ui::renderer* renderer)

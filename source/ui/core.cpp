@@ -25,9 +25,7 @@ namespace ui
     core::core(QApplication& app, nxi::core& nxi_core) :
         app_{ app }
         , nxi_core_{ nxi_core }
-        , page_system_{ *this }
         , session_system_{ *this }
-        , main_interface_{ [this](ui::window* window){ return new ui::interfaces::light::main(*this, window); } }
     {
         // systray
         systray_ = new QSystemTrayIcon;
@@ -47,15 +45,5 @@ namespace ui
     nxi::core& core::nxi_core()
     {
         return nxi_core_;
-    }
-
-    ui::page_system& core::page_system()
-    {
-        return page_system_;
-    }
-
-    ui::window_system& core::window_system()
-    {
-        return session_system_.focus().window_system();
     }
 } // ui

@@ -10,7 +10,6 @@ class QHBoxLayout;
 
 namespace ui
 {
-    class core;
     class window_system;
     class main_interface;
 
@@ -18,7 +17,7 @@ namespace ui
     {
     Q_OBJECT
     public:
-        window(ui::core& ui_core, unsigned int m_id);
+        window(ui::window_system&, unsigned int m_id);
         ~window();
 
         void mouseReleaseEvent(QMouseEvent*) override;
@@ -34,10 +33,10 @@ namespace ui
         ui::window_system& window_system();
 
     private:
-        ui::core& ui_core_;
+        ui::window_system& window_system_;
         unsigned int id_;
-        QHBoxLayout* layout_;
         ui::main_interface* interface_;
+        QHBoxLayout* layout_;
     };
 
 } // ui

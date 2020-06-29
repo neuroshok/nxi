@@ -37,7 +37,7 @@ namespace nxi
         void query(const QString& str_query);
 
     private:
-        inline static std::array<QSqlQuery, static_cast<size_t>(nxi::prepared_query::size_)> queries_;
+        std::array<QSqlQuery, static_cast<size_t>(nxi::prepared_query::size_)> queries_;
 
         bool make_required_;
         QString name_;

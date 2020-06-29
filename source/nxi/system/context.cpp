@@ -7,8 +7,8 @@
 
 namespace nxi
 {
-    context_system::context_system(nxi::core& nxi_core)
-        : nxi_core_{ nxi_core }
+    context_system::context_system(nxi::session& session)
+        : session_{ session }
     {}
 
     void context_system::load()

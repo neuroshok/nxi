@@ -10,10 +10,10 @@
 
 namespace ui::views
 {
-    config::config(ui::core& ui_core)
-        : ui_core_{ ui_core }
+    config::config(ui::session& session)
+        : session_{ session }
     {
-        auto& cfg = ui_core_.nxi_core().config();
+        //auto& cfg = session_.nxi_session().config();
 
         form_ = new QFormLayout(this);
 

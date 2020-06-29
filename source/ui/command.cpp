@@ -15,31 +15,31 @@
 
 namespace ui
 {
-    command::command(ui::core& ui_core)
-        : ui_core_{ ui_core }
+    command::command(ui::session& session)
+        : session_{ session }
     {
         setStyleSheet("font-weight:bold");
 
         info_ = new QLabel(this);
         header_ = new QLabel(this);
 
-        connect(&ui_core_.nxi_core().command_system(), &nxi::command_system::event_execution_request, [this](nds::node_ptr<const nxi::command> command)
+        connect(&session_.nxi_session().command_system(), &nxi::command_system::event_execution_request, [this](nds::node_ptr<const nxi::command> command)
         {
             command_executor_.emplace( command );
-            ui_core_.nxi_core().context_system().add<nxi::contexts::command_executor>(command_executor_.value());
+            session_.nxi_session().context_system().add<nxi::contexts::command_executor>(command_executor_.value());
             setText("");
         });
 
         connect(this, &QLineEdit::returnPressed, [this]()
         {
-            if (command_executor_ && ui_core_.nxi_core().context_system().is_active<nxi::contexts::command_executor>())
+            if (command_executor_ && session_.nxi_session().context_system().is_active<nxi::contexts::command_executor>())
             {
                 command_executor_->add_value(command_input().text());
                 command_executor_->exec();
                 if (command_executor_->is_complete())
                 {
                     command_input().reset();
-                    ui_core_.nxi_core().context_system().del<nxi::contexts::command_executor>();
+                    session_.nxi_session().context_system().del<nxi::contexts::command_executor>();
                 }
                 else
                 {
@@ -50,7 +50,7 @@ namespace ui
             else command_input().exec();
         });
 
-        connect(&ui_core_.nxi_core().context_system(), &nxi::context_system::event_context_add,
+        connect(&session_.nxi_session().context_system(), &nxi::context_system::event_context_add,
         [this](const nxi::context& context)
         {
             context.apply(
@@ -59,7 +59,7 @@ namespace ui
             );
         });
 
-        connect(&ui_core_.nxi_core().context_system(), &nxi::context_system::event_focus_context_update,
+        connect(&session_.nxi_session().context_system(), &nxi::context_system::event_focus_context_update,
         [this](const nxi::context& context)
         {
             context.apply(
@@ -70,22 +70,22 @@ namespace ui
 
 
         // use only base
-        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_focus, this, [this](nxi::page_system::page_ptr page)
+        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_focus, this, [this](nxi::page_system::page_ptr page)
         {
             setText(page->name());
 
         });
-        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_update_command, this, [this](nxi::page_system::page_ptr page)
+        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_update_command, this, [this](nxi::page_system::page_ptr page)
         {
             setText(page->name());
         });
 
-        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_shortcut_input_update, this, [this](const QString& shortcut_input)
+        connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_shortcut_input_update, this, [this](const QString& shortcut_input)
         {
             setPlaceholderText(shortcut_input);
         });
 
-        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_input_update, this, [this](const QString& input)
+        connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_input_update, this, [this](const QString& input)
         {
             setText(input);
         });
@@ -121,12 +121,12 @@ namespace ui
                 break;
 
             default:
-                ui_core_.nxi_core().command_system().command_input().update(text(), event);
+                session_.nxi_session().command_system().command_input().update(text(), event);
         }
     }
     void command::keyReleaseEvent(QKeyEvent* event)
     {
-        ui_core_.nxi_core().command_system().command_input().update(text(), event);
+        session_.nxi_session().command_system().command_input().update(text(), event);
     }
 
     void command::focusInEvent(QFocusEvent *event)
@@ -137,7 +137,7 @@ namespace ui
     void command::focusOutEvent(QFocusEvent* event)
     {
         QLineEdit::focusOutEvent(event);
-        auto focused_page = ui_core_.nxi_core().page_system().focus();
+        auto focused_page = session_.nxi_session().page_system().focus();
         //if (focused_page) setText(focused_page->name());
     }
 
@@ -145,7 +145,7 @@ namespace ui
     {
         if (hasFocus()) return;
         //if (!input_.is_empty()) return;
-        auto focused_page = ui_core_.nxi_core().page_system().focus();
+        auto focused_page = session_.nxi_session().page_system().focus();
         //if (focused_page) setText(focused_page->name());
     }
 
@@ -153,7 +153,7 @@ namespace ui
     {
         if (hasFocus()) return;
         //if (!input_.is_empty()) return;
-        auto focused_page = ui_core_.nxi_core().page_system().focus();
+        auto focused_page = session_.nxi_session().page_system().focus();
         //if (focused_page) setText(focused_page->name());
     }
 
@@ -166,6 +166,6 @@ namespace ui
 
     nxi::command_input& command::command_input()
     {
-        return ui_core_.nxi_core().command_system().command_input();
+        return session_.nxi_session().command_system().command_input();
     }
 } // ui

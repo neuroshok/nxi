@@ -39,15 +39,16 @@ namespace ui::interfaces::standard
     class window_controls : public ui::interface
     {
     public:
-        window_controls(ui::core& ui_core, ui::window* w) : interface(w)
+        window_controls(ui::session& session, ui::window* w) : interface(w)
         {
+            /*
             auto layout = new nxw::hbox_layout;
             setLayout(layout);
 
             auto win_minimize = new nxw::icon_button(this, ":/icon/minimize");
-            QObject::connect(win_minimize, &QPushButton::pressed, [this, &ui_core]()
+            QObject::connect(win_minimize, &QPushButton::pressed, [this, &session]()
             {
-                ui_core.window_system().minimize(window());
+                session.window_system().minimize(window());
             });
 
             auto win_close = new nxw::icon_button(this, ":/icon/close");
@@ -55,7 +56,7 @@ namespace ui::interfaces::standard
 
             layout->addWidget(win_minimize);
             layout->addWidget(new nxw::icon_button(this, ":/icon/maximize"));
-            layout->addWidget(win_close);
+            layout->addWidget(win_close);*/
         }
     };
 
@@ -72,8 +73,8 @@ namespace ui::interfaces::standard
 
 
         auto menu = new nxw::menu{ this };
-        menu->add<nxw::menu_item>("new window", [&ui_core](){ ui_core.nxi_core().window_system().add({}); });
-        menu->add<nxw::menu_item>(ui_core.nxi_core().command_system().get("quit").name(), [&ui_core](){  ui_core.nxi_core().command_system().get("quit").exec(); } );
+        //menu->add<nxw::menu_item>("new window", [&ui_core](){ window_system().add({}); });
+        //menu->add<nxw::menu_item>(ui_core.nxi_core().command_system().get("quit").name(), [&ui_core](){  ui_core.nxi_core().command_system().get("quit").exec(); } );
 
 /*        menu->add(ui_core.nxi_core().command_system().get("config"));
         menu->add(ui_core.nxi_core().command_system().get("about"));
@@ -92,7 +93,7 @@ namespace ui::interfaces::standard
         m_context->addItem("explorer");
         m_context->hide();
 
-        command_bar_ = new ui::command(m_ui_core);
+        //command_bar_ = new ui::command(session_);
 
         // module command
         // init
@@ -104,13 +105,14 @@ namespace ui::interfaces::standard
         }
          */
         // event
+        /*
         QObject::connect(&ui_core.nxi_core().command_system(), &nxi::command_system::event_add, [this](const nxi::command& command)
         {
             command_add(command);
-        });
+        });*/
 
 
-        auto window_controls = new ui::interfaces::standard::window_controls(ui_core, window);
+        //auto window_controls = new ui::interfaces::standard::window_controls(ui_core, window);
 
         layout->addWidget(btn_menu);
         layout->addSpacing(64);
@@ -127,7 +129,7 @@ namespace ui::interfaces::standard
         layout->addWidget(command_bar_, 1);
         layout->addLayout(module_controls_);
         layout->addStretch();
-        layout->addWidget(window_controls);
+        //layout->addWidget(window_controls);
     }
 
     void control_bar::command_add(const nxi::command& command)

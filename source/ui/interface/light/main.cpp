@@ -2,6 +2,7 @@
 
 #include <nxi/core.hpp>
 #include <nxi/system/page.hpp>
+#include <nxi/system/session.hpp>
 
 #include <nxw/hbox_layout.hpp>
 #include <nxw/vbox_layout.hpp>
@@ -24,16 +25,17 @@
 #include <QtGui/QPainter>
 #include <ui/command.hpp>
 #include <ui/command/menu.hpp>
+#include <ui/system/session.hpp>
 #include <ui/window.hpp>
 #include <ui/interface/standard/window_control.hpp>
 #include <include/nxi/style_data.hpp>
 
 namespace ui::interfaces::light
 {
-    main::main(ui::core& ui_core, ui::window* window)
-        : ui_core_{ ui_core }
+    main::main(ui::session& session, ui::window* window)
+        : session_{ session }
     {
-        connect(&ui_core_.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style)
+        connect(&session_.nxi_session().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style)
         {
             style.update(this);
         });
@@ -44,10 +46,10 @@ namespace ui::interfaces::light
         auto top_layout = new nxw::hbox_layout(this);
         auto middle_layout = new nxw::hbox_layout(this);
 
-        content_ = new interfaces::standard::content(ui_core_, window);
-        control_bar_ = new ui::interfaces::light::control_bar(ui_core_, window);
+        content_ = new interfaces::standard::content(session_, window);
+        control_bar_ = new ui::interfaces::light::control_bar(session_, window);
 
-        auto window_control = new ui::interfaces::standard::window_control(ui_core, window);
+        auto window_control = new ui::interfaces::standard::window_control(session_, window);
 
         static_cast<ui::window*>(this->window())->set_grip(this);
 
@@ -60,24 +62,24 @@ namespace ui::interfaces::light
         main_layout->addLayout(top_layout);
         main_layout->addLayout(middle_layout, 1);
 
-        command_menu_ = new ui::command_menu(ui_core_, this);
+        command_menu_ = new ui::command_menu(session_, this);
         command_menu_->hide();
 
         setFocusPolicy(Qt::ClickFocus);
 
-        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_reset, [this]()
+        connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_reset, [this]()
         {
             command_menu_->hide();
         });
 
-        connect(&ui_core_.nxi_core().command_system().command_input(), &nxi::command_input::event_suggestion_update, [this]
+        connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_suggestion_update, [this]
         (const nxi::suggestion_vector& suggestions)
         {
             command_menu_->set_data(stz::make_observer(&suggestions));
             command_menu_->exec();
         });
 
-        connect(&ui_core_.nxi_core(), &nxi::core::event_error, this, [](const QString& message)
+        connect(&session_.nxi_session(), &nxi::session::event_error, this, [](const QString& message)
         {
             auto* error = new QMessageBox;
             error->setAttribute(Qt::WA_DeleteOnClose, true);
@@ -108,7 +110,7 @@ namespace ui::interfaces::light
         //painter.drawImage(target, image, source);
 
         // insane design drawing
-        auto& design_color = ui_core_.nxi_core().interface_system().style().data().field.background_color.get();
+        auto& design_color = session_.nxi_session().interface_system().style().data().field.background_color.get();
         painter.fillRect(0, 0 , width(), control_bar_->height(), design_color);
     }
 

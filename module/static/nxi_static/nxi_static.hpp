@@ -3,19 +3,19 @@
 
 #include <nxi/module.hpp>
 
-namespace nxi { class core; }
+namespace nxi { class session; }
 
 namespace nxi::modules
 {
     class nxi_static : public nxi::module
     {
     public:
-        explicit nxi_static(nxi::core& nxi_core);
+        explicit nxi_static(nxi::session&);
 
         void on_load();
 
     private:
-        nxi::core& nxi_core_;
+        nxi::session& session_;
 
     };
 } // nxi::modules

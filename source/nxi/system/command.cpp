@@ -24,10 +24,10 @@ namespace nds::encoders
 
 namespace nxi
 {
-    command_system::command_system(nxi::core& nxi_core)
-        : nxi_core_{ nxi_core }
-        , command_initializer_{ nxi_core }
-        , command_input_{ nxi_core }
+    command_system::command_system(nxi::session& session)
+        : session_{ session }
+        , command_initializer_{ session }
+        , command_input_{ session }
         , root_{ nullptr }
     {}
 
@@ -44,8 +44,8 @@ namespace nxi
             else if (shortcut.sequence_keys.size() > 0) command_input().shortcut_input().add_trigger_key(shortcut.sequence_keys[0]);
         });
 
-        //auto cmd_page = add(nxi::command("nxi", "page", [this](const nxi::values&){ nxi_core_.page_system().focus(); }), main_cmd);
-        //cmd_page->get().add_param("page_id", nxi_core_.page_system().get());
+        //auto cmd_page = add(nxi::command("nxi", "page", [this](const nxi::values&){ session_.page_system().focus(); }), main_cmd);
+        //cmd_page->get().add_param("page_id", session_.page_system().get());
 
         //nds::encoders::dot<>::encode<nds::console>(graph_);
 

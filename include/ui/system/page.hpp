@@ -19,14 +19,14 @@ namespace nxi { class page; }
 
 namespace ui
 {
-    class core;
+    class session;
     class page;
 
     class page_system : public QObject
     {
         Q_OBJECT
     public:
-        page_system(ui::core& ui_core);
+        page_system(ui::session&);
         ~page_system();
 
         QWidget* get(const QString& page_path);
@@ -39,13 +39,13 @@ namespace ui
             if (it != widget_pages_.end()) nxi_warning("page {} already exists", path);
             else
             {
-                auto widget = new Widget(ui_core_);
+                auto widget = new Widget(session_);
                 widget_pages_.insert(path, widget);
             }
         }
 
     private:
-		ui::core& ui_core_;
+        ui::session& session_;
         QHash<QString, QWidget*> widget_pages_;
         std::unordered_map<nxi::page_id, QPointer<ui::page>> pages_;
     };

@@ -17,7 +17,7 @@ namespace nxi
 
 namespace ui
 {
-    class core;
+    class session;
     class menu_item;
 
     class command_menu : public QWidget
@@ -39,7 +39,7 @@ namespace ui
         } style_data;
 
     public:
-        command_menu(ui::core&, QWidget* parent);
+        command_menu(ui::session&, QWidget* parent);
 
         void set_data(stz::observer_ptr<nxi::commands_view>);
         void set_data(stz::observer_ptr<const nxi::suggestion_vector>);
@@ -60,7 +60,7 @@ namespace ui
         void draw_item(const nxi::suggestion& text,  QRect& item_rect, bool selected);
 
     private:
-        ui::core& ui_core_;
+        ui::session& session_;
 
         int hover_index_;
         int selection_index_;

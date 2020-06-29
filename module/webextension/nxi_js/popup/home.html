@@ -40,7 +40,7 @@ void nxi_static::on_load()
         nxi_core_.error("nxi_static module is loaded");
     });
 
-    nxi_core_.command_system().add(std::move(cmd));
+    session_.command_system().add(std::move(cmd));
 }
 </pre>
 

@@ -102,7 +102,7 @@ foreach(module ${SUBDIRS})
         add_subdirectory(${NXI_MODULE_ROOT}/static/${module})
         # create variables for generated file
         string(APPEND  NXI_MODULE_STATIC_INCLUDE "#include \"module/static/${module}/${module}.hpp\"\n")
-        string(APPEND  NXI_MODULE_STATIC_INIT ", ${module}_{ nxi_core }\n")
+        string(APPEND  NXI_MODULE_STATIC_INIT ", ${module}_{ session }\n")
         string(APPEND  NXI_MODULE_STATIC_LOAD "${module}_.load();\n")
         string(APPEND  NXI_MODULE_STATIC_MEMBER "nxi::modules::${module} ${module}_;\n")
     endif()
