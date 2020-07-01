@@ -22,6 +22,11 @@ namespace ui
         });
     }
 
+    window_system::~window_system()
+    {
+        unload();
+    }
+
     void window_system::unload()
     {
         for (ui::window* window : m_windows)
@@ -75,5 +80,4 @@ namespace ui
     {
         return m_windows.size();
     }
-
 } // ui

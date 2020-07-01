@@ -1,16 +1,8 @@
 #ifndef CORE_H_NXI
 #define CORE_H_NXI
 
-#include <nxi/module/api/core.hpp>
-#include <nxi/system/command.hpp>
-#include <nxi/system/context.hpp>
-#include <nxi/system/page.hpp>
-#include <nxi/system/module.hpp>
-#include <nxi/system/interface.hpp>
-#include <nxi/system/session.hpp>
-#include <nxi/system/window.hpp>
-
 #include <nxi/config.hpp>
+#include <nxi/system/session.hpp>
 
 namespace nxi
 {
@@ -19,7 +11,6 @@ namespace nxi
         Q_OBJECT
     public:
         core();
-        ~core();
         core(const core&) = delete;
         void operator=(const core&) = delete;
 

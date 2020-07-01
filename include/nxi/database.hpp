@@ -12,7 +12,7 @@ namespace nxi
     enum class prepared_query
     {
         add_page, get_page_id, get_page_name,
-        add_session, get_sessions,
+        add_session, del_session, get_sessions, load_session, unload_session,
         add_window, get_windows, move_window,
         size_
     };
@@ -29,6 +29,7 @@ namespace nxi
         database& operator=(database&&) = default;
 
         void connect();
+        void close();
         QSqlDatabase& get();
         virtual void make() = 0;
         virtual void prepare_queries();

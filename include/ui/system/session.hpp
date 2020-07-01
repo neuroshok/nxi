@@ -23,6 +23,7 @@ namespace ui
     {
     public:
         session(ui::core& ui_core, nxi::session&);
+        ~session();
 
         const QString& id() const;
 
@@ -49,7 +50,7 @@ namespace ui
     {
         Q_OBJECT
     public:
-        session_system(ui::core& ui_core);
+        session_system(ui::core&);
 
         ui::session& focus();
         ui::session& get(const QString& session_id);

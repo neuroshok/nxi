@@ -51,6 +51,7 @@ namespace ui
             // check if page has been deleted by Qt
             if (page_ptr) delete page_ptr;
         }
+        // todo delete widget_pages ?
     }
 
     stz::observer_ptr<ui::page> page_system::get(const nxi::page& page)

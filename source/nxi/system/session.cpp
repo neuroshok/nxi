@@ -4,6 +4,7 @@
 #include <nxi/database.hpp>
 #include <nxi/database/model.hpp>
 #include <nxi/log.hpp>
+#include <filesystem>
 
 namespace nxi
 {
@@ -15,7 +16,7 @@ namespace nxi
     {
         nxi_trace("");
 
-        auto result = nxi::data::session::get_sessions(nxi_core_);
+        auto result = nxi::data::session::get_sessions(nxi_core_.global_database());
         while(result.next())
         {
             nxi::session_data data;
@@ -37,11 +38,6 @@ namespace nxi
         focus(session);
 
         session.load();
-/*
-        session_.page_system().load();
-        nxi_core_.context_system().load();
-
-        nxi_core_.module_system().load();*/
     }
 
     void session_system::load(const QString& session_id)
@@ -52,7 +48,7 @@ namespace nxi
     void session_system::add(nxi::session_data data)
     {
         nxi_trace("");
-        nxi::data::session::add_session(nxi_core_, data.name);
+        nxi::data::session::add_session(nxi_core_.global_database(), data.name);
         sessions_.emplace_back( std::make_unique<nxi::session>(nxi_core_, std::move(data)) );
         auto& session = *sessions_.back();
         focus_ = stz::make_observer(&session);
@@ -63,6 +59,15 @@ namespace nxi
     void session_system::add(const QString& session_id)
     {
         add(nxi::session_data{ session_id, true });
+    }
+
+    void session_system::del(const QString& session_id)
+    {
+        auto& session = get(session_id);
+        unload(session_id);
+        nxi::data::session::del_session(nxi_core_.global_database(), session.id());
+        auto session_path = nxi::database::path + session_id;
+        std::filesystem::remove_all(std::filesystem::path(session_path.toStdString()));
     }
 
     void session_system::focus(nxi::session& session)
@@ -91,5 +96,21 @@ namespace nxi
     {
         nxi_assert(focus_ != nullptr);
         return focus_;
+    }
+
+    void session_system::unload()
+    {
+        nxi_trace("");
+        for (auto& session : sessions_)
+        {
+            session->unload();
+        }
+    }
+
+    void session_system::unload(const QString& session_id)
+    {
+        auto& session = get(session_id);
+        session.unload();
+        emit event_unload(session);
     }
 } // nxi

@@ -2,6 +2,7 @@
 #define INCLUDE_NXI_CONFIG_HPP_NXI
 
 #include <string>
+#include <QString>
 
 namespace nxi
 {

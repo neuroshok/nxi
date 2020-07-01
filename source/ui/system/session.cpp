@@ -19,6 +19,8 @@ namespace ui
         , main_interface_{ [this](ui::window* window){ return new ui::interfaces::light::main(*this, window); } }
     {}
 
+    session::~session() { nxi_trace("ui::session {} deleted", id()); }
+
     const QString& session::id() const { return nxi_session_.id(); }
 
     nxi::core& session::nxi_core() { return nxi_core_; }
@@ -26,6 +28,7 @@ namespace ui
     nxi::session& session::nxi_session() { return nxi_session_; }
     ui::page_system& session::page_system() { return page_system_; }
     ui::window_system& session::window_system() { return window_system_; }
+
     ui::main_interface* session::make_main_interface(ui::window* window) { return main_interface_(window); }
     void session::set_main_interface(std::function<ui::main_interface*(ui::window*)> fn) { main_interface_ = std::move(fn); }
 
@@ -37,6 +40,14 @@ namespace ui
         connect(&ui_core_.nxi_core().session_system(), &nxi::session_system::event_add, [this](nxi::session& session)
         {
             sessions_.emplace_back( std::make_unique<ui::session>(ui_core_, session) );
+        });
+
+        connect(&ui_core_.nxi_core().session_system(), &nxi::session_system::event_unload, [this](nxi::session& session)
+        {
+            nxi_trace_event("");
+            auto session_it = std::find_if(sessions_.begin(), sessions_.end(), [&session](auto&& s) { return s->id() == session.id(); });
+            nxi_assert(session_it != sessions_.end());
+            if (session_it != sessions_.end()) sessions_.erase(session_it);
         });
 
         connect(&ui_core_.nxi_core().session_system(), &nxi::session_system::event_focus_update, [this](const nxi::session& session)

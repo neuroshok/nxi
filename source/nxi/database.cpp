@@ -43,6 +43,11 @@ namespace nxi
         prepare_queries();
     }
 
+    void database::close()
+    {
+        database_.close();
+    }
+
     void database::make()
     {
         nxi::data::session::internal::make(*this);

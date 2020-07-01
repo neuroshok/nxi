@@ -20,19 +20,22 @@ namespace nxi
 
         void add(nxi::session_data);
         void add(const QString& session_id);
+        void del(const QString& session_id);
         void focus(nxi::session&);
         nxi::session& get(const QString& session_id);
         void load();
         void load(nxi::session&);
         void load(const QString& session_id);
+        void unload();
         void unload(const QString& session_id);
-        void switch_focus(const QString& new_session_id);
 
+        void switch_focus(const QString& new_session_id);
 
         stz::observer_ptr<nxi::session> focus();
 
     signals:
         void event_add(nxi::session&);
+        void event_unload(nxi::session&);
         void event_focus_update(const nxi::session&);
 
     private:

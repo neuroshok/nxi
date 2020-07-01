@@ -18,6 +18,7 @@ namespace ui
         Q_OBJECT
     public:
         window_system(ui::session&);
+        ~window_system();
 
         void unload();
         ui::window* add(const nxi::window_data&);

@@ -18,8 +18,11 @@ namespace nxi
 
 namespace nxi::data::session
 {
-    unsigned int add_session(nxi::core& core, const QString& name);
-    nxi::result get_sessions(nxi::core& core);
+    unsigned int add_session(nxi::database&, const QString& session_id);
+    void del_session(nxi::database&, const QString& session_id);
+    nxi::result get_sessions(nxi::database&);
+    void load_session(nxi::database&, const QString& session_id);
+    void unload_session(nxi::database&, const QString& session_id);
 } // nxi::data::session
 
 namespace nxi::data::session::internal

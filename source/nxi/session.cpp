@@ -31,7 +31,7 @@ namespace nxi
 
     void session::unload()
     {
-
+        core_database_.close();
     }
 
     void session::error(const QString& message) const
