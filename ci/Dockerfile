@@ -11,7 +11,7 @@ RUN apt-get update \
         libfontconfig1-dev libxss-dev libwebp-dev libjsoncpp-dev libopus-dev libminizip-dev \
         libavutil-dev libavformat-dev libavcodec-dev libevent-dev \
         bison build-essential gperf flex ruby python libasound2-dev libbz2-dev libcap-dev \
-        libcups2-dev libdrm-dev libegl1-mesa-dev libgcrypt11-dev libnss3-dev libpci-dev libpulse-dev libudev-dev \
+        libcups2-dev libdrm-dev libegl1-mesa-dev libgcrypt20-dev libnss3-dev libpci-dev libpulse-dev libudev-dev \
         libxtst-dev gyp ninja-build
 
 RUN pip3 install requests semantic_version lxml
