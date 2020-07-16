@@ -1,7 +1,6 @@
 #ifndef NXI_COMMAND_SYSTEM_H_NXI
 #define NXI_COMMAND_SYSTEM_H_NXI
 
-#include <nxi/system/command.hpp>
 #include <nxi/command/input.hpp>
 #include <nxi/command/initializer.hpp>
 
@@ -13,7 +12,7 @@
 
 namespace nxi
 {
-	class core;
+    class core;
 
     class command_system : public QObject
     {

@@ -1,6 +1,5 @@
 #include <nxi/data/page.hpp>
 #include <nxi/page.hpp>
-#include <nxi/session.hpp>
 
 namespace nxi
 {

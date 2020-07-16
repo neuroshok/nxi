@@ -1,7 +1,6 @@
 #ifndef INCLUDE_NXI_SESSION_HPP_NXI
 #define INCLUDE_NXI_SESSION_HPP_NXI
 
-#include <nxi/config.hpp>
 #include <nxi/data/session.hpp>
 #include <nxi/database.hpp>
 #include <nxi/module/api/core.hpp>

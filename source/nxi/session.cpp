@@ -1,5 +1,7 @@
 #include <nxi/session.hpp>
 
+#include <nxi/config.hpp>
+
 namespace nxi
 {
     session::session(nxi::core& core, nxi::session_data data)
