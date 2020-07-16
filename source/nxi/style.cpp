@@ -18,6 +18,7 @@
 
 #include <QBrush>
 #include <QLineEdit>
+#include <QStyleOption>
 #include <include/nxw/icon_button.hpp>
 #include <include/nxi/style_data.hpp>
 #include <QApplication>
@@ -85,10 +86,6 @@ namespace nxi
     void style::update(QWidget* ui) const
     {
 
-    }
-
-    void style::update(ui::views::page_tree* ui) const
-    {
     }
 
     void style::update(ui::command_menu* widget)

@@ -5,8 +5,6 @@ namespace nxi { class session; }
 
 #include <nxi/log.hpp>
 
-#include <ui/page/web.hpp>
-
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonValue>

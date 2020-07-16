@@ -6,9 +6,6 @@ namespace nxi { class session; }
 #include <nxi/module/platform.hpp>
 
 #include <nxi/log.hpp>
-
-#include <ui/page/web.hpp>
-
 #include <nxi/system/command.hpp>
 
 namespace nxi::api

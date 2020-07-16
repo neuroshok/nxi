@@ -20,15 +20,12 @@ namespace ui
     } // interfaces
 } // ui
 
-namespace nxw
-{
-    class menu;
-} // nxw
+namespace nxw { class menu; }
+
+namespace w3c { class theme; }
 
 #include <nxi/style_data.hpp>
 
-#include <ui/view/page_tree.hpp>
-#include <w3c/theme.hpp>
 #include <QProxyStyle>
 #include <ui/interface/main.hpp>
 
@@ -50,7 +47,6 @@ namespace nxi
         const QString& path() const;
         const nxi::style_data& data() const;
 
-        void update(ui::views::page_tree*) const;
         void update(QWidget*) const;
         void update(ui::command*) const;
         void update(ui::main_interface*) const;

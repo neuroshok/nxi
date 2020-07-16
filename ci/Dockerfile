@@ -6,7 +6,7 @@ COPY qt_downloader /opt
 RUN apt-get update \
     && apt-get install -y -qq --no-install-recommends \
         gcc-8 g++-8 cmake make \
-        python3.7-dev python3-pip xml2 p7zip-full libxslt1-dev libgl1-mesa-dev \
+        python3.8-dev python3-pip xml2 p7zip-full libxslt1-dev libgl1-mesa-dev \
         libssl-dev libxcursor-dev libxcomposite-dev libxdamage-dev libxrandr-dev \
         libfontconfig1-dev libxss-dev libwebp-dev libjsoncpp-dev libopus-dev libminizip-dev \
         libavutil-dev libavformat-dev libavcodec-dev libevent-dev \
