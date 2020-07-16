@@ -1,6 +1,7 @@
 #include <nxi/system/session.hpp>
 
 #include <nxi/core.hpp>
+#include <nxi/data/session.hpp>
 #include <nxi/database.hpp>
 #include <nxi/database/model.hpp>
 #include <nxi/log.hpp>
@@ -38,6 +39,7 @@ namespace nxi
         focus(session);
 
         session.load();
+        nxi::data::session::load_session(nxi_core_.global_database(), session.id());
     }
 
     void session_system::load(const QString& session_id)
@@ -111,6 +113,7 @@ namespace nxi
     {
         auto& session = get(session_id);
         session.unload();
+        nxi::data::session::load_session(session.database(), session.id());
         emit event_unload(session);
     }
 } // nxi

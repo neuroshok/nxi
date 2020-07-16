@@ -1,18 +1,31 @@
 #ifndef INCLUDE_NXI_CONFIG_HPP_NXI
 #define INCLUDE_NXI_CONFIG_HPP_NXI
 
+#include <nxi/data/config.hpp>
+
+#include <nxi/database/persistent.hpp>
+
 #include <string>
 #include <QString>
 
 namespace nxi
 {
-    struct config
+
+    struct config : nxi::persistent_group
     {
-        struct
+        using persistent_group::persistent_group;
+
+        struct : nxi::persistent_group
         {
-            QString home;
-        } browser;
+            using persistent_group::persistent_group;
+
+            nxi::persistent<QString> home{ this, "home", "test" };
+        } browser{ this, "browser" };
     };
+
+
+    //session_.config().get(nxi_config.browser.home)
+
 
     /*    struct config : // ndb::persistent_group
     {

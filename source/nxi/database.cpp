@@ -1,5 +1,6 @@
 #include <nxi/database.hpp>
 
+#include <nxi/data/config.hpp>
 #include <nxi/data/page.hpp>
 #include <nxi/data/session.hpp>
 #include <nxi/data/window.hpp>
@@ -11,8 +12,6 @@
 #include <QSqlDriver>
 #include <QSqlError>
 #include <QSqlQuery>
-
-#include <qdebug.h>
 
 namespace fs = std::filesystem;
 
@@ -98,12 +97,14 @@ namespace nxi
 
     void core_database::make()
     {
+        nxi::data::config::internal::make(*this);
         nxi::data::page::internal::make(*this);
         nxi::data::window::internal::make(*this);
     }
 
     void core_database::prepare_queries()
     {
+        nxi::data::config::internal::prepare(*this);
         nxi::data::page::internal::prepare(*this);
         nxi::data::window::internal::prepare(*this);
     }

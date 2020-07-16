@@ -7,19 +7,22 @@ namespace nxi
         , id_{ data.name }
         , name_{ std::move(data.name) }
         , active_{ std::move(data.active) }
+        , core_database_{ name_ }
         , api_{ *this }
+        , config_{ nullptr }
         , command_system_{ *this }
         , context_system_{ *this }
         , interface_system_{ *this }
         , page_system_{ *this }
         , window_system_{ *this }
         , module_system_{ *this }
-        , core_database_{ name_ }
     {}
 
     void session::load()
     {
         core_database_.connect();
+        config_ = std::make_unique<nxi::config>("nxi.session", core_database_);
+
         window_system_.load(); // load before interface_system
 
         command_system_.load();
@@ -43,9 +46,14 @@ namespace nxi
     const QString& session::name() const { return name_; }
     bool session::is_active() const { return active_; }
 
-    nxi::core& session::nxi_core() { return nxi_core_; }
     nxi::api::core& session::api() { return api_; }
+    nxi::config& session::config()
+    {
+        nxi_assert(config_ != nullptr);
+        return *config_;
+    }
     nxi::database& session::database() { return core_database_; }
+    nxi::core& session::nxi_core() { return nxi_core_; }
 
     nxi::command_system& session::command_system() { return command_system_; }
     nxi::context_system& session::context_system() { return context_system_; }

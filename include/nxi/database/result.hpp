@@ -21,7 +21,8 @@ namespace nxi
         {
             using Field = std::decay_t<Field_ref>;
             if constexpr (std::is_same_v<Field::type, int>) { return query_.value(Field::index).toInt(); }
-            if constexpr (std::is_same_v<Field::type, bool>) { return query_.value(Field::index).toBool(); }
+            else if constexpr (std::is_same_v<Field::type, bool>) { return query_.value(Field::index).toBool(); }
+            else if constexpr (std::is_same_v<Field::type, QByteArray>) { return query_.value(Field::index).toByteArray(); }
             else if constexpr (std::is_same_v<Field::type, QString>) { return query_.value(Field::index).toString(); }
         }
 

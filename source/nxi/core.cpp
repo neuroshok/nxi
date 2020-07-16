@@ -15,7 +15,7 @@ namespace nxi
 {
     core::core()
         : global_database_{}
-        , config_{}
+        , config_{ nullptr }
         , session_system_{ *this }
     {
         // apply config
@@ -29,6 +29,8 @@ namespace nxi
         nxi_trace("");
 
         global_database_.connect();
+        config_ = std::make_unique<nxi::config>("nxi", global_database_);
+
         session_system_.load();
     }
 
@@ -37,7 +39,12 @@ namespace nxi
         emit event_quit();
     }
 
-    nxi::config& core::config() { return config_; }
+    nxi::config& core::config()
+    {
+        nxi_assert(config_ != nullptr);
+        return *config_;
+    }
+
     nxi::database& core::global_database() { return global_database_; }
 
     nxi::session_system& core::session_system() { return session_system_; }

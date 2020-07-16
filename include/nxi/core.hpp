@@ -31,7 +31,7 @@ namespace nxi
 
     private:
         nxi::global_database global_database_;
-        nxi::config config_;
+        std::unique_ptr<nxi::config> config_;
 
         nxi::session_system session_system_;
     };
