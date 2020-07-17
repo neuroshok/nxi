@@ -3,6 +3,7 @@
 
 #include <nxi/session.hpp>
 #include <stz/observer_ptr.hpp>
+#include <memory>
 #include <unordered_map>
 #include <QObject>
 

@@ -4,6 +4,8 @@
 #include <nxi/module.hpp>
 #include <nxi/module/static.generated.hpp>
 
+#include <memory>
+
 #include <QObject>
 #include <QString>
 

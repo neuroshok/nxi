@@ -4,6 +4,7 @@
 #include <nxi/context.hpp>
 #include <nxi/database.hpp>
 
+#include <memory>
 #include <vector>
 #include <stz/observer_ptr.hpp>
 

@@ -6,7 +6,7 @@
 #include <nxi/data/window.hpp>
 #include <nxi/log.hpp>
 
-#include <filesystem>
+#include <stz/filesystem>
 
 #include <QSqlDatabase>
 #include <QSqlDriver>
