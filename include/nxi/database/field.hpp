@@ -3,11 +3,11 @@
 
 namespace nxi
 {
-    template<size_t Index, class T>
+    template<unsigned int Index, class T>
     struct field
     {
         using type = T;
-        inline static constexpr size_t index = Index;
+        inline static constexpr unsigned int index = Index;
     };
 } // nxi
 

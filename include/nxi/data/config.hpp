@@ -48,7 +48,7 @@ namespace nxi::data::config::internal
         nxi::field<0, int> key{};
         nxi::field<1, int> type{};
         nxi::field<2, QByteArray> value{};
-    } config;
+    } config{};
 
     constexpr std::string_view str_table = R"__(
         CREATE TABLE `config`

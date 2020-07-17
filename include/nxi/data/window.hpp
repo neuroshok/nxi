@@ -38,7 +38,7 @@ namespace nxi::data::window::internal
         nxi::field<2, int> y{};
         nxi::field<3, int> w{};
         nxi::field<4, int> h{};
-    } window;
+    } window{};
 
     constexpr std::string_view str_table = R"__(
         CREATE TABLE `window`

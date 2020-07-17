@@ -33,7 +33,7 @@ namespace nxi::data::page::internal
         inline static constexpr nxi::field<4, int> renderer_type{};
         inline static constexpr nxi::field<5, int> loaded{};
         inline static constexpr nxi::field<6, int> muted{};
-    } page;
+    } page{};
 
     constexpr std::string_view str_table = R"__(
         CREATE TABLE `page`

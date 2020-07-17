@@ -34,7 +34,7 @@ namespace nxi::data::session::internal
     {
         nxi::field<0, QString> name{};
         nxi::field<1, bool> active{};
-    } window;
+    } window{};
 
     constexpr std::string_view str_table = R"__(
         CREATE TABLE `session`
