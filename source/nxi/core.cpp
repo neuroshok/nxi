@@ -2,14 +2,10 @@
 
 #include <nxi/log.hpp>
 
-#include <stz/filesystem>
-
 #include <QCoreApplication>
 #include <QDir>
 #include <QWebEngineProfile>
 #include <QWebEngineSettings>
-
-namespace fs = std::filesystem;
 
 namespace nxi
 {

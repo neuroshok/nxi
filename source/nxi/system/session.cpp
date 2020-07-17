@@ -5,7 +5,8 @@
 #include <nxi/database.hpp>
 #include <nxi/database/model.hpp>
 #include <nxi/log.hpp>
-#include <filesystem>
+
+#include <QDir>
 
 namespace nxi
 {
@@ -69,7 +70,9 @@ namespace nxi
         unload(session_id);
         nxi::data::session::del_session(nxi_core_.global_database(), session.id());
         auto session_path = nxi::database::path + session_id;
-        std::filesystem::remove_all(std::filesystem::path(session_path.toStdString()));
+
+        QDir dir(session_path);
+        dir.removeRecursively();
     }
 
     void session_system::focus(nxi::session& session)

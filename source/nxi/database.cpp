@@ -6,14 +6,11 @@
 #include <nxi/data/window.hpp>
 #include <nxi/log.hpp>
 
-#include <stz/filesystem>
-
+#include <QDir>
 #include <QSqlDatabase>
 #include <QSqlDriver>
 #include <QSqlError>
 #include <QSqlQuery>
-
-namespace fs = std::filesystem;
 
 namespace nxi
 {
@@ -22,9 +19,9 @@ namespace nxi
         , name_{ std::move(name) }
         , path_{ path + subpath }
     {
-        if (!fs::exists(path_.toStdString()))
+        if (!QDir(path_).exists())
         {
-            fs::create_directory(path_.toStdString());
+            QDir().mkpath(path_);
             make_required_ = true;
         }
 
