@@ -22,7 +22,7 @@ namespace ui
 
 namespace nxw { class menu; }
 
-namespace w3c { class theme; }
+namespace w3c { struct theme; }
 
 #include <nxi/style_data.hpp>
 

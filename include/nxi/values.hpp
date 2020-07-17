@@ -17,7 +17,7 @@ namespace nxi
         values() = default;
 
         void add(const nxi::value& value) { values_.emplace_back( value ); }
-        auto get(int index) const { nxi_assert(index < values_.size()); return values_[index]; }
+        auto get(size_t index) const { nxi_assert(index < values_.size()); return values_[index]; }
         void clear() { values_.clear(); }
         size_t size() const { return values_.size(); }
 

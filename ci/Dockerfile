@@ -3,9 +3,8 @@ FROM ubuntu:20.04
 RUN mkdir nxi
 COPY qt_downloader /opt
 
-RUN export DEBIAN_FRONTEND=noninteractive
-RUN apt-get update \
-    && apt-get install -y -qq --no-install-recommends \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y -qq --no-install-recommends \
         apt-utils \
         gcc-8 g++-8 cmake make \
         python3.8-dev python3-pip xml2 p7zip-full libxslt1-dev libgl1-mesa-dev \
