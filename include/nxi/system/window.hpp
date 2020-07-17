@@ -2,7 +2,7 @@
 #define NXI_WINDOW_SYSTEM_H_NXI
 
 #include <nxi/data/window.hpp>
-
+#include <unordered_map>
 #include <QObject>
 
 namespace nxi
