@@ -3,6 +3,8 @@
 
 #include <nxi/page.hpp>
 
+#include <functional>
+
 class QWebEngineScript;
 
 namespace nxi
@@ -22,8 +24,8 @@ namespace nxi
 
     private:
 
-
         using const_qvariant = const QVariant; // nxi_bug_qt_moc
+
     signals:
         void event_add_script(const QWebEngineScript&) const;
         void event_call_script(const QString&, std::function<void(const_qvariant&)>) const;
