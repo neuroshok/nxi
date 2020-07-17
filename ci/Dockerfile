@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 RUN mkdir nxi
 COPY qt_downloader /opt
 
-RUN apt-get update \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     && apt-get install -y -qq --no-install-recommends \
         apt-utils \
         gcc-8 g++-8 cmake make \

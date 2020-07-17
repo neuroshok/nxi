@@ -15,7 +15,7 @@ namespace nxi
         , command_system_{ *this }
         , context_system_{ *this }
         , interface_system_{ *this }
-        , page_system_{ *this }
+        , page_system_{ core_database_ }
         , window_system_{ *this }
         , module_system_{ *this }
     {}

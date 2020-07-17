@@ -12,7 +12,7 @@
 
 namespace nxi
 {
-    class session;
+    class database;
     class page;
     class page_node;
     class custom_page;
@@ -28,7 +28,7 @@ namespace nxi
         using page_ptr = nds::node_ptr<nxi::page>;
 
     public:
-        page_system(nxi::session&);
+        page_system(nxi::database&);
         void load();
 
         page_ptr add_static(const QString& path, nxi::renderer_type renderer_type = nxi::renderer_type::web);
@@ -78,7 +78,7 @@ namespace nxi
         void event_update_root(page_ptr);
 
     public:
-        nxi::session& session_;
+        nxi::database& session_database_;
         nds::graph<nxi::page> graph_;
 
         page_ptr focus_;

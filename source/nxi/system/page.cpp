@@ -11,8 +11,8 @@
 
 namespace nxi
 {
-    page_system::page_system(nxi::session& session)
-        : session_{ session }
+    page_system::page_system(nxi::database& database)
+        : session_database_{ database }
         , root_{ nullptr }
     {}
 
