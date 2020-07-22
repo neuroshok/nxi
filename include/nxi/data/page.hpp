@@ -28,7 +28,7 @@ namespace nxi::data::page::internal
     void make(nxi::database&);
     void prepare(nxi::database&);
 
-    inline static constexpr struct page_
+    inline static constexpr struct table_page
     {
         inline static constexpr nxi::field<0, int> id{};
         inline static constexpr nxi::field<1, QString> name{};
@@ -39,7 +39,7 @@ namespace nxi::data::page::internal
         inline static constexpr nxi::field<6, int> muted{};
     } page{};
 
-    constexpr std::string_view table_page = R"__(
+    constexpr std::string_view str_table_page = R"__(
         CREATE TABLE `page`
         (
             `id` integer,
@@ -53,13 +53,13 @@ namespace nxi::data::page::internal
         )
     )__";
 
-    inline static constexpr struct page_arc_
+    inline static constexpr struct table_page_arc
     {
         inline static constexpr nxi::field<0, int> source_id{};
         inline static constexpr nxi::field<1, int> target_id{};
     } page_arc{};
 
-    constexpr std::string_view table_page_arc = R"__(
+    constexpr std::string_view str_table_page_arc = R"__(
         CREATE TABLE `page_arc`
         (
             `source_id` integer,

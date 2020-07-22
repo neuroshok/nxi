@@ -9,8 +9,8 @@
 inline constexpr static struct nxi_model_
 {
     nxi::data::config::internal::table config{};
-    nxi::data::page::internal::table page{};
-    nxi::data::page::internal::table page_arc{};
+    nxi::data::page::internal::table_page page{};
+    nxi::data::page::internal::table_page_arc page_arc{};
     nxi::data::session::internal::table session{};
     nxi::data::window::internal::table window{};
 } nxi_model;
