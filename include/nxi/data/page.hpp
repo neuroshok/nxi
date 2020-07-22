@@ -28,7 +28,7 @@ namespace nxi::data::page::internal
     void make(nxi::database&);
     void prepare(nxi::database&);
 
-    inline static constexpr struct table
+    inline static constexpr struct page_
     {
         inline static constexpr nxi::field<0, int> id{};
         inline static constexpr nxi::field<1, QString> name{};
@@ -53,7 +53,7 @@ namespace nxi::data::page::internal
         )
     )__";
 
-    inline static constexpr struct
+    inline static constexpr struct page_arc_
     {
         inline static constexpr nxi::field<0, int> source_id{};
         inline static constexpr nxi::field<1, int> target_id{};
