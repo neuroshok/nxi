@@ -63,10 +63,11 @@ namespace nxi
         return queries_[static_cast<size_t>(pquery)];
     }
 
-    void database::query(const QString& str_query)
+    QSqlQuery database::query(const QString& str_query)
     {
         QSqlQuery query{ database_ };
         if (!query.exec(str_query)) nxi_error("query error : {}", query.lastError().text());
+        return query;
     }
     QSqlDatabase& database::get() { return database_; }
 

@@ -7,10 +7,8 @@ namespace nxi
     page_system::page_ptr page_system::add(page_system::page_ptr source, Args&&... args)
     {
         auto page = graph_.emplace<nxi::page, Page>(source, *this, std::forward<Args>(args)...);
-        //// ndb::store(*page);
-
-        //// ndb::query<dbs::core>() << // ndb::add( nxi_model.page_connection.source_id = source->id(), nxi_model.page_connection.target_id = page->id() );
-        nxi::data::page::add_page(session_database_, page->name());
+        nxi::data::page::add(session_database_, *page);
+        nxi::data::page::add_arc(session_database_, source->id(), page->id());
 
         emit event_add(page, source);
         return page;

@@ -1,18 +1,22 @@
 #include <nxi/system/page.hpp>
 
+#include <nxi/config.hpp>
 #include <nxi/core.hpp>
+#include <nxi/data/page.hpp>
 #include <nxi/database.hpp>
-#include <nxi/log.hpp>
+#include <nxi/session.hpp>
 
+#include <nxi/log.hpp>
 #include <nxi/page/custom.hpp>
 #include <nxi/page/node.hpp>
+
 #include <nxi/page/web.hpp>
-#include <include/nxi/config.hpp>
 
 namespace nxi
 {
-    page_system::page_system(nxi::database& database)
-        : session_database_{ database }
+    page_system::page_system(nxi::session& session, nxi::database& database)
+        : session_{ session }
+        , session_database_{ database }
         , root_{ nullptr }
     {}
 
@@ -21,16 +25,15 @@ namespace nxi
         nxi_trace("");
 
         // first exec
-        //ndb_alias(count_id,  ndb::count(nxi_model.page.oid));
-        //auto res = // ndb::query<dbs::core>() << (// ndb::get(count_id) << // ndb::source(nxi_model.page));
-        /*
-        if (res[0][count_id] == 0)
+        auto page_count = nxi::data::page::count(session_database_);
+
+        if (page_count == 0)
         {
             auto main = graph_.emplace<nxi::page, nxi::page_node>(*this, "page");
-            // ndb::store(*main);
+            auto page_id = nxi::data::page::add(session_database_, *main);
             set_root(main);
-            nxi_core_.config().page.root = main->id();
-        }*/
+            session_.config().page.root = main->id();
+        }
 
         // load pages, connect all pages to root
         /*

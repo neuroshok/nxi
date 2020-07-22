@@ -2,32 +2,40 @@
 #define INCLUDE_NXI_CONFIG_HPP_NXI
 
 #include <nxi/data/config.hpp>
-
 #include <nxi/database/persistent.hpp>
-
-#include <string>
+#include <nxi/preprocessor.hpp>
 #include <QString>
 
 namespace nxi
 {
-
-    struct config : nxi::persistent_group
+    template<class T>
+    class config_key : public nxi::persistent<T>
     {
-        using persistent_group::persistent_group;
+    public:
+        config_key(const nxi::persistent_group* group, QString name, const T& default_value = T{}, QString description = "")
+            : nxi::persistent<T>(group, name, default_value)
+            , description_{ std::move(description) }
+        {}
 
-        struct : nxi::persistent_group
-        {
-            using persistent_group::persistent_group;
+        using nxi::persistent<T>::operator=;
 
-            nxi::persistent<QString> home{ this, "home", "test" };
-        } browser{ this, "browser" };
+        const QString& description() const { return description_; }
+    private:
+        QString description_;
     };
+} // nxi
 
 
-    //session_.config().get(nxi_config.browser.home)
+#define nxi_config_key3(NAME, TYPE, DEFAULT_VALUE) nxi::config_key<TYPE> NAME{ this, #NAME, DEFAULT_VALUE };
+#define nxi_config_key4(NAME, TYPE, DEFAULT_VALUE, DESCRIPTION) nxi::config_key<TYPE> NAME{ this, #NAME, DEFAULT_VALUE, DESCRIPTION };
 
+#define nxi_config_open(NAME) struct : nxi::persistent_group { using persistent_group::persistent_group;
+#define nxi_config_close(GROUP_NAME) } GROUP_NAME{ this, #GROUP_NAME };
+#define nxi_config_key(...) nxm_overload(nxi_config_key, __VA_ARGS__)
 
-    /*    struct config : // ndb::persistent_group
+namespace nxi
+{
+    struct config : nxi::persistent_group
     {
         using persistent_group::persistent_group;
 
@@ -40,8 +48,8 @@ namespace nxi
         nxi_config_close(page)
 
         nxi_config_open(browser)
-            nxi_config_key(home, std::string, "www.google.com");
-            nxi_config_key(download_path, std::string, "d:/incoming");
+            nxi_config_key(home, QString, "www.google.com");
+            nxi_config_key(download_path, QString, "d:/incoming");
 
             nxi_config_key(page_unload_timeout, int, 20, "Duration before unloading a closed page");
             nxi_config_key(page_mute_mode, int, 0, "0: Normal\n1: Auto mute non-active pages");
@@ -57,7 +65,7 @@ namespace nxi
             nxi_config_close(interface)
 
         nxi_config_close(browser)
-    };*/
+    };
 } // nxi
 
 #endif // INCLUDE_NXI_CONFIG_HPP_NXI

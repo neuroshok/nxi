@@ -2,6 +2,7 @@
 #define NXI_PAGE_H_NXI
 
 #include <nxi/database.hpp>
+#include <nxi/data/page.hpp>
 #include <nxi/type.hpp>
 
 #include <nds/graph/node.hpp>
@@ -18,6 +19,8 @@ namespace nxi
 
     class page : public QObject
     {
+        friend nxi::page_id nxi::data::page::add(nxi::database&, nxi::page&);
+
         Q_OBJECT
     public:
         virtual void run_script(const QString& script) const;
@@ -48,10 +51,10 @@ namespace nxi
         nxi::page_id id_;
         QString name_;
         QString command_;
-        bool is_loaded_;
-        bool is_muted_;
         nxi::page_type type_;
         nxi::renderer_type renderer_type_;
+        bool is_loaded_;
+        bool is_muted_;
         QIcon icon_;
 
         nds::node_ptr<nxi::page> node_ptr_;

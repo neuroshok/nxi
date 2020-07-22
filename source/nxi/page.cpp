@@ -12,6 +12,11 @@ namespace nxi
         : page_system_{ ps }
         , node_ptr_{ std::move(node_ptr) }
         , name_{ std::move(name) }
+        , command_{ command }
+        , type_{ type }
+        , renderer_type_{ renderer_type }
+        , is_loaded_{ false }
+        , is_muted_{ false }
     {
 
     }
@@ -19,6 +24,7 @@ namespace nxi
     void page::update_name(const QString& name)
     {
         // ndb::store(*this);
+        // nxi::data::page::set(nxi_model.page.name, name)
         //emit event_update_name(name);
     }
 

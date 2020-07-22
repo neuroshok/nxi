@@ -8,15 +8,19 @@ namespace nxi
 {
     class core;
     class database;
-}
+    class page;
+} // nxi
 
 class QString;
 
 namespace nxi::data::page
 {
-    nxi::page_id add_page(nxi::database&, const QString& name);
+    nxi::page_id add(nxi::database&, nxi::page&);
+    void add_arc(nxi::database&, int source_id, int target_id);
+    size_t count(nxi::database&);
     nxi::result get_page(nxi::database&, int id);
     nxi::result get_page(nxi::database&, const QString& name);
+    nxi::result update(nxi::database&, const nxi::page&);
 } // nxi::data::page
 
 namespace nxi::data::page::internal
@@ -35,7 +39,7 @@ namespace nxi::data::page::internal
         inline static constexpr nxi::field<6, int> muted{};
     } page{};
 
-    constexpr std::string_view str_table = R"__(
+    constexpr std::string_view table_page = R"__(
         CREATE TABLE `page`
         (
             `id` integer,
@@ -47,7 +51,22 @@ namespace nxi::data::page::internal
             `muted` integer,
             PRIMARY KEY(`id`)
         )
-        )__";
+    )__";
+
+    inline static constexpr struct
+    {
+        inline static constexpr nxi::field<0, int> source_id{};
+        inline static constexpr nxi::field<1, int> target_id{};
+    } page_arc{};
+
+    constexpr std::string_view table_page_arc = R"__(
+        CREATE TABLE `page_arc`
+        (
+            `source_id` integer,
+            `target_id` integer,
+            PRIMARY KEY(`source_id`, `target_id`)
+        )
+    )__";
 } // nxi::data::page::internal
 
 #endif // INCLUDE_NXI_DATA_PAGE_HPP_NXI

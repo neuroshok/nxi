@@ -11,7 +11,8 @@ namespace nxi
 {
     enum class prepared_query
     {
-        add_page, get_page_id, get_page_name,
+        add_page, count_page, get_page_id, get_page_name,
+        add_page_arc,
         add_session, del_session, get_sessions, load_session, unload_session,
         add_window, get_windows, move_window,
         get_config_value, set_config_value,
@@ -36,7 +37,7 @@ namespace nxi
         virtual void prepare_queries();
         void prepare(nxi::prepared_query, const QString& str_query);
         QSqlQuery& prepared_query(nxi::prepared_query);
-        void query(const QString& str_query);
+        QSqlQuery query(const QString& str_query);
 
     private:
         std::array<QSqlQuery, static_cast<size_t>(nxi::prepared_query::size_)> queries_;

@@ -4,20 +4,21 @@
 #include <nds/graph.hpp>
 #include <nxi/type.hpp>
 
-#include <unordered_map>
 #include <functional>
 #include <vector>
+#include <unordered_map>
 
 #include <QObject>
 
 namespace nxi
 {
+    class custom_page;
     class database;
+    class explorer_page;
     class page;
     class page_node;
-    class custom_page;
-    class explorer_page;
     class web_page;
+    class session;
 
     class page_system : public QObject
     {
@@ -28,7 +29,11 @@ namespace nxi
         using page_ptr = nds::node_ptr<nxi::page>;
 
     public:
-        page_system(nxi::database&);
+        page_system(nxi::session&, nxi::database&);
+        page_system(const page_system&) = delete;
+        page_system& operator=(const page_system&) = delete;
+
+
         void load();
 
         page_ptr add_static(const QString& path, nxi::renderer_type renderer_type = nxi::renderer_type::web);
@@ -78,6 +83,7 @@ namespace nxi
         void event_update_root(page_ptr);
 
     public:
+        nxi::session& session_;
         nxi::database& session_database_;
         nds::graph<nxi::page> graph_;
 
