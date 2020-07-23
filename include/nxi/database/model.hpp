@@ -2,6 +2,7 @@
 #define INCLUDE_NXI_DATABASE_MODEL_HPP_NXI
 
 #include <nxi/database/field.hpp>
+#include <nxi/data/config.hpp>
 #include <nxi/data/page.hpp>
 #include <nxi/data/session.hpp>
 #include <nxi/data/window.hpp>

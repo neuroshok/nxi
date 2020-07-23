@@ -1,11 +1,29 @@
 #include <nxi/data/page.hpp>
 
 #include <nxi/core.hpp>
+#include <nxi/database/model.hpp>
+#include <nxi/database/result.hpp>
 #include <nxi/page.hpp>
 
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+
+namespace nxi
+{
+    nxi::page_data page_data::from_get(const nxi::result& result)
+    {
+        nxi::page_data data;
+        data.command = result[nxi_model.page.command];
+        data.id = result[nxi_model.page.id];
+        data.loaded = result[nxi_model.page.loaded];
+        data.muted = result[nxi_model.page.muted];
+        data.name = result[nxi_model.page.name];
+        data.renderer_type = static_cast<nxi::renderer_type>(result[nxi_model.page.renderer_type]);
+        data.type = static_cast<nxi::page_type>(result[nxi_model.page.type]);
+        return data;
+    }
+} // nxi
 
 namespace nxi::data::page
 {
@@ -31,7 +49,13 @@ namespace nxi::data::page
         return query.value(0).toUInt();
     }
 
-    nxi::result get_page(nxi::database& db, int id)
+    nxi::result get(nxi::database& db)
+    {
+        auto& query = db.prepared_query(nxi::prepared_query::get_page);
+        return nxi::result{ query };
+    }
+
+    nxi::result get(nxi::database& db, int id)
     {
         auto& query = db.prepared_query(nxi::prepared_query::get_page_id);
         query.bindValue(0, id);
@@ -39,7 +63,7 @@ namespace nxi::data::page
         return nxi::result{ query };
     }
 
-    nxi::result get_page(nxi::database& db, const QString& name)
+    nxi::result get(nxi::database& db, const QString& name)
     {
         auto& query = db.prepared_query(nxi::prepared_query::get_page_name);
         query.bindValue(0, name);
@@ -47,12 +71,20 @@ namespace nxi::data::page
         return nxi::result{ query };
     }
 
-    void add_arc(database& db, int source_id, int target_id)
+    //
+
+    void add_arc(nxi::database& db, int source_id, int target_id)
     {
         auto& query = db.prepared_query(nxi::prepared_query::add_page_arc);
         query.bindValue(0, source_id);
         query.bindValue(1, target_id);
         if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
+    }
+
+    nxi::result get_arcs(nxi::database& db)
+    {
+        auto& query = db.prepared_query(nxi::prepared_query::get_page_arcs);
+        return nxi::result{ query };
     }
 } // nxi::data::page
 
@@ -67,9 +99,12 @@ namespace nxi::data::page::internal
     void prepare(nxi::database& db)
     {
         db.prepare(prepared_query::add_page, "INSERT INTO page(name, command, type, renderer_type, loaded, muted) VALUES(?, ?, ?, ?, ?, ?)");
-        db.prepare(prepared_query::add_page_arc, "INSERT INTO page_arc(source_id, target_id) VALUES(?, ?)");
         db.prepare(prepared_query::count_page, "SELECT COUNT(id) FROM page");
+        db.prepare(prepared_query::get_page, "SELECT * FROM page");
         db.prepare(prepared_query::get_page_id, "SELECT id, name, command FROM page WHERE page.id = ?");
         db.prepare(prepared_query::get_page_name, "SELECT id, name, command FROM page WHERE page.name = ?");
+
+        db.prepare(prepared_query::add_page_arc, "INSERT INTO page_arc(source_id, target_id) VALUES(?, ?)");
+        db.prepare(prepared_query::get_page_arcs, "SELECT * FROM page_arcs");
     }
 } // nxi::data::page::internal

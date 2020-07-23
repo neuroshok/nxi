@@ -8,18 +8,21 @@
 
 namespace nxi
 {
-    page::page(nds::node_ptr<nxi::page> node_ptr, page_system& ps, QString name, QString command, nxi::page_type type, nxi::renderer_type renderer_type)
+    page::page(nds::node_ptr<nxi::page> node_ptr, page_system& ps, nxi::page_data data)
         : page_system_{ ps }
         , node_ptr_{ std::move(node_ptr) }
-        , name_{ std::move(name) }
-        , command_{ command }
-        , type_{ type }
-        , renderer_type_{ renderer_type }
-        , is_loaded_{ false }
-        , is_muted_{ false }
-    {
+        , id_{ data.id }
+        , name_{ std::move(data.name) }
+        , command_{ std::move(data.command) }
+        , type_{ data.type }
+        , renderer_type_{ data.renderer_type }
+        , is_loaded_{ std::move(data.loaded) }
+        , is_muted_{ std::move(data.muted) }
+    {}
 
-    }
+    page::page(nds::node_ptr<nxi::page> node_ptr, page_system& ps, QString name, QString command, nxi::page_type type, nxi::renderer_type renderer_type)
+        : nxi::page(std::move(node_ptr), ps, nxi::page_data{ 0, std::move(name), std::move(command), type, renderer_type })
+    {}
 
     void page::update_name(const QString& name)
     {

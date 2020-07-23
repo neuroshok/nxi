@@ -6,8 +6,9 @@
 
 namespace nxi
 {
-    struct result
+    class result
     {
+    public:
         result(QSqlQuery& query) : query_{ query }
         {
             query_.exec();
@@ -26,6 +27,7 @@ namespace nxi
             else if constexpr (std::is_same_v<typename Field::type, QString>) { return query_.value(Field::index).toString(); }
         }
 
+    private:
         QSqlQuery& query_;
     };
 } // nxi

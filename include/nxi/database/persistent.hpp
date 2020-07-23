@@ -21,6 +21,7 @@ namespace nxi
         using view_type = std::vector<std::variant<
             nxi::persistent<bool>*
             , nxi::persistent<int>*
+            , nxi::persistent<unsigned int>*
             , nxi::persistent<double>*
             , nxi::persistent<QString>*
             >>;

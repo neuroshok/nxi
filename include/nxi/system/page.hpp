@@ -47,6 +47,8 @@ namespace nxi
         void open(page_ptr source, Args&&... args);
         template<class Page, class... Args>
         void open(Args&&... args);
+        template<class Page>
+        void open();
 
         void close(nds::node_ptr<nxi::page>&);
         void erase(nds::node_ptr<nxi::page>&);

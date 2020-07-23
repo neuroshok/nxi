@@ -23,6 +23,12 @@ namespace nxi
 
         Q_OBJECT
     public:
+        page(nds::node_ptr<nxi::page>, page_system& ps, nxi::page_data);
+        page(nds::node_ptr<nxi::page>, page_system& ps
+            , QString name = "new page", QString command = ""
+            , nxi::page_type = nxi::page_type::custom
+            , nxi::renderer_type = nxi::renderer_type::web);
+
         virtual void run_script(const QString& script) const;
 
         void set_loaded();
@@ -38,11 +44,6 @@ namespace nxi
         nxi::page_type type() const;
         nxi::renderer_type renderer_type() const;
         const QIcon& icon() const;
-
-        page(nds::node_ptr<nxi::page>, page_system& ps
-            , QString name = "new_page", QString command = ""
-            , nxi::page_type = nxi::page_type::custom
-            , nxi::renderer_type = nxi::renderer_type::web);
 
     protected:
         nxi::page_system& page_system_;

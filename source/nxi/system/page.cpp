@@ -36,19 +36,17 @@ namespace nxi
         }
 
         // load pages, connect all pages to root
-        /*
-        for (auto& page_data : // ndb::oget<dbs::core>(nxi_model.page))
+        auto result = nxi::data::page::get(session_database_);
+        while(result.next())
         {
-            auto page_id = page_data.oid;
+            auto page_data = nxi::page_data::from_get(result);
             auto page_type = page_data.type;
 
-            // make_page(page_type, args...)
             switch(page_type)
             {
                 case page_type::node:
                 {
-                    auto page = graph_.emplace<nxi::page, nxi::page_node>(*this);
-                    // ndb::load(*page, page_id);
+                    auto page = graph_.emplace<nxi::page, nxi::page_node>(*this, std::move(page_data));
                     emit event_add(page, nullptr);
                     emit page->event_load();
                     emit event_load(page);
@@ -57,11 +55,12 @@ namespace nxi
 
                 case page_type::web:
                 {
-                    auto page = graph_.emplace<nxi::page, nxi::web_page>(*this);
-                    // ndb::load(*page, page_id); // // ndb::load(*page, page_data)
+                    auto page = graph_.emplace<nxi::page, nxi::web_page>(*this, std::move(page_data));
                     emit event_add(page, nullptr);
                     emit page->event_load();
                     emit event_load(page);
+                    // todo : use navigation system
+                    focus(page);
                     break;
                 }
 
@@ -71,11 +70,12 @@ namespace nxi
 
                 case page_type::static_:
                 {
+                    /*
                     auto page = graph_.emplace<nxi::page, nxi::custom_page>(*this);
                     // ndb::load(*page, page_id);
                     emit event_add(page, nullptr);
                     emit page->event_load();
-                    emit event_load(page);
+                    emit event_load(page);*/
 
                     break;
                 }
@@ -84,24 +84,23 @@ namespace nxi
                 nxi_assert("unknown page type");
             }
         }
-         */
+
 
         // load page connections, move pages from nullptr to real source
-        /*
-        for (auto& edge : // ndb::oget<dbs::core>(nxi_model.page_connection))
+        auto arcs = nxi::data::page::get_arcs(session_database_);
+        while(arcs.next())
         {
-            graph_.connect(get(edge.source_id), get(edge.target_id));
-        }*/
+            graph_.connect(get(arcs[nxi_model.page_arc.source_id]), get(arcs[nxi_model.page_arc.target_id]));
+        }
 
         // notify
 
         // set root
-        //set_root(get(nxi_core_.config().page.root.get()));
-        /*
+        set_root(get(session_.config().page.root.get()));
         graph_.targets(root_, [this](auto&& page)
         {
             emit event_add(page, root_);
-        });*/
+        });
     }
 
     page_system::page_ptr page_system::add_static(const QString& path, nxi::renderer_type renderer_type)
@@ -115,6 +114,12 @@ namespace nxi
         auto added_page = add_static(path, renderer_type);
         load(added_page);
         focus(added_page);
+    }
+
+    template<>
+    void page_system::open<nxi::web_page>()
+    {
+        open<nxi::web_page>(root_, session_.config().browser.home.get());
     }
 
     void page_system::close(nds::node_ptr<nxi::page>& page)

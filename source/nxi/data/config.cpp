@@ -16,7 +16,7 @@ namespace nxi::data::config::internal
 
     void prepare(nxi::database& db)
     {
-        db.prepare(prepared_query::get_config_value, "SELECT value FROM config WHERE key = ?");
+        db.prepare(prepared_query::get_config_value, "SELECT * FROM config WHERE key = ?");
         db.prepare(prepared_query::set_config_value, "INSERT OR REPLACE INTO config(key, value) VALUES(?, ?)");
     }
 } // nxi::data::config::internal

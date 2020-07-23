@@ -15,8 +15,8 @@ namespace nxi
     {
         Q_OBJECT
     public:
-        web_page(nds::node_ptr<nxi::page>, nxi::page_system& ps);
-        web_page(nds::node_ptr<nxi::page> ptr, nxi::page_system& ps, const QString& url);
+        web_page(nds::node_ptr<nxi::page>, nxi::page_system& ps, nxi::page_data);
+        web_page(nds::node_ptr<nxi::page>, nxi::page_system& ps, QString url);
 
         void add_script(const QWebEngineScript&) const;
         void run_script(const QString& source_code) const override;

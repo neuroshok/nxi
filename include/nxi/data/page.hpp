@@ -1,26 +1,43 @@
 #ifndef INCLUDE_NXI_DATA_PAGE_HPP_NXI
 #define INCLUDE_NXI_DATA_PAGE_HPP_NXI
 
-#include <nxi/database/result.hpp>
+#include <nxi/database/field.hpp>
 #include <nxi/type.hpp>
+
+#include <QString>
 
 namespace nxi
 {
     class core;
     class database;
     class page;
-} // nxi
+    class result;
 
-class QString;
+    struct page_data
+    {
+        nxi::page_id id = 0;
+        QString name = "new page";
+        QString command;
+        nxi::page_type type = nxi::page_type::custom;
+        nxi::renderer_type renderer_type = nxi::renderer_type::widget;
+        bool loaded = false;
+        bool muted = false;
+
+        static page_data from_get(const nxi::result& result);
+    };
+} // nxi
 
 namespace nxi::data::page
 {
     nxi::page_id add(nxi::database&, nxi::page&);
-    void add_arc(nxi::database&, int source_id, int target_id);
     size_t count(nxi::database&);
-    nxi::result get_page(nxi::database&, int id);
-    nxi::result get_page(nxi::database&, const QString& name);
+    nxi::result get(nxi::database&);
+    nxi::result get(nxi::database&, int id);
+    nxi::result get(nxi::database&, const QString& name);
     nxi::result update(nxi::database&, const nxi::page&);
+
+    void add_arc(nxi::database&, int source_id, int target_id);
+    nxi::result get_arcs(nxi::database&);
 } // nxi::data::page
 
 namespace nxi::data::page::internal
@@ -35,8 +52,8 @@ namespace nxi::data::page::internal
         inline static constexpr nxi::field<2, QString> command{};
         inline static constexpr nxi::field<3, int> type{};
         inline static constexpr nxi::field<4, int> renderer_type{};
-        inline static constexpr nxi::field<5, int> loaded{};
-        inline static constexpr nxi::field<6, int> muted{};
+        inline static constexpr nxi::field<5, bool> loaded{};
+        inline static constexpr nxi::field<6, bool> muted{};
     } page{};
 
     constexpr std::string_view str_table_page = R"__(
