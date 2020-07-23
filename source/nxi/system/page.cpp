@@ -93,10 +93,10 @@ namespace nxi
             graph_.connect(get(arcs[nxi_model.page_arc.source_id]), get(arcs[nxi_model.page_arc.target_id]));
         }
 
-        // notify
-
         // set root
         set_root(get(session_.config().page.root.get()));
+
+        // notify
         graph_.targets(root_, [this](auto&& page)
         {
             emit event_add(page, root_);

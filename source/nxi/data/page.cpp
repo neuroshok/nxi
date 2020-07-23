@@ -105,6 +105,6 @@ namespace nxi::data::page::internal
         db.prepare(prepared_query::get_page_name, "SELECT id, name, command FROM page WHERE page.name = ?");
 
         db.prepare(prepared_query::add_page_arc, "INSERT INTO page_arc(source_id, target_id) VALUES(?, ?)");
-        db.prepare(prepared_query::get_page_arcs, "SELECT * FROM page_arcs");
+        db.prepare(prepared_query::get_page_arcs, "SELECT * FROM page_arc");
     }
 } // nxi::data::page::internal
