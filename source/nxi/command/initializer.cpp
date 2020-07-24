@@ -32,6 +32,7 @@ namespace nxi
         auto fn = [this, command_node](const nxi::values&)
         {
             session_.command_system().set_root(command_node);
+            session_.command_system().command_input().suggest_command();
         };
         command_node->function_ = std::move(fn);
 
