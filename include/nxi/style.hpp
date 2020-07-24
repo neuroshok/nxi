@@ -7,7 +7,7 @@ class QPalette;
 
 namespace ui
 {
-    class command;
+    class command_input;
     class command_menu;
     class main_interface;
 
@@ -48,7 +48,7 @@ namespace nxi
         const nxi::style_data& data() const;
 
         void update(QWidget*) const;
-        void update(ui::command*) const;
+        void update(ui::command_input*) const;
         void update(ui::main_interface*) const;
 
         void update(ui::command_menu*);

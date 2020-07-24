@@ -19,7 +19,7 @@
 #include <include/nxi/log.hpp>
 #include <nxi/config.hpp>
 
-#include <ui/command.hpp>
+#include <ui/command/input.hpp>
 #include <ui/window.hpp>
 
 namespace nxw

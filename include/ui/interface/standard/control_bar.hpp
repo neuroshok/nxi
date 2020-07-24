@@ -5,7 +5,7 @@
 
 namespace nxi { class command; }
 namespace nxw { class hbox_layout; }
-namespace ui { class core;  class command; }
+namespace ui { class core;  class command_input; }
 
 class QComboBox;
 class QLineEdit;
@@ -24,7 +24,7 @@ namespace ui::interfaces::standard
     private:
         ui::core& m_ui_core;
 
-        ui::command* command_bar_;
+        ui::command_input* command_bar_;
         QComboBox* m_context;
         nxw::hbox_layout* module_controls_;
     };

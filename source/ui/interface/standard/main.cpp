@@ -22,7 +22,7 @@
 #include <QImage>
 #include <QPalette>
 #include <QtGui/QPainter>
-#include <ui/command.hpp>
+#include <ui/command/input.hpp>
 #include <ui/command/menu.hpp>
 
 namespace ui::interfaces::standard

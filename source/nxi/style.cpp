@@ -9,7 +9,7 @@
 #include <include/nxi/style.hpp>
 #include <qdebug.h>
 
-#include <ui/command.hpp>
+#include <ui/command/input.hpp>
 #include <ui/command/menu.hpp>
 #include <ui/interface/main.hpp>
 #include <ui/interface/standard/control_bar.hpp>
@@ -77,7 +77,7 @@ namespace nxi
         w->style_data.background_image = w->style_data.background_image.transformed(QMatrix().rotate(90));
     }
 
-    void style::update(ui::command* ui) const
+    void style::update(ui::command_input* ui) const
     {
 
     }

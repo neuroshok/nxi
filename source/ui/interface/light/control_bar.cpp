@@ -4,7 +4,7 @@
 #include <nxi/log.hpp>
 #include <nxw/hbox_layout.hpp>
 
-#include <ui/command.hpp>
+#include <ui/command/input.hpp>
 #include <ui/core.hpp>
 #include <ui/interface/light/button.hpp>
 
@@ -57,7 +57,7 @@ namespace ui::interfaces::light
             page_root_->setText(page->name());
         });
 
-        command_input_ = new ui::command(session_);
+        command_input_ = new ui::command_input(session_);
         command_input_->setFocus();
         layout->addWidget(command_root_);
         layout->addWidget(page_root_);
@@ -108,7 +108,7 @@ namespace ui::interfaces::light
         });
     }
 
-    ui::command* control_bar::command_input()
+    ui::command_input* control_bar::command_input()
     {
         return command_input_;
     }
