@@ -35,6 +35,7 @@ namespace nxi::data::page
     nxi::result get(nxi::database&, int id);
     nxi::result get(nxi::database&, const QString& name);
     nxi::result update(nxi::database&, const nxi::page&);
+    void set_loaded(nxi::database&, nxi::page_id, bool state);
 
     void add_arc(nxi::database&, int source_id, int target_id);
     nxi::result get_arcs(nxi::database&);

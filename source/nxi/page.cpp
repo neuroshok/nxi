@@ -45,10 +45,11 @@ namespace nxi
     }
 
 
-    void page::set_loaded()
+    void page::load()
     {
-        //loaded = true;
-        // ndb::store(*this);
+        nxi::data::page::set_loaded(page_system_.session_database_, id_, true);
+        is_loaded_ = true;
+        emit event_load();
     }
 
     void page::run_script(const QString& script) const

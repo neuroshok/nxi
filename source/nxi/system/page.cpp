@@ -57,10 +57,13 @@ namespace nxi
                 {
                     auto page = graph_.emplace<nxi::page, nxi::web_page>(*this, std::move(page_data));
                     emit event_add(page, nullptr);
-                    emit page->event_load();
-                    emit event_load(page);
-                    // todo : use navigation system
-                    focus(page);
+                    if (page->is_loaded())
+                    {
+                        emit page->event_load();
+                        emit event_load(page);
+                        // todo : use navigation system
+                        focus(page);
+                    }
                     break;
                 }
 
@@ -192,8 +195,7 @@ namespace nxi
 
     void page_system::load(page_system::page_ptr page)
     {
-        page->set_loaded();
-        emit page->event_load();
+        page->load();
         emit event_load(page);
     }
 

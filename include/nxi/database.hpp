@@ -14,6 +14,8 @@ namespace nxi
         add_page, count_page, get_page_id, get_page_name,
         add_page_arc,
         get_page, get_page_arcs,
+        set_page_loaded,
+
         add_session, del_session, get_sessions, load_session, unload_session,
         add_window, get_windows, move_window,
         get_config_value, set_config_value,
