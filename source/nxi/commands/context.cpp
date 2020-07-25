@@ -11,13 +11,13 @@ namespace nxi
 
         // context_add
         nxi::command_data context_add;
-        context_add.action = "context_add";
+        context_add.action = "add_context";
         context_add.description = "Add a context";
         context_add.shortcut = {{ Qt::Key_Control }, { Qt::Key_N , Qt::Key_C }};
         context_add.function = [this](const nxi::values& param)
         {
-            nxi_assert(param.size() > 0);
-            session_.context_system().add(param.get(0));
+            nxi_assert(param.size() > 1);
+            session_.context_system().add(param.get(0), param.get(1).toInt());
         };
         context_add.parameters =
         {
@@ -40,7 +40,7 @@ namespace nxi
         add(std::move(context_add));
 
         nxi::command_data context_del;
-        context_del.action = "context_del";
+        context_del.action = "del_context";
         context_del.description = "Delete a context";
         context_del.shortcut = {{ Qt::Key_Control }, { Qt::Key_B , Qt::Key_C }};
         context_del.function = [this](const nxi::values& param)

@@ -11,6 +11,10 @@ namespace nxi
 {
     enum class prepared_query
     {
+        add_context, add_context_available,
+        del_context,
+        get_context, get_context_available,
+
         add_page, count_page, get_page_id, get_page_name,
         add_page_arc,
         get_page, get_page_arcs,

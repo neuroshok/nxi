@@ -15,7 +15,17 @@ namespace nxi
         }
 
         bool next() const { return query_.next(); }
-        unsigned int size() const { return (query_.size() > -1) ? query_.size() : 0; }
+        unsigned int size() const
+        {
+            unsigned size = 0;
+            if(query_.last())
+            {
+                size =  query_.at() + 1;
+                query_.first();
+                query_.previous();
+            }
+            return size;
+        }
 
         template<class Field_ref>
         auto operator[](Field_ref&& field) const

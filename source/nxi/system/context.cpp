@@ -1,9 +1,20 @@
 #include <nxi/system/context.hpp>
 
+#include <nxi/data/context.hpp>
 #include <nxi/database.hpp>
+#include <nxi/database/result.hpp>
+#include <nxi/session.hpp>
 
+#include <stz/observer_ptr.hpp>
 #include <QDebug>
-#include <include/stz/observer_ptr.hpp>
+
+//! context example
+//! page 1
+//! command 1
+//! command_executor 9
+//! focus : first vector element (page)
+//! active : elements with higher priority (command_executor)
+//! activate
 
 namespace nxi
 {
@@ -14,56 +25,74 @@ namespace nxi
     void context_system::load()
     {
         // load available contexts
-        // ndb::load_bulk(available_contexts_);
-        if (available_contexts_.size() == 0)
+        auto result = nxi::data::context::get_available(session_.database());
+
+        if (result.size() == 0)
         {
-            reset();
-            // ndb::load_bulk(available_contexts_);
+            add_available(nxi::contexts::page::ID, 1);
+            add_available(nxi::contexts::command::ID, 1);
         }
-        nxi_trace("{} contexts available", available_contexts_.size());
 
-        // add contexts
-        add<nxi::contexts::command>();
-        //add<nxi::contexts::page>();
-        //focus(contexts.command);
-    }
-
-    void context_system::reset()
-    {
-        nxi::context_data ac;
-        ac.name = nxi::contexts::command::ID;
-        ac.priority = nxi::contexts::command::PRIORITY;
-        // ndb::store(ac);
-        ac.name = nxi::contexts::page::ID;
-        ac.priority = nxi::contexts::page::PRIORITY;
-        // ndb::store(ac);
-
-    }
-
-    void context_system::add(const QString& id)
-    {
-        for (const auto& ctx : available_contexts_)
+        while (result.next())
         {
-            if (ctx.name == id)
+            auto data = nxi::context_data::from_get(result);
+            available_contexts_.push_back(std::move(data));
+            // add contexts
+            auto& last_data = available_contexts_.back();
+            if (last_data.enabled)
             {
-                if (ctx.name == nxi::contexts::command::ID) add<nxi::contexts::command>();
-                else if (ctx.name == nxi::contexts::page::ID) add<nxi::contexts::page>();
-                break;
+                add(last_data.name, last_data.priority);
             }
         }
+
+        nxi_trace("{} contexts available", available_contexts_.size());
+
+        if (contexts_.empty()) add<nxi::contexts::command>();
+    }
+
+    void context_system::add_available(const QString& id, unsigned int priority)
+    {
+        nxi::context_data data{ id, priority };
+        available_contexts_.push_back(std::move(data));
+        nxi::data::context::add_available(session_.database(), available_contexts_.back());
+    }
+
+    void context_system::add(const QString& id, unsigned int priority)
+    {
+        if (std::find_if(available_contexts_.begin(), available_contexts_.end(), [&id](const auto& c) { return c.name == id; }) != available_contexts_.end())
+        {
+            if (id == nxi::contexts::command::ID) add<nxi::contexts::command>(priority);
+            else if (id == nxi::contexts::page::ID) add<nxi::contexts::page>(priority);
+            else add<nxi::contexts::custom>(id, priority);
+        }
+        else nxi_warning("context {} is not available", id);
     }
 
     void context_system::del(const QString& id)
     {
-        for (const auto& ctx : available_contexts_)
+        nxi::context* focus_context = nullptr;
+        if (contexts_.size() > 0) focus_context = contexts_.front().get();
+
+        // if context exist, erase
+        auto it = std::find_if(contexts_.begin(), contexts_.end(), [&id](const auto& c) { return c->id() == id; });
+        if (it != contexts_.end())
         {
-            if (ctx.name == id)
-            {
-                if (ctx.name == nxi::contexts::command::ID) del<nxi::contexts::command>();
-                else if (ctx.name == nxi::contexts::page::ID) del<nxi::contexts::page>();
-                break;
-            }
+            emit event_context_del(**it);
+            nxi::data::context::del(session_.database(), **it);
+            contexts_.erase(it);
         }
+        else nxi_warning("context {} not found", id);
+
+        std::sort(contexts_.begin(), contexts_.end(), [](const auto& c1, const auto& c2){ return c1->priority() > c2->priority(); });
+
+        if (focus_context != contexts_.front().get()) emit event_focus_context_update(*contexts_.front());
+        // if priority change, active contexts have changed
+        //if (focus_context && focus_context->priority() != contexts_.front()->priority())
+    }
+
+    unsigned int context_system::active_priority() const
+    {
+        return contexts_.front()->priority();
     }
 
     std::vector<nxi::context_data> context_system::available_contexts() const
@@ -86,16 +115,15 @@ namespace nxi
         return contexts;
     }
 
-    unsigned int context_system::active_priority() const
+    void context_system::focus(const QString& id)
     {
-        return contexts_.front()->priority();
-    }
-
-    /*
-    void context_system::focus(const nxi::context& context)
-    {
-        auto context_it = std::find_if(contexts_.begin(), contexts_.end(), [&context](const nxi::context& c) { return c.name == context.name; });
+        auto context_it = std::find_if(contexts_.begin(), contexts_.end(), [&id](const auto& c) { return c->id() == id; });
+        if (context_it == contexts_.end())
+        {
+            nxi_warning("context {} not found", id);
+            return;
+        }
         std::iter_swap(contexts_.begin(), context_it);
-        //qDebug() << "focus: " << context.name;
-    }*/
+        emit event_focus_context_update(*contexts_.front());
+    }
 } // nxi

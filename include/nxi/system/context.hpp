@@ -3,6 +3,7 @@
 
 #include <nxi/context.hpp>
 #include <nxi/database.hpp>
+#include <nxi/data/context.hpp>
 
 #include <memory>
 #include <vector>
@@ -14,68 +15,40 @@ namespace nxi
 {
     class session;
 
-    struct context_data {  int priority; QString name;  };
-
     class context_system : public QObject
     {
         Q_OBJECT
     public:
         context_system(nxi::session&);
         context_system(const context_system&) = delete;
-        void operator=(const context_system&) = delete;
+        context_system& operator=(const context_system&) = delete;
 
         void load();
-        void reset();
 
-        std::vector<nxi::context_data> available_contexts() const;
-        std::vector<stz::observer_ptr<nxi::context>> contexts() const;
-
-        unsigned int active_priority() const;
-
-        void add(const QString& id);
-        void del(const QString& id);
+        void add(const QString& id, unsigned int priority);
+        void add_available(const QString& id, unsigned int priority);
 
         template<class Context, class... Args>
         void add(Args&&... args)
         {
             nxi::context* focus_context = nullptr;
+            auto context_id = nxi::context::id<Context>(std::forward<Args>(args)...);
             if (contexts_.size() > 0) focus_context = contexts_.front().get();
 
-            if (std::find_if(contexts_.begin(), contexts_.end(), [](const auto& c) { return c->id() == Context::ID; }) != contexts_.end())
+            if (std::find_if(contexts_.begin(), contexts_.end(), [&context_id](const auto& c) { return c->id() == context_id; }) != contexts_.end())
             {
                 nxi_warning("context already exist");
                 return;
             }
             contexts_.emplace_back( std::make_unique<nxi::context>( Context{ std::forward<Args>(args)... } ) );
 
+            nxi::data::context::add(session_.database(), *contexts_.back());
             emit event_context_add(*contexts_.back());
 
             std::sort(contexts_.begin(), contexts_.end(), [](const auto& c1, const auto& c2){ return c1->priority() > c2->priority(); });
 
             if (focus_context != contexts_.front().get()) emit event_focus_context_update(*contexts_.front());
         }
-
-        template<class Context>
-        void del()
-        {
-            nxi::context* focus_context = nullptr;
-            if (contexts_.size() > 0) focus_context = contexts_.front().get();
-
-            // if context exist, erase
-            auto it = std::find_if(contexts_.begin(), contexts_.end(), [](const auto& c) { return nxi::context::is<Context>(*c); });
-            if (it != contexts_.end())
-            {
-                emit event_context_del(**it);
-                contexts_.erase(it);
-            }
-
-            std::sort(contexts_.begin(), contexts_.end(), [](const auto& c1, const auto& c2){ return c1->priority() > c2->priority(); });
-
-            if (focus_context != contexts_.front().get()) emit event_focus_context_update(*contexts_.front());
-            // if priority change, active contexts have changed
-            //if (focus_context && focus_context->priority() != contexts_.front()->priority())
-        }
-
 
         template<class... Fs>
         void apply_on_active(Fs&&... fs)
@@ -88,6 +61,25 @@ namespace nxi
             }
         }
 
+        template<class... Fs>
+        void apply_on_focus(Fs&&... fs)
+        {
+            const auto& focus = contexts_.front();
+            focus->apply( std::forward<Fs>(fs)... );
+        }
+
+        template<class Context>
+        void del() { del(Context::ID); }
+        void del(const QString& id);
+
+        template<class Context, class... Args>
+        void focus(Args&&... args) { focus(nxi::context::id<Context>(std::forward<Args>(args)...)); }
+        void focus(const QString& id);
+
+        unsigned int active_priority() const;
+        std::vector<nxi::context_data> available_contexts() const;
+        std::vector<stz::observer_ptr<nxi::context>> contexts() const;
+
         template<class Context>
         bool is_active() const
         {
@@ -99,6 +91,12 @@ namespace nxi
             if (std::find_if(contexts_.begin(), contexts_.end(), f) != contexts_.end()) return true;
 
             return false;
+        }
+
+        template<class Context, class... Args>
+        bool is_focus(Args&&... args) const
+        {
+            return contexts_.front()->id() == nxi::context::id<Context>( std::forward<Args>(args)... );
         }
 
     signals:

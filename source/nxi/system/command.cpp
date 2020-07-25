@@ -137,7 +137,12 @@ namespace nxi
         emit event_root_update(root_);
     }
 
-    nxi::commands_view command_system::root_list()
+    nds::node_ptr<nxi::command> command_system::root() const
+    {
+        return root_;
+    }
+
+    nxi::commands_view command_system::root_list() const
     {
         nxi_assert(root_);
         nxi::commands_view commands;
@@ -148,13 +153,24 @@ namespace nxi
         return commands;
     }
 
-    void command_system::root_list(callback_type fn)
+    void command_system::root_list(callback_type fn) const
     {
         nxi_assert(root_);
         graph_.targets(root_, [&fn](auto&& node)
         {
             fn(node);
         });
+    }
+
+    nxi::commands_view command_system::root_sources() const
+    {
+        nxi_assert(root_);
+        nxi::commands_view commands;
+        graph_.sources(root_, [&commands](auto&& node)
+        {
+            commands.push_back(node);
+        });
+        return commands;
     }
 } // nxi
 

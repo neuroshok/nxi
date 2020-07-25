@@ -100,8 +100,8 @@ namespace nxi
             return apply([](auto&& c) { return c.priority(); });
         }
 
-        template<class Context>
-        static const QString& id()
+        template<class Context, class... Args>
+        static const QString& id(Args&&...)
         {
             return Context::ID;
         }

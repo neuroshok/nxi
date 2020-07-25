@@ -28,8 +28,10 @@ namespace nxi
 
         void load();
 
-        nxi::commands_view root_list();
-        void root_list(callback_type);
+        nds::node_ptr<nxi::command> root() const;
+        nxi::commands_view root_list() const;
+        void root_list(callback_type) const;
+        nxi::commands_view root_sources() const;
 
         const nxi::command& get(const QString& module_action, const QString& module_name = "nxi") const;
         nds::node_ptr<nxi::command> find(const QString& module_action, const QString& module_name = "nxi") const;
