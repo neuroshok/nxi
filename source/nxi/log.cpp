@@ -20,7 +20,7 @@ void init_logger()
     if (log_source) str_log_source = " (%@)";
     spdlog::set_level(log_level);
 
-    spdlog::default_logger()->set_pattern("%^[error]%$ [%!] %v" + str_log_source);
+    spdlog::default_logger()->set_pattern("%^[%n%l]%$ [%!] %v" + str_log_source);
 
     auto debug_sink = std::make_shared<spdlog::sinks::stdout_color_sink_st>();
     debug_sink->set_color(spdlog::level::debug, NXI_CONSOLE_COLOR_RED);
