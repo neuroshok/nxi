@@ -13,6 +13,7 @@
 
 namespace nxi
 {
+    class database;
     class session;
 
     class context_system : public QObject
@@ -42,7 +43,7 @@ namespace nxi
             }
             contexts_.emplace_back( std::make_unique<nxi::context>( Context{ std::forward<Args>(args)... } ) );
 
-            nxi::data::context::add(session_.database(), *contexts_.back());
+            nxi::data::context::add(session_database_, *contexts_.back());
             emit event_context_add(*contexts_.back());
 
             std::sort(contexts_.begin(), contexts_.end(), [](const auto& c1, const auto& c2){ return c1->priority() > c2->priority(); });
@@ -107,6 +108,7 @@ namespace nxi
 
     private:
         nxi::session& session_;
+        nxi::database& session_database_;
 
         std::vector<std::unique_ptr<nxi::context>> contexts_;
         std::vector<nxi::context_data> available_contexts_;

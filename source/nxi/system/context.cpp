@@ -20,6 +20,7 @@ namespace nxi
 {
     context_system::context_system(nxi::session& session)
         : session_{ session }
+        , session_database_{ session_.database() }
     {}
 
     void context_system::load()
