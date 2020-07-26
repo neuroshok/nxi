@@ -47,8 +47,6 @@ namespace nxi
         void open(page_ptr source, Args&&... args);
         template<class Page, class... Args>
         void open(Args&&... args);
-        template<class Page>
-        void open();
 
         void close(nds::node_ptr<nxi::page>&);
         void erase(nds::node_ptr<nxi::page>&);
@@ -95,6 +93,9 @@ namespace nxi
         //std::vector<page_ptr> actives_;
         std::vector<page_ptr> visible_pages_;
     };
+
+    template<>
+    void page_system::open<nxi::web_page>();
 } // nxi
 
 #include <nxi/system/page.tpp>
