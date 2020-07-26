@@ -71,7 +71,7 @@ namespace ui
 
         draw_header();
 
-        int item_y = contentsMargins().top() + style_data.item_height;
+        int item_y = contentsMargins().top() + style_data.item_height + contentsMargins().top();
         int item_x = contentsMargins().left();
         int item_index = 0;
 
@@ -100,36 +100,76 @@ namespace ui
         painter.fillRect(header_rect, style_data.background_color.darker());
 
         QRect item_rect = header_rect;
-        std::vector<QString> items{ "root", "item1", "item2" };
+        std::vector<QString> items;
+        session_.nxi_session().context_system().apply_on_focus
+        (
+            [this, &items](const nxi::contexts::command&)
+            {
+                auto res = session_.nxi_session().command_system().root_sources();
+                if (res.size() > 0) items.push_back(res[0]->action_name());
+
+                items.push_back(session_.nxi_session().command_system().root()->action_name());
+            }
+            , [this, &items](const nxi::contexts::page&)
+            {
+                items.push_back("page1");
+                items.push_back("page2");
+                items.push_back("page3");
+                items.push_back("page4");
+                items.push_back("page5");
+            }
+            , [this, &items](const nxi::contexts::command_executor& ctx)
+            {
+                items.push_back(ctx.data.command().action_name());
+                items.push_back(ctx.data.active_parameter().name());
+            }
+            , [this](auto&&) {  }
+        );
+
+        // display session_.nxi_session().page_system().root()
         // header with items
         QFont font;
         font.setBold(true);
-        font.setPixelSize(20);
+        font.setPixelSize(style_data.item_height - 4);
         painter.setFont(font);
         painter.setPen(style_data.item_text_color);
-        item_rect.setWidth(80);
-        item_rect.moveTo(QPoint( item_rect.topLeft().x() + 80 * (items.size() - 1), item_rect.topLeft().y() ));
-        int i = 0;
+
+        int header_item_padding = 40;
+        int header_item_arrow_width = 12;
+        int i = items.size() % 2;
         auto color1 = style_data.background_color.lighter();
-        auto color2 = style_data.background_color.darker();
+        auto color2 = style_data.background_color.darker(180);
+        auto color = color1;
         for (const auto& item : items)
         {
-            auto color = color1;
-            if (i++ % 2) color = color2;
+            item_rect.setWidth(painter.fontMetrics().size(Qt::TextSingleLine, item).width() + header_item_padding);
+
+            if (++i % 2) color = color2;
+            else color = color1;
+
+            auto rcolor = color1;
+            if (color == color1) rcolor = color2;
+
+            painter.fillRect(item_rect, color);
+
+            QRect item_rect_arrow = item_rect;
+            item_rect_arrow.moveLeft(item_rect.x() + item_rect.width() - header_item_arrow_width);
+            item_rect_arrow.setWidth(header_item_arrow_width);
+            painter.fillRect(item_rect_arrow, rcolor);
 
             QPainterPath path;
-            path.moveTo(item_rect.topLeft());
-            path.lineTo(item_rect.topRight());
-            path.lineTo(QPoint{ item_rect.bottomRight().x() + 12, (item_rect.bottomRight().y() + 5) / 2 });
-            path.lineTo(item_rect.bottomRight());
-            path.lineTo(item_rect.bottomLeft());
+            path.moveTo(item_rect.topRight().x() - header_item_arrow_width + 1, item_rect.topRight().y());
+
+            path.lineTo(QPoint{ item_rect.bottomRight().x(), item_rect.topRight().y() + (item_rect.height() / 2)});
+            path.lineTo(item_rect.bottomRight().x() - header_item_arrow_width + 1, item_rect.bottomRight().y());
+            path.lineTo(item_rect.topRight().x() - header_item_arrow_width + 1, item_rect.topRight().y());
 
             painter.fillPath(path, color);
 
             QRect text_rect = item_rect;
-            text_rect.moveLeft(text_rect.left() + 20);
+            text_rect.moveLeft(text_rect.left() - (header_item_arrow_width / 2) + header_item_padding / 2);
             painter.drawText(text_rect, Qt::AlignVCenter, item);
-            item_rect.moveLeft(item_rect.left() - 80);
+            item_rect.moveLeft(item_rect.left() + item_rect.width());
         }
     }
 

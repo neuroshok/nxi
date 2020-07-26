@@ -25,7 +25,8 @@ namespace ui::interfaces::light
         command_root_->style_data.text_color = QColor{ 0, 187, 255 };
         connect(command_root_, &light::button::event_enter, [this]()
         {
-            session_.nxi_session().command_system().command_input().suggest_command();
+          session_.nxi_session().context_system().focus<nxi::contexts::command>();
+          session_.nxi_session().command_system().command_input().suggest_command();
         });
         connect(command_root_, &light::button::event_mousewheel_up, [this]() { session_.nxi_session().command_system().command_input().suggestions().select_previous(); });
         connect(command_root_, &light::button::event_mousewheel_down, [this]() { session_.nxi_session().command_system().command_input().suggestions().select_next(); });
@@ -41,7 +42,8 @@ namespace ui::interfaces::light
         page_root_->style_data.text_color = QColor{ 255, 187, 0 };
         connect(page_root_, &light::button::event_enter, [this]()
         {
-            session_.nxi_session().command_system().command_input().suggest_page();
+          session_.nxi_session().context_system().focus<nxi::contexts::page>();
+          session_.nxi_session().command_system().command_input().suggest_page();
         });
         connect(page_root_, &light::button::event_mousewheel_up, [this]() {
             session_.nxi_session().command_system().command_input().suggestions().select_previous();
