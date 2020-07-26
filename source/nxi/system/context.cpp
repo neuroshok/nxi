@@ -123,6 +123,11 @@ namespace nxi
             nxi_warning("context {} not found", id);
             return;
         }
+        if ((*context_it)->priority() < active_priority())
+        {
+            nxi_warning("unable to focus context {}, it has lower priority", id);
+            return;
+        }
         std::iter_swap(contexts_.begin(), context_it);
         emit event_focus_context_update(*contexts_.front());
     }
