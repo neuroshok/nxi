@@ -13,6 +13,7 @@ namespace ui
     {
     public:
         page(nxi::page& page) : page_{ page } {}
+        virtual ~page() = default;
 
         virtual void display(renderer*) = 0;
         virtual ui::renderer* make_renderer() const = 0;
