@@ -67,7 +67,7 @@ namespace ui::interfaces::light
 
         // context
         context_ = new light::button("context_", this);
-        context_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #00BB99; padding: 0 20 0 20;");
+        context_->setStyleSheet("font-weight: bold; color: #00BB99; padding: 0 20 0 20;");
         connect(context_, &light::button::event_enter, [this]()
         {
             session_.nxi_session().command_system().command_input().suggest_context();

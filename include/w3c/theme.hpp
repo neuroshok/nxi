@@ -80,6 +80,7 @@ namespace w3c
             nxi_json_key(popup_text, w3c::color)
 
             nxi_json_key(toolbar_field, w3c::color)
+            nxi_json_key(toolbar_field_focus, w3c::color)
             nxi_json_key(toolbar_field_text, w3c::color)
             nxi_json_key(toolbar_text, w3c::color)
         nxi_json_close(colors)

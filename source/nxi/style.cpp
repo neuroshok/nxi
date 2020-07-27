@@ -106,6 +106,9 @@ namespace nxi
         data_.background_image.set(QImage(path() + "/" + theme.images.theme_frame.get()));
         map_color(data_.background_color, theme.colors.frame);
 
+        map_color(data_.field.background_color, theme.colors.toolbar_field);
+        map_color(data_.field.background_color_focus, theme.colors.toolbar_field_focus);
+
         map_color(data_.menu.background_color, theme.colors.popup);
         //map_color(theme.colors.popup_border, data_.menu.background_color);
         map_color(data_.menu.item_background_color_hover, theme.colors.popup_highlight);

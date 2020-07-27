@@ -110,8 +110,8 @@ namespace ui::interfaces::light
         //painter.drawImage(target, image, source);
 
         // insane design drawing
-        auto& design_color = session_.nxi_session().interface_system().style().data().field.background_color.get();
-        painter.fillRect(0, 0 , width(), control_bar_->height(), design_color);
+        //auto& design_color = session_.nxi_session().interface_system().style().data().field.background_color.get();
+        //painter.fillRect(0, 0 , width(), control_bar_->height(), design_color);
     }
 
     void main::resizeEvent(QResizeEvent*)
