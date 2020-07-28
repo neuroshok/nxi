@@ -68,8 +68,15 @@ namespace ui
 
     void node_page::paintEvent(QPaintEvent*)
     {
-
         auto pages = session_.nxi_session().page_system().targets(page_);
+
+        if (pages.size() == 0)
+        {
+            QPainter painter(this);
+            painter.drawText(20, 20, page_->name());
+            return;
+        }
+
         int page_x = 0;
         int page_y = 0;
         int page_width = width() / pages.size();

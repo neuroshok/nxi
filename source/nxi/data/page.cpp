@@ -71,6 +71,21 @@ namespace nxi::data::page
         return nxi::result{ query };
     }
 
+    void del(nxi::database& db, nxi::page& page)
+    {
+        auto& query = db.prepared_query(nxi::prepared_query::del_page);
+        query.bindValue(0, page.id());
+        if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
+    }
+
+    void set_loaded(database& db, nxi::page_id id, bool state)
+    {
+        auto& query = db.prepared_query(nxi::prepared_query::set_page_loaded);
+        query.bindValue(0, state);
+        query.bindValue(1, id);
+        if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
+    }
+
     //
 
     void add_arc(nxi::database& db, int source_id, int target_id)
@@ -86,11 +101,11 @@ namespace nxi::data::page
         auto& query = db.prepared_query(nxi::prepared_query::get_page_arcs);
         return nxi::result{ query };
     }
-    void set_loaded(database& db, nxi::page_id id, bool state)
+
+    void del_arc(nxi::database& db, int page_id)
     {
-        auto& query = db.prepared_query(nxi::prepared_query::set_page_loaded);
-        query.bindValue(0, state);
-        query.bindValue(1, id);
+        auto& query = db.prepared_query(nxi::prepared_query::del_page_arc);
+        query.bindValue(0, page_id);
         if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
     }
 } // nxi::data::page
@@ -106,6 +121,7 @@ namespace nxi::data::page::internal
     void prepare(nxi::database& db)
     {
         db.prepare(prepared_query::add_page, "INSERT INTO page(name, command, type, renderer_type, loaded, muted) VALUES(?, ?, ?, ?, ?, ?)");
+        db.prepare(prepared_query::del_page, "DELETE FROM page WHERE id = ?");
         db.prepare(prepared_query::count_page, "SELECT COUNT(id) FROM page");
         db.prepare(prepared_query::get_page, "SELECT * FROM page");
         db.prepare(prepared_query::get_page_id, "SELECT id, name, command FROM page WHERE page.id = ?");
@@ -113,6 +129,7 @@ namespace nxi::data::page::internal
         db.prepare(prepared_query::set_page_loaded, "UPDATE page SET loaded = ? WHERE id = ?");
 
         db.prepare(prepared_query::add_page_arc, "INSERT INTO page_arc(source_id, target_id) VALUES(?, ?)");
+        db.prepare(prepared_query::del_page_arc, "DELETE FROM page_arc WHERE source_id = $1 OR target_id = $1");
         db.prepare(prepared_query::get_page_arcs, "SELECT * FROM page_arc");
     }
 } // nxi::data::page::internal

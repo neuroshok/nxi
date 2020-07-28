@@ -49,10 +49,12 @@ namespace nxi
         void open(Args&&... args);
 
         void close(nds::node_ptr<nxi::page>&);
+        void close_focus();
+
         void erase(nds::node_ptr<nxi::page>&);
         void focus(nxi::page_id id);
         void focus(nds::node_ptr<nxi::page>);
-        page_ptr focus() const;
+        const page_ptr& focus() const;
         page_ptr get(nxi::page_id id) const;
         void load(nxi::page_id page);
         void load(page_ptr);

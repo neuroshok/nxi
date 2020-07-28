@@ -32,6 +32,8 @@ namespace nxi
         virtual void run_script(const QString& script) const;
 
         void load();
+        void close();
+
         void update_command(const QString& command);
         void update_icon(const QIcon&);
         void update_name(const QString& name);

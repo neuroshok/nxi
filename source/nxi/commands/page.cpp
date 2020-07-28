@@ -71,11 +71,11 @@ namespace nxi
         // close
         nxi::command_data page_close;
         page_close.action = "close";
-        page_close.description = "Close active page";
+        page_close.description = "Close focused page";
         page_close.shortcut = {{ Qt::Key_Control }, { Qt::Key_W, Qt::Key_X }};
         page_close.function = [this](const nxi::values& params)
         {
-            // close
+            session_.page_system().close_focus();
         };
         add(std::move(page_close));
 

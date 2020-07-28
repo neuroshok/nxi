@@ -127,7 +127,9 @@ namespace nxi
 
     void page_system::close(nds::node_ptr<nxi::page>& page)
     {
-        emit page->event_close();
+        nxi_assert(page);
+
+        page->close();
         emit event_close(page);
 
         bool had_focus = (focus_ == page);
@@ -139,22 +141,27 @@ namespace nxi
             nds::node_ptr<nxi::page> new_focus;
             graph_.targets(root_, [&new_focus](auto&& page) { new_focus = page; });
 
+            if (!new_focus) new_focus = root_;
             focus(new_focus);
         }
     }
 
+    void page_system::close_focus()
+    {
+        close(focus_);
+    }
+
     void page_system::erase(nds::node_ptr<nxi::page>& page)
     {
-        if (focus_ == page) focus_ = nullptr;
+        nxi_assert(page);
 
+        nxi::data::page::del_arc(session_database_, page->id());
+        nxi::data::page::del(session_database_, *page);
 
-        //// ndb::query<dbs::core>() << (// ndb::del << // ndb::source(pc) << // ndb::filter(pc.source_id == page->id() || pc.target_id == page->id()));
-
-        // ndb::unload(*page);
         graph_.erase(page);
     }
 
-    page_system::page_ptr page_system::focus() const
+    const page_system::page_ptr& page_system::focus() const
     {
         return focus_;
     }
