@@ -141,6 +141,28 @@ namespace nxi
         }};
         add(std::move(links));
 
+        // set_property
+        nxi::command_data page_set_property;
+        page_set_property.action = "set_property";
+        page_set_property.description = "Set a property";
+        page_set_property.context_id = nxi::context::id<nxi::contexts::command>();
+        page_set_property.function = [this](const nxi::values& values)
+        {
+            nxi_assert(values.size() == 2);
+            session_.page_system().focus()->update_property(values.get(0), values.get(1));
+        };
+
+        page_set_property.parameters = {
+        { "name", [this](nxi::suggestion_vector& suggestion)
+            {
+                suggestion.push_back("color");
+                suggestion.push_back("name");
+            }
+        },
+        { "value" }};
+
+        add(std::move(page_set_property));
+
         return node;
     }
 } // nxi

@@ -42,22 +42,16 @@ namespace ui
             request.accept();
         });
 
-        connect(native_page_, &QWebEnginePage::urlChanged, this, [this](const QUrl& url)
-        {
-            nxi_debug("{}",  url.toString());
-            page_.update_command(url.toString());
-        });
 
         connect(native_page_, &QWebEnginePage::loadFinished, this, [this](bool n)
         {
             nxi_debug("load complete");
             //ui_core_.nxi_core().module_system().process(page_);
-
-
         });
 
-        connect(native_page_, &QWebEnginePage::titleChanged, this, [this](const QString& name) { page_.update_name(name); });
         connect(native_page_, &QWebEnginePage::iconChanged, this, [this](const QIcon& icon) { page_.update_icon(icon); });
+        connect(native_page_, &QWebEnginePage::titleChanged, this, [this](const QString& name){ page_.update_name(name); });
+        connect(native_page_, &QWebEnginePage::urlChanged, this, [this](const QUrl& url) { page_.update_command(url.toString()); });
         connect(&page_, &nxi::web_page::event_load, this, [this]() { load(page_.command()); });
 
         connect(&page_, &nxi::web_page::event_run_script, this, [this](const QString& script)

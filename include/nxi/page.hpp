@@ -23,6 +23,8 @@ namespace nxi
 
         Q_OBJECT
     public:
+        enum class properties { color, custom };
+
         page(nds::node_ptr<nxi::page>, page_system& ps, nxi::page_data);
         page(nds::node_ptr<nxi::page>, page_system& ps
             , QString name = "new page", QString command = ""
@@ -34,17 +36,24 @@ namespace nxi
         void load();
         void close();
 
+        void update_color(const QColor&);
         void update_command(const QString& command);
         void update_icon(const QIcon&);
-        void update_name(const QString& name);
+        void update_name(const QString& name, bool override = false);
+        void update_property(const QString& name, const QString& value);
 
         nxi::page_id id() const;
         const QString& name() const;
         const QString& command() const;
-        bool is_loaded() const;
-        bool is_muted() const;
         nxi::page_type type() const;
         nxi::renderer_type renderer_type() const;
+
+        bool has_color() const;
+
+        bool is_loaded() const;
+        bool is_muted() const;
+
+        const QColor& color() const;
         const QIcon& icon() const;
 
     protected:
@@ -56,9 +65,17 @@ namespace nxi
         QString command_;
         nxi::page_type type_;
         nxi::renderer_type renderer_type_;
+
+        bool has_color_;
+        bool has_name_;
+
         bool is_loaded_;
         bool is_muted_;
+
+        QColor color_;
         QIcon icon_;
+
+        // std::unordered_map<QString, QString> properties_;
 
         nds::node_ptr<nxi::page> node_ptr_;
 

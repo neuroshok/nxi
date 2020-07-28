@@ -86,6 +86,17 @@ namespace nxi::data::page
         if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
     }
 
+    void update(database& db, const nxi::page& page)
+    {
+        auto& query = db.prepared_query(nxi::prepared_query::update_page);
+        query.bindValue(0, page.name());
+        query.bindValue(1, page.command());
+        query.bindValue(2, page.is_loaded());
+        query.bindValue(3, page.is_muted());
+        query.bindValue(4, page.id());
+        if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
+    }
+
     //
 
     void add_arc(nxi::database& db, int source_id, int target_id)
@@ -127,6 +138,7 @@ namespace nxi::data::page::internal
         db.prepare(prepared_query::get_page_id, "SELECT id, name, command FROM page WHERE page.id = ?");
         db.prepare(prepared_query::get_page_name, "SELECT id, name, command FROM page WHERE page.name = ?");
         db.prepare(prepared_query::set_page_loaded, "UPDATE page SET loaded = ? WHERE id = ?");
+        db.prepare(prepared_query::update_page, "UPDATE page SET name = ?, command = ?, loaded = ?, muted = ? WHERE id = ?");
 
         db.prepare(prepared_query::add_page_arc, "INSERT INTO page_arc(source_id, target_id) VALUES(?, ?)");
         db.prepare(prepared_query::del_page_arc, "DELETE FROM page_arc WHERE source_id = $1 OR target_id = $1");

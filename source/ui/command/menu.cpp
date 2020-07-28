@@ -238,6 +238,7 @@ namespace ui
     {
         QPainter painter(this);
         if (selected) painter.fillRect(item_rect, style_data.item_background_color_selected);
+        else if (page->has_color()) painter.fillRect(item_rect, page->color());
         else painter.fillRect(item_rect, style_data.item_background_color_hover);
 
         // page icon
