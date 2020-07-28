@@ -339,14 +339,18 @@ namespace ui
         if (event->button() == Qt::LeftButton)
             session_.nxi_session().command_system().command_input().exec();
         else if (event->button() == Qt::MiddleButton)
-            session_.nxi_session().command_system().command_input().suggestions().selected().apply(
-            [this](nds::node_ptr<nxi::page> page) {
-                // todo suggestion_vector should use use event_close
-                session_.nxi_session().command_system().command_input().suggestions().erase(page);
-                session_.nxi_session().page_system().close(page);
-                //page->close();
-            },
-            [this](auto&&) {});
+        {
+            if (suggestions().has_selection())
+            {
+                suggestions().selected().apply(
+                [this](nds::node_ptr<nxi::page> page) {
+                    // todo suggestion_vector should use use event_close
+                    session_.nxi_session().command_system().command_input().suggestions().erase(page);
+                    session_.nxi_session().page_system().close(page);
+                },
+                [this](auto&&) {});
+            }
+        }
     }
 
     void command_menu::wheelEvent(QWheelEvent* event)
@@ -356,4 +360,6 @@ namespace ui
         else
             session_.nxi_session().command_system().command_input().suggestions().select_next();
     }
+
+    nxi::suggestion_vector& command_menu::suggestions() { return session_.nxi_session().command_system().command_input().suggestions(); }
 } // ui

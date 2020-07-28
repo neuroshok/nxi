@@ -59,6 +59,8 @@ namespace ui
         void draw_item(nds::node_ptr<const nxi::page>, QRect&, bool selected);
         void draw_item(const nxi::suggestion& text,  QRect& item_rect, bool selected);
 
+        nxi::suggestion_vector& suggestions();
+
     private:
         ui::session& session_;
 
