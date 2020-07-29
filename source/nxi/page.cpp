@@ -33,10 +33,12 @@ namespace nxi
 
     void page::update_command(const QString& command)
     {
+        if (command_ == command) return;
+
+        emit event_update_command(command_);
+        emit page_system_.event_update_command(*this, command);
         command_ = command;
         nxi::data::page::update(page_system_.session_database_, *this);
-        emit event_update_command(command_);
-        emit page_system_.event_update_command(node_ptr_);
     }
 
     void page::update_icon(const QIcon& icon)

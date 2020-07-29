@@ -9,6 +9,7 @@
 #include <nxi/system/context.hpp>
 #include <nxi/system/interface.hpp>
 #include <nxi/system/module.hpp>
+#include <nxi/system/navigation.hpp>
 #include <nxi/system/page.hpp>
 #include <nxi/system/window.hpp>
 
@@ -45,6 +46,7 @@ namespace nxi
         nxi::context_system& context_system();
         nxi::interface_system& interface_system();
         nxi::module_system& module_system();
+        nxi::navigation_system& navigation_system();
         nxi::page_system& page_system();
         nxi::window_system& window_system();
 
@@ -69,6 +71,7 @@ namespace nxi
         nxi::page_system page_system_;
         nxi::window_system window_system_;
         nxi::module_system module_system_;
+        nxi::navigation_system navigation_system_;
     };
 } // nxi
 

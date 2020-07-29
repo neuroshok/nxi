@@ -80,7 +80,7 @@ namespace nxi
 
         void event_move(nxi::page_id page_id, nxi::page_id source_id, nxi::page_id target_id);
         void event_update(page_ptr);
-        void event_update_command(page_ptr);
+        void event_update_command(const nxi::page& source, const QString& target);
 
         void event_update_root(page_ptr);
 

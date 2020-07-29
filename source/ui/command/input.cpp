@@ -75,10 +75,12 @@ namespace ui
             setText(page->name());
 
         });
+
+        /*
         connect(&session_.nxi_session().page_system(), &nxi::page_system::event_update_command, this, [this](nxi::page_system::page_ptr page)
         {
             setText(page->name());
-        });
+        });*/
 
         connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_shortcut_input_update, this, [this](const QString& shortcut_input)
         {

@@ -15,6 +15,8 @@ namespace nxi
         del_context,
         get_context, get_context_available,
 
+        navigation_log_add,
+
         add_page, count_page, del_page, get_page_id, get_page_name,
         add_page_arc, del_page_arc,
         get_page, get_page_arcs,

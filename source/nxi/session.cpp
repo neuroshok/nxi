@@ -18,6 +18,7 @@ namespace nxi
         , page_system_{ *this, core_database_ }
         , window_system_{ *this }
         , module_system_{ *this }
+        , navigation_system_{ *this }
     {}
 
     void session::load()
@@ -32,6 +33,7 @@ namespace nxi
         interface_system_.load();
         page_system_.load();
         module_system_.load();
+        navigation_system_.load();
     }
 
     void session::unload()
@@ -61,6 +63,7 @@ namespace nxi
     nxi::context_system& session::context_system() { return context_system_; }
     nxi::interface_system& session::interface_system() { return interface_system_; }
     nxi::module_system& session::module_system() { return module_system_; }
+    nxi::navigation_system& session::navigation_system() { return navigation_system_; }
     nxi::page_system& session::page_system() { return page_system_; }
     nxi::window_system& session::window_system() { return window_system_; }
 } // nxi

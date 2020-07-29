@@ -141,6 +141,28 @@ namespace nxi
         }};
         add(std::move(links));
 
+        // navigate_next
+        nxi::command_data navigate_next;
+        navigate_next.action = "next_page";
+        navigate_next.description = "Navigate to next page";
+        navigate_next.shortcut = {{ Qt::Key_Alt }, { Qt::Key_Right }};
+        navigate_next.function = [this](const nxi::values& params)
+        {
+            session_.navigation_system().next_page_command();
+        };
+        add(std::move(navigate_next));
+
+        // navigate_previous
+        nxi::command_data navigate_previous;
+        navigate_previous.action = "previous_page";
+        navigate_previous.description = "Navigate to previous page";
+        navigate_previous.shortcut = {{ Qt::Key_Alt }, { Qt::Key_Left }};
+        navigate_previous.function = [this](const nxi::values& params)
+        {
+            session_.navigation_system().previous_page_command();
+        };
+        add(std::move(navigate_previous));
+
         // set_property
         nxi::command_data page_set_property;
         page_set_property.action = "set_property";
