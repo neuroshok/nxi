@@ -71,8 +71,15 @@ namespace nxi
 
     void page::load()
     {
+        if (is_loaded_) return;
         is_loaded_ = true;
         nxi::data::page::set_loaded(page_system_.session_database_, id_, true);
+        emit event_load();
+    }
+
+    void page::load(const QString& command)
+    {
+        update_command(command);
         emit event_load();
     }
 

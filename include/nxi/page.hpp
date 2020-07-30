@@ -34,6 +34,7 @@ namespace nxi
         virtual void run_script(const QString& script) const;
 
         void load();
+        void load(const QString& command);
         void close();
 
         void update_color(const QColor&);
