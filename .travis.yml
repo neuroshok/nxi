@@ -58,14 +58,14 @@ matrix:
   - os: osx
     osx_image: xcode11
     env:
-    - QT_VERSION=5.14.1
+    - QT_VERSION=5.15.0
     - QT_PATH=/usr/local/Cellar/qt/${QT_VERSION}
     before_install:
     - brew install qt5
     - brew link qt5 --force
     - brew install p7zip
     script:
-    - cmake -DNXI_QT_ROOT=${QT_PATH} -DSTZ_FILESYSTEM=ON .
+    - cmake -DNXI_QT_ROOT=${QT_PATH} -DSTZ_FILESYSTEM=ON  -DNXI_CONSOLE=ON.
     - cmake --build . --target nxi_deploy --config Release
     - 7z a -r ${RELEASE_FILENAME} ./bin/*
     deploy:
