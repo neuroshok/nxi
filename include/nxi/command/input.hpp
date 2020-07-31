@@ -45,6 +45,7 @@ namespace nxi
         void context_suggest();
         void suggest_command();
         void suggest_context();
+        void suggest_navigation();
         void suggest_page();
 
         const QString& text() const;

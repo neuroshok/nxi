@@ -59,11 +59,16 @@ namespace ui::interfaces::light
             page_root_->setText(page->name());
         });
 
+        // navigation
+        auto navigation = new light::button("< o >", this);
+        navigation->setStyleSheet("font-weight: bold; color: #BB2200; padding: 0 20 0 20;");
+        connect(navigation, &light::button::event_enter, [this]()
+        {
+            session_.nxi_session().command_system().command_input().suggest_navigation();
+        });
+
         command_input_ = new ui::command_input(session_);
         command_input_->setFocus();
-        layout->addWidget(command_root_);
-        layout->addWidget(page_root_);
-        layout->addWidget(command_input_);
 
         // context
         context_ = new light::button("context_", this);
@@ -72,9 +77,12 @@ namespace ui::interfaces::light
         {
             session_.nxi_session().command_system().command_input().suggest_context();
         });
+
+        layout->addWidget(command_root_);
+        layout->addWidget(page_root_);
+        layout->addWidget(navigation);
+        layout->addWidget(command_input_);
         layout->addWidget(context_);
-
-
 
         /*
         connect(&session_.nxi_session().command_system(), &nxi::page_system::event_root_update,

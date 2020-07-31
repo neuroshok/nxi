@@ -26,7 +26,6 @@ namespace nxi
         void next_page_command();
         void previous_page_command();
 
-        const QString& get_page(unsigned int index);
 
         template<class Context>
         void next()
@@ -47,9 +46,15 @@ namespace nxi
 
         void previous();
 
+        const QString& get_page(unsigned int index);
+        const std::deque<QString>& page_command_logs() const;
+
     private:
+        enum class load_source{ standard, from_previous, from_next };
+
         nxi::session& session_;
 
+        load_source load_source_;
         unsigned int recent_logs_cursor_;
         unsigned int recent_logs_capacity_;
 

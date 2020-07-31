@@ -207,6 +207,16 @@ namespace nxi
         emit event_suggestion_update(suggestions_);
     }
 
+    void command_input::suggest_navigation()
+    {
+        suggestions_.clear();
+        for (const auto& page_command :  session_.navigation_system().page_command_logs())
+        {
+            suggestions_.push_back(page_command);
+        }
+        emit event_suggestion_update(suggestions_);
+    }
+
     void command_input::suggest_page()
     {
         suggestions_.clear();

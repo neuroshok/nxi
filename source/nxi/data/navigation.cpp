@@ -30,7 +30,7 @@ namespace nxi::data::navigation::internal
 
     void prepare(nxi::database& db)
     {
-        db.prepare(nxi::prepared_query::navigation_log_add, "INSERT INTO navigation_log(datetime, source, target, type) VALUES(datetime('now'), ?, ?, ?)");
+        db.prepare(nxi::prepared_query::navigation_log_add, "INSERT INTO navigation_log(datetime, page_id, source, target, type) VALUES(datetime('now'), ?, ?, ?, ?)");
     }
 }
 // nxi::data::navigation::internal
