@@ -61,7 +61,7 @@ matrix:
     - QT_VERSION=5.15.0
     - QT_PATH=/usr/local/Cellar/qt/${QT_VERSION}
     before_install:
-    - brew install qt5@${QT_VERSION}
+    - brew install qt5
     - brew link qt5 --force
     - brew install p7zip
     script:
