@@ -5,6 +5,7 @@
 #include <nxi/core.hpp>
 #include <ui/core.hpp>
 #include <QPainter>
+#include <QPainterPath>
 
 namespace ui
 {
