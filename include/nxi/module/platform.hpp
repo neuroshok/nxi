@@ -8,7 +8,7 @@
     #undef interface
 
     #define nxi_os_module_function GetProcAddress
-    #define nxi_os_module_load(path) LoadLibrary(path)
+    #define nxi_os_module_load(path) LoadLibraryA(path)
     #define nxi_os_module_unload FreeLibrary
     namespace nxi { typedef HINSTANCE os_module_handle; }
     #define nxi_os_sharelibext "dll"

@@ -15,7 +15,6 @@
 #include <QApplication>
 #include <QFile>
 #include <QSystemTrayIcon>
-#include <QtWebEngine>
 #include <QWidgetList>
 
 

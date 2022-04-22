@@ -74,7 +74,7 @@ namespace nxi
     {
         w->style_data.background_color = data_.background_color.get();
         w->style_data.background_image = data_.background_image.get();
-        w->style_data.background_image = w->style_data.background_image.transformed(QMatrix().rotate(90));
+        w->style_data.background_image = w->style_data.background_image.transformed(QTransform().rotate(90));
     }
 
     void style::update(ui::command_input* ui) const

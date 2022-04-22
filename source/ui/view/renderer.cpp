@@ -5,12 +5,12 @@
 #include <nxi/core.hpp>
 #include <nxi/page/node.hpp>
 
-#include <include/ui/renderer/web.hpp>
+#include <ui/renderer/web.hpp>
 #include <ui/page.hpp>
 #include <nxw/vbox_layout.hpp>
 #include <nxi/system/page.hpp>
-#include <include/ui/renderer/qt3d.hpp>
-#include <include/nxi/log.hpp>
+#include <ui/renderer/qt3d.hpp>
+#include <nxi/log.hpp>
 
 namespace ui
 {
@@ -24,7 +24,7 @@ namespace ui
 
     void renderer_view::display(const nxi::page& page)
     {
-        nxi_trace("display {}", page.name());
+        nxi_trace("renderer_view::display {}", page.name());
         auto ui_page = session_.page_system().get(page);
 
         auto get_renderer = [this, &ui_page](const nxi::page& page)
@@ -35,7 +35,7 @@ namespace ui
                 // get the first available renderer of the right type
                 if (renderer->type() == page.renderer_type()) return renderer.get();
             }
-            // not renderer available, make one
+            // no renderer available, make one
             renderers_.push_back(stz::make_observer<ui::renderer>(ui::renderer::make(ui_page)));
             return renderers_.back().get();
         };

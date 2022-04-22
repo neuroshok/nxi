@@ -317,7 +317,7 @@ namespace ui
     void command_menu::mouseMoveEvent(QMouseEvent* event)
     {
         hover_index_ = -1;
-        auto mouse_pos = mapFromGlobal(event->globalPos());
+        auto mouse_pos = mapFromGlobal(event->globalPosition());
         mouse_pos.setY(mouse_pos.y());
 
         for (int i = 0; i < suggestions_->size(); ++i)
@@ -357,7 +357,7 @@ namespace ui
 
     void command_menu::wheelEvent(QWheelEvent* event)
     {
-        if (event->delta() > 0)
+        if (event->angleDelta().y() > 0)
             session_.nxi_session().command_system().command_input().suggestions().select_previous();
         else
             session_.nxi_session().command_system().command_input().suggestions().select_next();

@@ -12,7 +12,7 @@ namespace ui::interfaces::light
         setStyleSheet("font-weight: bold; padding: 0 20 0 20; color:" + style_data.text_color.name() + "; background-color:" + style_data.background_color.name());
     }
 
-    void button::enterEvent(QEvent* event)
+    void button::enterEvent(QEnterEvent* event)
     {
         emit event_enter();
     }
@@ -24,7 +24,7 @@ namespace ui::interfaces::light
 
     void button::wheelEvent(QWheelEvent* event)
     {
-        if (event->delta() < 0) emit event_mousewheel_down();
+        if (event->angleDelta().y() < 0) emit event_mousewheel_down();
         else emit event_mousewheel_up();
     }
 

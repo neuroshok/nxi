@@ -12,7 +12,7 @@
 #include <QPushButton>
 #include <QPainter>
 #include <QWebEngineView>
-#include <QtWebEngineWidgets/QWebEngineSettings>
+#include <QWebEngineSettings>
 
 // todo experimental / optimize
 
@@ -56,7 +56,7 @@ namespace ui
         for (int i = 0; i < pages_.size(); ++i)
         {
             QRect r = page_rects_[i];
-            if (QRect(mapToGlobal(r.topLeft()), r.size()).contains(event->globalPos()))
+            if (QRect(mapToGlobal(r.topLeft()), r.size()).contains(event->globalPosition()))
             {
                 hl_index_ = i;
                 if (hl_index_ != previous_i) repaint();
@@ -114,7 +114,7 @@ namespace ui
         for (int i = 0; i < pages_.size(); ++i)
         {
             QRect r = page_rects_[i];
-            if (QRect(mapToGlobal(r.topLeft()), r.size()).contains(event->globalPos()))
+            if (QRect(mapToGlobal(r.topLeft()), r.size()).contains(event->globalPosition()))
             {
                 session_.nxi_session().page_system().focus(pages_[i]->nxi_page().id());
                 break;

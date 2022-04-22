@@ -35,6 +35,8 @@ namespace nxi
 
     namespace contexts
     {
+        struct default_constructible_fix : basic_context { default_constructible_fix() : basic_context(0, "default_constructible_fix", 0) {} };
+
         struct custom : basic_context
         {
             static inline const QString ID = "custom_";
@@ -70,7 +72,8 @@ namespace nxi
     {
     public:
         using context_type = std::variant
-            < contexts::custom
+            < contexts::default_constructible_fix
+            , contexts::custom
             , contexts::page
             , contexts::command
             , contexts::command_executor

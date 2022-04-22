@@ -143,7 +143,7 @@ namespace ui
         //if (focused_page) setText(focused_page->name());
     }
 
-    void command_input::enterEvent(QEvent* event)
+    void command_input::enterEvent(QEnterEvent* event)
     {
         if (hasFocus()) return;
         //if (!input_.is_empty()) return;

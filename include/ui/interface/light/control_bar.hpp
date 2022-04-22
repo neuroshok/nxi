@@ -18,7 +18,7 @@ namespace ui::interfaces::light
     public:
         control_bar(ui::session&, ui::window*);
 
-        void enterEvent(QEvent* event) override;
+        void enterEvent(QEnterEvent* event) override;
         void leaveEvent(QEvent* event) override;
 
         ui::command_input* command_input();

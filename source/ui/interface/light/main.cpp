@@ -28,7 +28,10 @@
 #include <ui/system/session.hpp>
 #include <ui/window.hpp>
 #include <ui/interface/standard/window_control.hpp>
-#include <include/nxi/style_data.hpp>
+#include <nxi/style_data.hpp>
+
+#include <QWebEngineView>
+#include <ui/system/page.hpp>
 
 namespace ui::interfaces::light
 {

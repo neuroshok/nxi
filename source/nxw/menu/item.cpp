@@ -28,13 +28,13 @@ namespace nxw
         QWidget::mouseReleaseEvent(event);
     }
 
-    void menu_item::enterEvent(QEvent *event)
+    void menu_item::enterEvent(QEnterEvent* event)
     {
         states_.setFlag(QStyle::State_MouseOver);
         update();
     }
 
-    void menu_item::leaveEvent(QEvent *event)
+    void menu_item::leaveEvent(QEvent* event)
     {
         states_.setFlag(QStyle::State_MouseOver, false);
         update();

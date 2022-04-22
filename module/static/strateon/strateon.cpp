@@ -14,7 +14,7 @@
 
 namespace nxi::modules
 {
-    strateon::strateon(nxi::core& nxi_core)
+    strateon::strateon(nxi::session& nxi_core)
         : module("strateon", module_type::compiled)
         , nxi_core_{ nxi_core }
     {}

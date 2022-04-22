@@ -23,7 +23,7 @@ namespace nxw
 
         menu_item(nxw::menu*, const QString& str_name, std::function<void()> command = {}, const QString& str_icon = "");
 
-        void enterEvent(QEvent* event) override;
+        void enterEvent(QEnterEvent* event) override;
         void leaveEvent(QEvent* event) override;
         void mouseReleaseEvent(QMouseEvent* event) override;
 

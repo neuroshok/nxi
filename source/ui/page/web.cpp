@@ -19,6 +19,7 @@
 #include <QWebEngineScript>
 #include <QWebEngineScriptCollection>
 #include <QWebEngineSettings>
+#include <QWebEngineView>
 
 
 namespace ui
@@ -38,7 +39,7 @@ namespace ui
 
         connect(native_page_, &QWebEnginePage::fullScreenRequested, [this](QWebEngineFullScreenRequest request)
         {
-            static_cast<ui::window*>(native_page_->view()->window())->main_interface()->toggle_fullmode();
+            static_cast<ui::window*>(QWebEngineView::forPage(native_page_)->window())->main_interface()->toggle_fullmode();
             request.accept();
         });
 

@@ -17,13 +17,13 @@ namespace platform::generic
         if (event->button() == Qt::LeftButton)
         {
             moving_ = true;
-            move_origin_ = event->globalPos() - pos();
+            move_origin_ = event->globalPosition() - pos();
         }
     }
 
     void window::mouseMoveEvent(QMouseEvent* event)
     {
-        QPoint delta = event->globalPos() - move_origin_;
+        QPoint delta = event->globalPosition() - move_origin_;
         if (moving_) move(delta.x(), delta.y());
     }
 

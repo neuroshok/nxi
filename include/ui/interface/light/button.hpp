@@ -25,7 +25,7 @@ namespace ui::interfaces::light
         void activate(bool = true);
 
     protected:
-        void enterEvent(QEvent* event) override;
+        void enterEvent(QEnterEvent* event) override;
         void leaveEvent(QEvent* event) override;
         void wheelEvent(QWheelEvent* event) override;
 

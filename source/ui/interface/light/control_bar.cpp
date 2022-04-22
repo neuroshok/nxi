@@ -123,7 +123,7 @@ namespace ui::interfaces::light
         return command_input_;
     }
 
-    void control_bar::enterEvent(QEvent* event)
+    void control_bar::enterEvent(QEnterEvent* event)
     {
 
     }

@@ -10,12 +10,12 @@ namespace nxi::modules
     class strateon : public nxi::module
     {
     public:
-        explicit strateon(nxi::core& nxi_core);
+        explicit strateon(nxi::session& nxi_core);
 
         void on_load();
 
     private:
-        nxi::core& nxi_core_;
+        nxi::session& nxi_core_;
 
     };
 } // nxi::modules

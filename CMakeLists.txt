@@ -34,16 +34,17 @@ set(NXI_THIRD_PARTY_ROOT ${NXI_ROOT}/third_party)
 if (NOT NXI_QT_ROOT)
     message(FATAL_ERROR "Variable NXI_QT_ROOT not found")
 endif()
+
 set(CMAKE_FIND_ROOT_PATH  ${NXI_QT_ROOT})
 set(CMAKE_PREFIX_PATH  ${NXI_QT_ROOT})
-
+set(CMAKE_MODULE_PATH  ${NXI_QT_ROOT})
 
 ## PLATFORM
 # windows
 if (NXI_TARGET_DESKTOP)
-    set(NXI_QT_COMPONENTS Core Widgets Gui Sql WebEngine WebEngineWidgets WebChannel 3DCore 3DRender 3DInput 3DExtras)
-    set(NXI_QT_LIBS Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Sql Qt5::WebEngine Qt5::WebEngineWidgets Qt5::WebChannel
-            Qt5::3DCore Qt5::3DRender Qt5::3DInput Qt5::3DExtras)
+    set(NXI_QT_COMPONENTS Core Widgets Gui Sql WebEngineWidgets WebChannel 3DCore 3DRender 3DInput 3DExtras)
+    set(NXI_QT_LIBS Qt6::Core Qt6::Widgets Qt6::Gui Qt6::Sql Qt6::WebEngineWidgets Qt6::WebChannel
+            Qt6::3DCore Qt6::3DRender Qt6::3DInput Qt6::3DExtras)
 endif()
 
 # android
@@ -69,7 +70,7 @@ add_library(lib_speedlog INTERFACE)
 target_include_directories(lib_speedlog INTERFACE ${NXI_THIRD_PARTY_ROOT}/spdlog/include)
 
 # QT
-find_package(Qt5 REQUIRED COMPONENTS ${NXI_QT_COMPONENTS})
+find_package(Qt6 REQUIRED COMPONENTS ${NXI_QT_COMPONENTS})
 # must be set before files scan
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -181,17 +182,17 @@ if (NXI_TARGET_DESKTOP)
             )
 
     # deploy
-    get_target_property(QT5_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
-    get_filename_component(QT5_DEPLOYQT_EXECUTABLE ${QT5_QMAKE_EXECUTABLE} PATH)
+    get_target_property(QT_QMAKE_EXECUTABLE Qt::qmake IMPORTED_LOCATION)
+    get_filename_component(QT_DEPLOYQT_EXECUTABLE ${QT_QMAKE_EXECUTABLE} PATH)
 
     if (NXI_TARGET_SYSTEM STREQUAL "Windows")
-        set(QT5_DEPLOYQT_EXECUTABLE "${QT5_DEPLOYQT_EXECUTABLE}/windeployqt.exe")
-        add_custom_target(nxi_deploy COMMAND ${QT5_DEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi>)
+        set(QT_DEPLOYQT_EXECUTABLE "${QT_DEPLOYQT_EXECUTABLE}/windeployqt.exe")
+        add_custom_target(nxi_deploy COMMAND ${QT_DEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi>)
         add_dependencies(nxi_deploy nxi)
     endif()
     if (NXI_TARGET_SYSTEM STREQUAL "Darwin")
-        set(QT5_DEPLOYQT_EXECUTABLE "${QT5_DEPLOYQT_EXECUTABLE}/macdeployqt")
-        add_custom_target(nxi_deploy COMMAND ${QT5_DEPLOYQT_EXECUTABLE} $<TARGET_FILE_DIR:nxi> -qmldir=${CMAKE_SOURCE_DIR})
+        set(QT_DEPLOYQT_EXECUTABLE "${QT_DEPLOYQT_EXECUTABLE}/macdeployqt")
+        add_custom_target(nxi_deploy COMMAND ${QT_DEPLOYQT_EXECUTABLE} $<TARGET_FILE_DIR:nxi> -qmldir=${CMAKE_SOURCE_DIR})
         add_dependencies(nxi_deploy nxi)
     endif()
 
