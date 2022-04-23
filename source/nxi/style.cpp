@@ -50,6 +50,14 @@ namespace nxi
             w3c::theme w3c_theme{ obj["theme"] };
             from_w3c(w3c_theme);
         }
+    }
+
+
+    void style::update(ui::main_interface* w) const
+    {
+        w->style_data.background_color = data_.background_color.get();
+        w->style_data.background_image = data_.background_image.get();
+        w->style_data.background_image = w->style_data.background_image.transformed(QTransform().rotate(90));
 
         const QWidgetList top_widgets = QApplication::topLevelWidgets();
         for (auto top_widget : top_widgets)
@@ -64,17 +72,10 @@ namespace nxi
                 w->setFixedSize(data_.icon_button.size.get());
                 w->style.icon_color = data_.icon_button.icon_color.get();
                 w->style.icon_color_hover = data_.icon_button.icon_color_hover.get();
+                w->style.background_color = data_.icon_button.background_color.get();
+                w->style.background_color_hover = data_.icon_button.background_color_hover.get();
             }
-
         }
-    }
-
-
-    void style::update(ui::main_interface* w) const
-    {
-        w->style_data.background_color = data_.background_color.get();
-        w->style_data.background_image = data_.background_image.get();
-        w->style_data.background_image = w->style_data.background_image.transformed(QTransform().rotate(90));
     }
 
     void style::update(ui::command_input* ui) const
@@ -85,10 +86,9 @@ namespace nxi
 
     void style::update(QWidget* ui) const
     {
-
     }
 
-    void style::update(ui::command_menu* widget)
+    void style::update(ui::command_menu* widget) const
     {
         widget->style_data.background_image = data_.background_image.get();
         widget->style_data.background_color = data_.menu.background_color.get();
@@ -97,7 +97,7 @@ namespace nxi
         widget->style_data.item_background_color_hover = data_.menu.item_background_color_hover.get();
         widget->style_data.item_background_color_selected = data_.menu.item_background_color_selected.get();
 
-        widget->style_data.item_height = data_.menu.item_height.get();
+        widget->style_data.item_height = 40;//data_.menu.item_height.get();
     }
 
     #define map_color(NXI_KEY, W3C_KEY) if (!W3C_KEY.is_null()) NXI_KEY.set(W3C_KEY.get());
@@ -105,6 +105,9 @@ namespace nxi
     {
         data_.background_image.set(QImage(path() + "/" + theme.images.theme_frame.get()));
         map_color(data_.background_color, theme.colors.frame);
+
+        map_color(data_.icon_button.background_color, theme.colors.toolbar_field);
+        map_color(data_.icon_button.icon_color, theme.colors.popup_text);
 
         map_color(data_.field.background_color, theme.colors.toolbar_field);
         map_color(data_.field.background_color_focus, theme.colors.toolbar_field_focus);

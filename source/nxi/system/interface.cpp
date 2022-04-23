@@ -14,7 +14,7 @@ namespace nxi
 
     void interface_system::load()
     {
-        load_style();
+        load_style(session_.config().browser.interface.style.get());
     }
 
     void interface_system::load_style(const QString& name)
@@ -22,6 +22,7 @@ namespace nxi
         auto style = new nxi::style(name);
         style->load();
         QApplication::setStyle(style); // QApplication own style
+        session_.config().browser.interface.style = name;
         emit event_update_style(*style);
     }
 

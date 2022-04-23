@@ -51,7 +51,7 @@ namespace nxi
         void update(ui::command_input*) const;
         void update(ui::main_interface*) const;
 
-        void update(ui::command_menu*);
+        void update(ui::command_menu*) const;
 
         void polish(QPalette& palette) override;
         void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;
