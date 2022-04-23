@@ -8,16 +8,19 @@
         <file alias="node">graphic/node.png</file>
     </qresource>
     <qresource prefix="/icon">
-        <file alias="close">icon/close24.png</file>
-        <file alias="download">icon/download24.png</file>
+        <file alias="add">icon/add.svg</file>
+        <file alias="close">icon/close.svg</file>
+        <file alias="download">icon/download.svg</file>
+        <file alias="help">icon/help.svg</file>
         <file alias="maximize">icon/maximize24.png</file>
         <file alias="menu">icon/menu24.png</file>
         <file alias="message">icon/message24.png</file>
         <file alias="minimize">icon/minimize24.png</file>
-        <file alias="next">icon/next24.png</file>
+        <file alias="next">icon/next.svg</file>
         <file alias="node">icon/node16.png</file>
-        <file alias="previous">icon/previous24.png</file>
-        <file alias="search">icon/search16.png</file>
+        <file alias="previous">icon/previous.svg</file>
+        <file alias="refresh">icon/refresh.svg</file>
+        <file alias="search">icon/search.svg</file>
         <file alias="switch">icon/switch16.png</file>
     </qresource>
     <qresource prefix="/">
