@@ -33,7 +33,7 @@ namespace nxi
 
     void command_system::load()
     {
-        nxi_trace("");
+        nxi_trace("command_system::load");
         command_initializer_.load();
 
         // init trigger keys

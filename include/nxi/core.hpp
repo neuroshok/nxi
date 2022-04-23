@@ -27,6 +27,7 @@ namespace nxi
         static QString page_path(const QString&);
 
     signals:
+        void event_load() const;
         void event_quit() const;
 
     private:

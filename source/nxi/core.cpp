@@ -21,6 +21,7 @@ namespace nxi
         config_ = std::make_unique<nxi::config>("nxi", global_database_);
 
         session_system_.load();
+        emit event_load();
     }
 
     void core::quit() const

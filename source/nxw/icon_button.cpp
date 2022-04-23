@@ -8,16 +8,22 @@
 
 namespace nxw
 {
-    icon_button::icon_button(ui::session& session, QWidget* parent, const QString& icon_path, QString command)
+    icon_button::icon_button(ui::session& session, QWidget* parent, const QString& icon_path, QString str_command)
         : session_{ session }
-        , command_{ std::move(command) }
+        , str_command_{ std::move(str_command) }
         , svg_renderer_{ new QSvgRenderer{ icon_path } }
     {
-        setToolTip(command_);
+        connect(&session.nxi_core(), &nxi::core::event_load, [this] {
+            auto vs = session_.nxi_session().command_system().search(str_command_);
+            if (!vs.empty()) command_ = vs[0];
+            else nxi_warning("command {} not found", str_command_);
+
+            if (command_) setToolTip(command_->description());
+            else nxi_warning("command {} does not exist", str_command_);
+        });
 
         connect(this, &QPushButton::clicked, [this] {
-            auto vs = session_.nxi_session().command_system().search(command_);
-            if (!vs.empty()) vs[0]->exec();
+            if (command_) command_->exec();
         });
 
         setFixedSize(style.size);

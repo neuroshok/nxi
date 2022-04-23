@@ -18,9 +18,8 @@ namespace ui::views
     public:
         config(ui::session& session);
 
-        /*
         template<class T>
-        void add_row(ndb::persistent<T>& persistent)
+        void add_row(nxi::persistent<T>& persistent)
         {
             auto config_key = static_cast<nxi::config_key<T>&>(persistent);
 
@@ -57,7 +56,7 @@ namespace ui::views
 
             form_->addRow(label_key, value);
 
-        }*/
+        }
 
     private:
         ui::session& session_;

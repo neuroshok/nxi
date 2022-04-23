@@ -1,6 +1,8 @@
 #ifndef NXW_ICON_BUTTON_H_NXI
 #define NXW_ICON_BUTTON_H_NXI
 
+#include <nds/graph/node.hpp>
+
 #include <QPushButton>
 #include <QPainter>
 #include <QPalette>
@@ -10,6 +12,10 @@
 //! style
 //! window
 
+namespace nxi
+{
+    class command;
+} // nxi
 namespace ui
 {
     class session;
@@ -32,7 +38,7 @@ namespace nxw
             int padding = { 4 };
         } style;
 
-        icon_button(ui::session&, QWidget* parent, const QString& icon_path, QString command = "nxi:help"); // , nxi::style* = nullptr
+        icon_button(ui::session&, QWidget* parent, const QString& icon_path, QString str_command = "nxi:help"); // , nxi::style* = nullptr
 
         void paintEvent(QPaintEvent*) override;
 
@@ -40,7 +46,8 @@ namespace nxw
         QImage make_colorized_image(const QImage& source, QColor foreground_color, QColor background_color);
 
         ui::session& session_;
-        QString command_;
+        nds::node_ptr<nxi::command> command_;
+        QString str_command_;
         QImage image_;
         QImage image_hover_;
         QSvgRenderer* svg_renderer_;
