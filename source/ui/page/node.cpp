@@ -114,7 +114,7 @@ namespace ui
         for (int i = 0; i < pages_.size(); ++i)
         {
             QRect r = page_rects_[i];
-            if (QRect(mapToGlobal(r.topLeft()), r.size()).contains(event->globalPosition()))
+            if (QRect(mapToGlobal(r.topLeft()), r.size()).contains(event->globalPosition().toPoint()))
             {
                 session_.nxi_session().page_system().focus(pages_[i]->nxi_page().id());
                 break;
