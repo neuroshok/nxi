@@ -7,6 +7,7 @@
 #include <ui/command/input.hpp>
 #include <ui/core.hpp>
 #include <ui/interface/light/button.hpp>
+#include "nxw/icon_button.hpp"
 
 namespace ui::interfaces::light
 {
@@ -78,11 +79,24 @@ namespace ui::interfaces::light
             session_.nxi_session().command_system().command_input().suggest_context();
         });
 
+        // tools
+        auto download_button = new nxw::icon_button{ session_, this, ":/icon/download" };
+        auto close_button = new nxw::icon_button{ session_, this, ":/icon/close", "nxi:quit" };
+
         layout->addWidget(command_root_);
         layout->addWidget(page_root_);
         layout->addWidget(navigation);
+        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/previous" });
+        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/next" });
+        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/refresh" });
         layout->addWidget(command_input_);
+        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/close", "nxi:close" });
+        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/add", "nxi:new" });
         layout->addWidget(context_);
+        layout->addWidget(download_button);
+        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/help" });
+        layout->addWidget(close_button);
+
 
         /*
         connect(&session_.nxi_session().command_system(), &nxi::page_system::event_root_update,

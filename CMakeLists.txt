@@ -42,8 +42,8 @@ set(CMAKE_MODULE_PATH  ${NXI_QT_ROOT})
 ## PLATFORM
 # windows
 if (NXI_TARGET_DESKTOP)
-    set(NXI_QT_COMPONENTS Core Widgets Gui Sql WebEngineWidgets WebChannel 3DCore 3DRender 3DInput 3DExtras)
-    set(NXI_QT_LIBS Qt6::Core Qt6::Widgets Qt6::Gui Qt6::Sql Qt6::WebEngineWidgets Qt6::WebChannel
+    set(NXI_QT_COMPONENTS Core Widgets Gui SvgWidgets Sql WebEngineWidgets WebChannel 3DCore 3DRender 3DInput 3DExtras)
+    set(NXI_QT_LIBS Qt6::Core Qt6::Widgets Qt6::Gui  Qt6::SvgWidgets Qt6::Sql Qt6::WebEngineWidgets Qt6::WebChannel
             Qt6::3DCore Qt6::3DRender Qt6::3DInput Qt6::3DExtras)
 endif()
 
@@ -55,7 +55,7 @@ include(platform/android/cmake/android.cmake)
 #-------------------------------------------------------
 project(nxi)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
@@ -162,19 +162,19 @@ if (NXI_TARGET_DESKTOP)
 
     list(APPEND NXI_DEFINITIONS QT_FORCE_ASSERTS)
 
-    add_executable(nxi ${NXI_SOURCES} ${NXI_ICON})
-    target_include_directories(nxi PUBLIC include)
-    target_compile_definitions(nxi PUBLIC ${NXI_DEFINITIONS})
-    target_link_libraries(nxi lib_nds lib_speedlog ${NXI_MODULES} ${NXI_QT_LIBS})
+    add_executable(nxi_exe ${NXI_SOURCES} ${NXI_ICON})
+    target_include_directories(nxi_exe PUBLIC include)
+    target_compile_definitions(nxi_exe PUBLIC ${NXI_DEFINITIONS})
+    target_link_libraries(nxi_exe lib_nds lib_speedlog ${NXI_MODULES} ${NXI_QT_LIBS})
 
     # console
     if (NXI_CONSOLE)
-        set_target_properties(nxi PROPERTIES WIN32_EXECUTABLE false)
+        set_target_properties(nxi_exe PROPERTIES WIN32_EXECUTABLE false)
     else()
-        set_target_properties(nxi PROPERTIES WIN32_EXECUTABLE true)
+        set_target_properties(nxi_exe PROPERTIES WIN32_EXECUTABLE true)
     endif()
 
-    set_target_properties(nxi
+    set_target_properties(nxi_exe
             PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY "${NXI_BIN_ROOT}/nxi"
             RUNTIME_OUTPUT_DIRECTORY_RELEASE "${NXI_BIN_ROOT}/nxi"
@@ -187,13 +187,13 @@ if (NXI_TARGET_DESKTOP)
 
     if (NXI_TARGET_SYSTEM STREQUAL "Windows")
         set(QT_DEPLOYQT_EXECUTABLE "${QT_DEPLOYQT_EXECUTABLE}/windeployqt.exe")
-        add_custom_target(nxi_deploy COMMAND ${QT_DEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi>)
-        add_dependencies(nxi_deploy nxi)
+        add_custom_target(nxi_deploy COMMAND ${QT_DEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi_exe>)
+        add_dependencies(nxi_deploy nxi_exe)
     endif()
     if (NXI_TARGET_SYSTEM STREQUAL "Darwin")
         set(QT_DEPLOYQT_EXECUTABLE "${QT_DEPLOYQT_EXECUTABLE}/macdeployqt")
         add_custom_target(nxi_deploy COMMAND ${QT_DEPLOYQT_EXECUTABLE} $<TARGET_FILE_DIR:nxi> -qmldir=${CMAKE_SOURCE_DIR})
-        add_dependencies(nxi_deploy nxi)
+        add_dependencies(nxi_deploy nxi_exe)
     endif()
 
 endif()

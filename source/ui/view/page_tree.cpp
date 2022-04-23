@@ -89,7 +89,7 @@ public:
             QRect closeButtonRect = m_closeIcon.rect()
             .translated(closeIconPos(option));
 
-            if(closeButtonRect.contains(mouseEvent->pos()))
+            if(closeButtonRect.contains(mouseevent->position().toPoint()))
             {
                 qDebug() << "CLOSE";
             }
@@ -268,7 +268,7 @@ namespace ui::views
                 nxi::page_id page_id = static_cast<ui::tree_page_item*>(selected_item)->page().id();
 
                 // target is root
-                auto item = itemAt(event->pos());
+                auto item = itemAt(event->position().toPoint());
                 // target is a page
                 if (item) target_id = static_cast<ui::tree_page_item*>(item)->page().id();
 

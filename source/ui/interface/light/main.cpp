@@ -6,6 +6,7 @@
 
 #include <nxw/hbox_layout.hpp>
 #include <nxw/vbox_layout.hpp>
+#include <nxw/icon_button.hpp>
 
 #include <ui/core.hpp>
 #include <ui/interface/standard/content.hpp>
@@ -58,8 +59,6 @@ namespace ui::interfaces::light
 
         top_layout->addSpacing(120);
         top_layout->addWidget(control_bar_);
-        // top_layout->addWidget(window_control);
-        top_layout->addSpacing(120);
         middle_layout->addWidget(content_);
 
         main_layout->addLayout(top_layout);

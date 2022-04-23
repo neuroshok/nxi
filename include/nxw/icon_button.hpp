@@ -3,13 +3,17 @@
 
 #include <QPushButton>
 #include <QPainter>
-#include <QPixmap>
 #include <QPalette>
 #include <QImage>
-#include <QBitmap>
+#include <QSvgRenderer>
 
 //! style
 //! window
+
+namespace ui
+{
+    class session;
+} // ui
 
 namespace nxw
 {
@@ -19,44 +23,27 @@ namespace nxw
     public:
         struct style_type
         {
-            QColor background_color = {0, 0, 0};
-            QColor icon_color = {255, 0, 0};
-            QColor icon_color_hover = {0, 255, 0};
+            QColor background_color = { QRgba64::fromRgba64(0) };
+            QColor background_color_hover = { 0xFF, 0xFF, 0xFF, 0x22 };
+            QColor icon_color = { 0x00BFFF };
+            QColor icon_color_hover = { 0x00BFFF };
 
-            QSize size = {16, 16};
+            QSize size = { 24, 24 };
+            int padding = { 4 };
         } style;
 
-        icon_button(QWidget* parent, const QString& icon_path) // , nxi::style* = nullptr
-            : image_{ icon_path }
-        {
-            // style::update(this);
-            setFixedSize(style.size);
-        }
+        icon_button(ui::session&, QWidget* parent, const QString& icon_path, QString command = "nxi:help"); // , nxi::style* = nullptr
 
-        void paintEvent(QPaintEvent*)
-        {
-            // if nxi_style return (nxi_style->paint(this)
-
-            QPainter p(this);
-            QColor color = style.icon_color;
-            if (underMouse()) color = style.icon_color_hover;
-
-            for (int x = 0; x < image_.width(); ++x)
-            {
-                for (int y = 0; y < image_.height(); ++y)
-                {
-                    if (image_.pixelColor(x, y).alpha() > 0)
-                    {
-                        if (image_.pixelColor(x, y).alpha() < 255) color = Qt::red;
-                        p.setPen(color);
-                        p.drawPoint(x, y);
-                    }
-                }
-            }
-        }
+        void paintEvent(QPaintEvent*) override;
 
     private:
+        QImage make_colorized_image(const QImage& source, QColor foreground_color, QColor background_color);
+
+        ui::session& session_;
+        QString command_;
         QImage image_;
+        QImage image_hover_;
+        QSvgRenderer* svg_renderer_;
     };
 } // nxw
 

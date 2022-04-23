@@ -69,7 +69,7 @@ namespace ui::interfaces::standard
         QHBoxLayout* layout = new nxw::hbox_layout;
         setLayout(layout);
 
-        auto btn_menu = new nxw::icon_button(this, ":/icon/menu");
+        //auto btn_menu = new nxw::icon_button(this, ":/icon/menu");
 
 
         auto menu = new nxw::menu{ this };
@@ -83,7 +83,7 @@ namespace ui::interfaces::standard
         menu->add(ui_core.nxi_core().command_system().get("test"));
         menu->show_at(btn_menu);*/
 
-        QObject::connect(btn_menu, &nxw::icon_button::clicked, menu, &nxw::menu::exec);
+        //QObject::connect(btn_menu, &nxw::icon_button::clicked, menu, &nxw::menu::exec);
         //menu->add(nxi::command::get("nxi", "quit"), customwidget);
 
 
@@ -114,13 +114,13 @@ namespace ui::interfaces::standard
 
         //auto window_controls = new ui::interfaces::standard::window_controls(ui_core, window);
 
-        layout->addWidget(btn_menu);
+        //layout->addWidget(btn_menu);
         layout->addSpacing(64);
-
+/*
         layout->addWidget(new nxw::icon_button(this, ":/icon/previous"));
         layout->addWidget(new nxw::icon_button(this, ":/icon/next"));
         layout->addWidget(new nxw::icon_button(this, ":/icon/message"));
-        layout->addWidget(new nxw::icon_button(this, ":/icon/download"));
+        layout->addWidget(new nxw::icon_button(this, ":/icon/download"));*/
 
         //ui::window::get(this)->
         static_cast<ui::window*>(this->window())->set_grip(this);
@@ -134,10 +134,11 @@ namespace ui::interfaces::standard
 
     void control_bar::command_add(const nxi::command& command)
     {
+        /*
         auto button = new nxw::icon_button(this, command.icon());
         connect(button, &nxw::icon_button::clicked, [this, &command]()
         {
-            /*
+
             nxi::internal_command
             nxi::web_module_command
 
@@ -145,15 +146,15 @@ namespace ui::interfaces::standard
             if (command.is_webaction())
             {
 
-            }*/
+            }
 
             //
             command.exec();
 
-            /*
+
             QString path = "C:\\Projet\\nk\\nex\\bin\\nxi\\module\\webextension\\beastify\\popup\\choose_beast.html";
             auto popup = new nxw::popup(path);
-            popup->show();*/
+            popup->show();
         });
 
         button->setText(command.name());
@@ -161,5 +162,6 @@ namespace ui::interfaces::standard
         //popup->show_at(button);
 
         module_controls_->addWidget(button);
+        */
     }
 } // ui::interfaces
