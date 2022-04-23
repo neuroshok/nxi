@@ -54,7 +54,7 @@ namespace ui
         [this](const nxi::context& context)
         {
             context.apply(
-            [this](const nxi::contexts::command_executor& ex){ setPlaceholderText("Enter parameter `" + ex.data.active_parameter().name() + "`"); }
+            [this](const nxi::contexts::command_executor& ex){ setPlaceholderText("Enter parameter `" + ex.data.active_parameter().name() + "` (ESC to cancel)"); }
             , [this](auto&&) { setPlaceholderText("Enter command or use shortcut"); }
             );
         });
@@ -63,7 +63,7 @@ namespace ui
         [this](const nxi::context& context)
         {
             context.apply(
-            [this](const nxi::contexts::command_executor& ex){ setPlaceholderText("Enter parameter `" + ex.data.active_parameter().name() + "`"); }
+            [this](const nxi::contexts::command_executor& ex){ setPlaceholderText("Enter parameter `" + ex.data.active_parameter().name() + "` (ESC to cancel)"); }
             , [this](auto&&) { setPlaceholderText("Enter command or use shortcut"); }
             );
         });
@@ -106,6 +106,8 @@ namespace ui
         switch (event->key())
         {
             case Qt::Key_Escape:
+                if (command_executor_ && session_.nxi_session().context_system().is_active<nxi::contexts::command_executor>())
+                    session_.nxi_session().context_system().del<nxi::contexts::command_executor>();
                 nxi_input().reset();
                 break;
             case Qt::Key_Up:

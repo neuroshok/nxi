@@ -15,20 +15,6 @@ namespace nxi
         values_.add(value);
     }
 
-    const nxi::command& command_executor::command() const { return *command_; }
-
-    const nxi::command_parameter& command_executor::active_parameter() const
-    {
-        return command_->parameter(parameter_index_);
-    }
-
-    bool command_executor::is_ready() const
-    {
-        return parameter_index_ >= command_->parameters_count();
-    }
-
-    bool command_executor::is_complete() const { return complete_; }
-
     void command_executor::exec()
     {
         if (complete_)
@@ -44,4 +30,25 @@ namespace nxi
             complete_ = true;
         }
     }
+
+    void command_executor::reset()
+    {
+        complete_ = false;
+        parameter_index_ = 0;
+    }
+
+
+    const nxi::command& command_executor::command() const { return *command_; }
+
+    const nxi::command_parameter& command_executor::active_parameter() const
+    {
+        return command_->parameter(parameter_index_);
+    }
+
+    bool command_executor::is_ready() const
+    {
+        return parameter_index_ >= command_->parameters_count();
+    }
+
+    bool command_executor::is_complete() const { return complete_; }
 } // nxi

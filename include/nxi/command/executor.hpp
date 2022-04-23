@@ -21,6 +21,7 @@ namespace nxi
 
         void add_value(const QString& value);
         void exec();
+        void reset();
 
         const nxi::command_parameter& active_parameter() const;
         const nxi::command& command() const;
