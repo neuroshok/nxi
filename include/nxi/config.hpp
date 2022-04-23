@@ -61,6 +61,7 @@ namespace nxi
             nxi_config_close(history)
 
             nxi_config_open(interface)
+                nxi_config_key(style, QString, "nxi", "Interface style");
                 nxi_config_key(show_page_bar, bool, true);
             nxi_config_close(interface)
 
