@@ -20,25 +20,26 @@ namespace nxw
 
             if (command_) setToolTip(command_->description());
             else nxi_warning("command {} does not exist", str_command_);
+
+            setFixedSize(style.size);
+
+            QImage source{ style.size, QImage::Format_RGBA8888 };
+            // create image from svg
+            source.fill(0x00000000);
+            QPainter painter;
+            painter.begin(&source);
+            svg_renderer_->render(&painter, QRectF(0, 0, style.size.width() - style.padding * 2, style.size.height() - style.padding * 2));
+            painter.end();
+
+            image_ = make_colorized_image(source, style.icon_color, style.background_color);
+            image_hover_ = make_colorized_image(source, style.icon_color_hover, style.background_color_hover);
         });
 
         connect(this, &QPushButton::clicked, [this] {
             if (command_) command_->exec();
         });
 
-        setFixedSize(style.size);
         if (!svg_renderer_->isValid()) nxi_error("invalid icon");
-
-        QImage source{ style.size, QImage::Format_RGBA8888 };
-        // create image from svg
-        source.fill(0x00000000);
-        QPainter painter;
-        painter.begin(&source);
-        svg_renderer_->render(&painter, QRectF(0, 0, style.size.width() - style.padding * 2, style.size.height() - style.padding * 2));
-        painter.end();
-
-        image_ = make_colorized_image(source, style.icon_color, style.background_color);
-        image_hover_ = make_colorized_image(source, style.icon_color_hover, style.background_color_hover);
     }
 
     QImage icon_button::make_colorized_image(const QImage& source, QColor foreground_color, QColor background_color)

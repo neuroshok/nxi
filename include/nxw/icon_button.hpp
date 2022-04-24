@@ -30,7 +30,7 @@ namespace nxw
         struct style_type
         {
             QColor background_color = { QRgba64::fromRgba64(0) };
-            QColor background_color_hover = { 0xFF, 0xFF, 0xFF, 0x22 };
+            QColor background_color_hover = { QRgba64::fromRgba64(0) };
             QColor icon_color = { 0x00BFFF };
             QColor icon_color_hover = { 0x00BFFF };
 
