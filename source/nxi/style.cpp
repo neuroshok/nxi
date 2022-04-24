@@ -94,6 +94,7 @@ namespace nxi
         widget->style_data.background_color = data_.menu.background_color.get();
         widget->style_data.item_text_color = data_.menu.item_text_color.get();
         widget->style_data.item_text_color_hover = data_.menu.item_text_color_hover.get();
+        widget->style_data.item_background_color = data_.menu.item_background_color.get();
         widget->style_data.item_background_color_hover = data_.menu.item_background_color_hover.get();
         widget->style_data.item_background_color_selected = data_.menu.item_background_color_selected.get();
 
@@ -101,6 +102,8 @@ namespace nxi
     }
 
     #define map_color(NXI_KEY, W3C_KEY) if (!W3C_KEY.is_null()) NXI_KEY.set(W3C_KEY.get());
+    #define map_color_edit(NXI_KEY, W3C_KEY, EDIT) if (!W3C_KEY.is_null()) NXI_KEY.set(W3C_KEY.get().EDIT);
+    //! \brief map w3c theme color to nxi style color
     void style::from_w3c(w3c::theme& theme)
     {
         data_.background_image.set(QImage(path() + "/" + theme.images.theme_frame.get()));
@@ -113,10 +116,9 @@ namespace nxi
         map_color(data_.field.background_color_focus, theme.colors.toolbar_field_focus);
 
         map_color(data_.menu.background_color, theme.colors.popup);
-        //map_color(theme.colors.popup_border, data_.menu.background_color);
+        map_color_edit(data_.menu.item_background_color, theme.colors.popup, darker(120));
         map_color(data_.menu.item_background_color_hover, theme.colors.popup_highlight);
-        map_color(data_.menu.item_background_color_selected, theme.colors.popup_highlight);
-            data_.menu.item_background_color_selected.get().setAlpha(255);
+        map_color_edit(data_.menu.item_background_color_selected, theme.colors.popup_highlight, darker(120));
 
         map_color(data_.menu.item_text_color_hover, theme.colors.popup_highlight_text);
         map_color(data_.menu.item_text_color, theme.colors.popup_text);

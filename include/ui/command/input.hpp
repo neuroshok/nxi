@@ -40,7 +40,10 @@ namespace ui
         void paintEvent(QPaintEvent*) override;
 
     private:
+        static inline auto default_placeholder_text = "Enter a command, a resource location or search";
+
         nxi::command_input& nxi_input();
+        void set_executor_placeholder(const QString& parameter_name);
 
     private:
         ui::session& session_;

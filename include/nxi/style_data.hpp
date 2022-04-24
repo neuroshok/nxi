@@ -35,6 +35,7 @@ namespace nxi
             nxi_json_key(background_color, QColor, (15, 20, 25) )
             nxi_json_key(item_text_color, QColor, (186, 187, 193) )
             nxi_json_key(item_text_color_hover, QColor, (186, 187, 193) )
+            nxi_json_key(item_background_color, QColor, (20, 20, 20) )
             nxi_json_key(item_background_color_hover, QColor, (61, 65, 71) )
             nxi_json_key(item_background_color_selected, QColor, (61, 65, 71) )
             nxi_json_key(item_height, int, (40) )

@@ -43,7 +43,7 @@ namespace ui
                 }
                 else
                 {
-                    setPlaceholderText("Enter parameter `" + command_executor_->active_parameter().name() + "`");
+                    set_executor_placeholder(command_executor_->active_parameter().name());
                     setText("");
                 }
             }
@@ -54,8 +54,8 @@ namespace ui
         [this](const nxi::context& context)
         {
             context.apply(
-            [this](const nxi::contexts::command_executor& ex){ setPlaceholderText("Enter parameter `" + ex.data.active_parameter().name() + "` (ESC to cancel)"); }
-            , [this](auto&&) { setPlaceholderText("Enter command or use shortcut"); }
+            [this](const nxi::contexts::command_executor& ex){ set_executor_placeholder(ex.data.active_parameter().name()); }
+            , [this](auto&&) { setPlaceholderText(default_placeholder_text); }
             );
         });
 
@@ -63,8 +63,8 @@ namespace ui
         [this](const nxi::context& context)
         {
             context.apply(
-            [this](const nxi::contexts::command_executor& ex){ setPlaceholderText("Enter parameter `" + ex.data.active_parameter().name() + "` (ESC to cancel)"); }
-            , [this](auto&&) { setPlaceholderText("Enter command or use shortcut"); }
+            [this](const nxi::contexts::command_executor& ex){ set_executor_placeholder(ex.data.active_parameter().name()); }
+            , [this](auto&&) { setPlaceholderText(default_placeholder_text); }
             );
         });
 
@@ -171,5 +171,10 @@ namespace ui
     nxi::command_input& command_input::nxi_input()
     {
         return session_.nxi_session().command_system().command_input();
+    }
+
+    void command_input::set_executor_placeholder(const QString& parameter_name)
+    {
+        setPlaceholderText("Enter parameter `" + parameter_name + "` for " + command_executor_->command().name() + " (ESC to cancel)");
     }
 } // ui
