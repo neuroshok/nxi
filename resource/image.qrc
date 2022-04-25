@@ -9,9 +9,12 @@
     </qresource>
     <qresource prefix="/icon">
         <file alias="add">icon/add.svg</file>
+        <file alias="at">icon/at.svg</file>
+        <file alias="notification">icon/bell.svg</file>
         <file alias="close">icon/close.svg</file>
         <file alias="copy">icon/copy.svg</file>
         <file alias="download">icon/download.svg</file>
+        <file alias="friend">icon/users.svg</file>
         <file alias="help">icon/help.svg</file>
         <file alias="maximize">icon/maximize24.png</file>
         <file alias="menu">icon/menu24.png</file>
