@@ -43,17 +43,10 @@ namespace ui::interfaces::light
         page_root_->style_data.text_color = QColor{ 255, 187, 0 };
         connect(page_root_, &light::button::event_enter, [this]()
         {
-          session_.nxi_session().context_system().focus<nxi::contexts::page>();
-          session_.nxi_session().command_system().command_input().suggest_page();
+            session_.nxi_session().context_system().focus<nxi::contexts::page>();
+            session_.nxi_session().command_system().command_input().suggest_page();
         });
-        connect(page_root_, &light::button::event_mousewheel_up, [this]() {
-            session_.nxi_session().command_system().command_input().suggestions().select_previous();
-            session_.nxi_session().command_system().command_input().exec();
-        });
-        connect(page_root_, &light::button::event_mousewheel_down, [this]() {
-            session_.nxi_session().command_system().command_input().suggestions().select_next();
-            session_.nxi_session().command_system().command_input().exec();
-        });
+
         connect(&session_.nxi_session().page_system(), &nxi::page_system::event_update_root,
         [this](nds::node_ptr<const nxi::page> page)
         {
@@ -86,12 +79,12 @@ namespace ui::interfaces::light
         layout->addWidget(command_root_);
         layout->addWidget(page_root_);
         layout->addWidget(navigation);
+        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/refresh" });
         layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/previous" });
         layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/next" });
-        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/refresh" });
+        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/add", "nxi:new" });
         layout->addWidget(command_input_);
         layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/close", "nxi:close" });
-        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/add", "nxi:new" });
         layout->addWidget(context_);
         layout->addWidget(download_button);
         layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/help" });

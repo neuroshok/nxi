@@ -27,11 +27,15 @@ namespace ui::interfaces::light
     protected:
         void enterEvent(QEnterEvent* event) override;
         void leaveEvent(QEvent* event) override;
+        void mousePressEvent(QMouseEvent* event) override;
+        void mouseReleaseEvent(QMouseEvent* event) override;
         void wheelEvent(QWheelEvent* event) override;
 
     signals:
         void event_enter() const;
         void event_leave() const;
+        void event_mouse_press() const;
+        void event_mouse_release() const;
         void event_mousewheel_up() const;
         void event_mousewheel_down() const;
 

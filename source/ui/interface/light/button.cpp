@@ -37,4 +37,7 @@ namespace ui::interfaces::light
 
         setStyleSheet("font-weight: bold; padding: 0 20 0 20; color:" + style_data.text_color.name() + "; border-bottom: 2px solid " + background_color.name());
     }
+
+    void button::mousePressEvent(QMouseEvent* event) { emit event_mouse_press(); }
+    void button::mouseReleaseEvent(QMouseEvent* event) {  emit event_mouse_release(); }
 } // ui::interfaces::light

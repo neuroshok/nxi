@@ -25,7 +25,7 @@ namespace nxi
 
         nxi_json_open(icon_button)
             nxi_json_key(background_color, QColor)
-            nxi_json_key(background_color_hover, QColor, (50, 50, 50) )
+            nxi_json_key(background_color_hover, QColor, (0, 0, 0, 0) )
             nxi_json_key(icon_color, QColor, (238, 238, 238) )
             nxi_json_key(icon_color_hover, QColor, (0, 191, 255) )
             nxi_json_key(size, QSize, (24, 24) )
