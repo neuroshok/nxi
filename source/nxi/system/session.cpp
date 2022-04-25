@@ -32,6 +32,8 @@ namespace nxi
             if (session.is_active()) load(session);
         }
         if (sessions_.size() == 0) add({ "default", true });
+
+        emit event_load();
     }
 
     void session_system::load(nxi::session& session)

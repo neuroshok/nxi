@@ -35,6 +35,7 @@ namespace nxi
         stz::observer_ptr<nxi::session> focus();
 
     signals:
+        void event_load(); // session_system loaded
         void event_add(nxi::session&);
         void event_unload(nxi::session&);
         void event_focus_update(const nxi::session&);
