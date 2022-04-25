@@ -10,6 +10,7 @@
     <qresource prefix="/icon">
         <file alias="add">icon/add.svg</file>
         <file alias="close">icon/close.svg</file>
+        <file alias="copy">icon/copy.svg</file>
         <file alias="download">icon/download.svg</file>
         <file alias="help">icon/help.svg</file>
         <file alias="maximize">icon/maximize24.png</file>
@@ -21,6 +22,7 @@
         <file alias="previous">icon/previous.svg</file>
         <file alias="refresh">icon/refresh.svg</file>
         <file alias="search">icon/search.svg</file>
+        <file alias="sound">icon/headphones.svg</file>
         <file alias="switch">icon/switch16.png</file>
     </qresource>
     <qresource prefix="/">
