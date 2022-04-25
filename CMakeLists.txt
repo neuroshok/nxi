@@ -183,6 +183,16 @@ if (NXI_TARGET_DESKTOP)
             OUTPUT_NAME "nxi"
             )
 
+    # tools
+    add_executable(theme_converter tools/theme_converter/main.cpp)
+    target_link_libraries(theme_converter Qt6::Core)
+    set_target_properties(theme_converter
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${NXI_BIN_ROOT}/nxi"
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE "${NXI_BIN_ROOT}/nxi"
+        OUTPUT_NAME "theme_converter"
+        )
+
     # deploy
     get_target_property(QT_QMAKE_EXECUTABLE Qt::qmake IMPORTED_LOCATION)
     get_filename_component(QT_DEPLOYQT_EXECUTABLE ${QT_QMAKE_EXECUTABLE} PATH)
