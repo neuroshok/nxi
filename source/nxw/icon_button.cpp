@@ -5,6 +5,7 @@
 #include <nxi/system/command.hpp>
 
 #include <ui/system/session.hpp>
+#include <ui/utility.hpp>
 
 namespace nxw
 {
@@ -13,7 +14,7 @@ namespace nxw
         , str_command_{ std::move(str_command) }
         , svg_renderer_{ new QSvgRenderer{ icon_path } }
     {
-        connect(&session.nxi_core(), &nxi::core::event_load, [this] {
+        connect(&session.nxi_core(), &nxi::core::event_load, [icon_path, this] {
             auto vs = session_.nxi_session().command_system().search(str_command_);
             if (!vs.empty()) command_ = vs[0];
             else nxi_warning("command {} not found", str_command_);
@@ -22,17 +23,9 @@ namespace nxw
             else nxi_warning("command {} does not exist", str_command_);
 
             setFixedSize(style.size);
-
-            QImage source{ style.size, QImage::Format_RGBA8888 };
-            // create image from svg
-            source.fill(0x00000000);
-            QPainter painter;
-            painter.begin(&source);
-            svg_renderer_->render(&painter, QRectF(0, 0, style.size.width() - style.padding * 2, style.size.height() - style.padding * 2));
-            painter.end();
-
-            image_ = make_colorized_image(source, style.icon_color, style.background_color);
-            image_hover_ = make_colorized_image(source, style.icon_color_hover, style.background_color_hover);
+            QSize size{ style.size.width() - style.padding * 2, style.size.height() - style.padding * 2 };
+            image_ = ui::make_image_from_svg(icon_path, size, style.icon_color, style.background_color);
+            image_hover_ = ui::make_image_from_svg(icon_path, size, style.icon_color_hover, style.background_color_hover);
         });
 
         connect(this, &QPushButton::clicked, [this] {

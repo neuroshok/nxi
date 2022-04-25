@@ -67,13 +67,13 @@ namespace nxi
                 update(widget);
             }
 
-            for (auto w : top_widget->findChildren<nxw::icon_button*>())
+            for (auto icon_button : top_widget->findChildren<nxw::icon_button*>())
             {
-                w->setFixedSize(data_.icon_button.size.get());
-                w->style.icon_color = data_.icon_button.icon_color.get();
-                w->style.icon_color_hover = data_.icon_button.icon_color_hover.get();
-                w->style.background_color = data_.icon_button.background_color.get();
-                w->style.background_color_hover = data_.icon_button.background_color_hover.get();
+                icon_button->setFixedSize(data_.icon_button.size.get());
+                icon_button->style.icon_color = data_.icon_button.icon_color.get();
+                icon_button->style.icon_color_hover = data_.icon_button.icon_color_hover.get();
+                icon_button->style.background_color = data_.icon_button.background_color.get();
+                icon_button->style.background_color_hover = data_.icon_button.background_color_hover.get();
             }
         }
     }
