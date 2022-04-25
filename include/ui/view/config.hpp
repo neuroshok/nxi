@@ -37,9 +37,7 @@ namespace ui::views
                 else if constexpr(std::is_same_v<T, int> || std::is_same_v<T, bool>)
                 {
                     str_value = QString::number(config_key->get());
-                    connect(value, &QLineEdit::returnPressed, [config_key, value]() {
-                        *config_key = value->text().toInt();
-                    });
+                    connect(value, &QLineEdit::returnPressed, [config_key, value]() { *config_key = value->text().toInt(); });
                 }
                 else if constexpr(std::is_same_v<T, double>)
                 {

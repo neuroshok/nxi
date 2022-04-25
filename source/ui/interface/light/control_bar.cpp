@@ -76,20 +76,31 @@ namespace ui::interfaces::light
         auto download_button = new nxw::icon_button{ session_, this, ":/icon/download" };
         auto close_button = new nxw::icon_button{ session_, this, ":/icon/close", "nxi:quit" };
 
-        layout->addWidget(command_root_);
-        layout->addWidget(page_root_);
-        layout->addWidget(navigation);
-        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/refresh" });
-        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/previous" });
-        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/next" });
-        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/add", "nxi:new" });
-        layout->addWidget(command_input_);
-        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/close", "nxi:close" });
-        layout->addWidget(context_);
-        layout->addWidget(download_button);
-        layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/help" });
-        layout->addWidget(close_button);
-
+        if (session_.nxi_session().config().browser.interface.light.console_mode.get())
+        {
+            command_input_ = new ui::command_input(session_);
+            command_input_->setFocus();
+            layout->addWidget(command_input_);
+        }
+        else
+        {
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/at" });
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/friend" });
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/notification" });
+            layout->addWidget(command_root_);
+            layout->addWidget(page_root_);
+            layout->addWidget(navigation);
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/refresh" });
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/previous" });
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/next" });
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/add", "nxi:new" });
+            layout->addWidget(command_input_);
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/close", "nxi:close" });
+            layout->addWidget(context_);
+            layout->addWidget(download_button);
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/help" });
+            layout->addWidget(close_button);
+        }
 
         /*
         connect(&session_.nxi_session().command_system(), &nxi::page_system::event_root_update,

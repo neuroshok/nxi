@@ -24,6 +24,8 @@ namespace ui::interfaces::light
         ui::command_input* command_input();
 
     private:
+        void init_ui();
+
         ui::session& session_;
 
         ui::command_input* command_input_;

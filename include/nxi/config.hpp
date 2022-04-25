@@ -63,6 +63,10 @@ namespace nxi
             nxi_config_open(interface)
                 nxi_config_key(style, QString, "nxi", "Interface style");
                 nxi_config_key(show_page_bar, bool, true);
+
+                nxi_config_open(light)
+                    nxi_config_key(console_mode, int, false, "Display only the command input");
+                nxi_config_close(light)
             nxi_config_close(interface)
 
         nxi_config_close(browser)
