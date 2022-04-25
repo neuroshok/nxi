@@ -12,6 +12,10 @@ namespace nxi
     {
         Q_OBJECT
     public:
+        custom_page(nds::node_ptr<nxi::page> node_ptr, nxi::page_system& ps, nxi::page_data data)
+            : nxi::page(node_ptr, ps, std::move(data))
+        {}
+
         custom_page(nds::node_ptr<nxi::page> node_ptr, nxi::page_system& ps, QString name = "custom_page", QString command = "", nxi::renderer_type renderer_type = nxi::renderer_type::widget)
             : nxi::page(node_ptr, ps, std::move(name), std::move(command), nxi::page_type::custom, renderer_type)
             , renderer_type_{ renderer_type }
