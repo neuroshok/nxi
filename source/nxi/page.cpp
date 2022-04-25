@@ -18,6 +18,7 @@ namespace nxi
         , renderer_type_{ data.renderer_type }
         , has_color_{ false }
         , has_name_{ false }
+        , is_audible_{ std::move(data.audible) }
         , is_loaded_{ std::move(data.loaded) }
         , is_muted_{ std::move(data.muted) }
     {}
@@ -25,6 +26,12 @@ namespace nxi
     page::page(nds::node_ptr<nxi::page> node_ptr, page_system& ps, QString name, QString command, nxi::page_type type, nxi::renderer_type renderer_type)
         : nxi::page(std::move(node_ptr), ps, nxi::page_data{ 0, std::move(name), std::move(command), type, renderer_type })
     {}
+
+    void page::update_audible(bool state)
+    {
+        is_audible_ = state;
+        nxi::data::page::update(page_system_.session_database_, *this);
+    }
 
     void page::update_color(const QColor& color)
     {
@@ -69,6 +76,18 @@ namespace nxi
         else nxi_warning("property {} not found", name);
     }
 
+    void page::update_mute(bool state)
+    {
+        is_muted_ = state;
+        nxi::data::page::update(page_system_.session_database_, *this);
+        emit event_update_mute(is_muted_);
+    }
+
+    void page::toggle_mute()
+    {
+        update_mute(!is_muted_);
+    }
+
     void page::load()
     {
         if (is_loaded_) return;
@@ -104,6 +123,7 @@ namespace nxi
     nxi::page_type page::type() const { return type_; }
     nxi::renderer_type page::renderer_type() const { return renderer_type_; }
 
+    bool page::is_audible() const { return is_audible_; }
     bool page::is_loaded() const { return is_loaded_; }
     bool page::is_muted() const { return is_muted_; }
 
@@ -111,4 +131,5 @@ namespace nxi
 
     const QColor& page::color() const { return color_; }
     const QIcon& page::icon() const { return icon_; }
+
 } // nxi

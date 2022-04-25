@@ -37,9 +37,16 @@ namespace nxi
         void load(const QString& command);
         void close();
 
+        void set_audible(bool state);
+        void set_muted(bool state);
+
+        void toggle_mute();
+
+        void update_audible(bool state);
         void update_color(const QColor&);
         void update_command(const QString& command);
         void update_icon(const QIcon&);
+        void update_mute(bool state);
         void update_name(const QString& name, bool override = false);
         void update_property(const QString& name, const QString& value);
 
@@ -51,6 +58,7 @@ namespace nxi
 
         bool has_color() const;
 
+        bool is_audible() const;
         bool is_loaded() const;
         bool is_muted() const;
 
@@ -70,6 +78,7 @@ namespace nxi
         bool has_color_;
         bool has_name_;
 
+        bool is_audible_;
         bool is_loaded_;
         bool is_muted_;
 
@@ -83,6 +92,7 @@ namespace nxi
     signals:
         void event_update_command(const QString&);
         void event_update_icon(const QIcon&);
+        void event_update_mute(bool state);
         void event_update_name(const QString&);
 
         void event_close();

@@ -20,6 +20,7 @@ namespace nxi
         QString command;
         nxi::page_type type = nxi::page_type::custom;
         nxi::renderer_type renderer_type = nxi::renderer_type::widget;
+        bool audible = false;
         bool loaded = false;
         bool muted = false;
 

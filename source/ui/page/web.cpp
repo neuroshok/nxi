@@ -32,35 +32,38 @@ namespace ui
         native_page_ = new ui::web_engine_page(QWebEngineProfile::defaultProfile(), this);
         native_page_->setWebChannel(session_.nxi_session().module_system().web_channel());
 
+        native_page_->setAudioMuted(page.is_muted());
+
         connect(&page, &nxi::web_page::event_add_script, [this](const QWebEngineScript& script)
         {
             native_page_->scripts().insert(script);
         });
-
         connect(native_page_, &QWebEnginePage::fullScreenRequested, [this](QWebEngineFullScreenRequest request)
         {
             static_cast<ui::window*>(QWebEngineView::forPage(native_page_)->window())->main_interface()->toggle_fullmode();
             request.accept();
         });
-
-
         connect(native_page_, &QWebEnginePage::loadFinished, this, [this](bool n)
         {
             nxi_debug("load complete");
             //ui_core_.nxi_core().module_system().process(page_);
         });
-
         connect(native_page_, &QWebEnginePage::iconChanged, this, [this](const QIcon& icon) { page_.update_icon(icon); });
         connect(native_page_, &QWebEnginePage::titleChanged, this, [this](const QString& name){ page_.update_name(name); });
+        connect(native_page_, &QWebEnginePage::recentlyAudibleChanged, this, [this](bool state) { page_.update_audible(state); });
         connect(native_page_, &QWebEnginePage::urlChanged, this, [this](const QUrl& url) { page_.update_command(url.toString()); });
-        connect(&page_, &nxi::web_page::event_load, this, [this]() { load(page_.command()); });
 
+        //
+
+        connect(&page_, &nxi::web_page::event_load, this, [this]() { load(page_.command()); });
         connect(&page_, &nxi::web_page::event_run_script, this, [this](const QString& script)
         {
             native_page_->runJavaScript(script);
         });
-
-
+        connect(&page_, &nxi::web_page::event_update_mute, this, [this](bool state)
+        {
+            native_page_->setAudioMuted(state);
+        });
         connect(&page_, &nxi::web_page::event_call_script, this, [this](const QString& script, std::function<void(const QVariant&)> fn)
         {
             native_page_->runJavaScript(script, [f = std::move(fn)](const QVariant& result){ if (f) f(result); });
