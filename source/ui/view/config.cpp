@@ -13,16 +13,17 @@ namespace ui::views
     config::config(ui::session& session)
         : session_{ session }
     {
-        //auto& cfg = session_.nxi_session().config();
+        connect(&session.nxi_core(), &nxi::core::event_load, [ this]
+        {
+            auto& cfg = session_.nxi_session().config();
+            for (auto key : cfg.list())
+            {
+                std::visit(overloaded{
+                [this](auto config_value) { add_row(config_value); }
+                }, key);
+            }
+        });
 
         form_ = new QFormLayout(this);
-
-        /*
-        for (auto& key : cfg.list())
-        {
-            std::visit(overloaded{
-            [this](auto config_key) { add_row(*config_key); }
-            }, key);
-        }*/
     }
 } // nxi::views
