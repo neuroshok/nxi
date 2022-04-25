@@ -10,9 +10,14 @@
 namespace nxw
 {
     icon_button::icon_button(ui::session& session, QWidget* parent, const QString& icon_path, QString str_command)
+        : icon_button(session, parent, icon_path, std::move(str_command), style_type{})
+    {}
+
+    icon_button::icon_button(ui::session& session, QWidget* parent, const QString& icon_path, QString str_command, icon_button::style_type style_data)
         : session_{ session }
         , str_command_{ std::move(str_command) }
         , svg_renderer_{ new QSvgRenderer{ icon_path } }
+        , style{ std::move(style_data) }
     {
         connect(&session.nxi_core(), &nxi::core::event_load, [icon_path, this] {
             auto vs = session_.nxi_session().command_system().search(str_command_);

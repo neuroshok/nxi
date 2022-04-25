@@ -38,7 +38,8 @@ namespace nxw
             int padding = { 4 };
         } style;
 
-        icon_button(ui::session&, QWidget* parent, const QString& icon_path, QString str_command = "nxi:help"); // , nxi::style* = nullptr
+        icon_button(ui::session&, QWidget* parent, const QString& icon_path, QString str_command = "nxi:help");
+        icon_button(ui::session&, QWidget* parent, const QString& icon_path, QString str_command, style_type);
 
         void paintEvent(QPaintEvent*) override;
 
