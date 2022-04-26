@@ -1,6 +1,7 @@
 #include <nxi/command/executor.hpp>
 
 #include <nxi/command.hpp>
+#include <nxi/log.hpp>
 
 namespace nxi
 {
@@ -13,6 +14,11 @@ namespace nxi
     void command_executor::add_value(const QString& value)
     {
         values_.add(value);
+    }
+
+    void command_executor::add_value(const nxi::suggestion& value)
+    {
+        //values_.add(value);
     }
 
     void command_executor::exec()

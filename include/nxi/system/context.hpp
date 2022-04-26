@@ -2,12 +2,13 @@
 #define INCLUDE_NXI_SYSTEM_CONTEXT_HPP_NXI
 
 #include <nxi/context.hpp>
-#include <nxi/database.hpp>
 #include <nxi/data/context.hpp>
+#include <nxi/database.hpp>
+#include <nxi/log.hpp>
 
+#include <stz/observer_ptr.hpp>
 #include <memory>
 #include <vector>
-#include <stz/observer_ptr.hpp>
 
 #include <QObject>
 

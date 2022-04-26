@@ -15,8 +15,9 @@
 
 namespace ui
 {
-    command_input::command_input(ui::session& session)
-        : session_{ session }
+    command_input::command_input(ui::session& session, QWidget* parent)
+        : QLineEdit(parent)
+        , session_{ session }
     {
         setStyleSheet("font-weight:bold");
 
@@ -32,8 +33,9 @@ namespace ui
 
         connect(this, &QLineEdit::returnPressed, [this]()
         {
-            if (command_executor_ && session_.nxi_session().context_system().is_active<nxi::contexts::command_executor>())
+            if (command_executor_ && session_.nxi_session().context_system().is_focus<nxi::contexts::command_executor>())
             {
+                //if (nxi_input().suggestions().has_selection()) command_executor_->add_suggestion(nxi_input().suggestions().selected());
                 command_executor_->add_value(nxi_input().text());
                 command_executor_->exec();
                 if (command_executor_->is_complete())
@@ -68,12 +70,27 @@ namespace ui
             );
         });
 
+        connect(&nxi_input().suggestions(), &nxi::suggestion_vector::event_selection_update,
+        [this](int index)
+        {
+            if (session_.nxi_session().context_system().is_focus<nxi::contexts::command_executor>())
+            {
+                if (nxi_input().suggestions().has_selection())
+                {
+                    auto suggestion_text = nxi_input().suggestions().selected().text();
+                    auto input_text_size = text().size() - selectedText().size();
+                    setText(suggestion_text);
+                    setSelection(input_text_size, suggestion_text.size() - input_text_size);
+                }
+            }
+        });
+
+
 
         // use only base
         connect(&session_.nxi_session().page_system(), &nxi::page_system::event_focus, this, [this](nxi::page_system::page_ptr page)
         {
             setText(page->name());
-
         });
 
         /*
@@ -122,6 +139,10 @@ namespace ui
                     nxi_input().suggestions().select_next();
                 }
                 else nxi_input().suggestions().select_next();
+                break;
+
+            case Qt::Key_Backspace:
+                setText(text().mid(0, text().size()));
                 break;
 
             default:
@@ -176,5 +197,14 @@ namespace ui
     void command_input::set_executor_placeholder(const QString& parameter_name)
     {
         setPlaceholderText("Enter parameter `" + parameter_name + "` for " + command_executor_->command().name() + " (ESC to cancel)");
+    }
+
+    void command_input::style_update(ui::command_input* ui)
+    {
+        QPalette palette;
+        palette.setColor(QPalette::Highlight, ui->style_data.selection_highlight);
+        palette.setColor(QPalette::HighlightedText, ui->style_data.selection_highlight_text);
+        palette.setColor(QPalette::Text, ui->style_data.text_color);
+        ui->setPalette(palette);
     }
 } // ui

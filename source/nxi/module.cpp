@@ -1,4 +1,5 @@
 #include <nxi/module.hpp>
+#include <nxi/log.hpp>
 
 namespace nxi
 {
@@ -10,6 +11,7 @@ namespace nxi
 
     void module::load()
     {
+        nxi_trace("Load module {} of type {}", name_, (int)type_);
         on_load();
         loaded_ = true;
     }

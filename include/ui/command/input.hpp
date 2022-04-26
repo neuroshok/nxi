@@ -25,8 +25,20 @@ namespace ui
 
     class command_input : public QLineEdit
     {
+        Q_OBJECT
     public:
-        command_input(ui::session& ui_core);
+        struct style_type
+        {
+            QColor background_color{ 200, 200, 200 };
+            QColor background_color_focus{ 0, 0, 0 };
+            QColor selection_highlight{ 0, 0, 0 };
+            QColor selection_highlight_text{ 150, 150, 150 };
+            QColor text_color{ 100, 100, 200 };
+            QColor text_color_focus{ 100, 100, 200 };
+        } style_data;
+        static void style_update(ui::command_input*);
+
+        command_input(ui::session& ui_core, QWidget* parent);
 
         void resizeEvent(QResizeEvent* event) override;
         void keyPressEvent(QKeyEvent* event) override;

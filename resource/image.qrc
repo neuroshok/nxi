@@ -4,8 +4,7 @@
     </qresource>
 
     <qresource prefix="/image">
-        <file alias="nex">graphic/nex.png</file>
-        <file alias="node">graphic/node.png</file>
+
     </qresource>
     <qresource prefix="/icon">
         <file alias="add">icon/add.svg</file>
@@ -27,8 +26,5 @@
         <file alias="search">icon/search.svg</file>
         <file alias="sound">icon/headphones.svg</file>
         <file alias="switch">icon/switch16.png</file>
-    </qresource>
-    <qresource prefix="/">
-        <file alias="style.qss">graphic/style.qss</file>
     </qresource>
 </RCC>
