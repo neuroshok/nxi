@@ -61,9 +61,6 @@ namespace ui::interfaces::light
             session_.nxi_session().command_system().command_input().suggest_navigation();
         });
 
-        command_input_ = new ui::command_input(session_);
-        command_input_->setFocus();
-
         // context
         context_ = new light::button("context_", this);
         context_->setStyleSheet("font-weight: bold; color: #00BB99; padding: 0 20 0 20;");
@@ -78,12 +75,15 @@ namespace ui::interfaces::light
 
         if (session_.nxi_session().config().browser.interface.light.console_mode.get())
         {
-            command_input_ = new ui::command_input(session_);
+            command_input_ = new ui::command_input(session_, this);
             command_input_->setFocus();
             layout->addWidget(command_input_);
         }
         else
         {
+            command_input_ = new ui::command_input(session_, this);
+            command_input_->setFocus();
+
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/at" });
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/friend" });
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/notification" });
