@@ -1,5 +1,5 @@
-#ifndef EXP_MODULE_TEST_H_NXI
-#define EXP_MODULE_TEST_H_NXI
+#ifndef EXP_MODULENXI_STATIC_TEST_H_NXI
+#define EXP_MODULENXI_STATIC_TEST_H_NXI
 
 #include <nxi/module.hpp>
 
@@ -20,4 +20,4 @@ namespace nxi::modules
     };
 } // nxi::modules
 
-#endif // EXP_MODULE_TEST_H_NXI
+#endif // EXP_MODULENXI_STATIC_TEST_H_NXI

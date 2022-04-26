@@ -96,28 +96,9 @@ message("Qt path : ${NXI_QT_ROOT}")
 #-------------------------------------------------------
 message("Module build")
 
-SUBDIRLIST(SUBDIRS ${NXI_MODULE_ROOT}/static)
-
 # add modules
-foreach(module ${SUBDIRS})
-    option(NXI_MODULE_${module} "Module ${module}" ${NXI_MODULE_${module}})
-    message("- ${module} : ${NXI_MODULE_${module}}")
-    if (NXI_MODULE_${module})
-        set(NXI_MODULE_CURRENT ${module})
-        add_subdirectory(${NXI_MODULE_ROOT}/static/${module})
-        # create variables for generated file
-        string(APPEND  NXI_MODULE_STATIC_INCLUDE "#include \"module/static/${module}/${module}.hpp\"\n")
-        string(APPEND  NXI_MODULE_STATIC_INIT ", ${module}_{ session }\n")
-        string(APPEND  NXI_MODULE_STATIC_LOAD "${module}_.load();\n")
-        string(APPEND  NXI_MODULE_STATIC_MEMBER "nxi::modules::${module} ${module}_;\n")
-    endif()
-endforeach()
 
-# create container file
-configure_file(
-        "${NXI_ROOT}/include/nxi/module/static.hpp.in"
-        "${NXI_ROOT}/include/nxi/module/static.generated.hpp"
-)
+internal_add_modules(${NXI_MODULE_ROOT}/static)
 
 #-------------------------------------------------------
 #                       Target
