@@ -4,8 +4,7 @@
     </qresource>
 
     <qresource prefix="/image">
-        <file alias="nex">graphic/nex.png</file>
-        <file alias="node">graphic/node.png</file>
+
     </qresource>
     <qresource prefix="/icon">
         <file alias="add">icon/add.svg</file>
