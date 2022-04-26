@@ -13,11 +13,11 @@ namespace nxw
         : icon_button(session, parent, icon_path, std::move(str_command), style_type{})
     {}
 
-    icon_button::icon_button(ui::session& session, QWidget* parent, const QString& icon_path, QString str_command, icon_button::style_type style_data)
+    icon_button::icon_button(ui::session& session, QWidget* parent, const QString& icon_path, QString str_command, icon_button::style_type custom_style)
         : session_{ session }
         , str_command_{ std::move(str_command) }
         , svg_renderer_{ new QSvgRenderer{ icon_path } }
-        , style{ std::move(style_data) }
+        , style_data{ std::move(custom_style) }
     {
         connect(&session.nxi_core(), &nxi::core::event_load, [icon_path, this] {
             auto vs = session_.nxi_session().command_system().search(str_command_);
@@ -27,10 +27,10 @@ namespace nxw
             if (command_) setToolTip(command_->description());
             else nxi_warning("command {} does not exist", str_command_);
 
-            setFixedSize(style.size);
-            QSize size{ style.size.width() - style.padding * 2, style.size.height() - style.padding * 2 };
-            image_ = ui::make_image_from_svg(icon_path, size, style.icon_color, style.background_color);
-            image_hover_ = ui::make_image_from_svg(icon_path, size, style.icon_color_hover, style.background_color_hover);
+            setFixedSize(style_data.size);
+            QSize size{ style_data.size.width() - style_data.padding * 2, style_data.size.height() - style_data.padding * 2 };
+            image_ = ui::make_image_from_svg(icon_path, size, style_data.icon_color, style_data.background_color);
+            image_hover_ = ui::make_image_from_svg(icon_path, size, style_data.icon_color_hover, style_data.background_color_hover);
         });
 
         connect(this, &QPushButton::clicked, [this] {
@@ -70,13 +70,13 @@ namespace nxw
 
         if (underMouse())
         {
-            if (style.background_color_hover.alpha() > 0) painter.fillRect(0, 0, style.size.width(), style.size.height(), style.background_color_hover);
-            painter.drawImage(style.padding, style.padding, image_hover_);
+            if (style_data.background_color_hover.alpha() > 0) painter.fillRect(0, 0, style_data.size.width(), style_data.size.height(), style_data.background_color_hover);
+            painter.drawImage(style_data.padding, style_data.padding, image_hover_);
         }
         else
         {
-            if (style.background_color.alpha() > 0) painter.fillRect(0, 0, style.size.width(), style.size.height(), style.background_color);
-            painter.drawImage(style.padding, style.padding, image_);
+            if (style_data.background_color.alpha() > 0) painter.fillRect(0, 0, style_data.size.width(), style_data.size.height(), style_data.background_color);
+            painter.drawImage(style_data.padding, style_data.padding, image_);
         }
     }
 } // nxw

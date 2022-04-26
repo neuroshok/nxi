@@ -75,14 +75,18 @@ namespace w3c
             //! The background color of popups (such as the url bar dropdown and the arrow panels).
             nxi_json_key(popup, w3c::color)
             nxi_json_key(popup_border, w3c::color)
-            nxi_json_key(popup_highlight, w3c::color)
-            nxi_json_key(popup_highlight_text, w3c::color)
+            nxi_json_key(popup_highlight, w3c::color) //! The background color of items highlighted using the keyboard inside popups (such as the selected URL bar dropdown item).
+            nxi_json_key(popup_highlight_text, w3c::color) //! The text color of items highlighted inside popups.
             nxi_json_key(popup_text, w3c::color)
 
+            // ui::command_input
             nxi_json_key(toolbar_field, w3c::color)
             nxi_json_key(toolbar_field_focus, w3c::color)
-            nxi_json_key(toolbar_field_text, w3c::color)
-            nxi_json_key(toolbar_text, w3c::color)
+            nxi_json_key(toolbar_field_highlight, w3c::color) //! The background color used to indicate the current selection of text in the URL bar
+            nxi_json_key(toolbar_field_highlight_text, w3c::color) //! The color used to draw text that's currently selected in the URL bar
+            nxi_json_key(toolbar_field_text, w3c::color) //! The color of text in fields in the toolbar, such as the URL bar. This also sets the color of text in the Find in page field.
+            nxi_json_key(toolbar_field_text_focus, w3c::color) //! The color of text in focused fields in the toolbar, such as the URL bar.
+            nxi_json_key(toolbar_text, w3c::color) //! The color of toolbar text. This also sets the color of text in the "Find" bar.
         nxi_json_close(colors)
     };
 } // w3c

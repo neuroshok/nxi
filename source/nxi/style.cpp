@@ -53,6 +53,7 @@ namespace nxi
     }
 
 
+    // findChildren require Q_OBJECT to be present on the searched type to avoid conversion with common base
     void style::update(ui::main_interface* w) const
     {
         w->style_data.background_color = data_.background_color.get();
@@ -62,25 +63,29 @@ namespace nxi
         const QWidgetList top_widgets = QApplication::topLevelWidgets();
         for (auto top_widget : top_widgets)
         {
-            for (auto widget : top_widget->findChildren<ui::command_menu*>())
-            {
-                update(widget);
-            }
+            for (auto command_input : top_widget->findChildren<ui::command_input*>()) update(command_input);
+            for (auto command_menu : top_widget->findChildren<ui::command_menu*>()) update(command_menu);
 
             for (auto icon_button : top_widget->findChildren<nxw::icon_button*>())
             {
                 icon_button->setFixedSize(data_.icon_button.size.get());
-                icon_button->style.icon_color = data_.icon_button.icon_color.get();
-                icon_button->style.icon_color_hover = data_.icon_button.icon_color_hover.get();
-                icon_button->style.background_color = data_.icon_button.background_color.get();
-                icon_button->style.background_color_hover = data_.icon_button.background_color_hover.get();
+                icon_button->style_data.icon_color = data_.icon_button.icon_color.get();
+                icon_button->style_data.icon_color_hover = data_.icon_button.icon_color_hover.get();
+                icon_button->style_data.background_color = data_.icon_button.background_color.get();
+                icon_button->style_data.background_color_hover = data_.icon_button.background_color_hover.get();
             }
         }
     }
 
     void style::update(ui::command_input* ui) const
     {
-
+        ui->style_data.background_color = data_.field.background_color.get();
+        ui->style_data.background_color_focus = data_.field.background_color_focus.get();
+        ui->style_data.selection_highlight = data_.field.selection_highlight.get();
+        ui->style_data.selection_highlight_text = data_.field.selection_highlight_text.get();
+        ui->style_data.text_color = data_.field.text_color.get();
+        ui->style_data.text_color_focus = data_.field.text_color_focus.get();
+        ui::command_input::style_update(ui);
     }
 
 
@@ -108,6 +113,13 @@ namespace nxi
     {
         data_.background_image.set(QImage(path() + "/" + theme.images.theme_frame.get()));
         map_color(data_.background_color, theme.colors.frame);
+
+        map_color(data_.field.background_color, theme.colors.toolbar_field);
+        map_color(data_.field.background_color_focus, theme.colors.toolbar_field_focus);
+        map_color(data_.field.selection_highlight, theme.colors.toolbar_field_highlight);
+        map_color(data_.field.selection_highlight_text, theme.colors.toolbar_field_highlight_text);
+        map_color(data_.field.text_color, theme.colors.toolbar_field_text);
+        map_color(data_.field.text_color_focus, theme.colors.toolbar_field_text_focus);
 
         map_color(data_.icon_button.background_color, theme.colors.toolbar_field);
         map_color(data_.icon_button.icon_color, theme.colors.popup_text);
