@@ -28,7 +28,4 @@
         <file alias="sound">icon/headphones.svg</file>
         <file alias="switch">icon/switch16.png</file>
     </qresource>
-    <qresource prefix="/">
-        <file alias="style.qss">graphic/style.qss</file>
-    </qresource>
 </RCC>
