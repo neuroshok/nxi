@@ -106,34 +106,13 @@ namespace nxi
         widget->style_data.item_height = 40;//data_.menu.item_height.get();
     }
 
-    #define map_color(NXI_KEY, W3C_KEY) if (!W3C_KEY.is_null()) NXI_KEY.set(W3C_KEY.get());
-    #define map_color_edit(NXI_KEY, W3C_KEY, EDIT) if (!W3C_KEY.is_null()) NXI_KEY.set(W3C_KEY.get().EDIT);
+    #define map_color(NXI_KEY, W3C_KEY) if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(theme.W3C_KEY.get());
+    #define map_color_edit(NXI_KEY, W3C_KEY, EDIT) if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(theme.W3C_KEY.get().EDIT);
+    #define map_image(NXI_KEY, W3C_KEY) if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(QImage(path() + "/" + theme.W3C_KEY.get()));
     //! \brief map w3c theme color to nxi style color
     void style::from_w3c(w3c::theme& theme)
     {
-        data_.background_image.set(QImage(path() + "/" + theme.images.theme_frame.get()));
-        map_color(data_.background_color, theme.colors.frame);
-
-        map_color(data_.field.background_color, theme.colors.toolbar_field);
-        map_color(data_.field.background_color_focus, theme.colors.toolbar_field_focus);
-        map_color(data_.field.selection_highlight, theme.colors.toolbar_field_highlight);
-        map_color(data_.field.selection_highlight_text, theme.colors.toolbar_field_highlight_text);
-        map_color(data_.field.text_color, theme.colors.toolbar_field_text);
-        map_color(data_.field.text_color_focus, theme.colors.toolbar_field_text_focus);
-
-        map_color(data_.icon_button.background_color, theme.colors.toolbar_field);
-        map_color(data_.icon_button.icon_color, theme.colors.popup_text);
-
-        map_color(data_.field.background_color, theme.colors.toolbar_field);
-        map_color(data_.field.background_color_focus, theme.colors.toolbar_field_focus);
-
-        map_color(data_.menu.background_color, theme.colors.popup);
-        map_color_edit(data_.menu.item_background_color, theme.colors.popup, darker(120));
-        map_color(data_.menu.item_background_color_hover, theme.colors.popup_highlight);
-        map_color_edit(data_.menu.item_background_color_selected, theme.colors.popup_highlight, darker(120));
-
-        map_color(data_.menu.item_text_color_hover, theme.colors.popup_highlight_text);
-        map_color(data_.menu.item_text_color, theme.colors.popup_text);
+        #include <nxi/style/w3c_mapping.hpp>
     }
     #undef map_color
 
