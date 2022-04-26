@@ -12,6 +12,7 @@ namespace nxi
 {
     class command;
     class command_parameter;
+    class suggestion;
 
     class command_executor : public QObject
     {
@@ -20,6 +21,7 @@ namespace nxi
         command_executor(nds::node_ptr<const nxi::command> command);
 
         void add_value(const QString& value);
+        void add_value(const nxi::suggestion& value);
         void exec();
         void reset();
 
