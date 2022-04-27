@@ -20,6 +20,14 @@ namespace ui::interfaces::light
         auto* layout = new nxw::hbox_layout;
         setLayout(layout);
 
+        if (session_.nxi_session().config().browser.interface.light.console_mode.get())
+        {
+            command_input_ = new ui::command_input(session_, this);
+            command_input_->setFocus();
+            layout->addWidget(command_input_);
+            return;
+        }
+
         // command_root
         command_root_ = new light::button("command_root_", this);
         command_root_->setStyleSheet("font-weight: bold; color: #00BBFF; padding: 0 20 0 20;");
