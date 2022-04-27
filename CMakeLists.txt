@@ -166,6 +166,7 @@ if (NXI_TARGET_DESKTOP)
 
     # tools
     add_executable(theme_converter tools/theme_converter/main.cpp)
+    target_include_directories(theme_converter PUBLIC include)
     target_link_libraries(theme_converter Qt6::Core)
     set_target_properties(theme_converter
         PROPERTIES
