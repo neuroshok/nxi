@@ -1,10 +1,12 @@
 #include <ui/command/input.hpp>
 
 #include <nxi/command/executor.hpp>
+#include <nxi/command/input.hpp>
 #include <nxi/core.hpp>
 
 #include <ui/core.hpp>
 #include <ui/menu.hpp>
+#include <ui/window.hpp>
 #include <ui/command/menu.hpp>
 
 #include <QKeyEvent>
@@ -20,6 +22,8 @@ namespace ui
         , session_{ session }
     {
         setStyleSheet("font-weight:bold");
+
+        set_mode(nxi::command_input::mode_type::display);
 
         info_ = new QLabel(this);
         header_ = new QLabel(this);
@@ -165,6 +169,7 @@ namespace ui
         auto focused_page = session_.nxi_session().page_system().focus();
         if (focused_page) setText(focused_page->name());
         first_focus_ = true;
+        set_mode(nxi::command_input::mode_type::display);
     }
 
     void command_input::enterEvent(QEnterEvent* event)
@@ -183,18 +188,38 @@ namespace ui
         //if (focused_page) setText(focused_page->name());
     }
 
+    void command_input::mouseMoveEvent(QMouseEvent* event)
+    {
+        if (nxi_input().mode() == nxi::command_input::mode_type::display) event->ignore();
+        else QLineEdit::mouseMoveEvent(event);
+    }
+
+    void command_input::mousePressEvent(QMouseEvent* event)
+    {
+        mouse_press_origin_ = event->globalPosition().toPoint();
+        if (nxi_input().mode() == nxi::command_input::mode_type::display) event->ignore();
+        else QLineEdit::mousePressEvent(event);
+    }
+
     void command_input::mouseReleaseEvent(QMouseEvent* event)
     {
-        if (first_focus_)
+        if (nxi_input().mode() == nxi::command_input::mode_type::input) return QLineEdit::mouseReleaseEvent(event);
+
+        if (mouse_press_origin_ == event->globalPosition().toPoint())
         {
-            if (nxi_input().is_empty())
+            set_mode(nxi::command_input::mode_type::input);
+
+            if (first_focus_)
             {
-                auto focused_page = session_.nxi_session().page_system().focus();
-                if (focused_page) setText(focused_page->command());
+                if (nxi_input().is_empty())
+                {
+                    auto focused_page = session_.nxi_session().page_system().focus();
+                    if (focused_page) setText(focused_page->command());
+                }
+                else setText(nxi_input().text());
+                selectAll();
+                first_focus_ = false;
             }
-            else setText(nxi_input().text());
-            selectAll();
-            first_focus_ = false;
         }
     }
 
@@ -214,6 +239,19 @@ namespace ui
     void command_input::set_executor_placeholder(const QString& parameter_name)
     {
         setPlaceholderText("Enter parameter `" + parameter_name + "` for " + command_executor_->command().name() + " (ESC to cancel)");
+    }
+
+    void command_input::set_mode(nxi::command_input::mode_type mode)
+    {
+        nxi_input().set_mode(mode);
+        if (mode == nxi::command_input::mode_type::display)
+        {
+            QWidget::setCursor(QCursor(Qt::ArrowCursor));
+        }
+        else
+        {
+            QWidget::setCursor(QCursor(Qt::IBeamCursor));
+        }
     }
 
     void command_input::style_update(ui::command_input* ui)

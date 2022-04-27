@@ -15,7 +15,7 @@ namespace nxi
 
     command_input::command_input(nxi::session& session)
         : session_{ session }
-        , mode_{ mode::input }
+        , mode_{ mode_type::input }
         , state_{ state::search }
         , shortcut_input_{ *this }
     {
@@ -37,25 +37,25 @@ namespace nxi
         auto key = static_cast<Qt::Key>(event->key());
 
         // ignore autorepeat in shortcut mode
-        if (mode_ == mode::shortcut && event->isAutoRepeat()) return;
+        if (mode_ == mode_type::shortcut && event->isAutoRepeat()) return;
 
         if (event->type() == QEvent::KeyPress)
         {
-            if (mode_ != mode::shortcut && shortcut_input_.is_trigger_key(key)) set_mode(mode::shortcut);
+            if (mode_ != mode_type::shortcut && shortcut_input_.is_trigger_key(key)) set_mode(mode_type::shortcut);
 
-            if (input_.isEmpty() && mode_ == mode::input)
+            if (input_.isEmpty() && mode_ == mode_type::input)
             {
                 reset();
                 return;
             }
             suggestions_.clear();
 
-            if (mode_ == mode::shortcut)
+            if (mode_ == mode_type::shortcut)
             {
                 shortcut_input_.update(event, suggestions_);
                 emit event_shortcut_input_update(shortcut_input_.to_string());
             }
-            if (mode_ == mode::input)
+            if (mode_ == mode_type::input)
             {
                 if (!input_.isEmpty() && !session_.context_system().is_active<nxi::contexts::command_executor>())
                 {
@@ -94,10 +94,10 @@ namespace nxi
         }
 
         // shortcut mode need release event
-        if (mode_ == mode::shortcut && event->type() == QEvent::KeyRelease)
+        if (mode_ == mode_type::shortcut && event->type() == QEvent::KeyRelease)
         {
             shortcut_input_.update(event, suggestions_);
-            if (!shortcut_input_.is_triggered()) set_mode(mode::input);
+            if (!shortcut_input_.is_triggered()) set_mode(mode_type::input);
             emit event_shortcut_input_update(shortcut_input_.to_string());
             emit event_suggestion_update(suggestions_);
         }
@@ -132,10 +132,12 @@ namespace nxi
         });
     }
 
-    void command_input::set_mode(command_input::mode mode)
+    void command_input::set_mode(command_input::mode_type mode)
     {
         mode_ = mode;
     }
+
+    command_input::mode_type command_input::mode() const { return mode_; }
 
     const nxi::suggestion_vector& command_input::suggestions() const
     {
@@ -229,7 +231,7 @@ namespace nxi
 
     void command_input::reset()
     {
-        set_mode(mode::input);
+        set_mode(mode_type::input);
         clear();
         emit event_reset();
     }

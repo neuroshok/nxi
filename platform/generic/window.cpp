@@ -5,7 +5,6 @@
 namespace platform::generic
 {
     window::window()
-        : moving_{ false }
     {
         setWindowFlag(Qt::Window);
         setWindowFlag(Qt::FramelessWindowHint);

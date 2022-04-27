@@ -21,7 +21,7 @@ namespace nxi
     {
         Q_OBJECT
     public:
-        enum class mode {
+        enum class mode_type {
             display //! display text when ui::command_input is not focus, input is shown on hover
             , input //! accept user input, can trigger shortcut mode
             , shortcut //! triggered by shortcut trigger_keys
@@ -40,18 +40,22 @@ namespace nxi
         void exec();
         void update(const QString& input, QKeyEvent*);
 
-        const nxi::suggestion_vector& suggestions() const;
-        nxi::suggestion_vector& suggestions();
         void context_suggest();
         void suggest_command();
         void suggest_context();
         void suggest_navigation();
         void suggest_page();
 
+        void set_mode(mode_type);
+
         const QString& text() const;
 
         void clear();
         void reset();
+
+        mode_type mode() const;
+        const nxi::suggestion_vector& suggestions() const;
+        nxi::suggestion_vector& suggestions();
 
         bool is_empty() const;
         bool is_valid() const;
@@ -68,14 +72,11 @@ namespace nxi
 
         void event_shortcut_input_update(const QString&);
 
-    protected:
-        void set_mode(mode);
-
     private:
         nxi::session& session_;
 
         QString input_;
-        mode mode_;
+        mode_type mode_;
         state state_;
         nxi::shortcut_input shortcut_input_;
         nxi::suggestion_vector suggestions_;
