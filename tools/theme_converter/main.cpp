@@ -13,13 +13,31 @@
 #include <iomanip>
 
 
+#define map_color(NXI_COLOR, W3C_COLOR){ #NXI_COLOR, #W3C_COLOR },
+#define map_color_edit(NXI_COLOR, W3C_COLOR, IGNORED){#NXI_COLOR, #W3C_COLOR},
+#define map_image(NXI_COLOR, W3C_COLOR)
+std::unordered_map<std::string, std::string> table_correspondance
+{ 
+   #include <nxi/style/w3c_mapping.hpp>
+};
+
+
 struct parametres
 {
-    int vers{};
-    std::string manifest_vers{ "" };
+    int manifest_vers{2};
     std::string path{ "" };
-    std::string nom{ "" };
 };
+
+
+unsigned int hexa_to_rgb(std::string couleur_hexa)
+{
+    std::stringstream ss;
+    unsigned int couleur_rgb;
+    ss << std::hex << couleur_hexa;
+    ss >> couleur_rgb;
+    return couleur_rgb;
+}
+
 
 void generate(parametres param) 
 {
@@ -28,97 +46,97 @@ void generate(parametres param)
     QJsonObject color;
     QJsonObject theme_frame;
     QJsonObject images;
-    QJsonArray colors;
-    QJsonArray theme;
+    QJsonObject theme;
+   
 
     std::ifstream fichier_format_nxi{ param.path };
 
     if (!fichier_format_nxi.is_open())
     {
         std::cout << "Erreur : fichier non ouvert \n";
+        return;
     }
 
      std::string ligne{ "" };
+     std::string nom;
+     std::string vers;
 
     while (std::getline(fichier_format_nxi, ligne))
     {
         auto espace_pos = ligne.find(" ");
-
-        std::stringstream ss1, ss2, ss3, ss4;
+        if (espace_pos == std::string::npos)
+        {
+            continue;
+        }
 
         std::string prop{ ligne.begin(), ligne.begin() + espace_pos };
 
-        std::string couleur_hexa_1{ ligne.begin() + espace_pos + 1, ligne.begin() + espace_pos + 3 };
-        std::string couleur_hexa_2{ ligne.begin() + espace_pos + 3, ligne.begin() + espace_pos + 5 };
-        std::string couleur_hexa_3{ ligne.begin() + espace_pos + 5, ligne.begin() + espace_pos + 7 };
-        std::string couleur_hexa_4{ ligne.begin() + espace_pos + 7, ligne.begin() + espace_pos + 9 };
+        if (prop == "name")
+        {
+            
+            nom = std::string {ligne.begin() + espace_pos + 1, ligne.end() };
+          
+        }
 
-        std::cout << prop << "\n" << couleur_hexa_1 << "\n" << couleur_hexa_2 << "\n" << couleur_hexa_3 << "\n" << couleur_hexa_4 << "\n";
-        unsigned int couleur_rgb_1;
-        ss1 << std::hex << couleur_hexa_1;
-        ss1 >> couleur_rgb_1;
+        else if (prop == "version")
+        {
+            vers = std::string{ ligne.begin() + espace_pos + 1, ligne.end() };
+        }
 
-        unsigned int couleur_rgb_2;
-        ss2 << std::hex << couleur_hexa_2;
-        ss2 >> couleur_rgb_2;
+        else
+        {
+     
+            std::string couleur_hexa_1{ ligne.begin() + espace_pos + 1, ligne.begin() + espace_pos + 3 };
+            std::string couleur_hexa_2{ ligne.begin() + espace_pos + 3, ligne.begin() + espace_pos + 5 };
+            std::string couleur_hexa_3{ ligne.begin() + espace_pos + 5, ligne.begin() + espace_pos + 7 };
+            std::string couleur_hexa_4{ ligne.begin() + espace_pos + 7, ligne.begin() + espace_pos + 9 };
 
-        unsigned int couleur_rgb_3;
-        ss3 << std::hex << couleur_hexa_3;
-        ss3 >> couleur_rgb_3;
+            unsigned int couleur_rgb_1{ hexa_to_rgb(couleur_hexa_1) };
+            unsigned int couleur_rgb_2{ hexa_to_rgb(couleur_hexa_2) };
+            unsigned int couleur_rgb_3{ hexa_to_rgb(couleur_hexa_3) };
+            unsigned int couleur_rgb_4{ hexa_to_rgb(couleur_hexa_4) };
 
-        unsigned int couleur_rgb_4;
-        std::ostringstream out;
-        ss4 << std::hex << couleur_hexa_4;
-        ss4 >> couleur_rgb_4;
-        float couleur_rgb_4_adj = couleur_rgb_4 / 255.0f;
-        out << std::setprecision(2) << couleur_rgb_4_adj;
-        std::cout << out.str() << "\n";
+            std::ostringstream out;
+            float couleur_rgb_4_adj = couleur_rgb_4 / 255.0f;
+            out << std::setprecision(2) << couleur_rgb_4_adj;
 
-        std::unordered_map<std::string, std::string> table_correspondance
-        { 
-            { "menu.background_color", "frame" },
-            { "menu.text_color", "tab_background_text" } 
-        };
+            std::string propriete_conv{ table_correspondance.at(prop).begin() + 7, table_correspondance.at(prop).end() };
 
-        
-        std::cout << "rgba(" + std::to_string(couleur_rgb_1) + "," + std::to_string(couleur_rgb_2) + "," + std::to_string(couleur_rgb_3) + "," + out.str() + ") \n";
-        propriete[table_correspondance.at(prop).c_str()] = QString::fromStdString("rgba(" + std::to_string(couleur_rgb_1) + "," + std::to_string(couleur_rgb_2) + "," +
-                                               std::to_string(couleur_rgb_3) + "," + out.str() + ") \n");
-        colors.push_back(propriete);
+            propriete[propriete_conv.c_str()] = QString::fromStdString("rgba(" + std::to_string(couleur_rgb_1) + "," + std::to_string(couleur_rgb_2) + "," + std::to_string(couleur_rgb_3) + "," + out.str() + ")");
+        }
     }
 
-    theme_frame["theme_frame"] = "background.jpg";
-    images["images"] = theme_frame;
-    theme.push_back(images);
+   theme_frame["theme_frame"] = "background.jpg";
 
-    color["colors"] = colors;
-    theme.push_back(color);
-
-    root["name"] = QString::fromStdString(param.nom);
-    root["manifest_version"] = QString::fromStdString(param.manifest_vers);
-    root["version"] = param.vers;
-    root["theme"] = theme;
+    root["name"] = QString::fromStdString(nom);
+    root["version"] = QString::fromStdString(vers);
+    root["manifest_version"] = param.manifest_vers;
+    theme["images"] = theme_frame;
+    theme["colors"] = propriete;
+    root["theme"]=theme;
+    
 
     QJsonDocument doc{ root };
-    qDebug() << doc.toJson();
+    //qDebug() << doc.toJson();
+    std::ofstream fichier{ "manifest.json" };
+    fichier << doc.toJson().toStdString();
 }
 
 
-int main() //int main(int argc, char** argv)
+int main(int argc, char** argv)
 {
-   // if (argc < 2)
-    //{
-      //  std::cout << "Missing nxi theme parameter";
-        //return 0;
-    //}   
-   // std::string theme_nxi = *(argv + 1);
-   //std::cout << "args : "<< "test"; 
-   // std::cout << "args : " << theme_nxi;
+    if (argc < 2)
+    {
+        std::cout << "Missing nxi theme parameter";
+        return 0;
+    }
+    std::string theme_nxi = *(argv + 1);
+    std::cout << "args : " << "test \n"; //std::cout << "args : " << theme_nxi;
 
-   parametres param{ 2, "1.0", "C:/test.txt", "nxi" };
+    parametres param;
+    param.path = "C:/test.txt"; // param.path = theme_nxi;
+    param.manifest_vers = 2;
     generate(param);
 
-   
-    
     return 0;
 }
