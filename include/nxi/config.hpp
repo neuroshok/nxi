@@ -39,6 +39,8 @@ namespace nxi
     {
         using persistent_group::persistent_group;
 
+        enum class fullscreen_mode { screen = 0, window, hybrid };
+
         nxi_config_open(command)
             nxi_config_key(autoexec, bool, false, "exec command on single match");
         nxi_config_close(command)

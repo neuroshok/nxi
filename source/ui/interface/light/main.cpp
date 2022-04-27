@@ -37,7 +37,8 @@
 namespace ui::interfaces::light
 {
     main::main(ui::session& session, ui::window* window)
-        : session_{ session }
+        : ui::main_interface{ window }
+        , session_{ session }
     {
         connect(&session_.nxi_session().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style)
         {
@@ -89,13 +90,65 @@ namespace ui::interfaces::light
             error->setText(message);
             error->show();
         });
+
+        setMouseTracking(true);
     }
 
-    void main::toggle_fullmode()
+    bool main::toggle_fullmode(int state)
     {
-        main_interface::toggle_fullmode();
-        //if (main_interface::fullmode()) control_bar_->hide();
-        //else control_bar_->show();
+        auto toggle_fullscreen = [](auto this_, bool active) {
+            if (active)
+            {
+                this_->window()->showFullScreen();
+                this_->control_bar_->hide();
+            }
+            else
+            {
+                this_->window()->showNormal();
+                this_->control_bar_->showNormal();
+            }
+        };
+        auto toggle_fullwindow = [](auto this_, bool active) {
+            if (active) this_->control_bar_->hide();
+            else this_->control_bar_->showNormal();
+        };
+
+        auto fullscreen_mode = session_.nxi_session().config().browser.page_fullscreen_mode.get();
+
+        switch (static_cast<nxi::config::fullscreen_mode>(fullscreen_mode))
+        {
+        case nxi::config::fullscreen_mode::window:
+            main_interface::toggle_fullmode();
+            toggle_fullwindow(this, fullmode());
+            return true;
+
+        case nxi::config::fullscreen_mode::screen:
+            main_interface::toggle_fullmode();
+            toggle_fullscreen(this, fullmode());
+            return true;
+
+        case nxi::config::fullscreen_mode::hybrid:
+            main_interface::toggle_fullmode(3);
+            if (fullmode() == 1) toggle_fullwindow(this, true);
+            else if (fullmode() == 2) toggle_fullscreen(this, true);
+            else toggle_fullscreen(this, false);
+            return fullmode() != 2;
+            break;
+        }
+
+        return fullmode();
+    }
+
+    void main::focusInEvent(QFocusEvent* event)
+    {
+        QWidget::focusInEvent(event);
+        if (fullmode() != 0) control_bar_->show();
+    }
+
+    void main::focusOutEvent(QFocusEvent* event)
+    {
+        QWidget::focusOutEvent(event);
+        if (fullmode() != 0) control_bar_->hide();
     }
 
     void main::paintEvent(QPaintEvent*)

@@ -28,7 +28,8 @@
 namespace ui::interfaces::standard
 {
     main::main(ui::session& session, ui::window* window)
-        : session_{ session }
+        : ui::main_interface{ window }
+        , session_{ session }
     {
         connect(&session_.nxi_session().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style)
         {
@@ -65,7 +66,7 @@ namespace ui::interfaces::standard
         });*/
     }
 
-    void main::toggle_fullmode()
+    bool main::toggle_fullmode(int state)
     {
         nxi_debug("fullmode");
 
@@ -80,6 +81,7 @@ namespace ui::interfaces::standard
             control_bar_->show();
             page_bar_->show();
         }
+        return true;
     }
 
     void main::paintEvent(QPaintEvent*)

@@ -21,7 +21,7 @@ namespace ui::interfaces::standard
     public:
         main(ui::session&, ui::window*);
 
-        void toggle_fullmode() override;
+        bool toggle_fullmode(int) override;
 
     protected:
         void paintEvent(QPaintEvent*) override;

@@ -5,6 +5,8 @@
 
 namespace ui
 {
+    class window;
+
     class main_interface : public QWidget
     {
     public:
@@ -15,23 +17,29 @@ namespace ui
         } style_data;
 
     public:
-        main_interface()
-            : fullmode_{ false }
+        main_interface(ui::window* window)
+            : window_{ window }
+            , fullmode_{ false }
             , style_data{}
         {}
 
-        virtual void toggle_fullmode()
+        ui::window* window() { return window_; }
+
+        virtual bool toggle_fullmode(int states = 2)
         {
-            fullmode_ = !fullmode_;
+            ++fullmode_;
+            fullmode_ %= states; // 0 = normal, window = 1, screen = 2
+            return fullmode_;
         }
 
-        bool fullmode() const
+        int fullmode() const
         {
             return fullmode_;
         }
 
     private:
-        bool fullmode_;
+        ui::window* window_;
+        int fullmode_ = 0;
     };
 } // ui
 

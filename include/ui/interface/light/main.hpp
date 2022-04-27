@@ -25,9 +25,11 @@ namespace ui::interfaces::light
     public:
         main(ui::session&, ui::window*);
 
-        void toggle_fullmode() override;
+        bool toggle_fullmode(int) override;
 
     protected:
+        void focusInEvent(QFocusEvent*) override;
+        void focusOutEvent(QFocusEvent*) override;
         void paintEvent(QPaintEvent*) override;
         void resizeEvent(QResizeEvent*) override;
 
