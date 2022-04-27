@@ -45,6 +45,7 @@ namespace ui
         void keyReleaseEvent(QKeyEvent* event) override;
         void enterEvent(QEnterEvent* event) override;
         void leaveEvent(QEvent* event) override;
+        void mouseReleaseEvent(QMouseEvent*) override;
 
         void focusInEvent(QFocusEvent* event) override;
         void focusOutEvent(QFocusEvent* event) override;
@@ -60,6 +61,7 @@ namespace ui
     private:
         ui::session& session_;
 
+        bool first_focus_ = true;
         QLabel* info_;
         QLabel* header_;
         std::optional<nxi::command_executor> command_executor_;

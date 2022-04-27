@@ -163,7 +163,8 @@ namespace ui
     {
         QLineEdit::focusOutEvent(event);
         auto focused_page = session_.nxi_session().page_system().focus();
-        //if (focused_page) setText(focused_page->name());
+        if (focused_page) setText(focused_page->name());
+        first_focus_ = true;
     }
 
     void command_input::enterEvent(QEnterEvent* event)
@@ -181,6 +182,22 @@ namespace ui
         auto focused_page = session_.nxi_session().page_system().focus();
         //if (focused_page) setText(focused_page->name());
     }
+
+    void command_input::mouseReleaseEvent(QMouseEvent* event)
+    {
+        if (first_focus_)
+        {
+            if (nxi_input().is_empty())
+            {
+                auto focused_page = session_.nxi_session().page_system().focus();
+                if (focused_page) setText(focused_page->command());
+            }
+            else setText(nxi_input().text());
+            selectAll();
+            first_focus_ = false;
+        }
+    }
+
 
     void command_input::paintEvent(QPaintEvent* event)
     {
