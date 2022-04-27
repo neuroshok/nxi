@@ -77,6 +77,7 @@ endfunction()
 function(module_add name)
     add_library(module_${name} INTERFACE)
     target_include_directories(module_${name} INTERFACE ${NXI_MODULE_ROOT}/static/${name})
+    add_custom_target(mod_${name})
 endfunction()
 
 # module_build
