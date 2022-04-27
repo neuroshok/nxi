@@ -38,7 +38,7 @@ namespace platform::windows
         setVisible(true);
     }
 
-    bool window::nativeEvent(const QByteArray& eventType, void* message, long* result)
+    bool window::nativeEvent(const QByteArray& eventType, void* message, qintptr* result)
     {
         // https://forum.qt.io/topic/93141/qtablewidget-itemselectionchanged/13
         #if (QT_VERSION == QT_VERSION_CHECK(5, 11, 1))
@@ -223,6 +223,7 @@ namespace platform::windows
     }
     void window::getContentsMargins(int *left, int *top, int *right, int *bottom) const
     {
+        /*
         QWidget::getContentsMargins(left,top,right,bottom);
         if (!(left&&top&&right&&bottom)) return;
         if (isMaximized())
@@ -231,7 +232,7 @@ namespace platform::windows
             *top -= m_frames.top();
             *right -= m_frames.right();
             *bottom -= m_frames.bottom();
-        }
+        }*/
     }
 
     QRect window::contentsRect() const

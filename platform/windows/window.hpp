@@ -22,7 +22,7 @@ namespace platform::windows
         void set_fullscreen();
 
     protected:
-        bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
+        bool nativeEvent(const QByteArray &eventType, void *message, qintptr *result) override;
 
     private:
         QWidget* grip_;
