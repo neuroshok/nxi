@@ -181,7 +181,11 @@ if (NXI_TARGET_DESKTOP)
 
     if (NXI_TARGET_SYSTEM STREQUAL "Windows")
         set(QT_DEPLOYQT_EXECUTABLE "${QT_DEPLOYQT_EXECUTABLE}/windeployqt.exe")
-        add_custom_target(nxi_deploy COMMAND ${QT_DEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi_exe>)
+        add_custom_target(nxi_deploy
+                COMMAND ${QT_DEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi_exe>
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/theme/ $<TARGET_FILE_DIR:nxi_exe>/module/theme/
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/webextension/ $<TARGET_FILE_DIR:nxi_exe>/module/webextension/
+        )
         add_dependencies(nxi_deploy nxi_exe)
     endif()
     if (NXI_TARGET_SYSTEM STREQUAL "Darwin")
