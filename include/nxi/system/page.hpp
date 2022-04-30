@@ -48,10 +48,10 @@ namespace nxi
         template<class Page, class... Args>
         void open(Args&&... args);
 
-        void close(nds::node_ptr<nxi::page>&);
+        void close(nds::node_ptr<nxi::page>);
         void close_focus();
 
-        void erase(nds::node_ptr<nxi::page>&);
+        void erase(nds::node_ptr<nxi::page>);
         void focus(nxi::page_id id);
         void focus(nds::node_ptr<nxi::page>);
         const page_ptr& focus() const;

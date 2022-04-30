@@ -123,14 +123,21 @@ namespace nxi
         open<nxi::web_page>(root_, session_.config().browser.home.get());
     }
 
-    void page_system::close(nds::node_ptr<nxi::page>& page)
+    void page_system::close(nds::node_ptr<nxi::page> page)
     {
-        nxi_assert(page);
+        if (!page)
+        {
+            nxi_warning("page_system::close with null page");
+            return;
+        }
+        // last page remaining
+        if (graph_.count_nodes() <= 1) return;
 
         page->close();
         emit event_close(page);
 
         bool had_focus = (focus_ == page);
+
         erase(page);
 
         if (had_focus)
@@ -138,7 +145,6 @@ namespace nxi
             // get the next page to focus
             nds::node_ptr<nxi::page> new_focus;
             graph_.targets(root_, [&new_focus](auto&& page) { new_focus = page; });
-
             if (!new_focus) new_focus = root_;
             focus(new_focus);
         }
@@ -149,7 +155,7 @@ namespace nxi
         close(focus_);
     }
 
-    void page_system::erase(nds::node_ptr<nxi::page>& page)
+    void page_system::erase(nds::node_ptr<nxi::page> page)
     {
         nxi_assert(page);
 
