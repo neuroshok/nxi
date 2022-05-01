@@ -7,6 +7,3 @@
 [submodule "third_party/nds"]
 	path = third_party/nds
 	url = https://github.com/ads00/nds.git
-[submodule "module/static/nxi.module"]
-	path = module/static/nxi.module
-	url = https://github.com/neuroshok/nxi.module.git
