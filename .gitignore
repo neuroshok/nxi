@@ -6,6 +6,7 @@
 # binary folders
 **bin/
 build/
+lib/
 
 # local resources
 resource/local/
