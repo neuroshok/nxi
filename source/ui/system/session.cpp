@@ -8,9 +8,6 @@
 #include <ui/interface/light/main.hpp>
 #include <ui/system/window.hpp>
 
-#include <QWebEngineProfile>
-#include <QWebEngineSettings>
-
 namespace ui
 {
    session::session(ui::core& ui_core, nxi::session& nxi_session)
@@ -20,11 +17,7 @@ namespace ui
         , page_system_{ *this }
         , window_system_{ *this }
         , main_interface_{ [this](ui::window* window){ return new ui::interfaces::light::main(*this, window); } }
-    {
-        QWebEngineProfile::defaultProfile()->settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
-        QWebEngineProfile::defaultProfile()->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
-        QWebEngineProfile::defaultProfile()->setHttpUserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0) Gecko/20100101 Firefox/99.0.1");
-    }
+    {}
 
     session::~session() { nxi_trace("ui::session {} deleted", id()); }
 

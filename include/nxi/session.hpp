@@ -20,6 +20,7 @@ namespace nxi
 {
     struct config;
     class core;
+    class web_session;
 
     class session : public QObject
     {
@@ -39,9 +40,10 @@ namespace nxi
 
         nxi::api::core& api();
         nxi::config& config();
-        nxi::core& nxi_core();
-
         nxi::database& database();
+        nxi::core& nxi_core();
+        nxi::web_session& web_session();
+
         nxi::command_system& command_system();
         nxi::context_system& context_system();
         nxi::interface_system& interface_system();
@@ -72,6 +74,8 @@ namespace nxi
         nxi::window_system window_system_;
         nxi::module_system module_system_;
         nxi::navigation_system navigation_system_;
+
+        nxi::web_session* web_session_;
     };
 } // nxi
 

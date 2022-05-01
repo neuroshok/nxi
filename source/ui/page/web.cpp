@@ -6,6 +6,7 @@
 #include <nxi/module/api/core.hpp>
 #include <nxi/module/api/page_system.hpp>
 #include <nxi/page/web.hpp>
+#include <nxi/web_session.hpp>
 
 #include <ui/core.hpp>
 #include <ui/interface/main.hpp>
@@ -29,7 +30,7 @@ namespace ui
         , page_{ page }
         , session_{ session }
     {
-        native_page_ = new ui::web_engine_page(QWebEngineProfile::defaultProfile(), this);
+        native_page_ = new ui::web_engine_page(&static_cast<QWebEngineProfile&>(session_.nxi_session().web_session()), this);
         native_page_->setWebChannel(session_.nxi_session().module_system().web_channel());
 
         native_page_->setAudioMuted(page.is_muted());
@@ -38,10 +39,17 @@ namespace ui
         {
             native_page_->scripts().insert(script);
         });
-        connect(native_page_, &QWebEnginePage::fullScreenRequested, [this](QWebEngineFullScreenRequest request)
+        connect(native_page_, &QWebEnginePage::fullScreenRequested, [this](QWebEngineFullScreenRequest)
         {
-            static_cast<ui::window*>(QWebEngineView::forPage(native_page_)->window())->main_interface()->toggle_fullmode();
-            request.accept();
+                    // return state
+            auto interface = static_cast<ui::window*>(QWebEngineView::forPage(native_page_)->window())->main_interface();
+            bool accepted = static_cast<ui::window*>(QWebEngineView::forPage(native_page_)->window())->main_interface()->toggle_fullmode();
+            //qDebug() << "MODE " << interface->fullmode() ;
+            //native_page_->setFullScreenMode(interface->fullmode());
+        });
+        connect(native_page_, &QWebEnginePage::featurePermissionRequested, [this](const QUrl& origin, QWebEnginePage::Feature feature)
+        {
+            native_page_->setFeaturePermission(origin, feature, QWebEnginePage::PermissionPolicy::PermissionGrantedByUser);
         });
         connect(native_page_, &QWebEnginePage::loadFinished, this, [this](bool n)
         {

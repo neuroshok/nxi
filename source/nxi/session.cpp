@@ -1,6 +1,7 @@
 #include <nxi/session.hpp>
 
 #include <nxi/config.hpp>
+#include <nxi/web_session.hpp>
 
 namespace nxi
 {
@@ -19,6 +20,7 @@ namespace nxi
         , window_system_{ *this }
         , module_system_{ *this }
         , navigation_system_{ *this }
+        , web_session_{ new nxi::web_session{ *this, this } }
     {}
 
     void session::load()
@@ -34,6 +36,8 @@ namespace nxi
         page_system_.load();
         module_system_.load();
         navigation_system_.load();
+
+        web_session_->load();
     }
 
     void session::unload()
@@ -58,6 +62,7 @@ namespace nxi
     }
     nxi::database& session::database() { return core_database_; }
     nxi::core& session::nxi_core() { return nxi_core_; }
+    nxi::web_session& session::web_session() { return *web_session_; }
 
     nxi::command_system& session::command_system() { return command_system_; }
     nxi::context_system& session::context_system() { return context_system_; }

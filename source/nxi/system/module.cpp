@@ -7,6 +7,7 @@
 #include <nxi/module/web.hpp>
 #include <nxi/type.hpp>
 #include <nxi/utility/file.hpp>
+#include <nxi/web_session.hpp>
 
 #include <QWebChannel>
 #include <QWebEngineProfile>
@@ -44,7 +45,7 @@ namespace nxi
         script.setSourceCode(js_api_);
         script.setInjectionPoint(QWebEngineScript::DocumentCreation);
         script.setWorldId(QWebEngineScript::MainWorld);
-        QWebEngineProfile::defaultProfile()->scripts()->insert(script);
+        session_.web_session().scripts()->insert(script);
 
         nxi_trace("load static modules");
         static_modules_.load();
