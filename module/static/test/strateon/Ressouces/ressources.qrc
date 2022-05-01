@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/strateon">
-        <file alias="logo">logo.png</file>
-    </qresource>
-</RCC>
