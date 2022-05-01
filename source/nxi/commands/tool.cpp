@@ -9,7 +9,6 @@ namespace nxi
     {
         auto node = add_node("tool");
         set_node(node);
-        set_root(node);
 
         // import
         nxi::command_data import;
