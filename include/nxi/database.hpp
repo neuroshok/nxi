@@ -11,20 +11,31 @@ namespace nxi
 {
     enum class prepared_query
     {
+        // context
         add_context, add_context_available,
         del_context,
         get_context, get_context_available,
 
+        // navigation
         navigation_log_add,
 
+        // module
+        get_modules,
+        set_module_loaded,
+
+        // page
         add_page, count_page, del_page, get_page_id, get_page_name,
         add_page_arc, del_page_arc,
         get_page, get_page_arcs,
         set_page_loaded, update_page,
 
+        // session
         add_session, del_session, get_sessions, load_session, unload_session,
+
+        // window
         add_window, get_windows, move_window,
         get_config_value, set_config_value,
+
         size_
     };
 

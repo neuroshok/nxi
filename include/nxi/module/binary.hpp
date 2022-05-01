@@ -9,8 +9,8 @@
 #include <nxi/session.hpp>
 #include <nxi/type.hpp>
 
-using Module_main_ptr = int (*)(nxi::api::core&);
-using Module_load_ptr = int (*)(nxi::api::core&);
+using Module_load_ptr = int(*)(nxi::core*);
+using Module_unload_ptr = int(*)(nxi::core*);
 
 #include <nxi/log.hpp>
 #include <exception>
@@ -38,14 +38,14 @@ namespace nxi
           else
           {
               // get main pointer
-              auto main_ptr = reinterpret_cast<Module_main_ptr>(nxi_os_module_function(handle, "nxi_module"));
-              if (!main_ptr) nxi_error("function nxi_module missing");
-              else
-              {
-                  // get load pointer and call
-                  auto load_ptr = reinterpret_cast<Module_load_ptr>(nxi_os_module_function(handle, "nxi_module_load"));
-                  if (load_ptr) load_ptr(session_.api());
-              }
+              auto load_ptr = reinterpret_cast<Module_load_ptr>(nxi_os_module_function(handle, "nxi_load"));
+              if (!load_ptr) nxi_error("function nxi_load missing");
+              else load_ptr(&session_.nxi_core());
+
+
+                  //auto unload_ptr = reinterpret_cast<Module_unload_ptr>(nxi_os_module_function(handle, "nxi_unload"));
+                  //if (load_ptr) unload_ptr(session_.api());
+
           }
       }
 

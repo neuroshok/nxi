@@ -2,6 +2,7 @@
 
 #include <nxi/data/config.hpp>
 #include <nxi/data/context.hpp>
+#include <nxi/data/module.hpp>
 #include <nxi/data/navigation.hpp>
 #include <nxi/data/page.hpp>
 #include <nxi/data/session.hpp>
@@ -99,6 +100,7 @@ namespace nxi
     {
         nxi::data::config::internal::make(*this);
         nxi::data::context::internal::make(*this);
+        nxi::data::module::internal::make(*this);
         nxi::data::navigation::internal::make(*this);
         nxi::data::page::internal::make(*this);
         nxi::data::window::internal::make(*this);
@@ -108,6 +110,7 @@ namespace nxi
     {
         nxi::data::config::internal::prepare(*this);
         nxi::data::context::internal::prepare(*this);
+        nxi::data::module::internal::prepare(*this);
         nxi::data::navigation::internal::prepare(*this);
         nxi::data::page::internal::prepare(*this);
         nxi::data::window::internal::prepare(*this);

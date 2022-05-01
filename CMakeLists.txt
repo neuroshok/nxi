@@ -28,8 +28,10 @@ include(user-config.cmake OPTIONAL)
 #-------------------------------------------------------
 # path
 set(NXI_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
-set(NXI_BIN_ROOT ${NXI_ROOT}/bin)
+set(NXI_BIN_ROOT ${NXI_ROOT}/bin/nxi)
+set(NXI_LIB_ROOT ${NXI_ROOT}/lib)
 set(NXI_MODULE_ROOT "${NXI_ROOT}/module")
+set(NXI_MODULE_BIN_ROOT ${NXI_BIN_ROOT}/module)
 set(NXI_THIRD_PARTY_ROOT ${NXI_ROOT}/third_party)
 
 # qt path
@@ -89,16 +91,13 @@ message("--------------------------------------------------------
 message("Host system : ${CMAKE_HOST_SYSTEM_NAME}")
 message("Target system : ${NXI_TARGET_SYSTEM}")
 message("Qt path : ${NXI_QT_ROOT}")
+message("")
 
 
 #-------------------------------------------------------
 #                       Module
 #-------------------------------------------------------
-message("Module build")
-
-# add modules
-
-internal_add_modules(${NXI_MODULE_ROOT}/static)
+internal_add_modules(${NXI_MODULE_ROOT})
 
 #-------------------------------------------------------
 #                       Target
@@ -107,7 +106,7 @@ internal_add_modules(${NXI_MODULE_ROOT}/static)
 if (NXI_TARGET_SYSTEM STREQUAL "android")
     add_library(nxi SHARED ${NXI_SOURCES})
     target_include_directories(nxi PUBLIC include)
-    target_link_libraries(nxi lib_nds ${NXI_MODULES} ${NXI_QT_LIBS})
+    target_link_libraries(nxi lib_nds ${NXI_STATIC_MODULES} ${NXI_QT_LIBS})
 
     nxi_android_apk_target(nxi)
 endif()
@@ -148,7 +147,7 @@ if (NXI_TARGET_DESKTOP)
     add_executable(nxi_exe ${NXI_SOURCES} ${NXI_ICON})
     target_include_directories(nxi_exe PUBLIC include)
     target_compile_definitions(nxi_exe PUBLIC ${NXI_DEFINITIONS})
-    target_link_libraries(nxi_exe lib_nds lib_speedlog ${NXI_MODULES} ${NXI_QT_LIBS})
+    target_link_libraries(nxi_exe lib_nds lib_speedlog ${NXI_STATIC_MODULES} ${NXI_QT_LIBS})
 
     # console
     if (NXI_CONSOLE)
@@ -159,19 +158,20 @@ if (NXI_TARGET_DESKTOP)
 
     set_target_properties(nxi_exe
             PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY "${NXI_BIN_ROOT}/nxi"
-            RUNTIME_OUTPUT_DIRECTORY_RELEASE "${NXI_BIN_ROOT}/nxi"
+            RUNTIME_OUTPUT_DIRECTORY "${NXI_BIN_ROOT}"
+            RUNTIME_OUTPUT_DIRECTORY_RELEASE "${NXI_BIN_ROOT}"
             OUTPUT_NAME "nxi"
             )
 
+
     # tools
-    add_executable(theme_converter tools/theme_converter/main.cpp)
-    target_include_directories(theme_converter PUBLIC include)
-    target_link_libraries(theme_converter Qt6::Core)
-    set_target_properties(theme_converter
+    add_executable(tool_theme_converter tools/theme_converter/main.cpp)
+    target_include_directories(tool_theme_converter PUBLIC include)
+    target_link_libraries(tool_theme_converter Qt6::Core)
+    set_target_properties(tool_theme_converter
         PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${NXI_BIN_ROOT}/nxi"
-        RUNTIME_OUTPUT_DIRECTORY_RELEASE "${NXI_BIN_ROOT}/nxi"
+        RUNTIME_OUTPUT_DIRECTORY "${NXI_BIN_ROOT}"
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE "${NXI_BIN_ROOT}"
         OUTPUT_NAME "theme_converter"
         )
 
@@ -182,9 +182,10 @@ if (NXI_TARGET_DESKTOP)
     if (NXI_TARGET_SYSTEM STREQUAL "Windows")
         set(QT_DEPLOYQT_EXECUTABLE "${QT_DEPLOYQT_EXECUTABLE}/windeployqt.exe")
         add_custom_target(nxi_deploy
+                COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/nxi.lib ${NXI_LIB_ROOT}/nxi.lib
                 COMMAND ${QT_DEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi_exe>
-                COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/theme/ $<TARGET_FILE_DIR:nxi_exe>/module/theme/
-                COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/webextension/ $<TARGET_FILE_DIR:nxi_exe>/module/webextension/
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/nxi.module/theme/ $<TARGET_FILE_DIR:nxi_exe>/module/theme/
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/nxi.module/web/ $<TARGET_FILE_DIR:nxi_exe>/module/web/
         )
         add_dependencies(nxi_deploy nxi_exe)
     endif()
