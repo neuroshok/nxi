@@ -25,7 +25,7 @@
     constexpr std::string_view str_table_##Name## = "CREATE TABLE `" #Name "` ("
 
     #define init_field(Index, Type, Name, SqlType) "`" #Name "` " SqlType ","
-    #define init_close(Name) "PRIMARY KEY(`id`) )"; } // nxi::data::##Name##::internal
+    #define init_close(Name) MAKE_SQL_EXTRA "PRIMARY KEY(`id`) )"; } // nxi::data::##Name##::internal
 
     #undef MAKE_TABLE
 #endif
