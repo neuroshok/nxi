@@ -1,7 +1,9 @@
 #include <nxi/web_session.hpp>
 
 #include <nxi/session.hpp>
+#include <nxi/data/cookie.hpp>
 
+#include <nxi/database/model.hpp>
 #include <QNetworkCookie>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -26,14 +28,14 @@ namespace nxi
         setHttpCacheType(QWebEngineProfile::HttpCacheType::DiskHttpCache);
         setPersistentCookiesPolicy(QWebEngineProfile::NoPersistentCookies);
 
-        connect(cookieStore(), &QWebEngineCookieStore::cookieAdded, [this](const QNetworkCookie& c)
+        connect(cookieStore(), &QWebEngineCookieStore::cookieAdded, [this](const QNetworkCookie& cookie)
         {
-            //add_cookie(cookie); nxi::data::cookie::set(cookie);
+            nxi::data::cookie::set(session_.database(), cookie);
         });
 
-        connect(cookieStore(), &QWebEngineCookieStore::cookieRemoved, [this](const QNetworkCookie& c)
+        connect(cookieStore(), &QWebEngineCookieStore::cookieRemoved, [this](const QNetworkCookie& cookie)
         {
-            //cookieStore()->deleteCookie(cookie)  nxi::data::cookie::del(cookie);
+            nxi::data::cookie::del(session_.database(), cookie);
         });
 
         settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
@@ -42,8 +44,19 @@ namespace nxi
         setHttpUserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:10.0) Gecko/20100101 Firefox/99.0.1");
     }
 
+    void web_session::load_cookie(const QString& domain)
+    {
+        auto result = nxi::data::cookie::get(session_.database(), "%" + domain);
+        while(result.next())
+        {
+            QNetworkCookie cookie = nxi::data::cookie::make(nxi::data::cookie::from_get(result));
+            cookieStore()->setCookie(cookie);
+        }
+    }
+
     void web_session::import_cookies(const QString& database_path)
     {
+        //C:\Users\ads\AppData\Roaming\Mozilla\Firefox\Profiles\y9siacyv.default-1475306262438\cookies.sqlite
         auto import_db = QSqlDatabase::addDatabase("QSQLITE", database_path);
         import_db.setDatabaseName(database_path);
 
@@ -54,22 +67,30 @@ namespace nxi
         }
 
         QSqlQuery query{ import_db };
-        if (!query.exec("SELECT host, path, name, value FROM moz_cookies")) nxi_error("query error : {}", query.lastError().text());
+        query.exec("SELECT host, expiry, isHttpOnly, name, path, sameSite, isSecure, value FROM moz_cookies");
 
         while (query.next())
         {
-            auto host = query.value(0).toString();
-            auto path = query.value(1).toString();
-            auto name = query.value(2).toByteArray();
-            auto value = query.value(3).toByteArray();
+            auto domain = query.value(0).toString();
+            auto expiry = query.value(1).toLongLong();
+            auto isHttpOnly = query.value(2).toBool();
+            auto name = query.value(3).toByteArray();
+            auto path = query.value(4).toString();
+            auto sameSite = query.value(5).toInt();
+            auto isSecure = query.value(6).toBool();
+            auto value = query.value(7).toByteArray();
             QNetworkCookie cookie;
-            cookie.setDomain(host);
-            cookie.setPath(path);
+
+            cookie.setDomain(domain);
+            cookie.setExpirationDate(QDateTime::fromSecsSinceEpoch(expiry));
+            cookie.setHttpOnly(isHttpOnly);
             cookie.setName(name);
+            cookie.setPath(path);
+            //cookie.setSameSitePolicy(QNetworkCookie::SameSite::);
+            cookie.setSecure(isSecure);
             cookie.setValue(value);
+            nxi::data::cookie::set(session_.database(), cookie);
             cookieStore()->setCookie(cookie);
-            // nxi::data::cookie::set(cookie);
         }
     }
-
 } // nxi

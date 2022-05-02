@@ -15,6 +15,8 @@ namespace nxi
 
         void load();
 
+        void load_cookie(const QString& domain);
+
         void import_cookies(const QString& database_path);
 
     private:

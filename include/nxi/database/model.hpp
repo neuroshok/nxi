@@ -4,6 +4,7 @@
 #include <nxi/database/field.hpp>
 #include <nxi/data/config.hpp>
 #include <nxi/data/context.hpp>
+#include <nxi/data/cookie.hpp>
 #include <nxi/data/module.hpp>
 #include <nxi/data/page.hpp>
 #include <nxi/data/session.hpp>
@@ -13,6 +14,7 @@ inline constexpr static struct nxi_model_
 {
     nxi::data::config::internal::table config{};
     nxi::data::context::internal::table_context context{};
+    nxi::data::cookie::internal::table_cookie cookie{};
     nxi::data::module::internal::table_module module{};
     nxi::data::page::internal::table_page page{};
     nxi::data::page::internal::table_page_arc page_arc{};

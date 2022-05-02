@@ -34,6 +34,7 @@ namespace nxi
         {
             using Field = std::decay_t<Field_ref>;
             if constexpr (std::is_same_v<typename Field::type, int>) { return query_.value(Field::index).toInt(); }
+            else if constexpr (std::is_same_v<typename Field::type, int64_t>) { return query_.value(Field::index).toLongLong(); }
             else if constexpr (std::is_same_v<typename Field::type, bool>) { return query_.value(Field::index).toBool(); }
             else if constexpr (std::is_same_v<typename Field::type, QByteArray>) { return query_.value(Field::index).toByteArray(); }
             else if constexpr (std::is_same_v<typename Field::type, QString>) { return query_.value(Field::index).toString(); }

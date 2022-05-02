@@ -51,6 +51,10 @@ namespace ui
         {
             native_page_->setFeaturePermission(origin, feature, QWebEnginePage::PermissionPolicy::PermissionGrantedByUser);
         });
+        connect(native_page_, &QWebEnginePage::loadStarted, this, [this]()
+        {
+            session_.nxi_session().web_session().load_cookie(native_page_->requestedUrl().host());
+        });
         connect(native_page_, &QWebEnginePage::loadFinished, this, [this](bool n)
         {
             nxi_debug("load complete");

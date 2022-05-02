@@ -16,6 +16,9 @@ namespace nxi
         del_context,
         get_context, get_context_available,
 
+        // cookie
+        del_cookie, get_cookie, get_cookie_domain, set_cookie,
+
         // navigation
         navigation_log_add,
 
@@ -52,12 +55,14 @@ namespace nxi
 
         void connect();
         void close();
+        QSqlQuery exec(const QString& str_query);
+        void exec(QSqlQuery&);
+
         QSqlDatabase& get();
         virtual void make() = 0;
         virtual void prepare_queries();
         void prepare(nxi::prepared_query, const QString& str_query);
         QSqlQuery& prepared_query(nxi::prepared_query);
-        QSqlQuery query(const QString& str_query);
 
     private:
         std::array<QSqlQuery, static_cast<size_t>(nxi::prepared_query::size_)> queries_;
