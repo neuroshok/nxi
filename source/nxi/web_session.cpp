@@ -46,7 +46,18 @@ namespace nxi
 
     void web_session::load_cookie(const QString& domain)
     {
-        auto result = nxi::data::cookie::get(session_.database(), "%" + domain);
+        QString out = domain;
+        if (domain.count('.') > 1)
+        {
+            int first = domain.lastIndexOf(".");
+            if (first > 0)
+            {
+                int second = domain.mid(0, first).lastIndexOf(".");
+                if (second > 0) out = domain.mid(second + 1);
+            }
+        }
+
+        auto result = nxi::data::cookie::get(session_.database(), "%" + out);
         while(result.next())
         {
             QNetworkCookie cookie = nxi::data::cookie::make(nxi::data::cookie::from_get(result));
