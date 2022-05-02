@@ -43,7 +43,7 @@ namespace nxi::data::module::internal
 {
     void make(nxi::database& db)
     {
-        db.query(internal::str_table_module.data());
+        db.exec(internal::str_table_module.data());
     }
 
     void prepare(nxi::database& db)

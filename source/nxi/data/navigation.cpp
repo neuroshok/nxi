@@ -25,7 +25,7 @@ namespace nxi::data::navigation::internal
 {
     void make(nxi::database& db)
     {
-        db.query(internal::str_table_navigation_log.data());
+        db.exec(internal::str_table_navigation_log.data());
     }
 
     void prepare(nxi::database& db)

@@ -2,6 +2,7 @@
 
 #include <nxi/data/config.hpp>
 #include <nxi/data/context.hpp>
+#include <nxi/data/cookie.hpp>
 #include <nxi/data/module.hpp>
 #include <nxi/data/navigation.hpp>
 #include <nxi/data/page.hpp>
@@ -21,6 +22,7 @@ namespace nxi
         : make_required_{ false }
         , name_{ std::move(name) }
         , path_{ path + subpath }
+        , database_ { QSqlDatabase::addDatabase("QSQLITE", path_ + name_) }
     {
         if (!QDir(path_).exists())
         {
@@ -28,7 +30,6 @@ namespace nxi
             make_required_ = true;
         }
 
-        database_ = QSqlDatabase::addDatabase("QSQLITE", path_ + name_);
         database_.setDatabaseName(path_ + name_);
     }
 
@@ -45,6 +46,18 @@ namespace nxi
     void database::close()
     {
         database_.close();
+    }
+
+    QSqlQuery database::exec(const QString& str_query)
+    {
+        QSqlQuery query{ database_ };
+        if (!query.exec(str_query)) nxi_error("query error : {} | {}", query.lastError().text(), str_query);
+        return query;
+    }
+
+    void database::exec(QSqlQuery& query)
+    {
+        if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
     }
 
     void database::make()
@@ -66,12 +79,6 @@ namespace nxi
         return queries_[static_cast<size_t>(pquery)];
     }
 
-    QSqlQuery database::query(const QString& str_query)
-    {
-        QSqlQuery query{ database_ };
-        if (!query.exec(str_query)) nxi_error("query error : {}", query.lastError().text());
-        return query;
-    }
     QSqlDatabase& database::get() { return database_; }
 
     //
@@ -100,6 +107,7 @@ namespace nxi
     {
         nxi::data::config::internal::make(*this);
         nxi::data::context::internal::make(*this);
+        nxi::data::cookie::internal::make(*this);
         nxi::data::module::internal::make(*this);
         nxi::data::navigation::internal::make(*this);
         nxi::data::page::internal::make(*this);
@@ -110,6 +118,7 @@ namespace nxi
     {
         nxi::data::config::internal::prepare(*this);
         nxi::data::context::internal::prepare(*this);
+        nxi::data::cookie::internal::prepare(*this);
         nxi::data::module::internal::prepare(*this);
         nxi::data::navigation::internal::prepare(*this);
         nxi::data::page::internal::prepare(*this);

@@ -125,8 +125,8 @@ namespace nxi::data::page::internal
 {
     void make(nxi::database& db)
     {
-        db.query(internal::str_table_page.data());
-        db.query(internal::str_table_page_arc.data());
+        db.exec(internal::str_table_page.data());
+        db.exec(internal::str_table_page_arc.data());
     }
 
     void prepare(nxi::database& db)

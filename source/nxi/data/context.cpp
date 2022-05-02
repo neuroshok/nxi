@@ -63,7 +63,7 @@ namespace nxi::data::context::internal
 {
     void make(nxi::database& db)
     {
-        db.query(internal::str_table_context.data());
+        db.exec(internal::str_table_context.data());
     }
 
     void prepare(nxi::database& db)

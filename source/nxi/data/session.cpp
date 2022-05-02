@@ -48,7 +48,7 @@ namespace nxi::data::session::internal
 {
     void make(nxi::database& db)
     {
-        db.query(internal::str_table.data());
+        db.exec(internal::str_table.data());
     }
 
     void prepare(nxi::database& db)
