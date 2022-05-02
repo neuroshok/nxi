@@ -13,4 +13,10 @@ namespace ui
     {
         if (level == JavaScriptConsoleMessageLevel::ErrorMessageLevel) nxi_error("[JS] {} - {}", line, message);
     }
+
+    bool web_engine_page::acceptNavigationRequest(const QUrl& url, QWebEnginePage::NavigationType type, bool is_mainframe)
+    {
+        return QWebEnginePage::acceptNavigationRequest(url, type, is_mainframe);
+
+    }
 } // ui

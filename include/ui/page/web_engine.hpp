@@ -12,6 +12,8 @@ namespace ui
     public:
         web_engine_page(QWebEngineProfile*, QObject* parent = nullptr);
 
+        virtual bool acceptNavigationRequest(const QUrl& url, QWebEnginePage::NavigationType type, bool is_mainframe) override;
+
     protected:
         void javaScriptConsoleMessage(QWebEnginePage::JavaScriptConsoleMessageLevel
             , const QString& message, int line, const QString& sourceID) override;
