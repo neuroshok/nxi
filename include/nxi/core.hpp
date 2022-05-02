@@ -17,7 +17,6 @@ namespace nxi
         void load();
         void quit() const;
 
-        nxi::config& config();
         nxi::database& global_database();
 
         nxi::session_system& session_system();
@@ -32,7 +31,6 @@ namespace nxi
 
     private:
         nxi::global_database global_database_;
-        std::unique_ptr<nxi::config> config_;
 
         nxi::session_system session_system_;
     };
