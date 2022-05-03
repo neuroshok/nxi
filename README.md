@@ -32,7 +32,7 @@
 **user-config.cmake**
 ```cmake
 if (NXI_TARGET_DESKTOP)
-    set(NXI_WINDOW_GENERIC ON) # user generic/platform windows
+    set(NXI_WINDOW_GENERIC ON) # use generic/platform windows
     set(NXI_CONSOLE ON) # display/hide the console
 
     module_build(nxi.module adk) # build the adk static module from *nxi.module* module pack
