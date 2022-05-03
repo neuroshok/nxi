@@ -24,7 +24,7 @@ namespace nxi
         //help
         nxi::command_data help;
         help.action = "help";
-        help.icon = ":/icon/help";
+        help.icon = "";
         help.description = "Display nxi help";
         help.function = [this](const nxi::values&) { session_.page_system().open<nxi::web_page>("https://github.com/neuroshok/nxi/wiki"); };
 
