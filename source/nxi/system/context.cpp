@@ -48,7 +48,11 @@ namespace nxi
 
         nxi_trace("{} contexts available", available_contexts_.size());
 
-        if (contexts_.empty()) add<nxi::contexts::command>();
+        if (contexts_.empty())
+        {
+            add<nxi::contexts::command>();
+            add<nxi::contexts::page>();
+        }
     }
 
     void context_system::add_available(const QString& id, unsigned int priority)
