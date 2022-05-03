@@ -20,6 +20,8 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
+option(NXI_WINDOW_GENERIC "Use generic window" ON)
+
 # user config file
 include(user-config.cmake OPTIONAL)
 
