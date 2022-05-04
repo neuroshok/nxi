@@ -23,6 +23,7 @@ namespace nxi
         bool audible = false;
         bool loaded = false;
         bool muted = false;
+        int session_id = 0;
 
         static page_data from_get(const nxi::result& result);
     };
@@ -58,6 +59,7 @@ namespace nxi::data::page::internal
         inline static constexpr nxi::field<4, int> renderer_type{};
         inline static constexpr nxi::field<5, bool> loaded{};
         inline static constexpr nxi::field<6, bool> muted{};
+        inline static constexpr nxi::field<7, int> session_id{};
     } page{};
 
     constexpr std::string_view str_table_page = R"__(
@@ -70,6 +72,7 @@ namespace nxi::data::page::internal
             `renderer_type` integer,
             `loaded` integer,
             `muted` integer,
+            `session_id` integer,
             PRIMARY KEY(`id`)
         )
     )__";

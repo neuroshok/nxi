@@ -11,6 +11,7 @@ namespace nxi
 
     struct session_data
     {
+        int id;
         QString name = "unknown_session";
         bool active = false;
     };
@@ -32,16 +33,18 @@ namespace nxi::data::session::internal
 
     inline static constexpr struct table
     {
-        nxi::field<0, QString> name{};
-        nxi::field<1, bool> active{};
+        nxi::field<0, int> id{};
+        nxi::field<1, QString> name{};
+        nxi::field<2, bool> active{};
     } window{};
 
     constexpr std::string_view str_table = R"__(
         CREATE TABLE `session`
         (
+            `id` integer,
             `name` text(24),
             `active` integer,
-            PRIMARY KEY(`name`)
+            PRIMARY KEY(`id`)
         )
         )__";
 } // nxi::data::session::internal

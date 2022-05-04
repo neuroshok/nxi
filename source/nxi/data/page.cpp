@@ -21,6 +21,7 @@ namespace nxi
         data.name = result[nxi_model.page.name];
         data.renderer_type = static_cast<nxi::renderer_type>(result[nxi_model.page.renderer_type]);
         data.type = static_cast<nxi::page_type>(result[nxi_model.page.type]);
+        data.session_id = result[nxi_model.page.session_id];
         return data;
     }
 } // nxi
@@ -36,6 +37,7 @@ namespace nxi::data::page
         query.bindValue(3, static_cast<int>(page.renderer_type()));
         query.bindValue(4, page.is_loaded());
         query.bindValue(5, page.is_muted());
+        query.bindValue(6, page.session_id());
         if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
         page.id_ = query.lastInsertId().toInt();
         return page.id();
@@ -93,7 +95,8 @@ namespace nxi::data::page
         query.bindValue(1, page.command());
         query.bindValue(2, page.is_loaded());
         query.bindValue(3, page.is_muted());
-        query.bindValue(4, page.id());
+        query.bindValue(4, page.session_id());
+        query.bindValue(5, page.id());
         if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
     }
 
@@ -131,14 +134,14 @@ namespace nxi::data::page::internal
 
     void prepare(nxi::database& db)
     {
-        db.prepare(prepared_query::add_page, "INSERT INTO page(name, command, type, renderer_type, loaded, muted) VALUES(?, ?, ?, ?, ?, ?)");
+        db.prepare(prepared_query::add_page, "INSERT INTO page(name, command, type, renderer_type, loaded, muted, session_id) VALUES(?, ?, ?, ?, ?, ?, ?)");
         db.prepare(prepared_query::del_page, "DELETE FROM page WHERE id = ?");
         db.prepare(prepared_query::count_page, "SELECT COUNT(id) FROM page");
         db.prepare(prepared_query::get_page, "SELECT * FROM page");
         db.prepare(prepared_query::get_page_id, "SELECT id, name, command FROM page WHERE page.id = ?");
         db.prepare(prepared_query::get_page_name, "SELECT id, name, command FROM page WHERE page.name = ?");
         db.prepare(prepared_query::set_page_loaded, "UPDATE page SET loaded = ? WHERE id = ?");
-        db.prepare(prepared_query::update_page, "UPDATE page SET name = ?, command = ?, loaded = ?, muted = ? WHERE id = ?");
+        db.prepare(prepared_query::update_page, "UPDATE page SET name = ?, command = ?, loaded = ?, muted = ?, session_id = ? WHERE id = ?");
 
         db.prepare(prepared_query::add_page_arc, "INSERT INTO page_arc(source_id, target_id) VALUES(?, ?)");
         db.prepare(prepared_query::del_page_arc, "DELETE FROM page_arc WHERE source_id = $1 OR target_id = $1");

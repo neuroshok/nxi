@@ -22,6 +22,7 @@ namespace nxi
         while(result.next())
         {
             nxi::session_data data;
+            data.id = result[nxi_model.session.id];
             data.name = result[nxi_model.session.name];
             data.active = result[nxi_model.session.active];
             sessions_.emplace_back( std::make_unique<nxi::session>(nxi_core_, std::move(data)) );
@@ -31,7 +32,7 @@ namespace nxi
             emit event_add(session);
             if (session.is_active()) load(session);
         }
-        if (sessions_.size() == 0) add({ "default", true });
+        if (sessions_.size() == 0) add({ 0, "default", true });
 
         emit event_load();
     }
@@ -42,7 +43,7 @@ namespace nxi
         focus(session);
 
         session.load();
-        nxi::data::session::load_session(nxi_core_.global_database(), session.id());
+        nxi::data::session::load_session(nxi_core_.global_database(), session.name());
     }
 
     void session_system::load(const QString& session_id)
@@ -63,14 +64,14 @@ namespace nxi
 
     void session_system::add(const QString& session_id)
     {
-        add(nxi::session_data{ session_id, true });
+        add(nxi::session_data{ 0, session_id, true });
     }
 
     void session_system::del(const QString& session_id)
     {
         auto& session = get(session_id);
         unload(session_id);
-        nxi::data::session::del_session(nxi_core_.global_database(), session.id());
+        nxi::data::session::del_session(nxi_core_.global_database(), session.name());
         auto session_path = nxi::database::path + session_id;
 
         QDir dir(session_path);
@@ -85,12 +86,14 @@ namespace nxi
 
     void session_system::switch_focus(const QString& new_session_id)
     {
-        if (focus_->name() != new_session_id)
-        {
-            load(new_session_id);
-            focus_->unload();
-            //focus_->load();
-        }
+        focus(get(new_session_id));
+    }
+
+    nxi::session& session_system::get(int id)
+    {
+        auto session_it = std::find_if(sessions_.begin(), sessions_.end(), [id](auto&& s) { return s->id() == id; });
+        nxi_assert(session_it != sessions_.end());
+        return *session_it->get();
     }
 
     nxi::session& session_system::get(const QString& session_id)
@@ -118,7 +121,7 @@ namespace nxi
     {
         auto& session = get(session_id);
         session.unload();
-        nxi::data::session::load_session(session.database(), session.id());
+        nxi::data::session::load_session(session.database(), session.name());
         emit event_unload(session);
     }
 } // nxi

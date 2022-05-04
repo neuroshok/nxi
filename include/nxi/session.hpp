@@ -34,7 +34,7 @@ namespace nxi
 
         void error(const QString& message) const;
 
-        const QString& id() const;
+        int id() const;
         const QString& name() const;
         bool is_active() const;
 
@@ -58,7 +58,7 @@ namespace nxi
     private:
         nxi::core& nxi_core_;
 
-        QString id_;
+        int id_;
         QString name_;
         bool active_;
 

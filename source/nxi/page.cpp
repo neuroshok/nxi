@@ -21,6 +21,7 @@ namespace nxi
         , is_audible_{ std::move(data.audible) }
         , is_loaded_{ std::move(data.loaded) }
         , is_muted_{ std::move(data.muted) }
+        , session_id_{ std::move(data.session_id) }
     {}
 
     page::page(nds::node_ptr<nxi::page> node_ptr, page_system& ps, QString name, QString command, nxi::page_type type, nxi::renderer_type renderer_type)
@@ -76,6 +77,13 @@ namespace nxi
         else nxi_warning("property {} not found", name);
     }
 
+    void page::update_session(int id)
+    {
+        session_id_ = id;
+        nxi::data::page::update(page_system_.session_database_, *this);
+    }
+
+
     void page::update_mute(bool state)
     {
         is_muted_ = state;
@@ -122,6 +130,8 @@ namespace nxi
     const QString& page::command() const { return command_; }
     nxi::page_type page::type() const { return type_; }
     nxi::renderer_type page::renderer_type() const { return renderer_type_; }
+    int page::session_id() const { return session_id_; }
+
 
     bool page::is_audible() const { return is_audible_; }
     bool page::is_loaded() const { return is_loaded_; }
@@ -131,5 +141,4 @@ namespace nxi
 
     const QColor& page::color() const { return color_; }
     const QIcon& page::icon() const { return icon_; }
-
 } // nxi

@@ -23,6 +23,7 @@ namespace nxi
         void add(const QString& session_id);
         void del(const QString& session_id);
         void focus(nxi::session&);
+        nxi::session& get(int id);
         nxi::session& get(const QString& session_id);
         void load();
         void load(nxi::session&);
@@ -38,7 +39,7 @@ namespace nxi
         void event_load(); // session_system loaded
         void event_add(nxi::session&);
         void event_unload(nxi::session&);
-        void event_focus_update(const nxi::session&);
+        void event_focus_update(nxi::session&);
 
     private:
         nxi::core& nxi_core_;

@@ -55,7 +55,7 @@ namespace nxi::data::session::internal
     {
         db.prepare(prepared_query::add_session, "INSERT INTO session(name, active) VALUES(?, 1)");
         db.prepare(prepared_query::del_session, "DELETE FROM session WHERE name = ?");
-        db.prepare(prepared_query::get_sessions, "SELECT name, active FROM session");
+        db.prepare(prepared_query::get_sessions, "SELECT id, name, active FROM session");
         db.prepare(prepared_query::load_session, "UPDATE session SET active = 1 WHERE name = ?");
         db.prepare(prepared_query::unload_session, "UPDATE session SET active = 0 WHERE name = ?");
     }

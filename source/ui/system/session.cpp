@@ -21,7 +21,7 @@ namespace ui
 
     session::~session() { nxi_trace("ui::session {} deleted", id()); }
 
-    const QString& session::id() const { return nxi_session_.id(); }
+    int session::id() const { return nxi_session_.id(); }
 
     nxi::core& session::nxi_core() { return nxi_core_; }
     ui::core& session::ui_core() { return ui_core_; }
@@ -58,7 +58,7 @@ namespace ui
 
     ui::session& session_system::focus() { return *focus_; }
 
-    ui::session& session_system::get(const QString& session_id)
+    ui::session& session_system::get(int session_id)
     {
         auto session_it = std::find_if(sessions_.begin(), sessions_.end(), [&session_id](auto&& s) { return s->id() == session_id; });
         nxi_assert(session_it != sessions_.end());

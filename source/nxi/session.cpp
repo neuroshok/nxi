@@ -7,7 +7,7 @@ namespace nxi
 {
     session::session(nxi::core& core, nxi::session_data data)
         : nxi_core_{ core }
-        , id_{ data.name }
+        , id_{ data.id }
         , name_{ std::move(data.name) }
         , active_{ std::move(data.active) }
         , core_database_{ name_ }
@@ -50,7 +50,7 @@ namespace nxi
         emit event_error(message);
     }
 
-    const QString& session::id() const { return id_; }
+    int session::id() const { return id_; }
     const QString& session::name() const { return name_; }
     bool session::is_active() const { return active_; }
 

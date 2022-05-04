@@ -25,7 +25,7 @@ namespace ui
         session(ui::core& ui_core, nxi::session&);
         ~session();
 
-        const QString& id() const;
+        int id() const;
 
         nxi::core& nxi_core();
         nxi::session& nxi_session();
@@ -53,7 +53,7 @@ namespace ui
         session_system(ui::core&);
 
         ui::session& focus();
-        ui::session& get(const QString& session_id);
+        ui::session& get(int session_id);
 
     private:
         ui::core& ui_core_;
