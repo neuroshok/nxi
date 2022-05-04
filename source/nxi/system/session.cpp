@@ -5,8 +5,7 @@
 #include <nxi/database.hpp>
 #include <nxi/database/model.hpp>
 #include <nxi/log.hpp>
-
-#include <QDir>
+#include <nxi/type.hpp>
 
 namespace nxi
 {
@@ -25,25 +24,26 @@ namespace nxi
             data.id = result[nxi_model.session.id];
             data.name = result[nxi_model.session.name];
             data.active = result[nxi_model.session.active];
-            sessions_.emplace_back( std::make_unique<nxi::session>(nxi_core_, std::move(data)) );
+            //sessions_.emplace_back( std::make_unique<nxi::user_session>(nxi_core_, std::move(data)) );
 
             auto& session = *sessions_.back();
             focus_ = stz::make_observer(&session);
             emit event_add(session);
             if (session.is_active()) load(session);
         }
-        if (sessions_.size() == 0) add({ 0, "default", true });
+
+        if (sessions_.size() == 0) add({ 0, "nxi", true });
 
         emit event_load();
     }
 
-    void session_system::load(nxi::session& session)
+    void session_system::load(nxi::user_session& session)
     {
         nxi_trace("load session {}", session.name());
         focus(session);
 
         session.load();
-        nxi::data::session::load_session(nxi_core_.global_database(), session.name());
+        nxi::data::session::load_session(nxi_core_.global_database(), session.id());
     }
 
     void session_system::load(const QString& session_id)
@@ -54,8 +54,8 @@ namespace nxi
     void session_system::add(nxi::session_data data)
     {
         nxi_trace("");
-        nxi::data::session::add_session(nxi_core_.global_database(), data.name);
-        sessions_.emplace_back( std::make_unique<nxi::session>(nxi_core_, std::move(data)) );
+        nxi::data::session::add_session(nxi_core_.global_database(), data);
+        //sessions_.emplace_back( std::make_unique<nxi::user_session>(nxi_core_, std::move(data)) );
         auto& session = *sessions_.back();
         focus_ = stz::make_observer(&session);
         emit event_add(session);
@@ -71,14 +71,12 @@ namespace nxi
     {
         auto& session = get(session_id);
         unload(session_id);
-        nxi::data::session::del_session(nxi_core_.global_database(), session.name());
+        nxi::data::session::del_session(nxi_core_.global_database(), session.id());
         auto session_path = nxi::database::path + session_id;
 
-        QDir dir(session_path);
-        dir.removeRecursively();
     }
 
-    void session_system::focus(nxi::session& session)
+    void session_system::focus(nxi::user_session& session)
     {
         focus_ = stz::make_observer(&session);
         emit event_focus_update(*focus_);
@@ -89,20 +87,20 @@ namespace nxi
         focus(get(new_session_id));
     }
 
-    nxi::session& session_system::get(int id)
+    nxi::user_session& session_system::get(int id)
     {
         auto session_it = std::find_if(sessions_.begin(), sessions_.end(), [id](auto&& s) { return s->id() == id; });
         nxi_assert(session_it != sessions_.end());
         return *session_it->get();
     }
 
-    nxi::session& session_system::get(const QString& session_id)
+    nxi::user_session& session_system::get(const QString& session_id)
     {
         auto session_it = std::find_if(sessions_.begin(), sessions_.end(), [&session_id](auto&& s) { return s->name() == session_id; });
         nxi_assert(session_it != sessions_.end());
         return *session_it->get();
     }
-    stz::observer_ptr<nxi::session> session_system::focus()
+    stz::observer_ptr<nxi::user_session> session_system::focus()
     {
         nxi_assert(focus_ != nullptr);
         return focus_;
@@ -121,7 +119,7 @@ namespace nxi
     {
         auto& session = get(session_id);
         session.unload();
-        nxi::data::session::load_session(session.database(), session.name());
+        nxi::data::session::load_session(session.database(), session.id());
         emit event_unload(session);
     }
 } // nxi

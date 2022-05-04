@@ -1,10 +1,11 @@
 #ifndef INCLUDE_NXI_SYSTEM_SESSION_HPP_NXI
 #define INCLUDE_NXI_SYSTEM_SESSION_HPP_NXI
 
-#include <nxi/session.hpp>
+#include <nxi/data/session.hpp>
+#include <nxi/user_session.hpp>
 #include <stz/observer_ptr.hpp>
-#include <memory>
 #include <unordered_map>
+#include <memory>
 #include <QObject>
 
 namespace nxi
@@ -22,29 +23,30 @@ namespace nxi
         void add(nxi::session_data);
         void add(const QString& session_id);
         void del(const QString& session_id);
-        void focus(nxi::session&);
-        nxi::session& get(int id);
-        nxi::session& get(const QString& session_id);
+        void focus(nxi::user_session&);
+        nxi::user_session& get(int id);
+        nxi::user_session& get(const QString& session_id);
         void load();
-        void load(nxi::session&);
+        void load(nxi::user_session&);
         void load(const QString& session_id);
         void unload();
         void unload(const QString& session_id);
 
         void switch_focus(const QString& new_session_id);
 
-        stz::observer_ptr<nxi::session> focus();
+        stz::observer_ptr<nxi::user_session> focus();
 
     signals:
         void event_load(); // session_system loaded
-        void event_add(nxi::session&);
-        void event_unload(nxi::session&);
-        void event_focus_update(nxi::session&);
+        void event_add(nxi::user_session&);
+        void event_unload(nxi::user_session&);
+        void event_focus_update(nxi::user_session&);
 
     private:
         nxi::core& nxi_core_;
-        stz::observer_ptr<nxi::session> focus_;
-        std::vector<std::unique_ptr<nxi::session>> sessions_;
+        stz::observer_ptr<nxi::user_session> focus_;
+        std::vector<std::unique_ptr<nxi::user_session>> sessions_;
+        std::vector<std::unique_ptr<nxi::user_session>> user_sessions_;
     };
 } // nxi
 

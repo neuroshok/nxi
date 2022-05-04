@@ -11,7 +11,7 @@
 
 namespace ui::interfaces::light
 {
-    control_bar::control_bar(ui::session& session, ui::window* window)
+    control_bar::control_bar(ui::user_session& session, ui::window* window)
         : ui::interface("control_bar", window)
         , session_{ session }
     {

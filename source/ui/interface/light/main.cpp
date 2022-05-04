@@ -26,7 +26,8 @@
 #include <QtGui/QPainter>
 #include <ui/command/input.hpp>
 #include <ui/command/menu.hpp>
-#include <ui/system/session.hpp>
+#include <ui/system/user.hpp>
+#include <nxi/system/interface.hpp>
 #include <ui/window.hpp>
 #include <ui/interface/standard/window_control.hpp>
 #include <nxi/style_data.hpp>
@@ -36,7 +37,7 @@
 
 namespace ui::interfaces::light
 {
-    main::main(ui::session& session, ui::window* window)
+    main::main(ui::user_session& session, ui::window* window)
         : ui::main_interface{ window }
         , session_{ session }
     {
@@ -70,6 +71,26 @@ namespace ui::interfaces::light
 
         setFocusPolicy(Qt::ClickFocus);
 
+        auto session_info_ = new QLabel{ this };
+
+
+
+        connect(&session_.nxi_session().nxi_core(), &nxi::core::event_load, [session_info_, this]()
+        {
+
+            connect(&session_.nxi_session().nxi_core().session_system(), &nxi::session_system::event_focus_update, [session_info_, this](nxi::user_session& session)
+            {
+                                /*
+                session.interface_system().style().update(this);
+                session_info_->setText(session.name() + "-" + session.config().browser.interface.style.get());*/
+            });
+        });
+
+
+
+
+
+
         connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_reset, [this]()
         {
             command_menu_->hide();
@@ -82,7 +103,7 @@ namespace ui::interfaces::light
             command_menu_->exec();
         });
 
-        connect(&session_.nxi_session(), &nxi::session::event_error, this, [](const QString& message)
+        connect(&session_.nxi_session(), &nxi::user_session::event_error, this, [](const QString& message)
         {
             auto* error = new QMessageBox;
             error->setAttribute(Qt::WA_DeleteOnClose, true);

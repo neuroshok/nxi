@@ -1,7 +1,7 @@
 #include <nxi/module/api/command_system.hpp>
 
-#include <nxi/session.hpp>
 #include <nxi/system/command.hpp>
+#include <nxi/user_session.hpp>
 
 namespace nxi::api
 {

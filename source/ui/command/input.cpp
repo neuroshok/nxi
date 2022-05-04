@@ -17,7 +17,7 @@
 
 namespace ui
 {
-    command_input::command_input(ui::session& session, QWidget* parent)
+    command_input::command_input(ui::user_session& session, QWidget* parent)
         : QLineEdit(parent)
         , session_{ session }
     {

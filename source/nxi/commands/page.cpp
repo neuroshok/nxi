@@ -17,7 +17,11 @@ namespace nxi
         page_new.context_id = nxi::context::id<nxi::contexts::command>();
         page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }, nxi::context::id<nxi::contexts::page>() };
         //page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }, nxi::contexts::page };
-        page_new.function = [this](const nxi::values&){ session_.page_system().open<nxi::web_page>(); };
+        page_new.function = [this](const nxi::values&) {
+            core_.page_system().open<nxi::web_page>();
+            //auto p = core_.page_system().focus();
+            //p->update_session(core_.session_system().focus()->id());
+        };
         add(std::move(page_new));
 
         // open
@@ -27,7 +31,7 @@ namespace nxi
         page_open.function = [this](const nxi::values& params)
         {
             auto url = params.get(0);
-            session_.page_system().open<nxi::web_page>(url);
+            core_.page_system().open<nxi::web_page>(url);
         };
         page_open.parameters = {
         { "command", [](nxi::suggestion_vector& suggestion)
@@ -54,12 +58,12 @@ namespace nxi
                 return;
             }
             auto id = params.get(0).toUInt();
-            session_.page_system().focus(id);
+            core_.page_system().focus(id);
         };
         page_switch.parameters = {
         { "id", [this](nxi::suggestion_vector& suggestion)
             {
-                for (auto& page : session_.page_system().pages())
+                for (auto& page : core_.page_system().pages())
                 {
                     suggestion.push_back(page);
                 }
@@ -75,7 +79,7 @@ namespace nxi
         page_close.shortcut = {{ Qt::Key_Control }, { Qt::Key_W, Qt::Key_X }};
         page_close.function = [this](const nxi::values& params)
         {
-            session_.page_system().close_focus();
+            core_.page_system().close_focus();
         };
         add(std::move(page_close));
 
@@ -86,7 +90,7 @@ namespace nxi
         fullscreen.shortcut = {{ Qt::Key_Control }, { Qt::Key_Enter }};
         fullscreen.function = [this](const nxi::values& params)
         {
-            //session_.page_system().focus()->run("document.documentElement.requestFullscreen();");
+            //core_.page_system().focus()->run("document.documentElement.requestFullscreen();");
         };
         add(std::move(fullscreen));
 
@@ -97,7 +101,7 @@ namespace nxi
         page_run_script.function = [this](const nxi::values& params)
         {
             //nxi_expect(params.size() == 1);
-            session_.page_system().focus()->run_script(params.get(0));
+            core_.page_system().focus()->run_script(params.get(0));
         };
         page_run_script.parameters = {{ "script" }};
         add(std::move(page_run_script));
@@ -109,7 +113,7 @@ namespace nxi
         links.function = [this](const nxi::values& params)
         {
             //nxi_expect(params.size() == 1);
-            session_.error(params.get(0));
+            //core_.error(params.get(0));
         };
         links.parameters = {
         { "link", [this](nxi::suggestion_vector& suggestion)
@@ -127,7 +131,7 @@ namespace nxi
                 })();
                 )__";
 
-                static_cast<nxi::web_page&>(*session_.page_system().focus()).run_script(script, [&suggestion](const QVariant& variant)
+                static_cast<nxi::web_page&>(*core_.page_system().focus()).run_script(script, [&suggestion](const QVariant& variant)
                 {
                     for (const auto& item : variant.toList())
                     {
@@ -135,7 +139,7 @@ namespace nxi
                     }
                     emit suggestion.event_update(stz::make_observer(&suggestion));
 
-                    //session_.command_system().command_input().suggest(vector);
+                    //core_.command_system().command_input().suggest(vector);
                 });
             }
         }};
@@ -148,7 +152,7 @@ namespace nxi
         navigate_next.shortcut = {{ Qt::Key_Alt }, { Qt::Key_Right }};
         navigate_next.function = [this](const nxi::values& params)
         {
-            session_.navigation_system().next_page_command();
+            core_.navigation_system().next_page_command();
         };
         add(std::move(navigate_next));
 
@@ -159,7 +163,7 @@ namespace nxi
         navigate_previous.shortcut = {{ Qt::Key_Alt }, { Qt::Key_Left }};
         navigate_previous.function = [this](const nxi::values& params)
         {
-            session_.navigation_system().previous_page_command();
+            core_.navigation_system().previous_page_command();
         };
         add(std::move(navigate_previous));
 
@@ -171,7 +175,7 @@ namespace nxi
         page_set_property.function = [this](const nxi::values& values)
         {
             nxi_assert(values.size() == 2);
-            session_.page_system().focus()->update_property(values.get(0), values.get(1));
+            core_.page_system().focus()->update_property(values.get(0), values.get(1));
         };
 
         page_set_property.parameters = {

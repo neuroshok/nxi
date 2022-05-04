@@ -12,7 +12,7 @@
 
 namespace ui
 {
-    window_system::window_system(ui::session& session)
+    window_system::window_system(ui::user_session& session)
         : session_{ session }
     {
         QObject::connect(&session_.nxi_session().window_system(), &nxi::window_system::event_add, [this](const nxi::window_data& window)

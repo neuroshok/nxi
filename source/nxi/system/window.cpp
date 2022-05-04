@@ -4,7 +4,7 @@
 #include <nxi/data/window.hpp>
 #include <nxi/database/model.hpp>
 #include <nxi/log.hpp>
-#include <nxi/session.hpp>
+#include <nxi/user_session.hpp>
 
 #include <QGuiApplication>
 #include <QRect>
@@ -12,7 +12,7 @@
 
 namespace nxi
 {
-    window_system::window_system(nxi::session& session) :
+    window_system::window_system(nxi::user_session& session) :
         session_{ session }
     {}
 

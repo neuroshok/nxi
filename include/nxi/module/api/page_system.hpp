@@ -1,7 +1,7 @@
 #ifndef INCLUDE_NXI_MODULE_API_PAGE_SYSTEM_HPP_NXI
 #define INCLUDE_NXI_MODULE_API_PAGE_SYSTEM_HPP_NXI
 
-namespace nxi { class session; }
+namespace nxi { class user_session; }
 
 #include <nxi/log.hpp>
 
@@ -20,7 +20,7 @@ namespace nxi::api
 
         Q_OBJECT
     public:
-        page_system(nxi::session& session)
+        page_system(nxi::user_session& session)
             : session_{ session }
         {}
 
@@ -32,7 +32,7 @@ namespace nxi::api
         void js_callback(const QString&, QVariantMap);
 
     private:
-        nxi::session& session_;
+        nxi::user_session& session_;
 
         std::vector<QString> focus_callbacks_;
     };

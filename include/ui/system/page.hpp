@@ -19,14 +19,14 @@ namespace nxi { class page; }
 
 namespace ui
 {
-    class session;
+    class user_session;
     class page;
 
     class page_system : public QObject
     {
         Q_OBJECT
     public:
-        page_system(ui::session&);
+        page_system(ui::user_session&);
         ~page_system();
 
         QWidget* get(const QString& page_path);
@@ -45,7 +45,7 @@ namespace ui
         }
 
     private:
-        ui::session& session_;
+        ui::user_session& session_;
         QHash<QString, QWidget*> widget_pages_;
         std::unordered_map<nxi::page_id, QPointer<ui::page>> pages_;
     };

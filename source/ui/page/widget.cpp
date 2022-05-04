@@ -4,13 +4,15 @@
 
 #include <nxi/page/custom.hpp>
 
+
+#include <ui/user_session.hpp>
 #include <ui/core.hpp>
 #include <ui/renderer/widget.hpp>
 #include <nxw/hbox_layout.hpp>
 
 namespace ui
 {
-    widget_page::widget_page(ui::session& session, nxi::custom_page& page)
+    widget_page::widget_page(ui::user_session& session, nxi::custom_page& page)
         : ui::page{ page }
         , page_{ page }
         , session_{ session }

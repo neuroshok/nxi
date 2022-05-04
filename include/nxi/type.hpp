@@ -31,7 +31,11 @@ namespace nxi
         web
         , widget
     };
-
+    enum class session_type
+    {
+        basic
+        , user
+    };
 } // nxi
 
 #endif // NXI_TYPE_H_NXI

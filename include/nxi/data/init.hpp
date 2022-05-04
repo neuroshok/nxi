@@ -3,6 +3,7 @@
 #ifdef MAKE_STRUCT
     #define init_open(Name) namespace nxi { class result; struct Name##_data {
     #define init_field(Index, Type, Name, SqlType) Type Name;
+    #define init_SQL(Data)
     #define init_close(Name) static Name##_data from_get(const nxi::result& result); }; } //nxi
 
     #undef MAKE_STRUCT
@@ -15,6 +16,7 @@
         inline static constexpr struct table_##Name## {
 
     #define init_field(Index, Type, Name, SqlType) inline static constexpr nxi::field<Index, Type> Name{};
+    #define init_SQL(Data)
     #define init_close(Name)  } Name##_data{}; } // nxi::data::##Name##::internal
 
     #undef MAKE_MODEL
@@ -25,7 +27,8 @@
     constexpr std::string_view str_table_##Name## = "CREATE TABLE `" #Name "` ("
 
     #define init_field(Index, Type, Name, SqlType) "`" #Name "` " SqlType ","
-    #define init_close(Name) MAKE_SQL_EXTRA "PRIMARY KEY(`id`) )"; } // nxi::data::##Name##::internal
+    #define init_SQL(Data) Data
+    #define init_close(Name) "PRIMARY KEY(`id`) )"; } // nxi::data::##Name##::internal
 
     #undef MAKE_TABLE
 #endif

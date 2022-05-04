@@ -16,7 +16,7 @@
 
 namespace ui::interfaces::standard
 {
-    page_bar::page_bar(ui::session& session, ui::window* window) :
+    page_bar::page_bar(ui::user_session& session, ui::window* window) :
         ui::interface("page_bar", window)
         , session_{ session }
     {

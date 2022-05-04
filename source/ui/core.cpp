@@ -24,7 +24,7 @@ namespace ui
     core::core(QApplication& app, nxi::core& nxi_core) :
         app_{ app }
         , nxi_core_{ nxi_core }
-        , session_system_{ *this }
+        , user_system_{ *this }
     {
         // systray
         systray_ = new QSystemTrayIcon;

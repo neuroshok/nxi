@@ -6,12 +6,12 @@
 
 namespace nxi
 {
-    class session;
+    class user_session;
 
     class web_session : public QWebEngineProfile
     {
     public:
-        web_session(nxi::session&, QObject* = nullptr);
+        web_session(nxi::user_session&, QObject* = nullptr);
 
         void load();
 
@@ -20,7 +20,7 @@ namespace nxi
         void import_cookies(const QString& database_path);
 
     private:
-        nxi::session& session_;
+        nxi::user_session& session_;
 
         QSqlDatabase cookie_db_;
     };

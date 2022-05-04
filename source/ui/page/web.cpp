@@ -25,7 +25,7 @@
 
 namespace ui
 {
-    web_page::web_page(ui::session& session, nxi::web_page& page) :
+    web_page::web_page(ui::user_session& session, nxi::web_page& page) :
         ui::page{ page }
         , page_{ page }
         , session_{ session }

@@ -30,7 +30,7 @@
 #include "qt3dwindow.h"
 #include "qorbitcameracontroller.h"
 
-#include <ui/system/session.hpp>
+#include <ui/system/user.hpp>
 #include <nxi/core.hpp>
 #include <nxi/config.hpp>
 #include <QtWidgets/QHBoxLayout>
@@ -41,7 +41,7 @@ namespace ui::views
     class aboutgl : public QWidget
     {
     public:
-        aboutgl(ui::session& session) : session_{ session }
+        aboutgl(ui::user_session& session) : session_{ session }
         {
             /*
             Qt3DExtras::Qt3DWindow* view = new Qt3DExtras::Qt3DWindow();
@@ -112,7 +112,7 @@ namespace ui::views
         }
 
     private:
-        ui::session& session_;
+        ui::user_session& session_;
 
     };
 } // nxi::views

@@ -24,9 +24,9 @@ namespace nds::encoders
 
 namespace nxi
 {
-    command_system::command_system(nxi::session& session)
+    command_system::command_system(nxi::user_session& session)
         : session_{ session }
-        , command_initializer_{ session }
+        , command_initializer_{ session.nxi_core() }
         , command_input_{ session }
         , root_{ nullptr }
     {}

@@ -19,7 +19,7 @@
 
 namespace nxi
 {
-    module_system::module_system(nxi::session& session) :
+    module_system::module_system(nxi::user_session& session) :
         session_{ session }
         , static_modules_{ session_ }
         , web_channel_{ new QWebChannel{ this } }

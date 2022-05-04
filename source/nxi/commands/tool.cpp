@@ -18,7 +18,7 @@ namespace nxi
         import.function = [this](const nxi::values& values)
         {
             nxi_assert(values.size() == 1);
-            session_.web_session().import_cookies(values.get(0));
+            core_.session_system().focus()->web_session().import_cookies(values.get(0));
         };
         import.parameters = {{ "path" }};
 

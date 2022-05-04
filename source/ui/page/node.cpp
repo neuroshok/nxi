@@ -18,7 +18,7 @@
 
 namespace ui
 {
-    node_page::node_page(ui::session& session, nds::node_ptr<const nxi::page> page)
+    node_page::node_page(ui::user_session& session, nds::node_ptr<const nxi::page> page)
         : ui::page{ const_cast<nxi::page&>(*page) } // tmp
         , page_{ std::move(page) }
         , session_{ session }

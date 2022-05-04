@@ -13,7 +13,7 @@
 namespace nxi
 {
 
-    command_input::command_input(nxi::session& session)
+    command_input::command_input(nxi::user_session& session)
         : session_{ session }
         , mode_{ mode_type::input }
         , state_{ state::search }

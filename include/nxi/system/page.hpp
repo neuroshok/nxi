@@ -18,7 +18,7 @@ namespace nxi
     class page;
     class page_node;
     class web_page;
-    class session;
+    class user_session;
 
     class page_system : public QObject
     {
@@ -29,7 +29,7 @@ namespace nxi
         using page_ptr = nds::node_ptr<nxi::page>;
 
     public:
-        page_system(nxi::session&, nxi::database&);
+        page_system(nxi::user_session&, nxi::database&);
         page_system(const page_system&) = delete;
         page_system& operator=(const page_system&) = delete;
 
@@ -85,7 +85,7 @@ namespace nxi
         void event_update_root(page_ptr);
 
     public:
-        nxi::session& session_;
+        nxi::user_session& session_;
         nxi::database& session_database_;
         nds::graph<nxi::page> graph_;
 

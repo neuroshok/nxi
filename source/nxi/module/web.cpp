@@ -22,7 +22,7 @@
 namespace nxi
 {
 
-    web_module::web_module(nxi::session& session, const QString& name)
+    web_module::web_module(nxi::user_session& session, const QString& name)
         : module(name, module_type::web)
         , session_{ session }
         , manifest_ { name }

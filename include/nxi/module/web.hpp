@@ -10,7 +10,7 @@
 
 namespace nxi
 {
-    class session;
+    class user_session;
 
     class web_module : public module
     {
@@ -49,7 +49,7 @@ namespace nxi
         };
 
     public:
-        web_module(nxi::session&, const QString& name);
+        web_module(nxi::user_session&, const QString& name);
         void init_scripts();
 
         void on_load() override;
@@ -59,7 +59,7 @@ namespace nxi
         auto& browser_action() const { return browser_action_; }
 
     private:
-        nxi::session& session_;
+        nxi::user_session& session_;
 
         w3c::manifest manifest_;
         QHash<QString, QWebEngineScript> scripts_;

@@ -10,7 +10,7 @@
 
 namespace ui::views
 {
-    config::config(ui::session& session)
+    config::config(ui::user_session& session)
         : session_{ session }
     {
         connect(&session.nxi_core(), &nxi::core::event_load, [ this]

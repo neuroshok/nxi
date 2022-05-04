@@ -35,6 +35,9 @@ namespace nxi
         // session
         add_session, del_session, get_sessions, load_session, unload_session,
 
+        // user
+        add_user, del_user, get_users, load_user, unload_user,
+
         // window
         add_window, get_windows, move_window,
         get_config_value, set_config_value,

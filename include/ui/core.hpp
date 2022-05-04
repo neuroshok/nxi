@@ -2,7 +2,7 @@
 #define UI_CORE_H_NXI
 
 #include <ui/system/page.hpp>
-#include <ui/system/session.hpp>
+#include <ui/system/user.hpp>
 
 #include <QWidget>
 
@@ -32,13 +32,13 @@ namespace ui
         void quit();
 
         nxi::core& nxi_core();
-        ui::session_system& session_system();
+        ui::user_system& user_system();
 
     private:
         QApplication& app_;
         nxi::core& nxi_core_;
 
-        ui::session_system session_system_;
+        ui::user_system user_system_;
 
         QSystemTrayIcon* systray_;
     };

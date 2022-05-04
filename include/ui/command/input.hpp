@@ -21,7 +21,7 @@ namespace nxi { class style; }
 namespace ui
 {
     class command_menu;
-    class session;
+    class user_session;
 
     class command_input : public QLineEdit
     {
@@ -38,7 +38,7 @@ namespace ui
         } style_data;
         static void style_update(ui::command_input*);
 
-        command_input(ui::session& ui_core, QWidget* parent);
+        command_input(ui::user_session& ui_core, QWidget* parent);
 
         void resizeEvent(QResizeEvent* event) override;
         void keyPressEvent(QKeyEvent* event) override;
@@ -64,7 +64,7 @@ namespace ui
         nxi::command_input& nxi_input();
 
     private:
-        ui::session& session_;
+        ui::user_session& session_;
 
         bool first_focus_ = true;
         QPoint mouse_press_origin_;

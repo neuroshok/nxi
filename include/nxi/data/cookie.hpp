@@ -8,7 +8,6 @@
 #include "cookie_struct.hpp"
 
 #define MAKE_TABLE
-#define MAKE_SQL_EXTRA "CONSTRAINT `unique_cookie` UNIQUE(`name`,`domain`,`path`),"
 #include "cookie_struct.hpp"
 
 #define MAKE_MODEL

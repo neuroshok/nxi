@@ -3,7 +3,7 @@
 #include <nxi/data/context.hpp>
 #include <nxi/database.hpp>
 #include <nxi/database/result.hpp>
-#include <nxi/session.hpp>
+#include <nxi/user_session.hpp>
 
 #include <stz/observer_ptr.hpp>
 #include <QDebug>
@@ -18,7 +18,7 @@
 
 namespace nxi
 {
-    context_system::context_system(nxi::session& session)
+    context_system::context_system(nxi::user_session& session)
         : session_{ session }
         , session_database_{ session_.database() }
     {}

@@ -1,7 +1,7 @@
 #include <nxi/web_session.hpp>
 
-#include <nxi/session.hpp>
 #include <nxi/data/cookie.hpp>
+#include <nxi/user_session.hpp>
 
 #include <nxi/database/model.hpp>
 #include <QNetworkCookie>
@@ -14,7 +14,7 @@
 
 namespace nxi
 {
-    web_session::web_session(nxi::session& session, QObject* parent)
+    web_session::web_session(nxi::user_session& session, QObject* parent)
         : QWebEngineProfile(parent)
         , session_{ session }
     {}

@@ -15,7 +15,7 @@ class QKeyEvent;
 namespace nxi
 {
     class command_system;
-    class session;
+    class user_session;
 
     class command_input : public QObject
     {
@@ -35,7 +35,7 @@ namespace nxi
             command, page, history
         };*/
 
-        command_input(nxi::session&);
+        command_input(nxi::user_session&);
 
         void exec();
         void update(const QString& input, QKeyEvent*);
@@ -73,7 +73,7 @@ namespace nxi
         void event_shortcut_input_update(const QString&);
 
     private:
-        nxi::session& session_;
+        nxi::user_session& session_;
 
         QString input_;
         mode_type mode_;

@@ -15,13 +15,13 @@
 namespace nxi
 {
     class database;
-    class session;
+    class user_session;
 
     class context_system : public QObject
     {
         Q_OBJECT
     public:
-        context_system(nxi::session&);
+        context_system(nxi::user_session&);
         context_system(const context_system&) = delete;
         context_system& operator=(const context_system&) = delete;
 
@@ -108,7 +108,7 @@ namespace nxi
         //void event_active_context_update(std::vector<stz::observer_ptr<const nxi::context>) const;
 
     private:
-        nxi::session& session_;
+        nxi::user_session& session_;
         nxi::database& session_database_;
 
         std::vector<std::unique_ptr<nxi::context>> contexts_;

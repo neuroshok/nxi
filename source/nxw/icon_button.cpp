@@ -4,16 +4,17 @@
 #include <nxi/core.hpp>
 #include <nxi/system/command.hpp>
 
-#include <ui/system/session.hpp>
+#include <ui/system/user.hpp>
+#include <ui/user_session.hpp>
 #include <ui/utility.hpp>
 
 namespace nxw
 {
-    icon_button::icon_button(ui::session& session, QWidget* parent, const QString& icon_path, QString str_command)
+    icon_button::icon_button(ui::user_session& session, QWidget* parent, const QString& icon_path, QString str_command)
         : icon_button(session, parent, icon_path, std::move(str_command), style_type{})
     {}
 
-    icon_button::icon_button(ui::session& session, QWidget* parent, const QString& icon_path, QString str_command, icon_button::style_type custom_style)
+    icon_button::icon_button(ui::user_session& session, QWidget* parent, const QString& icon_path, QString str_command, icon_button::style_type custom_style)
         : session_{ session }
         , str_command_{ std::move(str_command) }
         , svg_renderer_{ new QSvgRenderer{ icon_path } }

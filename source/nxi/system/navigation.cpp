@@ -5,12 +5,12 @@
 
 #include <nxi/data/navigation.hpp>
 #include <nxi/page.hpp>
-#include <nxi/session.hpp>
 #include <nxi/system/page.hpp>
+#include <nxi/user_session.hpp>
 
 namespace nxi
 {
-    navigation_system::navigation_system(nxi::session& session)
+    navigation_system::navigation_system(nxi::user_session& session)
         : session_{ session }
         , recent_logs_cursor_{ 0 }
         , recent_logs_capacity_{ 3 + 1 }

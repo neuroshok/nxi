@@ -6,7 +6,7 @@
 #include <QLabel>
 #include <QFormLayout>
 
-#include <ui/system/session.hpp>
+#include <ui/system/user.hpp>
 #include <nxi/core.hpp>
 #include <nxi/config.hpp>
 #include <nxi/utility.hpp>
@@ -16,7 +16,7 @@ namespace ui::views
     class config : public QWidget
     {
     public:
-        config(ui::session& session);
+        config(ui::user_session& session);
 
         template<class T>
         void add_row(nxi::persistent<T>* persistent)
@@ -60,7 +60,7 @@ namespace ui::views
         }
 
     private:
-        ui::session& session_;
+        ui::user_session& session_;
 
         QFormLayout* form_;
     };

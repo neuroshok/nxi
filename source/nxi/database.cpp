@@ -7,6 +7,7 @@
 #include <nxi/data/navigation.hpp>
 #include <nxi/data/page.hpp>
 #include <nxi/data/session.hpp>
+#include <nxi/data/user.hpp>
 #include <nxi/data/window.hpp>
 #include <nxi/log.hpp>
 
@@ -60,10 +61,7 @@ namespace nxi
         if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
     }
 
-    void database::make()
-    {
-        nxi::data::session::internal::make(*this);
-    }
+    void database::make() {}
 
     void database::prepare_queries() {}
 
@@ -89,12 +87,12 @@ namespace nxi
 
     void global_database::make()
     {
-        nxi::data::session::internal::make(*this);
+        nxi::data::user::internal::make(*this);
     }
 
     void global_database::prepare_queries()
     {
-        nxi::data::session::internal::prepare(*this);
+        nxi::data::user::internal::prepare(*this);
     }
 
     //
@@ -111,6 +109,7 @@ namespace nxi
         nxi::data::module::internal::make(*this);
         nxi::data::navigation::internal::make(*this);
         nxi::data::page::internal::make(*this);
+        nxi::data::session::internal::make(*this);
         nxi::data::window::internal::make(*this);
     }
 
@@ -122,6 +121,7 @@ namespace nxi
         nxi::data::module::internal::prepare(*this);
         nxi::data::navigation::internal::prepare(*this);
         nxi::data::page::internal::prepare(*this);
+        nxi::data::session::internal::prepare(*this);
         nxi::data::window::internal::prepare(*this);
     }
 } // nxi

@@ -3,11 +3,11 @@
 
 #include <nxi/module/platform.hpp>
 
+#include <nxi/core.hpp>
 #include <nxi/database.hpp>
 #include <nxi/module.hpp>
-#include <nxi/core.hpp>
-#include <nxi/session.hpp>
 #include <nxi/type.hpp>
+#include <nxi/user_session.hpp>
 
 using Module_load_ptr = int(*)(nxi::core*);
 using Module_unload_ptr = int(*)(nxi::core*);
@@ -19,12 +19,12 @@ using Module_unload_ptr = int(*)(nxi::core*);
 
 namespace nxi
 {
-    class session;
+    class user_session;
 
     class dynamic_module : public module
     {
     public:
-      dynamic_module(nxi::session& session, const QString& name)
+      dynamic_module(nxi::user_session& session, const QString& name)
           : module(name, module_type::dynamic)
           , session_{ session }
           , name_{ name }
@@ -50,7 +50,7 @@ namespace nxi
       }
 
         QString name_;
-        nxi::session& session_;
+        nxi::user_session& session_;
     };
 } // nxi
 

@@ -13,14 +13,14 @@ class QWebChannel;
 
 namespace nxi
 {
-    class session;
+    class user_session;
     class web_page;
 
     class module_system : public QObject
     {
         Q_OBJECT
     public:
-        module_system(nxi::session&);
+        module_system(nxi::user_session&);
         module_system(const module_system&) = delete;
         void operator=(const module_system&) = delete;
 
@@ -33,7 +33,7 @@ namespace nxi
         QWebChannel* web_channel() const;
 
     private:
-        nxi::session& session_;
+        nxi::user_session& session_;
         std::vector<std::unique_ptr<nxi::module>> modules_;
         nxi::static_module_container static_modules_;
         QString js_api_;

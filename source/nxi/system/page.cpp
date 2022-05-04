@@ -4,7 +4,7 @@
 #include <nxi/core.hpp>
 #include <nxi/data/page.hpp>
 #include <nxi/database.hpp>
-#include <nxi/session.hpp>
+#include <nxi/user_session.hpp>
 
 #include <nxi/log.hpp>
 #include <nxi/page/custom.hpp>
@@ -14,7 +14,7 @@
 
 namespace nxi
 {
-    page_system::page_system(nxi::session& session, nxi::database& database)
+    page_system::page_system(nxi::user_session& session, nxi::database& database)
         : session_{ session }
         , session_database_{ database }
         , root_{ nullptr }
@@ -62,7 +62,7 @@ namespace nxi
                         emit page->event_load();
                         emit event_load(page);
                         // todo : use navigation system
-                        focus(page);
+                        //focus(page);
                     }
                     break;
                 }
@@ -181,6 +181,8 @@ namespace nxi
 
         if (focus_ && page == focus_) return;
         focus_ = page;
+
+        //session_.nxi_core().session_system().focus(session_.nxi_core().session_system().get(page->session_id()));
 
         if (!focus_->is_loaded()) load(focus_);
         emit focus_->event_focus();

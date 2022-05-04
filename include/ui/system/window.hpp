@@ -10,14 +10,14 @@ namespace nxi
 
 namespace ui
 {
-    class session;
+    class user_session;
     class window;
 
     class window_system : public QObject
     {
         Q_OBJECT
     public:
-        window_system(ui::session&);
+        window_system(ui::user_session&);
         ~window_system();
 
         void unload();
@@ -31,7 +31,7 @@ namespace ui
         size_t count() const;
 
     private:
-        ui::session& session_;
+        ui::user_session& session_;
 
         std::vector<ui::window*> m_windows;
         //std::vector<std::pair<int, ui::window*> m_windows_storage_id;

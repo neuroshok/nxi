@@ -10,12 +10,12 @@
 namespace nxi
 {
     class page;
-    class session;
+    class user_session;
 
     class navigation_system : public QObject
     {
     public:
-        navigation_system(nxi::session&);
+        navigation_system(nxi::user_session&);
         navigation_system(const navigation_system&) = delete;
         void operator=(const navigation_system&) = delete;
 
@@ -52,7 +52,7 @@ namespace nxi
     private:
         enum class load_source{ standard, from_previous, from_next };
 
-        nxi::session& session_;
+        nxi::user_session& session_;
 
         load_source load_source_;
         unsigned int recent_logs_cursor_;

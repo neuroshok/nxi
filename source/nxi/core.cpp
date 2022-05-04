@@ -10,6 +10,7 @@ namespace nxi
     core::core()
         : global_database_{}
         , session_system_{ *this }
+        , user_system_{ *this }
     {}
 
     void core::load()
@@ -18,7 +19,8 @@ namespace nxi
 
         global_database_.connect();
 
-        session_system_.load();
+        //session_system_.load();
+        user_system_.load();
         emit event_load();
     }
 
@@ -27,10 +29,16 @@ namespace nxi
         emit event_quit();
     }
 
-
     nxi::database& core::global_database() { return global_database_; }
 
     nxi::session_system& core::session_system() { return session_system_; }
+    nxi::user_system& core::user_system() { return user_system_; }
+
+    nxi::command_system& core::command_system() { return user_system_.focus()->command_system(); }
+    nxi::context_system& core::context_system() { return user_system_.focus()->context_system(); }
+    nxi::interface_system& core::interface_system() { return user_system_.focus()->interface_system(); }
+    nxi::navigation_system& core::navigation_system() { return user_system_.focus()->navigation_system(); }
+    nxi::page_system& core::page_system() { return user_system_.focus()->page_system(); }
 
     QString core::module_path()
     {

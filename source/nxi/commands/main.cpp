@@ -17,7 +17,7 @@ namespace nxi
         quit.icon = ":/icon/quit";
         quit.description = "Quit application";
         quit.shortcut = {{ Qt::Key_Control }, { Qt::Key_Q }};
-        quit.function = [this](const nxi::values&){ session_.nxi_core().quit(); };
+        quit.function = [this](const nxi::values&){ core_.quit(); };
 
         add(std::move(quit));
 
@@ -26,7 +26,7 @@ namespace nxi
         help.action = "help";
         help.icon = "";
         help.description = "Display nxi help";
-        help.function = [this](const nxi::values&) { session_.page_system().open<nxi::web_page>("https://github.com/neuroshok/nxi/wiki"); };
+        help.function = [this](const nxi::values&) { core_.page_system().open<nxi::web_page>("https://github.com/neuroshok/nxi/wiki"); };
 
         add(std::move(help));
      
@@ -34,7 +34,7 @@ namespace nxi
         // test
         add("test", [this](const nxi::values&){ qDebug() << "TEST PAGE"; });
         // about
-        add("about", [this](const nxi::values&){ session_.page_system().open_static("nxi/about"); });
+        add("about", [this](const nxi::values&){ core_.page_system().open_static("nxi/about"); });
 
         return node;
     }

@@ -5,12 +5,12 @@
 
 namespace nxi
 {
-	class session;
+	class user_session;
 
     class static_module_container
     {
     public:
-		explicit static_module_container(nxi::session& session) :
+		explicit static_module_container(nxi::user_session& session) :
 			session_{ session }
             @NXI_MODULE_STATIC_INIT@
 		{}
@@ -21,7 +21,7 @@ namespace nxi
 		}
 
     private:
-		nxi::session& session_;
+		nxi::user_session& session_;
 
         @NXI_MODULE_STATIC_MEMBER@
     };

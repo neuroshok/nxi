@@ -7,7 +7,7 @@
 
 namespace nxi
 {
-    interface_system::interface_system(nxi::session& session)
+    interface_system::interface_system(nxi::user_session& session)
          : session_{ session }
     {}
 

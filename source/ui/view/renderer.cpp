@@ -14,7 +14,7 @@
 
 namespace ui
 {
-    renderer_view::renderer_view(ui::session& session, QWidget* parent)
+    renderer_view::renderer_view(ui::user_session& session, QWidget* parent)
         : QWidget(parent)
         , session_{ session }
     {
