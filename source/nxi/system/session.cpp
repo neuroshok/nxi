@@ -87,6 +87,12 @@ namespace nxi
 
     nxi::session& session_system::get(int id)
     {
+        // todo default session id, should return the focused session ?
+        if (id == 0)
+        {
+            nxi_assert(!sessions_.empty());
+            return *sessions_[0];
+        }
         auto session_it = std::find_if(sessions_.begin(), sessions_.end(), [id](auto&& s) { return s->id() == id; });
         nxi_assert(session_it != sessions_.end());
         return *session_it->get();
