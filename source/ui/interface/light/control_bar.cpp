@@ -10,6 +10,9 @@
 #include <ui/interface/light/button.hpp>
 #include "nxw/icon_button.hpp"
 
+#include <QIcon>
+
+
 namespace ui::interfaces::light
 {
     control_bar::control_bar(ui::user_session& session, ui::window* window)
@@ -106,6 +109,11 @@ namespace ui::interfaces::light
         {
             command_input_ = new ui::command_input(session_, this);
             command_input_->setFocus();
+
+            auto label = new QLabel{ this };
+            auto icon = new QIcon{ ":/image/nxi" };
+            label->setPixmap(icon->pixmap(16, 16));
+            layout->addWidget(label);
 
             layout->addWidget(session_button);
             layout->addWidget(command_root_);
