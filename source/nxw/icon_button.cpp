@@ -3,6 +3,7 @@
 
 #include <nxi/core.hpp>
 #include <nxi/system/command.hpp>
+#include <nxi/user_session.hpp>
 
 #include <ui/system/user.hpp>
 #include <ui/user_session.hpp>

@@ -1,6 +1,9 @@
 #include <nxi/command/initializer.hpp>
 
 #include <nxi/core.hpp>
+#include <nxi/suggestion/text.hpp>
+#include <nxi/suggestion/vector.hpp>
+#include <nxi/system/context.hpp>
 #include <nxi/values.hpp>
 
 namespace nxi

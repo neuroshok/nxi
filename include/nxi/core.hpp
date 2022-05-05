@@ -47,7 +47,6 @@ namespace nxi
     private:
         nxi::global_database global_database_;
 
-        nxi::session_system session_system_;
         nxi::user_system user_system_;
     };
 } // nxi

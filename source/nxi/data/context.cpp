@@ -4,6 +4,7 @@
 #include <nxi/database/model.hpp>
 #include <nxi/database/result.hpp>
 #include <nxi/page.hpp>
+#include <nxi/context.hpp>
 
 #include <QSqlDatabase>
 #include <QSqlError>

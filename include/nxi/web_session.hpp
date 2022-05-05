@@ -6,21 +6,21 @@
 
 namespace nxi
 {
-    class user_session;
+    class session;
 
     class web_session : public QWebEngineProfile
     {
     public:
-        web_session(nxi::user_session&, QObject* = nullptr);
+        web_session(nxi::session&, QObject* = nullptr);
 
         void load();
 
-        void load_cookie(const QString& domain);
+        void load_cookie(const QString& domain, int session_id);
 
         void import_cookies(const QString& database_path);
 
     private:
-        nxi::user_session& session_;
+        nxi::session& session_;
 
         QSqlDatabase cookie_db_;
     };

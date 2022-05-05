@@ -70,6 +70,8 @@ namespace nxi
         void move(nxi::page_id page_id, nxi::page_id source_id, nxi::page_id target_id);
         void update(nxi::page_id id);
 
+        int session_id() const;
+
     signals:
         void event_add(page_ptr, page_ptr source) const;
         void event_init_static(nxi::page&);
@@ -92,6 +94,7 @@ namespace nxi
         page_ptr focus_;
         page_ptr root_;
 
+        int session_id_ = 0;
         //std::vector<page_ptr> actives_;
         std::vector<page_ptr> visible_pages_;
     };

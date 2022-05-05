@@ -6,6 +6,7 @@
 #include <nxi/database/model.hpp>
 #include <nxi/log.hpp>
 #include <nxi/type.hpp>
+#include <nxi/user_session.hpp>
 
 #include <QDir>
 
@@ -48,6 +49,14 @@ namespace nxi
         nxi::data::user::load(nxi_core_.global_database(), user.id());
     }
 
+    void user_system::unload_focus()
+    {
+        // unload(focus_);
+        focus_->unload();
+        nxi::data::user::load(focus_->database(), focus_->id());
+        emit event_unload(*focus_);
+    }
+
     void user_system::load(const QString& user_id)
     {
         load(get(user_id));
@@ -83,7 +92,7 @@ namespace nxi
     void user_system::focus(nxi::user_session& user)
     {
         focus_ = stz::make_observer(&user);
-        emit event_focus_update(*focus_);
+        emit event_focus(*focus_);
     }
 
     void user_system::switch_focus(const QString& new_user_id)

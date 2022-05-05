@@ -7,6 +7,7 @@
 #include <nxi/log.hpp>
 #include <nxi/page/web.hpp>
 #include <nxi/system/command.hpp>
+#include <nxi/user_session.hpp>
 
 #include <QKeyEvent>
 
@@ -225,6 +226,16 @@ namespace nxi
         for (const auto& page :  session_.page_system().root_targets())
         {
             suggestions_.push_back(page);
+        }
+        emit event_suggestion_update(suggestions_);
+    }
+
+    void command_input::suggest_session()
+    {
+        suggestions_.clear();
+        for (const auto& session :  session_.session_system().sessions())
+        {
+            suggestions_.push_back(session->name());
         }
         emit event_suggestion_update(suggestions_);
     }

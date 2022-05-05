@@ -13,7 +13,7 @@ namespace nxi
     {}
 
     web_page::web_page(nds::node_ptr<nxi::page> page_ptr, nxi::page_system& ps, QString url)
-        : web_page(page_ptr, ps, nxi::page_data{ 0, "new web_page", std::move(url), nxi::page_type::web, nxi::renderer_type::web })
+        : web_page(page_ptr, ps, nxi::page_data{ 0, url, std::move(url), nxi::page_type::web, nxi::renderer_type::web, ps.session_id() })
     {}
 
     void web_page::add_script(const QWebEngineScript& script) const

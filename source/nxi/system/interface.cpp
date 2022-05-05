@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <nxi/core.hpp>
 #include <nxi/style.hpp>
+#include <nxi/user_session.hpp>
 #include <QDir>
 
 namespace nxi

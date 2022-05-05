@@ -8,12 +8,6 @@
 #include <functional>
 #include <QObject>
 
-namespace nxi
-{
-    class core;
-    class user_session;
-} // nxi
-
 namespace ui
 {
     class core;

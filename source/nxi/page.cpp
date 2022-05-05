@@ -25,7 +25,7 @@ namespace nxi
     {}
 
     page::page(nds::node_ptr<nxi::page> node_ptr, page_system& ps, QString name, QString command, nxi::page_type type, nxi::renderer_type renderer_type)
-        : nxi::page(std::move(node_ptr), ps, nxi::page_data{ 0, std::move(name), std::move(command), type, renderer_type })
+        : nxi::page(std::move(node_ptr), ps, nxi::page_data{ 0, std::move(name), std::move(command), type, renderer_type, ps.session_id() })
     {}
 
     void page::update_audible(bool state)

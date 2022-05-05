@@ -20,10 +20,10 @@ namespace nxi
         QString command;
         nxi::page_type type = nxi::page_type::custom;
         nxi::renderer_type renderer_type = nxi::renderer_type::widget;
+        int session_id = 0;
         bool audible = false;
         bool loaded = false;
         bool muted = false;
-        int session_id = 0;
 
         static page_data from_get(const nxi::result& result);
     };

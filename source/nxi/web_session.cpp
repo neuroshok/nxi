@@ -1,8 +1,10 @@
 #include <nxi/web_session.hpp>
 
 #include <nxi/data/cookie.hpp>
+#include <nxi/session.hpp>
 #include <nxi/user_session.hpp>
 
+#include <nxi/cookie.hpp>
 #include <nxi/database/model.hpp>
 #include <QNetworkCookie>
 #include <QSqlDatabase>
@@ -14,7 +16,7 @@
 
 namespace nxi
 {
-    web_session::web_session(nxi::user_session& session, QObject* parent)
+    web_session::web_session(nxi::session& session, QObject* parent)
         : QWebEngineProfile(parent)
         , session_{ session }
     {}
@@ -28,23 +30,25 @@ namespace nxi
         setHttpCacheType(QWebEngineProfile::HttpCacheType::DiskHttpCache);
         setPersistentCookiesPolicy(QWebEngineProfile::NoPersistentCookies);
 
+        // todo cookie session_id may be wrong if we switch session while a page from another one is writing cookies
+        // todo link the web_session to the web_page at creation
         connect(cookieStore(), &QWebEngineCookieStore::cookieAdded, [this](const QNetworkCookie& cookie)
         {
-            nxi::data::cookie::set(session_.database(), cookie);
+            nxi::data::cookie::set(session_.user_session().database(), cookie, session_.id());
         });
 
         connect(cookieStore(), &QWebEngineCookieStore::cookieRemoved, [this](const QNetworkCookie& cookie)
         {
-            nxi::data::cookie::del(session_.database(), cookie);
+            nxi::data::cookie::del(session_.user_session().database(), static_cast<const nxi::cookie&>(cookie));
         });
 
         settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
         settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
-        setNotificationPresenter([this](std::unique_ptr<QWebEngineNotification> notif) { session_.error(notif->message()); });
+        setNotificationPresenter([this](std::unique_ptr<QWebEngineNotification> notif) { session_.user_session().error(notif->message()); });
         setHttpUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0");
     }
 
-    void web_session::load_cookie(const QString& domain)
+    void web_session::load_cookie(const QString& domain, int session_id)
     {
         QString out = domain;
         if (domain.count('.') > 1)
@@ -57,7 +61,7 @@ namespace nxi
             }
         }
 
-        auto result = nxi::data::cookie::get(session_.database(), "%" + out);
+        auto result = nxi::data::cookie::get(session_.user_session().database(), "%" + out, session_id);
         while(result.next())
         {
             QNetworkCookie cookie = nxi::data::cookie::make(nxi::data::cookie::from_get(result));
@@ -100,7 +104,7 @@ namespace nxi
             //cookie.setSameSitePolicy(QNetworkCookie::SameSite::);
             cookie.setSecure(isSecure);
             cookie.setValue(value);
-            nxi::data::cookie::set(session_.database(), cookie);
+            nxi::data::cookie::set(session_.user_session().database(), cookie, 0);
             cookieStore()->setCookie(cookie);
         }
     }

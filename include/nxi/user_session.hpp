@@ -11,6 +11,7 @@
 #include <nxi/system/module.hpp>
 #include <nxi/system/navigation.hpp>
 #include <nxi/system/page.hpp>
+#include <nxi/system/session.hpp>
 #include <nxi/system/window.hpp>
 
 #include <QObject>
@@ -42,7 +43,6 @@ namespace nxi
         nxi::config& config();
         nxi::database& database();
         nxi::core& nxi_core();
-        nxi::web_session& web_session();
 
         nxi::command_system& command_system();
         nxi::context_system& context_system();
@@ -50,6 +50,7 @@ namespace nxi
         nxi::module_system& module_system();
         nxi::navigation_system& navigation_system();
         nxi::page_system& page_system();
+        nxi::session_system& session_system();
         nxi::window_system& window_system();
 
     signals:
@@ -67,6 +68,7 @@ namespace nxi
         nxi::api::core api_;
         std::unique_ptr<nxi::config> config_;
 
+        nxi::session_system session_system_;
         nxi::command_system command_system_;
         nxi::context_system context_system_;
         nxi::interface_system interface_system_;
@@ -74,8 +76,6 @@ namespace nxi
         nxi::window_system window_system_;
         nxi::module_system module_system_;
         nxi::navigation_system navigation_system_;
-
-        nxi::web_session* web_session_;
     };
 } // nxi
 

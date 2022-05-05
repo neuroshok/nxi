@@ -17,13 +17,13 @@ class QNetworkCookie;
 
 namespace nxi::data::cookie
 {
-    nxi::result get(nxi::database&);
-    nxi::result get(nxi::database&, const QString& domain);
+    nxi::result get(nxi::database&, int session_id);
+    nxi::result get(nxi::database&, const QString& domain, int session_id);
     void del(nxi::database&, const QNetworkCookie&);
-    void set(nxi::database&, const QNetworkCookie&);
+    void set(nxi::database&, const QNetworkCookie&, int session_id);
 
     nxi::cookie_data from_get(const nxi::result&);
     QNetworkCookie make(const nxi::cookie_data&);
-} // nxi::data::cookie_data
+} // nxi::data::cookie
 
 #endif // INCLUDE_NXI_DATA_COOKIE_HPP_NXI

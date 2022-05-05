@@ -5,6 +5,7 @@
 #include <nxi/data/page.hpp>
 #include <nxi/database.hpp>
 #include <nxi/user_session.hpp>
+#include <nxi/system/session.hpp>
 
 #include <nxi/log.hpp>
 #include <nxi/page/custom.hpp>
@@ -18,7 +19,9 @@ namespace nxi
         : session_{ session }
         , session_database_{ database }
         , root_{ nullptr }
-    {}
+    {
+        connect(&session_.session_system(), &nxi::session_system::event_focus, [this](nxi::session& s) { session_id_ = s.id(); });
+    }
 
     void page_system::load()
     {
@@ -182,7 +185,7 @@ namespace nxi
         if (focus_ && page == focus_) return;
         focus_ = page;
 
-        //session_.nxi_core().session_system().focus(session_.nxi_core().session_system().get(page->session_id()));
+        session_.nxi_core().session_system().focus(session_.nxi_core().session_system().get(page->session_id()));
 
         if (!focus_->is_loaded()) load(focus_);
         emit focus_->event_focus();
@@ -234,9 +237,10 @@ namespace nxi
 
     void page_system::search(const QString& search_string, std::function<void(nds::node_ptr<nxi::page>)> callback) const
     {
-        graph_.nodes([&callback, &search_string](auto&& node)
+        auto session_id = session_.session_system().focus()->id();
+        graph_.nodes([&callback, &search_string, session_id](auto&& node)
         {
-            if (node->name().toLower().contains(search_string)) callback(node);
+            if (session_id == node->session_id() && node->name().toLower().contains(search_string)) callback(node);
         });
     }
 
@@ -281,5 +285,10 @@ namespace nxi
     void page_system::update(nxi::page_id id)
     {
         //emit event_update(page_.at(id));
+    }
+
+    int page_system::session_id() const
+    {
+        return session_id_;
     }
 } // nxi

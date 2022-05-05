@@ -63,7 +63,16 @@ namespace nxi
             nxi_assert(values.size() == 1);
             core_.session_system().switch_focus(values.get(0));
         };
-        switch_session.parameters = {{ "name" }};
+        switch_session.parameters = {
+        { "name", [this](nxi::suggestion_vector& suggestion)
+            {
+                for (const auto& session : core_.session_system().sessions())
+                {
+                    suggestion.push_back(session->name());
+                }
+            }
+        }};
+
         add(std::move(switch_session));
 
         return node;

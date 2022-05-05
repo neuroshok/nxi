@@ -1,6 +1,7 @@
 #include <nxi/core.hpp>
 
 #include <nxi/log.hpp>
+#include <nxi/user_session.hpp>
 
 #include <QCoreApplication>
 #include <QDir>
@@ -9,7 +10,6 @@ namespace nxi
 {
     core::core()
         : global_database_{}
-        , session_system_{ *this }
         , user_system_{ *this }
     {}
 
@@ -19,7 +19,6 @@ namespace nxi
 
         global_database_.connect();
 
-        //session_system_.load();
         user_system_.load();
         emit event_load();
     }
@@ -31,7 +30,7 @@ namespace nxi
 
     nxi::database& core::global_database() { return global_database_; }
 
-    nxi::session_system& core::session_system() { return session_system_; }
+    nxi::session_system& core::session_system() { return user_system_.focus()->session_system(); }
     nxi::user_system& core::user_system() { return user_system_; }
 
     nxi::command_system& core::command_system() { return user_system_.focus()->command_system(); }

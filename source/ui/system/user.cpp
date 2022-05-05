@@ -3,6 +3,7 @@
 #include <nxi/core.hpp>
 #include <nxi/system/session.hpp>
 #include <nxi/system/window.hpp>
+#include <nxi/user_session.hpp>
 
 #include <ui/core.hpp>
 #include <ui/interface/light/main.hpp>
@@ -26,7 +27,7 @@ namespace ui
             if (session_it != sessions_.end()) sessions_.erase(session_it);
         });
 
-        connect(&ui_core_.nxi_core().user_system(), &nxi::user_system::event_focus_update, [this](const nxi::user_session& session)
+        connect(&ui_core_.nxi_core().user_system(), &nxi::user_system::event_focus, [this](const nxi::user_session& session)
         {
             focus_ = stz::make_observer(&get(session.id()));
         });

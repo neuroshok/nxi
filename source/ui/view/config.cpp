@@ -7,6 +7,7 @@
 #include <ui/core.hpp>
 #include <nxi/core.hpp>
 #include <nxi/config.hpp>
+#include <nxi/user_session.hpp>
 
 namespace ui::views
 {

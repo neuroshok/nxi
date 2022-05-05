@@ -19,11 +19,11 @@ namespace nxi
 
 namespace nxi::data::session
 {
-    unsigned int add_session(nxi::database&, const nxi::session_data&);
-    void del_session(nxi::database&, int session_id);
-    nxi::result get_sessions(nxi::database&);
-    void load_session(nxi::database&, int id);
-    void unload_session(nxi::database&, int id);
+    unsigned int add(nxi::database&, const nxi::session_data&);
+    void del(nxi::database&, int session_id);
+    nxi::result get(nxi::database&);
+    void load(nxi::database&, int id);
+    void unload(nxi::database&, int id);
 } // nxi::data::session
 
 namespace nxi::data::session::internal
@@ -35,8 +35,7 @@ namespace nxi::data::session::internal
     {
         nxi::field<0, int> id{};
         nxi::field<1, QString> name{};
-        nxi::field<2, int> type{};
-        nxi::field<3, bool> active{};
+        nxi::field<2, bool> active{};
     } session{};
 
     constexpr std::string_view str_table = R"__(

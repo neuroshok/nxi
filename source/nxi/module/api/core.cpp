@@ -1,18 +1,21 @@
 #include <nxi/module/api/core.hpp>
 
 #include <nxi/core.hpp>
+#include <nxi/page/web.hpp>
+#include <nxi/session.hpp>
+#include <nxi/system/page.hpp>
 
 #include <QString>
 #include <string>
 
 void nxi_core_error(nxi::core* core, const char* message)
 {
-    core->session_system().focus()->error(message);
+    core->user_system().focus()->error(message);
 }
 
 void nxi_page_system_open(nxi::core* core)
 {
-    core->session_system().focus()->page_system().open<nxi::web_page>();
+    core->page_system().open<nxi::web_page>();
 }
 
 

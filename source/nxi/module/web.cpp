@@ -6,6 +6,7 @@
 #include <nxi/module/web.hpp>
 #include <nxi/page/web.hpp>
 #include <nxi/system/command.hpp>
+#include <nxi/user_session.hpp>
 #include <nxi/utility/file.hpp>
 #include <w3c/module/manifest.hpp>
 

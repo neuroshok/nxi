@@ -2,6 +2,7 @@
 
 #include <nxi/core.hpp>
 #include <nxi/page/web.hpp>
+#include <nxi/system/page.hpp>
 
 namespace nxi
 {

@@ -2,6 +2,7 @@
 
 #include <nxi/page/node.hpp>
 #include <nxi/core.hpp>
+#include <nxi/user_session.hpp>
 
 #include <ui/core.hpp>
 #include <ui/renderer/widget.hpp>
@@ -9,10 +10,11 @@
 #include <nxw/hbox_layout.hpp>
 
 #include <QLabel>
-#include <QPushButton>
 #include <QPainter>
-#include <QWebEngineView>
+#include <QPushButton>
+#include <QTimerEvent>
 #include <QWebEngineSettings>
+#include <QWebEngineView>
 
 // todo experimental / optimize
 

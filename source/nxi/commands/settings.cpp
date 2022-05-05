@@ -1,6 +1,7 @@
 #include <nxi/command/initializer.hpp>
 
 #include <nxi/core.hpp>
+#include <nxi/system/page.hpp>
 
 namespace nxi
 {

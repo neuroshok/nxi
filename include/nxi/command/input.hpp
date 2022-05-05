@@ -45,6 +45,7 @@ namespace nxi
         void suggest_context();
         void suggest_navigation();
         void suggest_page();
+        void suggest_session();
 
         void set_mode(mode_type);
 

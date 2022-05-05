@@ -14,6 +14,7 @@ namespace nxi
         , core_database_{ name_ }
         , api_{ *this }
         , config_{ nullptr }
+        , session_system_{ *this }
         , command_system_{ *this }
         , context_system_{ *this }
         , interface_system_{ *this }
@@ -21,7 +22,6 @@ namespace nxi
         , window_system_{ *this }
         , module_system_{ *this }
         , navigation_system_{ *this }
-        , web_session_{ new nxi::web_session{ *this, this } }
     {}
 
     void user_session::load()
@@ -31,14 +31,13 @@ namespace nxi
 
         window_system_.load(); // load before interface_system
 
+        session_system_.load();
         command_system_.load();
         context_system_.load();
         interface_system_.load();
         page_system_.load();
         module_system_.load();
         navigation_system_.load();
-
-        web_session_->load();
     }
 
     void user_session::unload()
@@ -63,7 +62,6 @@ namespace nxi
     }
     nxi::database& user_session::database() { return core_database_; }
     nxi::core& user_session::nxi_core() { return nxi_core_; }
-    nxi::web_session& user_session::web_session() { return *web_session_; }
 
     nxi::command_system& user_session::command_system() { return command_system_; }
     nxi::context_system& user_session::context_system() { return context_system_; }
@@ -71,5 +69,6 @@ namespace nxi
     nxi::module_system& user_session::module_system() { return module_system_; }
     nxi::navigation_system& user_session::navigation_system() { return navigation_system_; }
     nxi::page_system& user_session::page_system() { return page_system_; }
+    nxi::session_system& user_session::session_system() { return session_system_; }
     nxi::window_system& user_session::window_system() { return window_system_; }
 } // nxi

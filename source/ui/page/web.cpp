@@ -6,6 +6,7 @@
 #include <nxi/module/api/core.hpp>
 #include <nxi/module/api/page_system.hpp>
 #include <nxi/page/web.hpp>
+#include <nxi/user_session.hpp>
 #include <nxi/web_session.hpp>
 
 #include <ui/core.hpp>
@@ -30,7 +31,8 @@ namespace ui
         , page_{ page }
         , session_{ session }
     {
-        native_page_ = new ui::web_engine_page(&static_cast<QWebEngineProfile&>(session_.nxi_session().web_session()), this);
+        auto& websession = session_.nxi_core().session_system().get(page_.session_id()).web_session();
+        native_page_ = new ui::web_engine_page(static_cast<QWebEngineProfile*>(&websession), this);
         native_page_->setWebChannel(session_.nxi_session().module_system().web_channel());
 
         native_page_->setAudioMuted(page.is_muted());
@@ -51,13 +53,12 @@ namespace ui
         {
             native_page_->setFeaturePermission(origin, feature, QWebEnginePage::PermissionPolicy::PermissionGrantedByUser);
         });
-        connect(native_page_, &QWebEnginePage::loadStarted, this, [this]()
+        connect(native_page_, &QWebEnginePage::loadStarted, this, [&websession, this]()
         {
-            session_.nxi_session().web_session().load_cookie(native_page_->requestedUrl().host());
+            websession.load_cookie(native_page_->requestedUrl().host(), page_.session_id());
         });
         connect(native_page_, &QWebEnginePage::loadFinished, this, [this](bool n)
         {
-            nxi_debug("load complete");
             //ui_core_.nxi_core().module_system().process(page_);
         });
         connect(native_page_, &QWebEnginePage::iconChanged, this, [this](const QIcon& icon) { page_.update_icon(icon); });

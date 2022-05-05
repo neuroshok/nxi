@@ -3,6 +3,7 @@
 #include <nxi/command/executor.hpp>
 #include <nxi/command/input.hpp>
 #include <nxi/core.hpp>
+#include <nxi/user_session.hpp>
 
 #include <ui/core.hpp>
 #include <ui/menu.hpp>

@@ -30,6 +30,7 @@ namespace nxi
         nds::node_ptr<nxi::command> init_settings();
         nds::node_ptr<nxi::command> init_session();
         nds::node_ptr<nxi::command> init_tool();
+        nds::node_ptr<nxi::command> init_user();
 
         void set_node(nds::node_ptr<nxi::command>);
         void set_root(nds::node_ptr<nxi::command>);

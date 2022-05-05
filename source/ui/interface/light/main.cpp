@@ -78,7 +78,7 @@ namespace ui::interfaces::light
         connect(&session_.nxi_session().nxi_core(), &nxi::core::event_load, [session_info_, this]()
         {
 
-            connect(&session_.nxi_session().nxi_core().session_system(), &nxi::session_system::event_focus_update, [session_info_, this](nxi::user_session& session)
+            connect(&session_.nxi_session().nxi_core().session_system(), &nxi::session_system::event_focus, [session_info_, this](nxi::session& session)
             {
                                 /*
                 session.interface_system().style().update(this);

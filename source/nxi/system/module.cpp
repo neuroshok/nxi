@@ -45,7 +45,7 @@ namespace nxi
         script.setSourceCode(js_api_);
         script.setInjectionPoint(QWebEngineScript::DocumentCreation);
         script.setWorldId(QWebEngineScript::MainWorld);
-        session_.web_session().scripts()->insert(script);
+        //session_.web_session().scripts()->insert(script);
 
         nxi_trace("load static modules");
         static_modules_.load();
