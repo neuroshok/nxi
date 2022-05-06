@@ -7,14 +7,14 @@
 
 namespace nxi
 {
-    class user_session;
+    class core;
     class style;
 
     class interface_system : public QObject
     {
         Q_OBJECT
     public:
-        interface_system(nxi::user_session&);
+        interface_system(nxi::core&);
         interface_system(const interface_system&) = delete;
         void operator=(const interface_system&) = delete;
 
@@ -28,7 +28,7 @@ namespace nxi
         void event_update_style(const nxi::style&);
 
     private:
-        nxi::user_session& session_;
+        nxi::core& core_;
     };
 } // nxi
 

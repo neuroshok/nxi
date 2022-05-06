@@ -1,5 +1,5 @@
-#ifndef INCLUDE_NXI_USER_SESSION_HPP_NXI
-#define INCLUDE_NXI_USER_SESSION_HPP_NXI
+#ifndef INCLUDE_NXI_USER_HPP_NXI
+#define INCLUDE_NXI_USER_HPP_NXI
 
 #include <nxi/data/user.hpp>
 #include <nxi/database.hpp>
@@ -23,12 +23,12 @@ namespace nxi
     class core;
     class web_session;
 
-    class user_session : public QObject
+    class user : public QObject
     {
         Q_OBJECT
 
     public:
-        user_session(nxi::core& core, nxi::user_data data);
+        user(nxi::core& core, nxi::user_data data);
 
         void load();
         void unload();
@@ -63,7 +63,7 @@ namespace nxi
         QString name_;
         bool active_;
 
-        nxi::core_database core_database_;
+        nxi::core_database user_database_;
 
         nxi::api::core api_;
         std::unique_ptr<nxi::config> config_;
@@ -79,4 +79,4 @@ namespace nxi
     };
 } // nxi
 
-#endif // INCLUDE_NXI_USER_SESSION_HPP_NXI
+#endif // INCLUDE_NXI_USER_HPP_NXI

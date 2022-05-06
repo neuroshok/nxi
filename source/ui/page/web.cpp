@@ -6,7 +6,7 @@
 #include <nxi/module/api/core.hpp>
 #include <nxi/module/api/page_system.hpp>
 #include <nxi/page/web.hpp>
-#include <nxi/user_session.hpp>
+#include <nxi/user.hpp>
 #include <nxi/web_session.hpp>
 
 #include <ui/core.hpp>
@@ -59,7 +59,7 @@ namespace ui
         });
         connect(native_page_, &QWebEnginePage::loadFinished, this, [this](bool n)
         {
-            //ui_core_.nxi_core().module_system().process(page_);
+            // ui_core_.module_system().process(page_);
         });
         connect(native_page_, &QWebEnginePage::iconChanged, this, [this](const QIcon& icon) { page_.update_icon(icon); });
         connect(native_page_, &QWebEnginePage::titleChanged, this, [this](const QString& name){ page_.update_name(name); });

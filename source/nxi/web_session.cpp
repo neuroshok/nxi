@@ -1,11 +1,12 @@
 #include <nxi/web_session.hpp>
 
-#include <nxi/data/cookie.hpp>
-#include <nxi/session.hpp>
-#include <nxi/user_session.hpp>
-
 #include <nxi/cookie.hpp>
+#include <nxi/core.hpp>
+#include <nxi/data/cookie.hpp>
 #include <nxi/database/model.hpp>
+#include <nxi/session.hpp>
+#include <nxi/user.hpp>
+
 #include <QNetworkCookie>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -25,26 +26,24 @@ namespace nxi
     {
         cookie_db_ = QSqlDatabase::addDatabase("QSQLITE", nxi::database::path + QString{ "cookie" });
 
-        //setCachePath("./cache");
-        //setPersistentStoragePath("./cache");
+        // setCachePath("./cache");
+        // setPersistentStoragePath("./cache");
         setHttpCacheType(QWebEngineProfile::HttpCacheType::DiskHttpCache);
         setPersistentCookiesPolicy(QWebEngineProfile::NoPersistentCookies);
 
         // todo cookie session_id may be wrong if we switch session while a page from another one is writing cookies
         // todo link the web_session to the web_page at creation
-        connect(cookieStore(), &QWebEngineCookieStore::cookieAdded, [this](const QNetworkCookie& cookie)
-        {
-            nxi::data::cookie::set(session_.user_session().database(), cookie, session_.id());
+        connect(cookieStore(), &QWebEngineCookieStore::cookieAdded, [this](const QNetworkCookie& cookie) {
+            nxi::data::cookie::set(session_.core().user_database(), cookie, session_.id());
         });
 
-        connect(cookieStore(), &QWebEngineCookieStore::cookieRemoved, [this](const QNetworkCookie& cookie)
-        {
-            nxi::data::cookie::del(session_.user_session().database(), static_cast<const nxi::cookie&>(cookie));
+        connect(cookieStore(), &QWebEngineCookieStore::cookieRemoved, [this](const QNetworkCookie& cookie) {
+            nxi::data::cookie::del(session_.core().user_database(), static_cast<const nxi::cookie&>(cookie));
         });
 
         settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
         settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
-        setNotificationPresenter([this](std::unique_ptr<QWebEngineNotification> notif) { session_.user_session().error(notif->message()); });
+        setNotificationPresenter([this](std::unique_ptr<QWebEngineNotification> notif) { session_.core().error(notif->message()); });
         setHttpUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0");
     }
 
@@ -61,8 +60,8 @@ namespace nxi
             }
         }
 
-        auto result = nxi::data::cookie::get(session_.user_session().database(), "%" + out, session_id);
-        while(result.next())
+        auto result = nxi::data::cookie::get(session_.core().user_database(), "%" + out, session_id);
+        while (result.next())
         {
             QNetworkCookie cookie = nxi::data::cookie::make(nxi::data::cookie::from_get(result));
             cookieStore()->setCookie(cookie);
@@ -71,11 +70,11 @@ namespace nxi
 
     void web_session::import_cookies(const QString& database_path)
     {
-        //C:\Users\ads\AppData\Roaming\Mozilla\Firefox\Profiles\y9siacyv.default-1475306262438\cookies.sqlite
+        // C:\Users\ads\AppData\Roaming\Mozilla\Firefox\Profiles\y9siacyv.default-1475306262438\cookies.sqlite
         auto import_db = QSqlDatabase::addDatabase("QSQLITE", database_path);
         import_db.setDatabaseName(database_path);
 
-        if(!import_db.open())
+        if (!import_db.open())
         {
             nxi_error("import_cookies failed connection error : {}", import_db.lastError().text());
             return;
@@ -101,10 +100,10 @@ namespace nxi
             cookie.setHttpOnly(isHttpOnly);
             cookie.setName(name);
             cookie.setPath(path);
-            //cookie.setSameSitePolicy(QNetworkCookie::SameSite::);
+            // cookie.setSameSitePolicy(QNetworkCookie::SameSite::);
             cookie.setSecure(isSecure);
             cookie.setValue(value);
-            nxi::data::cookie::set(session_.user_session().database(), cookie, 0);
+            nxi::data::cookie::set(session_.core().user_database(), cookie, 0);
             cookieStore()->setCookie(cookie);
         }
     }

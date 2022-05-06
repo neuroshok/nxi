@@ -12,35 +12,58 @@ namespace nxi
     enum class prepared_query
     {
         // context
-        add_context, add_context_available,
+        add_context,
+        add_context_available,
         del_context,
-        get_context, get_context_available,
+        get_context,
+        get_context_available,
 
         // cookie
-        del_cookie, get_cookie, get_cookie_domain, set_cookie,
+        del_cookie,
+        get_cookie,
+        get_cookie_domain,
+        set_cookie,
 
         // navigation
         navigation_log_add,
 
         // module
         get_modules,
-        set_module_loaded,
+        set_module_active,
 
         // page
-        add_page, count_page, del_page, get_page_id, get_page_name,
-        add_page_arc, del_page_arc,
-        get_page, get_page_arcs,
-        set_page_loaded, update_page,
+        add_page,
+        count_page,
+        del_page,
+        get_page_id,
+        get_page_name,
+        add_page_arc,
+        del_page_arc,
+        get_page,
+        get_page_arcs,
+        set_page_loaded,
+        update_page,
 
         // session
-        add_session, del_session, get_sessions, load_session, unload_session,
+        add_session,
+        del_session,
+        get_sessions,
+        load_session,
+        unload_session,
 
         // user
-        add_user, del_user, get_users, load_user, unload_user,
+        add_user,
+        del_user,
+        get_users,
+        load_user,
+        unload_user,
 
         // window
-        add_window, get_windows, move_window,
-        get_config_value, set_config_value,
+        add_window,
+        get_windows,
+        move_window,
+        get_config_value,
+        set_config_value,
 
         size_
     };

@@ -15,7 +15,7 @@ namespace nxi
         QString module = "nxi";
         QString action = "none";
         nxi::command_function_type function;
-        std::vector<command_parameter> parameters;
+        std::vector<nxi::command_parameter> parameters;
         QString icon;
         QString description;
         nxi::shortcut shortcut;

@@ -1,27 +1,11 @@
 #include <nxi/data/cookie.hpp>
 
-#include <nxi/core.hpp>
+#include <nxi/cookie.hpp>
+#include <nxi/database.hpp>
 #include <nxi/database/model.hpp>
 #include <nxi/database/result.hpp>
 
-#include <nxi/cookie.hpp>
 #include <QDateTime>
-#include <QNetworkCookie>
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
-
-namespace nxi
-{
-    nxi::cookie_data cookie_data::from_get(const nxi::result& result)
-    {
-        nxi::cookie_data data;
-
-        //data.name = result[nxi_model.module.name];
-
-        return data;
-    }
-} // nxi
 
 namespace nxi::data::cookie
 {
@@ -106,8 +90,9 @@ namespace nxi::data::cookie::internal
         db.prepare(prepared_query::del_cookie, "DELETE FROM cookie WHERE name = ? AND domain = ? AND path = ? AND session_id = ?");
         db.prepare(prepared_query::get_cookie, "SELECT * FROM cookie WHERE session_id = ?");
         db.prepare(prepared_query::get_cookie_domain, "SELECT * FROM cookie WHERE domain LIKE ? AND session_id = ?");
-        db.prepare(prepared_query::set_cookie, "INSERT OR REPLACE INTO cookie"
-                                               "(domain, expiration, http_only, name, path, same_site, secured, value, session_id) "
-                                               "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        db.prepare(prepared_query::set_cookie,
+                   "INSERT OR REPLACE INTO cookie"
+                   "(domain, expiration, http_only, name, path, same_site, secured, value, session_id) "
+                   "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
     }
 } // nxi::data::page::internal

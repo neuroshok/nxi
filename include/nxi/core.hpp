@@ -22,19 +22,28 @@ namespace nxi
         void operator=(const core&) = delete;
 
         void load();
+
+        void error(const QString&);
         void quit() const;
 
         nxi::database& global_database();
-
-        nxi::session_system& session_system();
+        nxi::user_system& user_system();
 
         // alias
+        nxi::session& session();
+        nxi::user& user();
+
+        nxi::config& session_config();
+
+        nxi::session_system& session_system();
         nxi::command_system& command_system();
         nxi::context_system& context_system();
         nxi::interface_system& interface_system();
         nxi::navigation_system& navigation_system();
         nxi::page_system& page_system();
-        nxi::user_system& user_system();
+
+        nxi::database& user_database();
+        // -- alias
 
         static QString module_path();
         static QString module_path(const QString& name, nxi::module_type);

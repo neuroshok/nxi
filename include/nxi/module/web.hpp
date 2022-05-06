@@ -10,7 +10,7 @@
 
 namespace nxi
 {
-    class user_session;
+    class core;
 
     class web_module : public module
     {
@@ -36,7 +36,12 @@ namespace nxi
 
         struct content_script
         {
-            enum class run_at_type { document_start, document_end, document_idle };
+            enum class run_at_type
+            {
+                document_start,
+                document_end,
+                document_idle
+            };
             bool all_frames;
             std::vector<QString> css;
             std::vector<QString> exclude_globs;
@@ -49,7 +54,7 @@ namespace nxi
         };
 
     public:
-        web_module(nxi::user_session&, const QString& name);
+        web_module(nxi::core&, const QString& name);
         void init_scripts();
 
         void on_load() override;
@@ -59,7 +64,7 @@ namespace nxi
         auto& browser_action() const { return browser_action_; }
 
     private:
-        nxi::user_session& session_;
+        nxi::core& core_;
 
         w3c::manifest manifest_;
         QHash<QString, QWebEngineScript> scripts_;

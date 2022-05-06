@@ -13,10 +13,7 @@ struct tab
 namespace nxi::api
 {
 
-    void page_system::add()
-    {
-        session_.page_system().open<nxi::web_page>();
-    }
+    void page_system::add() { core_.page_system().open<nxi::web_page>(); }
 
     void page_system::add_listener(int event_id, const QString& js_callback_source)
     {
@@ -27,8 +24,7 @@ namespace nxi::api
                 break;
             case event::focus:
                 focus_callbacks_.push_back(js_callback_source);
-                connect(&session_.page_system(), &nxi::page_system::event_focus, this, [this](nds::node_ptr<nxi::page> page)
-                {
+                connect(&core_.page_system(), &nxi::page_system::event_focus, this, [this](nds::node_ptr<nxi::page> page) {
                     QJsonObject activeInfo;
                     activeInfo["previousTabId"] = 0;
                     activeInfo["tabId"] = static_cast<int>(page->id());
@@ -36,7 +32,7 @@ namespace nxi::api
 
                     QJsonDocument doc{ activeInfo };
 
-                    for(const auto& callback : focus_callbacks_)
+                    for (const auto& callback : focus_callbacks_)
                     {
                         nxi::api::js_call(*page, callback, activeInfo);
                     }

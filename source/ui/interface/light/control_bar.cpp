@@ -2,7 +2,7 @@
 
 #include <nxi/core.hpp>
 #include <nxi/log.hpp>
-#include <nxi/user_session.hpp>
+#include <nxi/user.hpp>
 #include <nxw/hbox_layout.hpp>
 
 #include <ui/command/input.hpp>

@@ -17,10 +17,13 @@ namespace nxi
     {
     public:
         command_initializer(nxi::core&);
+        command_initializer(const command_initializer&) = delete;
+        command_initializer& operator=(const command_initializer&) = delete;
+
         void load();
 
     private:
-        nds::node_ptr<nxi::command> add(nxi::command_data data);
+        nds::node_ptr<nxi::command> add(nxi::command_data);
         nds::node_ptr<nxi::command> add(const QString& action, nxi::command_function_type fn, const QString& icon = "");
         nds::node_ptr<nxi::command> add_node(const QString& command_node);
 

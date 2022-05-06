@@ -9,7 +9,7 @@
 namespace nxi
 {
     class core;
-    class user_session;
+    class user;
 } // nxi
 
 namespace ui
@@ -21,13 +21,13 @@ namespace ui
     class user_session
     {
     public:
-        user_session(ui::core& ui_core, nxi::user_session&);
+        user_session(ui::core& ui_core, nxi::user&);
         ~user_session();
 
         int id() const;
 
         nxi::core& nxi_core();
-        nxi::user_session& nxi_session();
+        nxi::user& nxi_session();
         ui::core& ui_core();
         ui::page_system& page_system();
         ui::window_system& window_system();
@@ -38,7 +38,7 @@ namespace ui
     private:
         ui::core& ui_core_;
         nxi::core& nxi_core_;
-        nxi::user_session& nxi_session_;
+        nxi::user& nxi_session_;
         ui::page_system page_system_;
         ui::window_system window_system_;
 

@@ -4,7 +4,7 @@
 #include <nxi/data/window.hpp>
 #include <nxi/log.hpp>
 #include <nxi/system/window.hpp>
-#include <nxi/user_session.hpp>
+#include <nxi/user.hpp>
 
 #include <ui/core.hpp>
 #include <ui/interface/standard/main.hpp>

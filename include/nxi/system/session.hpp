@@ -12,13 +12,13 @@
 namespace nxi
 {
     class core;
-    class user_session;
+    class user;
 
     class session_system : public QObject
     {
         Q_OBJECT
     public:
-        explicit session_system(nxi::user_session& user_session);
+        explicit session_system(nxi::core&);
         session_system(const session_system&) = delete;
         void operator=(const session_system&) = delete;
 
@@ -27,7 +27,7 @@ namespace nxi
 
         void add(nxi::session_data);
         void add(const QString& session_id);
-        void del(const QString& session_id);
+        void del(int session_id);
         void focus(nxi::session&);
         nxi::session& get(int id);
         nxi::session& get(const QString& session_id);
@@ -38,7 +38,7 @@ namespace nxi
 
         void switch_focus(const QString& new_session_id);
 
-        stz::observer_ptr<nxi::session> focus();
+        nxi::session& focus();
 
     signals:
         void event_load(); // session_system loaded
@@ -47,7 +47,7 @@ namespace nxi
         void event_focus(nxi::session&);
 
     private:
-        nxi::user_session& user_session_;
+        nxi::core& core_;
 
         stz::observer_ptr<nxi::session> focus_;
         std::vector<std::unique_ptr<nxi::session>> sessions_;

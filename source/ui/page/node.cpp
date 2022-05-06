@@ -1,13 +1,13 @@
 #include <ui/page/node.hpp>
 
-#include <nxi/page/node.hpp>
 #include <nxi/core.hpp>
-#include <nxi/user_session.hpp>
+#include <nxi/page/node.hpp>
+#include <nxi/user.hpp>
 
-#include <ui/core.hpp>
-#include <ui/renderer/widget.hpp>
-#include <ui/page/web.hpp>
 #include <nxw/hbox_layout.hpp>
+#include <ui/core.hpp>
+#include <ui/page/web.hpp>
+#include <ui/renderer/widget.hpp>
 
 #include <QLabel>
 #include <QPainter>

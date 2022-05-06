@@ -1,10 +1,6 @@
 #include <nxi/data/window.hpp>
 
-#include <nxi/core.hpp>
-
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
+#include <nxi/database.hpp>
 
 namespace nxi::data::window
 {
@@ -38,11 +34,6 @@ namespace nxi::data::window
 
 namespace nxi::data::window::internal
 {
-    void make(nxi::database& db)
-    {
-        db.exec(internal::str_table.data());
-    }
-
     void prepare(nxi::database& db)
     {
         db.prepare(prepared_query::add_window, "INSERT INTO window(x, y, w, h) VALUES(?, ?, ?, ?)");

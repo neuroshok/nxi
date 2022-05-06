@@ -20,8 +20,8 @@ namespace nxi
         //page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }, nxi::contexts::page };
         page_new.function = [this](const nxi::values&) {
             core_.page_system().open<nxi::web_page>();
-            //auto p = core_.page_system().focus();
-            //p->update_session(core_.session_system().focus()->id());
+            // auto p = core_.page_system().focus();
+            // p->update_session(core_.session().id());
         };
         add(std::move(page_new));
 
@@ -91,7 +91,7 @@ namespace nxi
         fullscreen.shortcut = {{ Qt::Key_Control }, { Qt::Key_Enter }};
         fullscreen.function = [this](const nxi::values& params)
         {
-            //core_.page_system().focus()->run("document.documentElement.requestFullscreen();");
+            // core_.page_system().focus().run("document.documentElement.requestFullscreen();");
         };
         add(std::move(fullscreen));
 

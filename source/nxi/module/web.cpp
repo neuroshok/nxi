@@ -6,7 +6,7 @@
 #include <nxi/module/web.hpp>
 #include <nxi/page/web.hpp>
 #include <nxi/system/command.hpp>
-#include <nxi/user_session.hpp>
+#include <nxi/user.hpp>
 #include <nxi/utility/file.hpp>
 #include <w3c/module/manifest.hpp>
 
@@ -23,10 +23,10 @@
 namespace nxi
 {
 
-    web_module::web_module(nxi::user_session& session, const QString& name)
+    web_module::web_module(nxi::core& core, const QString& name)
         : module(name, module_type::web)
-        , session_{ session }
-        , manifest_ { name }
+        , core_{ core }
+        , manifest_{ name }
     {
         init_scripts();
     }
@@ -36,15 +36,15 @@ namespace nxi
         // add module commands
         auto f = [this](const nxi::values&)
         {
-            if (manifest_.browser_action.default_popup.isEmpty()) session_.error("module has no page");
+            if (manifest_.browser_action.default_popup.isEmpty()) core_.error("module has no page");
             else
             {
                 auto page_path = nxi::core::module_path(name(), nxi::module_type::web) + "/" + manifest_.browser_action.default_popup;
-                session_.page_system().open<nxi::web_page>("file:///" + page_path);
+                core_.page_system().open<nxi::web_page>("file:///" + page_path);
             }
         };
         nxi::command command{ name(), "main", f, nxi::core::module_path(name(), nxi::module_type::web) + browser_action_.default_icon };
-        session_.command_system().add(std::move(command));
+        core_.command_system().add(std::move(command));
     }
 
     void web_module::process(nxi::web_page& page)

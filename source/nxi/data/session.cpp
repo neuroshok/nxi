@@ -1,10 +1,6 @@
 #include <nxi/data/session.hpp>
 
-#include <nxi/core.hpp>
-
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
+#include <nxi/database.hpp>
 
 namespace nxi::data::session
 {
@@ -47,11 +43,6 @@ namespace nxi::data::session
 
 namespace nxi::data::session::internal
 {
-    void make(nxi::database& db)
-    {
-        db.exec(internal::str_table.data());
-    }
-
     void prepare(nxi::database& db)
     {
         db.prepare(prepared_query::add_session, "INSERT INTO session(name, active) VALUES(?, ?)");

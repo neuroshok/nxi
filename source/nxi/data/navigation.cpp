@@ -1,12 +1,6 @@
 #include <nxi/data/navigation.hpp>
 
 #include <nxi/database.hpp>
-#include <nxi/log.hpp>
-
-#include <QVariant>
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
 
 namespace nxi::data::navigation
 {
@@ -23,14 +17,10 @@ namespace nxi::data::navigation
 
 namespace nxi::data::navigation::internal
 {
-    void make(nxi::database& db)
-    {
-        db.exec(internal::str_table_navigation_log.data());
-    }
-
     void prepare(nxi::database& db)
     {
-        db.prepare(nxi::prepared_query::navigation_log_add, "INSERT INTO navigation_log(datetime, page_id, source, target, type) VALUES(datetime('now'), ?, ?, ?, ?)");
+        db.prepare(nxi::prepared_query::navigation_log_add,
+                   "INSERT INTO navigation(datetime, page_id, source, target, type) VALUES(datetime('now'), ?, ?, ?, ?)");
     }
 }
 // nxi::data::navigation::internal

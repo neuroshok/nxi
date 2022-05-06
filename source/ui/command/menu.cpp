@@ -3,8 +3,8 @@
 #include <nxi/command.hpp>
 #include <nxi/command/input.hpp>
 #include <nxi/core.hpp>
-#include <nxi/user_session.hpp>
 #include <nxi/system/session.hpp>
+#include <nxi/user.hpp>
 
 #include <ui/core.hpp>
 #include <ui/utility.hpp>

@@ -16,7 +16,11 @@ namespace nxi
     class shortcut_input
     {
     public:
-        enum class trigger_mode{ combo, sequence };
+        enum class trigger_mode
+        {
+            combo,
+            sequence
+        };
 
         shortcut_input(const nxi::command_input&);
 
@@ -31,7 +35,7 @@ namespace nxi
         QString to_string() const;
 
     signals:
-        //void input_update(QString keys);
+        // void input_update(QString keys);
 
     private:
         const nxi::command_input& command_input_;

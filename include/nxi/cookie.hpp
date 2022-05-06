@@ -1,6 +1,7 @@
 #ifndef INCLUDE_NXI_COOKIE_HPP_NXI
 #define INCLUDE_NXI_COOKIE_HPP_NXI
 
+#include <QNetworkCookie>
 #include <QWidget>
 
 namespace nxi

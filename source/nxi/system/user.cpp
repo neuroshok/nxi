@@ -6,7 +6,7 @@
 #include <nxi/database/model.hpp>
 #include <nxi/log.hpp>
 #include <nxi/type.hpp>
-#include <nxi/user_session.hpp>
+#include <nxi/user.hpp>
 
 #include <QDir>
 
@@ -28,7 +28,7 @@ namespace nxi
             data.name = result[nxi_model.user.name];
             data.active = result[nxi_model.user.active];
 
-            users_.emplace_back(std::make_unique<nxi::user_session>(nxi_core_, std::move(data)) );
+            users_.emplace_back(std::make_unique<nxi::user>(nxi_core_, std::move(data)));
 
             auto& user = *users_.back();
             focus_ = stz::make_observer(&user);
@@ -40,7 +40,7 @@ namespace nxi
         emit event_load();
     }
 
-    void user_system::load(nxi::user_session& user)
+    void user_system::load(nxi::user& user)
     {
         nxi_trace("load user {}", user.name());
         focus(user);
@@ -66,7 +66,7 @@ namespace nxi
     {
         nxi_trace("");
         nxi::data::user::add(nxi_core_.global_database(), data);
-        users_.emplace_back( std::make_unique<nxi::user_session>(nxi_core_, std::move(data)) );
+        users_.emplace_back(std::make_unique<nxi::user>(nxi_core_, std::move(data)));
         auto& user = *users_.back();
         focus_ = stz::make_observer(&user);
         emit event_add(user);
@@ -89,7 +89,7 @@ namespace nxi
         dir.removeRecursively();
     }
 
-    void user_system::focus(nxi::user_session& user)
+    void user_system::focus(nxi::user& user)
     {
         focus_ = stz::make_observer(&user);
         emit event_focus(*focus_);
@@ -100,23 +100,23 @@ namespace nxi
         focus(get(new_user_id));
     }
 
-    nxi::user_session& user_system::get(int id)
+    nxi::user& user_system::get(int id)
     {
         auto session_it = std::find_if(users_.begin(), users_.end(), [id](auto&& s) { return s->id() == id; });
         nxi_assert(session_it != users_.end());
         return *session_it->get();
     }
 
-    nxi::user_session& user_system::get(const QString& user_id)
+    nxi::user& user_system::get(const QString& user_id)
     {
         auto session_it = std::find_if(users_.begin(), users_.end(), [&user_id](auto&& s) { return s->name() == user_id; });
         nxi_assert(session_it != users_.end());
         return *session_it->get();
     }
-    stz::observer_ptr<nxi::user_session> user_system::focus()
+    nxi::user& user_system::focus()
     {
         nxi_assert(focus_ != nullptr);
-        return focus_;
+        return *focus_;
     }
 
     void user_system::unload()

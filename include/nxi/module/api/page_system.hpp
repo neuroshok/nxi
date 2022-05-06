@@ -1,28 +1,37 @@
 #ifndef INCLUDE_NXI_MODULE_API_PAGE_SYSTEM_HPP_NXI
 #define INCLUDE_NXI_MODULE_API_PAGE_SYSTEM_HPP_NXI
 
-namespace nxi { class user_session; }
-
 #include <nxi/log.hpp>
 
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QObject>
-#include <QWebEnginePage>
 #include <QVariantMap>
+#include <QWebEnginePage>
+
+namespace nxi
+{
+    class core;
+}
 
 namespace nxi::api
 {
     class page_system : public QObject
     {
-        enum class event {add = 0, focus = 1};
+        enum class event
+        {
+            add = 0,
+            focus = 1
+        };
 
         Q_OBJECT
     public:
-        page_system(nxi::user_session& session)
-            : session_{ session }
+        page_system(nxi::core& core)
+            : core_{ core }
         {}
+        page_system(const page_system&) = delete;
+        page_system& operator=(const page_system&) = delete;
 
     public slots:
         void add();
@@ -32,7 +41,7 @@ namespace nxi::api
         void js_callback(const QString&, QVariantMap);
 
     private:
-        nxi::user_session& session_;
+        nxi::core& core_;
 
         std::vector<QString> focus_callbacks_;
     };

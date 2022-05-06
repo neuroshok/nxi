@@ -7,21 +7,21 @@
 #include <nxi/log.hpp>
 #include <nxi/page/web.hpp>
 #include <nxi/system/command.hpp>
-#include <nxi/user_session.hpp>
+#include <nxi/user.hpp>
 
 #include <QKeyEvent>
 
 namespace nxi
 {
 
-    command_input::command_input(nxi::user_session& session)
-        : session_{ session }
+    command_input::command_input(nxi::core& core)
+        : core_{ core }
         , mode_{ mode_type::input }
         , state_{ state::search }
         , shortcut_input_{ *this }
     {
         /*
-        connect(&session_.command_system(), &nxi::command_system::event_execution_request, [this](nxi::command_executor& executor)
+        connect(&core_.command_system(), &nxi::command_system::event_execution_request, [this](nxi::command_executor& executor)
         {
             state_ = state::executing;
             //command_input().reset();
@@ -29,7 +29,6 @@ namespace nxi
             setText("");
             setPlaceholderText("enter parameter " + command_executor_->active_parameter().name);
         });*/
-
     }
 
     void command_input::update(const QString& input, QKeyEvent* event)
@@ -58,28 +57,21 @@ namespace nxi
             }
             if (mode_ == mode_type::input)
             {
-                if (!input_.isEmpty() && !session_.context_system().is_active<nxi::contexts::command_executor>())
+                if (!input_.isEmpty() && !core_.context_system().is_active<nxi::contexts::command_executor>())
                 {
-                    suggestions_.push_back(nxi::search_suggestion{ input_, "Google", "https://www.google.com/search?q=", ":/icon/search" } );
-                    suggestions_.push_back(nxi::search_suggestion{ input_, "CppReference", "https://en.cppreference.com/mwiki/index.php?search=", ":/icon/search" } );
+                    suggestions_.push_back(nxi::search_suggestion{ input_, "Google", "https://www.google.com/search?q=", ":/icon/search" });
+                    suggestions_.push_back(
+                    nxi::search_suggestion{ input_, "CppReference", "https://en.cppreference.com/mwiki/index.php?search=", ":/icon/search" });
                 }
 
-                session_.context_system().apply_on_active
-                (
-                    [this](const nxi::contexts::command&)
-                    {
-                        command_system().search(input_, [this](nds::node_ptr<const nxi::command> command)
-                        {
-                            suggestions_.push_back(std::move(command));
-                        });
-                    }
-                    , [this](const nxi::contexts::page&)
-                    {
-                        session_.page_system().search(input_, [this](nds::node_ptr<nxi::page> page)
-                        {
-                            suggestions_.push_back(std::move(page));
-                        });
-                    }
+                core_.context_system().apply_on_active(
+                [this](const nxi::contexts::command&) {
+                    command_system().search(input_,
+                                            [this](nds::node_ptr<const nxi::command> command) { suggestions_.push_back(std::move(command)); });
+                },
+                [this](const nxi::contexts::page&) {
+                    core_.page_system().search(input_, [this](nds::node_ptr<nxi::page> page) { suggestions_.push_back(std::move(page)); });
+                }
                     , [this](const nxi::contexts::command_executor& ctx)
                     {
                         decltype(suggestions_) suggestions;
@@ -118,16 +110,16 @@ namespace nxi
             using suggestion_type = std::decay_t<decltype(suggestion)>;
             if constexpr (std::is_same_v<suggestion_type, nds::node_ptr<const nxi::command>>)
             {
-                session_.command_system().exec(suggestion);
+                core_.command_system().exec(suggestion);
             }
             else if constexpr (std::is_same_v<suggestion_type, nds::node_ptr<nxi::page>>)
             {
-                session_.page_system().focus(suggestion);
+                core_.page_system().focus(suggestion);
             }
             else if constexpr (std::is_same_v<suggestion_type, nxi::search_suggestion>)
             {
-                session_.page_system().open<nxi::web_page>(suggestion.url() + suggestion.text());
-                //session_.search(suggestion.text());
+                core_.page_system().open<nxi::web_page>(suggestion.url() + suggestion.text());
+                // core_.search(suggestion.text());
             }
             else nxi_warning("unknown suggestion");
         });
@@ -168,23 +160,16 @@ namespace nxi
     void command_input::context_suggest()
     {
         suggestions_.clear();
-        session_.context_system().apply_on_active
-        (
-            [this](const nxi::contexts::command&)
+        core_.context_system().apply_on_active(
+        [this](const nxi::contexts::command&) {
+            command_system().root_list([this](nds::node_ptr<const nxi::command> command) { suggestions_.push_back(std::move(command)); });
+        },
+        [this](const nxi::contexts::page&) {
+            for (auto& page : core_.page_system().root_targets())
             {
-                command_system().root_list([this](nds::node_ptr<const nxi::command> command)
-                {
-                    suggestions_.push_back(std::move(command));
-                });
+                suggestions_.push_back(page);
             }
-            , [this](const nxi::contexts::page&)
-            {
-                for (auto& page :  session_.page_system().root_targets())
-                {
-                    suggestions_.push_back(page);
-                }
-            }
-            , [this](const nxi::contexts::command_executor& ctx) { ctx.data.active_parameter().suggestion_callback(suggestions_); }
+        }, [this](const nxi::contexts::command_executor& ctx) { ctx.data.active_parameter().suggestion_callback(suggestions_); }
             , [this](auto&&) { nxi_warning("no suggestion"); }
         );
         emit event_suggestion_update(suggestions_);
@@ -203,7 +188,7 @@ namespace nxi
     void command_input::suggest_context()
     {
         suggestions_.clear();
-        for (const auto& context : session_.context_system().contexts())
+        for (const auto& context : core_.context_system().contexts())
         {
             suggestions_.push_back(nxi::text_suggestion{ context->name(), "", QString::number(context->priority()) });
         };
@@ -213,7 +198,7 @@ namespace nxi
     void command_input::suggest_navigation()
     {
         suggestions_.clear();
-        for (const auto& page_command :  session_.navigation_system().page_command_logs())
+        for (const auto& page_command : core_.navigation_system().page_command_logs())
         {
             suggestions_.push_back(page_command);
         }
@@ -223,7 +208,7 @@ namespace nxi
     void command_input::suggest_page()
     {
         suggestions_.clear();
-        for (const auto& page :  session_.page_system().root_targets())
+        for (const auto& page : core_.page_system().root_targets())
         {
             suggestions_.push_back(page);
         }
@@ -233,7 +218,7 @@ namespace nxi
     void command_input::suggest_session()
     {
         suggestions_.clear();
-        for (const auto& session :  session_.session_system().sessions())
+        for (const auto& session : core_.session_system().sessions())
         {
             suggestions_.push_back(session->name());
         }
@@ -254,14 +239,8 @@ namespace nxi
         suggestions_.clear();
     }
 
-    const nxi::command_system& command_input::command_system() const
-    {
-        return session_.command_system();
-    }
-    nxi::command_system& command_input::command_system()
-    {
-        return session_.command_system();
-    }
+    const nxi::command_system& command_input::command_system() const { return core_.command_system(); }
+    nxi::command_system& command_input::command_system() { return core_.command_system(); }
 
     nxi::shortcut_input& command_input::shortcut_input()
     {

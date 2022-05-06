@@ -2,8 +2,7 @@
 #define INCLUDE_NXI_SYSTEM_USER_HPP_NXI
 
 #include <nxi/data/user.hpp>
-#include <nxi/user_session.hpp>
-#include <stz/observer_ptr.hpp>
+#include <nxi/user.hpp>
 
 #include <vector>
 #include <memory>
@@ -13,7 +12,7 @@
 namespace nxi
 {
     class core;
-    class user_session;
+    class user;
 
     class user_system : public QObject
     {
@@ -29,28 +28,28 @@ namespace nxi
         void add(nxi::user_data);
         void add(const QString& session_id);
         void del(const QString& session_id);
-        void focus(nxi::user_session&);
-        nxi::user_session& get(int id);
-        nxi::user_session& get(const QString& user_id);
-        void load(nxi::user_session&);
+        void focus(nxi::user&);
+        nxi::user& get(int id);
+        nxi::user& get(const QString& user_id);
+        void load(nxi::user&);
         void load(const QString& user_id);
         void unload(const QString& user_id);
         void unload_focus();
 
         void switch_focus(const QString& new_user_id);
 
-        stz::observer_ptr<nxi::user_session> focus();
+        nxi::user& focus();
 
     signals:
         void event_load(); // user_system loaded
-        void event_add(nxi::user_session&);
-        void event_unload(nxi::user_session&);
-        void event_focus(nxi::user_session&);
+        void event_add(nxi::user&);
+        void event_unload(nxi::user&);
+        void event_focus(nxi::user&);
 
     private:
         nxi::core& nxi_core_;
-        stz::observer_ptr<nxi::user_session> focus_;
-        std::vector<std::unique_ptr<nxi::user_session>> users_;
+        stz::observer_ptr<nxi::user> focus_;
+        std::vector<std::unique_ptr<nxi::user>> users_;
     };
 } // nxi
 

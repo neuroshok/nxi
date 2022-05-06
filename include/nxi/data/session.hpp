@@ -1,21 +1,21 @@
-#ifndef INCLUDE_NXI_DATABASE_SESSION_HPP_NXI
-#define INCLUDE_NXI_DATABASE_SESSION_HPP_NXI
+#ifndef INCLUDE_NXI_DATA_SESSION_HPP_NXI
+#define INCLUDE_NXI_DATA_SESSION_HPP_NXI
+
+#define MAKE_STRUCT
+#include "session_struct.hpp"
+
+#define MAKE_TABLE
+#include "session_struct.hpp"
+
+#define MAKE_MODEL
+#include "session_struct.hpp"
 
 #include <nxi/database/result.hpp>
-#include <nxi/type.hpp>
 
 namespace nxi
 {
-    class core;
     class database;
-
-    struct session_data
-    {
-        int id = 0;
-        QString name = "unknown_session";
-        bool active = false;
-    };
-}
+} // nxi
 
 namespace nxi::data::session
 {
@@ -26,27 +26,4 @@ namespace nxi::data::session
     void unload(nxi::database&, int id);
 } // nxi::data::session
 
-namespace nxi::data::session::internal
-{
-    void make(nxi::database& db);
-    void prepare(nxi::database& db);
-
-    inline static constexpr struct table
-    {
-        nxi::field<0, int> id{};
-        nxi::field<1, QString> name{};
-        nxi::field<2, bool> active{};
-    } session{};
-
-    constexpr std::string_view str_table = R"__(
-        CREATE TABLE `session`
-        (
-            `id` integer,
-            `name` text(24),
-            `active` integer,
-            PRIMARY KEY(`id`)
-        )
-        )__";
-} // nxi::data::session::internal
-
-#endif // INCLUDE_NXI_DATABASE_SESSION_HPP_NXI
+#endif // INCLUDE_NXI_DATA_SESSION_HPP_NXI

@@ -12,13 +12,13 @@
 
 namespace nxi
 {
+    class core;
     class custom_page;
     class database;
     class explorer_page;
     class page;
     class page_node;
     class web_page;
-    class user_session;
 
     class page_system : public QObject
     {
@@ -29,7 +29,7 @@ namespace nxi
         using page_ptr = nds::node_ptr<nxi::page>;
 
     public:
-        page_system(nxi::user_session&, nxi::database&);
+        page_system(nxi::core&, nxi::database&);
         page_system(const page_system&) = delete;
         page_system& operator=(const page_system&) = delete;
 
@@ -87,15 +87,15 @@ namespace nxi
         void event_update_root(page_ptr);
 
     public:
-        nxi::user_session& session_;
-        nxi::database& session_database_;
+        nxi::core& core_;
+        nxi::database& user_database_;
         nds::graph<nxi::page> graph_;
 
         page_ptr focus_;
         page_ptr root_;
 
         int session_id_ = 0;
-        //std::vector<page_ptr> actives_;
+        // std::vector<page_ptr> actives_;
         std::vector<page_ptr> visible_pages_;
     };
 

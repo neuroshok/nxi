@@ -109,6 +109,7 @@ namespace nxi
         nxi::data::module::internal::make(*this);
         nxi::data::navigation::internal::make(*this);
         nxi::data::page::internal::make(*this);
+        nxi::data::page_arc::internal::make(*this);
         nxi::data::session::internal::make(*this);
         nxi::data::window::internal::make(*this);
     }

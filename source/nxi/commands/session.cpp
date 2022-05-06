@@ -17,27 +17,26 @@ namespace nxi
             auto session_id = params.get(0);
             core_.session_system().add(session_id);
         };
-        add_session.parameters = {{ "name" }};
+        add_session.parameters = { { "name" } };
         add(std::move(add_session));
 
         // del_session
         nxi::command_data del_session;
         del_session.action = "del_session";
         del_session.description = "Delete a session";
-        del_session.function = [this](const nxi::values& params)
-        {
-            auto session_id = params.get(0);
-            core_.session_system().del(session_id);
+        del_session.function = [this](const nxi::values& params) {
+            auto session_name = params.get(0);
+            auto& session = core_.session_system().get(session_name);
+            core_.session_system().del(session.id());
         };
-        del_session.parameters = {{ "name" }};
+        del_session.parameters = { { "name" } };
         add(std::move(del_session));
 
         // load_session
         nxi::command_data load_session;
         load_session.action = "load_session";
         load_session.description = "Load a session";
-        load_session.function = [this](const nxi::values& params)
-        {
+        load_session.function = [this](const nxi::values& params) {
             auto session_id = params.get(0);
             core_.session_system().load(session_id);
         };

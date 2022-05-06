@@ -13,6 +13,13 @@
 #define MAKE_MODEL
 #include "user_struct.hpp"
 
+#include <nxi/database/result.hpp>
+
+namespace nxi
+{
+    class database;
+}
+
 namespace nxi::data::user
 {
     unsigned int add(nxi::database&, const nxi::user_data&);

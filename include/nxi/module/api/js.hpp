@@ -12,7 +12,7 @@ namespace nxi::api
     void js_call(nxi::page& page, const QString& function, const Arg& arg, const Args&... args)
     {
         QString str_args;
-        if constexpr(sizeof...(Args) > 0) str_args = (... + ("," + QJsonDocument{ args }.toJson(QJsonDocument::Compact)));
+        if constexpr (sizeof...(Args) > 0) str_args = (... + ("," + QJsonDocument{ args }.toJson(QJsonDocument::Compact)));
         QString script = "(" + function + ")(" + QJsonDocument{ arg }.toJson(QJsonDocument::Compact) + str_args + ");";
         page.run_script(std::move(script));
     }

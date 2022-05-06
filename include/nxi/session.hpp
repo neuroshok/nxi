@@ -8,7 +8,7 @@
 
 namespace nxi
 {
-    class user_session;
+    class core;
     class web_session;
 
     class session : public QObject
@@ -16,7 +16,7 @@ namespace nxi
         Q_OBJECT
 
     public:
-        session(nxi::user_session&, nxi::session_data data);
+        session(nxi::core&, nxi::session_data data);
 
         void load();
         void unload();
@@ -28,18 +28,18 @@ namespace nxi
         nxi::config& config();
         const nxi::config& config() const;
 
-        nxi::user_session& user_session();
+        nxi::core& core();
         nxi::web_session& web_session();
 
     private:
-        nxi::user_session& user_session_;
-        nxi::web_session* web_session_;
-
-        nxi::config config_;
+        nxi::core& core_;
 
         int id_;
         QString name_;
         bool active_;
+
+        nxi::config config_;
+        nxi::web_session* web_session_;
     };
 } // nxi
 
