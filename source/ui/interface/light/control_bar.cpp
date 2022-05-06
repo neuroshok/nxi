@@ -119,7 +119,7 @@ namespace ui::interfaces::light
             layout->addWidget(command_root_);
             layout->addWidget(page_root_);
             layout->addWidget(navigation);
-            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/refresh" });
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/refresh", "nxi:reload" });
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/previous" });
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/next" });
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/add", "nxi:new" });

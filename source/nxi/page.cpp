@@ -107,6 +107,8 @@ namespace nxi
         emit event_load();
     }
 
+    void page::reload() { emit event_reload(); }
+
     void page::close() { emit event_close(); }
 
     void page::run_script(const QString& script) const { nxi_warning("unimplemented"); }

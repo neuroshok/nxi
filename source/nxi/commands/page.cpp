@@ -161,32 +161,34 @@ namespace nxi
         nxi::command_data navigate_previous;
         navigate_previous.action = "previous_page";
         navigate_previous.description = "Navigate to previous page";
-        navigate_previous.shortcut = {{ Qt::Key_Alt }, { Qt::Key_Left }};
-        navigate_previous.function = [this](const nxi::values& params)
-        {
-            core_.navigation_system().previous_page_command();
-        };
+        navigate_previous.shortcut = { { Qt::Key_Alt }, { Qt::Key_Left } };
+        navigate_previous.function = [this](const nxi::values& params) { core_.navigation_system().previous_page_command(); };
         add(std::move(navigate_previous));
+
+        // reload
+        nxi::command_data page_reload;
+        page_reload.action = "reload";
+        page_reload.description = "Reload this page";
+        page_reload.context_id = nxi::context::id<nxi::contexts::page>();
+        page_reload.function = [this](const nxi::values& values) { core_.page_system().focus()->reload(); };
+        add(std::move(page_reload));
 
         // set_property
         nxi::command_data page_set_property;
         page_set_property.action = "set_property";
         page_set_property.description = "Set a property";
         page_set_property.context_id = nxi::context::id<nxi::contexts::command>();
-        page_set_property.function = [this](const nxi::values& values)
-        {
+        page_set_property.function = [this](const nxi::values& values) {
             nxi_assert(values.size() == 2);
             core_.page_system().focus()->update_property(values.get(0), values.get(1));
         };
 
-        page_set_property.parameters = {
-        { "name", [this](nxi::suggestion_vector& suggestion)
-            {
-                suggestion.push_back("color");
-                suggestion.push_back("name");
-            }
-        },
-        { "value" }};
+        page_set_property.parameters = { { "name",
+                                           [this](nxi::suggestion_vector& suggestion) {
+                                               suggestion.push_back("color");
+                                               suggestion.push_back("name");
+                                           } },
+                                         { "value" } };
 
         add(std::move(page_set_property));
 

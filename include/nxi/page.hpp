@@ -35,6 +35,7 @@ namespace nxi
 
         void load();
         void load(const QString& command);
+        void reload();
         void close();
 
         void set_audible(bool state);
@@ -101,6 +102,7 @@ namespace nxi
         void event_close();
         void event_focus();
         void event_load();
+        void event_reload();
     };
 } // nxi
 

@@ -61,7 +61,8 @@ namespace ui
 
         //
 
-        connect(&page_, &nxi::web_page::event_load, this, [this]() { load(page_.command()); });
+        connect(&page_, &nxi::web_page::event_load, this, [this] { load(page_.command()); });
+        connect(&page_, &nxi::web_page::event_reload, this, [this] { native_page_->triggerAction(ui::web_engine_page::WebAction::Reload); });
         connect(&page_, &nxi::web_page::event_run_script, this, [this](const QString& script) { native_page_->runJavaScript(script); });
         connect(&page_, &nxi::web_page::event_update_mute, this, [this](bool state) { native_page_->setAudioMuted(state); });
         connect(&page_, &nxi::web_page::event_call_script, this, [this](const QString& script, std::function<void(const QVariant&)> fn) {
