@@ -60,7 +60,7 @@ namespace nxi
                     emit page->event_load();
                     emit event_load(page);
                     // todo : use navigation system
-                    // focus(page);
+                    focus(page);
                 }
                 break;
             }
