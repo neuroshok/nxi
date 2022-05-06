@@ -1,8 +1,7 @@
 #ifndef INCLUDE_NXI_SESSION_HPP_NXI
 #define INCLUDE_NXI_SESSION_HPP_NXI
 
-#include <nxi/data/session.hpp>
-
+#include <nxi/config.hpp>
 
 #include <QObject>
 #include <QString>
@@ -26,12 +25,17 @@ namespace nxi
         const QString& name() const;
         bool is_active() const;
 
+        nxi::config& config();
+        const nxi::config& config() const;
+
         nxi::user_session& user_session();
         nxi::web_session& web_session();
 
     private:
         nxi::user_session& user_session_;
         nxi::web_session* web_session_;
+
+        nxi::config config_;
 
         int id_;
         QString name_;

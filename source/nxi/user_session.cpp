@@ -27,7 +27,7 @@ namespace nxi
     void user_session::load()
     {
         core_database_.connect();
-        config_ = std::make_unique<nxi::config>("nxi.user", core_database_);
+        config_ = std::make_unique<nxi::config>("nxi.user", core_database_, 0);
 
         window_system_.load(); // load before interface_system
 

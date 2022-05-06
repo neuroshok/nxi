@@ -23,7 +23,7 @@ namespace nxi
         auto style = new nxi::style(name);
         style->load();
         QApplication::setStyle(style); // QApplication own style
-        session_.config().browser.interface.style = name;
+        session_.session_system().focus()->config().browser.interface.style = name;
         emit event_update_style(*style);
     }
 

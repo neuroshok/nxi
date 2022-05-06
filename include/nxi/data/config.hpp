@@ -19,20 +19,22 @@ namespace nxi
 
 namespace nxi::data::config
 {
-    inline nxi::result get(nxi::database& db, const QString& key)
+    inline nxi::result get(nxi::database& db, const QString& key, int session_id)
     {
         auto& query = db.prepared_query(nxi::prepared_query::get_config_value);
         query.bindValue(0, key);
+        query.bindValue(1, session_id);
 
         return nxi::result{ query };
     }
 
     template<class T>
-    inline void set(nxi::database& db, const QString& key, const T& value)
+    inline void set(nxi::database& db, const QString& key, const T& value, int session_id)
     {
         auto& query = db.prepared_query(nxi::prepared_query::set_config_value);
         query.bindValue(0, key);
         query.bindValue(1, value);
+        query.bindValue(2, session_id);
         if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
     }
 
@@ -48,6 +50,7 @@ namespace nxi::data::config::internal
         nxi::field<0, int> key{};
         nxi::field<1, int> type{};
         nxi::field<2, QByteArray> value{};
+        nxi::field<3, int> session_id{};
     } config{};
 
     constexpr std::string_view str_table = R"__(
@@ -56,6 +59,7 @@ namespace nxi::data::config::internal
             `key` varchar(24),
             `type` integer,
             `value` blob,
+            `session_id` integer,
             PRIMARY KEY(`key`)
         )
         )__";

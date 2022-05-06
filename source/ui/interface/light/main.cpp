@@ -18,6 +18,7 @@
 
 #include <QMessageBox>
 #include <nxi/system/page.hpp>
+#include <nxi/system/session.hpp>
 #include <nxi/type.hpp>
 
 #include <QBrush>
@@ -44,6 +45,13 @@ namespace ui::interfaces::light
         connect(&session_.nxi_session().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style)
         {
             style.update(this);
+        });
+
+
+        connect(&session_.nxi_session().session_system(), &nxi::session_system::event_focus, [this](const nxi::session& session)
+        {
+            auto& s = session.config().browser.interface.style.get();
+            session_.nxi_session().interface_system().load_style(s);
         });
 
         auto main_layout = new nxw::vbox_layout;
