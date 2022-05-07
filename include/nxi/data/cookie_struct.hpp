@@ -1,7 +1,7 @@
 #include <nxi/data/init.hpp>
 
-#include <QString>
 #include <QNetworkCookie>
+#include <QString>
 
 init_open(cookie) init_field(0, int, id, "integer") init_field(1, QString, domain, "text") init_field(2, int64_t, expiration, "integer")
 init_field(3, bool, http_only, "integer") init_field(4, QByteArray, name, "text") init_field(5, QString, path, "text")
