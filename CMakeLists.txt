@@ -191,9 +191,14 @@ if (NXI_TARGET_DESKTOP)
         )
         add_dependencies(nxi_deploy nxi_exe)
     endif()
+    # todo copy library using extension
     if (NXI_TARGET_SYSTEM STREQUAL "Darwin")
         set(QT_DEPLOYQT_EXECUTABLE "${QT_DEPLOYQT_EXECUTABLE}/macdeployqt")
-        add_custom_target(nxi_deploy COMMAND ${QT_DEPLOYQT_EXECUTABLE} $<TARGET_FILE_DIR:nxi> -qmldir=${CMAKE_SOURCE_DIR})
+        add_custom_target(nxi_deploy COMMAND ${QT_DEPLOYQT_EXECUTABLE} $<TARGET_FILE_DIR:nxi> -qmldir=${CMAKE_SOURCE_DIR}
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/nxi.module/theme/ $<TARGET_FILE_DIR:nxi_exe>/module/theme/
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/nxi.module/web/ $<TARGET_FILE_DIR:nxi_exe>/module/web/
+                )
+
         add_dependencies(nxi_deploy nxi_exe)
     endif()
 
