@@ -60,7 +60,7 @@ namespace ui
         connect(native_page_, &QWebEnginePage::urlChanged, this, [this](const QUrl& url) { page_.update_command(url.toString()); });
 
         //
-
+        connect(&page_, &nxi::web_page::event_add_script, [this](const QWebEngineScript& script) { native_page_->scripts().insert(script); });
         connect(&page_, &nxi::web_page::event_load, this, [this] { load(page_.command()); });
         connect(&page_, &nxi::web_page::event_reload, this, [this] { native_page_->triggerAction(ui::web_engine_page::WebAction::Reload); });
         connect(&page_, &nxi::web_page::event_run_script, this, [this](const QString& script) { native_page_->runJavaScript(script); });

@@ -30,6 +30,7 @@
 #include <QBrush>
 #include <QImage>
 #include <QPalette>
+#include <QProgressBar>
 #include <QtGui/QPainter>
 
 #include <ui/system/page.hpp>
@@ -62,6 +63,8 @@ namespace ui::interfaces::light
         auto window_control = new ui::interfaces::standard::window_control(session_, window);
 
         static_cast<ui::window*>(this->window())->set_grip(this);
+        auto bar = new QProgressBar{ this };
+        bar->hide();
 
         top_layout->addSpacing(120);
         top_layout->addWidget(control_bar_);
@@ -69,6 +72,7 @@ namespace ui::interfaces::light
 
         main_layout->addLayout(top_layout);
         main_layout->addLayout(middle_layout, 1);
+        main_layout->addWidget(bar);
 
         command_menu_ = new ui::command_menu(session_, this);
         command_menu_->hide();
@@ -77,8 +81,12 @@ namespace ui::interfaces::light
 
         auto session_info_ = new QLabel{ this };
 
-        connect(&session_.nxi_session().nxi_core(), &nxi::core::event_load, [session_info_, this]() {
-
+        connect(&session_.nxi_session().nxi_core(), &nxi::core::event_load, [bar, this]() {
+            connect(&session_.nxi_core().session().web_downloader(), &nxi::web_downloader::event_update, [bar](float percent) {
+                if (percent > 99) bar->hide();
+                else bar->show();
+                bar->setValue(percent);
+            });
         });
 
         connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_reset, [this]() { command_menu_->hide(); });

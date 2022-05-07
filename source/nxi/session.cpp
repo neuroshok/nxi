@@ -12,7 +12,12 @@ namespace nxi
         , active_{ std::move(data.active) }
         , config_{ "session", core_.user_database(), id_ }
         , web_session_{ new nxi::web_session{ *this, this } }
-    {}
+        , web_downloader_{ *this }
+    {
+        connect(static_cast<QWebEngineProfile*>(web_session_), &QWebEngineProfile::downloadRequested, [this](QWebEngineDownloadRequest* request) {
+            web_downloader_.process(request);
+        });
+    }
 
     void session::load()
     {
@@ -30,5 +35,6 @@ namespace nxi
     nxi::config& session::config() { return config_; }
 
     nxi::core& session::core() { return core_; }
+    nxi::web_downloader& session::web_downloader() { return web_downloader_; }
     nxi::web_session& session::web_session() { return *web_session_; }
 } // nxi

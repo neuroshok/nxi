@@ -2,6 +2,7 @@
 #define INCLUDE_NXI_SESSION_HPP_NXI
 
 #include <nxi/config.hpp>
+#include <nxi/web_downloader.hpp>
 
 #include <QObject>
 #include <QString>
@@ -27,8 +28,8 @@ namespace nxi
 
         nxi::config& config();
         const nxi::config& config() const;
-
         nxi::core& core();
+        nxi::web_downloader& web_downloader();
         nxi::web_session& web_session();
 
     private:
@@ -39,6 +40,7 @@ namespace nxi
         bool active_;
 
         nxi::config config_;
+        nxi::web_downloader web_downloader_;
         nxi::web_session* web_session_;
     };
 } // nxi
