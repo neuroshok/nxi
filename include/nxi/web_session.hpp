@@ -21,8 +21,6 @@ namespace nxi
 
     private:
         nxi::session& session_;
-
-        QSqlDatabase cookie_db_;
     };
 } // nxi
 

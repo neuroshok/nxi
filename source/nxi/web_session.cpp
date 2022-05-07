@@ -24,8 +24,6 @@ namespace nxi
 
     void web_session::load()
     {
-        cookie_db_ = QSqlDatabase::addDatabase("QSQLITE", nxi::database::path + QString{ "cookie" });
-
         // setCachePath("./cache");
         // setPersistentStoragePath("./cache");
         setHttpCacheType(QWebEngineProfile::HttpCacheType::DiskHttpCache);
