@@ -89,6 +89,7 @@ namespace nxi
         const QString& name() const { return name_; }
         const QString& path() const { return path_; }
         const T& default_value() const { return default_value_; }
+        int session_id() const { return session_id_; }
 
         void operator=(T value)
         {
