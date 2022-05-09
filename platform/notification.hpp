@@ -15,6 +15,12 @@ namespace platform
 {
     using namespace platform::macos;
 }
+#else
+#include <platform/generic/notification.hpp>
+namespace platform
+{
+    using namespace platform::generic;
+}
 #endif
 
 #endif // PLATFORM_NOTIFICATION_HPP_NXI
