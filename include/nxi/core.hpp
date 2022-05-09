@@ -40,6 +40,7 @@ namespace nxi
         nxi::context_system& context_system();
         nxi::interface_system& interface_system();
         nxi::navigation_system& navigation_system();
+        nxi::notification_system& notification_system();
         nxi::page_system& page_system();
 
         nxi::database& user_database();

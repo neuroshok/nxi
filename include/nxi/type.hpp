@@ -7,24 +7,30 @@ namespace nxi
 
     enum class context_type
     {
-        command
-        , command_executor
-        , custom
-        , page
+        command,
+        command_executor,
+        custom,
+        page
     };
     enum class module_type
     {
-        compiled
-        , dynamic
-        , web
+        compiled,
+        dynamic,
+        web
+    };
+    enum class notification_type
+    {
+        system,
+        module,
+        web
     };
     enum class page_type
     {
-        node
-        , static_
-        , web
-        , explorer
-        , custom
+        node,
+        static_,
+        web,
+        explorer,
+        custom
     };
     enum class renderer_type
     {

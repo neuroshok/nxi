@@ -1,40 +1,31 @@
 #include <ui/interface/light/main.hpp>
 
 #include <nxi/core.hpp>
-#include <nxi/system/page.hpp>
+#include <nxi/notification_data.hpp>
+#include <nxi/system/interface.hpp>
 #include <nxi/system/session.hpp>
 
 #include <nxw/hbox_layout.hpp>
-#include <nxw/icon_button.hpp>
 #include <nxw/vbox_layout.hpp>
 
 #include <ui/core.hpp>
 #include <ui/interface/light/control_bar.hpp>
 #include <ui/interface/standard/content.hpp>
 
-#include <ui/view/config.hpp>
-#include <ui/view/page_tree.hpp>
-
-#include <nxi/system/page.hpp>
-#include <nxi/system/session.hpp>
-#include <nxi/type.hpp>
-#include <QMessageBox>
-
-#include <nxi/style_data.hpp>
-#include <nxi/system/interface.hpp>
 #include <ui/command/input.hpp>
 #include <ui/command/menu.hpp>
 #include <ui/interface/standard/window_control.hpp>
+#include <ui/notification.hpp>
 #include <ui/system/user.hpp>
+#include <ui/view/config.hpp>
+#include <ui/view/page_tree.hpp>
 #include <ui/window.hpp>
-#include <QBrush>
-#include <QImage>
-#include <QPalette>
-#include <QProgressBar>
-#include <QtGui/QPainter>
 
-#include <ui/system/page.hpp>
+#include <QImage>
+#include <QMessageBox>
+#include <QProgressBar>
 #include <QWebEngineView>
+#include <QtGui/QPainter>
 
 namespace ui::interfaces::light
 {
@@ -86,6 +77,10 @@ namespace ui::interfaces::light
                 if (percent > 99) bar->hide();
                 else bar->show();
                 bar->setValue(percent);
+            });
+            connect(&session_.nxi_core().notification_system(), &nxi::notification_system::event_send, [this](const nxi::notification_data& data) {
+                auto notification = ui::notification::make(data, session_.nxi_core().session_config().browser.notification_mode.get());
+                notification->show();
             });
         });
 

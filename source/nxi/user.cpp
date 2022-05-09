@@ -22,6 +22,7 @@ namespace nxi
         , window_system_{ core }
         , module_system_{ core }
         , navigation_system_{ core }
+        , notification_system_{ core }
     {}
 
     void user::load()
@@ -38,6 +39,7 @@ namespace nxi
         page_system_.load();
         module_system_.load();
         navigation_system_.load();
+        // notification_system.load();
     }
 
     void user::unload() { user_database_.close(); }
@@ -62,6 +64,7 @@ namespace nxi
     nxi::interface_system& user::interface_system() { return interface_system_; }
     nxi::module_system& user::module_system() { return module_system_; }
     nxi::navigation_system& user::navigation_system() { return navigation_system_; }
+    nxi::notification_system& user::notification_system() { return notification_system_; }
     nxi::page_system& user::page_system() { return page_system_; }
     nxi::session_system& user::session_system() { return session_system_; }
     nxi::window_system& user::window_system() { return window_system_; }

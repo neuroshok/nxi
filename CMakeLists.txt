@@ -68,7 +68,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #-------------------------------------------------------
 #                     Dependencies
 #-------------------------------------------------------
-# NDS
+# nds
 add_subdirectory(${NXI_THIRD_PARTY_ROOT}/nds)
 
 # speedlog
@@ -121,19 +121,25 @@ if (NXI_TARGET_DESKTOP)
         # use generic window
         if (NOT NXI_WINDOW_GENERIC)
             list(APPEND NXI_PLATFORM_SOURCES "${PROJECT_SOURCE_DIR}/platform/windows/window.cpp")
-        endif()
+        endif ()
+
+        list(APPEND NXI_PLATFORM_SOURCES
+                "${PROJECT_SOURCE_DIR}/platform/windows/notification.cpp"
+                "${PROJECT_SOURCE_DIR}/third_party/wintoast/wintoast.cpp")
     endif()
 
-    # use generic window on other platforms
     if (NOT WIN32)
         set(NXI_WINDOW_GENERIC ON)
-    endif()
+    endif ()
 
     # use generic window
     if (NXI_WINDOW_GENERIC)
         list(APPEND NXI_PLATFORM_SOURCES "${PROJECT_SOURCE_DIR}/platform/generic/window.cpp")
         list(APPEND NXI_DEFINITIONS NXI_WINDOW_GENERIC)
-    endif()
+    endif ()
+
+    # generic platform sources
+    list(APPEND NXI_PLATFORM_SOURCES "${PROJECT_SOURCE_DIR}/platform/generic/notification.cpp")
 
     file(GLOB_RECURSE NXI_SOURCES
             "${PROJECT_SOURCE_DIR}/source/nxi/*.cpp"

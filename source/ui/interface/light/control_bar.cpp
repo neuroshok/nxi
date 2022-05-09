@@ -5,13 +5,14 @@
 #include <nxi/user.hpp>
 #include <nxw/hbox_layout.hpp>
 
+#include "nxw/icon_button.hpp"
 #include <ui/command/input.hpp>
 #include <ui/core.hpp>
 #include <ui/interface/light/button.hpp>
-#include "nxw/icon_button.hpp"
 
+#include <nxi/notification_data.hpp>
+#include <nxi/system/notification.hpp>
 #include <QIcon>
-
 
 namespace ui::interfaces::light
 {
@@ -84,16 +85,17 @@ namespace ui::interfaces::light
         navigation->setStyleSheet("font-weight: bold; color: #BB2200; padding: 0 20 0 20;");
         connect(navigation, &light::button::event_enter, [this]()
         {
-            session_.nxi_session().command_system().command_input().suggest_navigation();
-        });
+            session_.nxi_session().command_system().command_input().suggest_navigation(); });
 
         // context
         context_ = new light::button("context_", this);
         context_->setStyleSheet("font-weight: bold; color: #00BB99; padding: 0 20 0 20;");
-        connect(context_, &light::button::event_enter, [this]()
-        {
-            session_.nxi_session().command_system().command_input().suggest_context();
-        });
+        connect(context_, &light::button::event_enter, [this]() { session_.nxi_session().command_system().command_input().suggest_context(); });
+
+        // notification
+        auto notification_ = new nxw::icon_button{ session_, this, ":/icon/notification", "" };
+
+        connect(notification_, &QPushButton::clicked, [this] { session_.nxi_core().notification_system().send("notif"); });
 
         // tools
         auto download_button = new nxw::icon_button{ session_, this, ":/icon/download" };
@@ -128,7 +130,7 @@ namespace ui::interfaces::light
             layout->addWidget(context_);
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/at" });
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/friend" });
-            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/notification" });
+            layout->addWidget(notification_);
             layout->addWidget(download_button);
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/help" });
             layout->addWidget(close_button);

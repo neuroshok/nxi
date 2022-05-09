@@ -38,6 +38,7 @@ namespace nxi
     nxi::context_system& core::context_system() { return user().context_system(); }
     nxi::interface_system& core::interface_system() { return user().interface_system(); }
     nxi::navigation_system& core::navigation_system() { return user().navigation_system(); }
+    nxi::notification_system& core::notification_system() { return user().notification_system(); }
     nxi::page_system& core::page_system() { return user().page_system(); }
     nxi::session_system& core::session_system() { return user().session_system(); }
 

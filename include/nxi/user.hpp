@@ -10,6 +10,7 @@
 #include <nxi/system/interface.hpp>
 #include <nxi/system/module.hpp>
 #include <nxi/system/navigation.hpp>
+#include <nxi/system/notification.hpp>
 #include <nxi/system/page.hpp>
 #include <nxi/system/session.hpp>
 #include <nxi/system/window.hpp>
@@ -49,6 +50,7 @@ namespace nxi
         nxi::interface_system& interface_system();
         nxi::module_system& module_system();
         nxi::navigation_system& navigation_system();
+        nxi::notification_system& notification_system();
         nxi::page_system& page_system();
         nxi::session_system& session_system();
         nxi::window_system& window_system();
@@ -76,6 +78,7 @@ namespace nxi
         nxi::window_system window_system_;
         nxi::module_system module_system_;
         nxi::navigation_system navigation_system_;
+        nxi::notification_system notification_system_;
     };
 } // nxi
 
