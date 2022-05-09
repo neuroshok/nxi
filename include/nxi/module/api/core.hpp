@@ -47,8 +47,8 @@ namespace nxi::api
 
 extern "C"
 {
-    __declspec(dllexport) void nxi_core_error(nxi::core*, const char* message);
-    __declspec(dllexport) void nxi_page_system_open(nxi::core*);
+    NXI_EXPORT void nxi_core_error(nxi::core*, const char* message);
+    NXI_EXPORT void nxi_page_system_open(nxi::core*);
 };
 
 #endif // INCLUDE_NXI_MODULE_API_CORE_HPP_NXI
