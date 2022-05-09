@@ -48,10 +48,9 @@ set(CMAKE_MODULE_PATH  ${NXI_QT_ROOT})
 ## PLATFORM
 # windows
 if (NXI_TARGET_DESKTOP)
-    set(NXI_QT_COMPONENTS Core Widgets Gui SvgWidgets Sql WebEngineWidgets WebChannel 3DCore 3DRender 3DInput 3DExtras)
-    set(NXI_QT_LIBS Qt6::Core Qt6::Widgets Qt6::Gui  Qt6::SvgWidgets Qt6::Sql Qt6::WebEngineWidgets Qt6::WebChannel
-            Qt6::3DCore Qt6::3DRender Qt6::3DInput Qt6::3DExtras)
-endif()
+    set(NXI_QT_COMPONENTS Core Widgets Gui SvgWidgets Sql WebEngineWidgets WebChannel)
+    set(NXI_QT_LIBS Qt6::Core Qt6::Widgets Qt6::Gui Qt6::SvgWidgets Qt6::Sql Qt6::WebEngineWidgets Qt6::WebChannel)
+endif ()
 
 # android
 include(platform/android/cmake/android.cmake)

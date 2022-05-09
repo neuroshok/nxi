@@ -24,7 +24,7 @@ namespace ui
         // todo rename views to pages
         // init static widget page
         make_widget<ui::views::config>("nxi/config");
-        make_widget<ui::views::aboutgl>("nxi/aboutgl");
+        // make_widget<ui::views::aboutgl>("nxi/aboutgl");
 
         connect(&session_.nxi_session().page_system(), &nxi::page_system::event_add, this, [this](nds::node_ptr<nxi::page> page, nds::node_ptr<nxi::page>)
         {

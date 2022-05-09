@@ -1,40 +1,41 @@
 #ifndef INCLUDE_UI_VIEW_ABOUTGL_HPP_NXI
 #define INCLUDE_UI_VIEW_ABOUTGL_HPP_NXI
 
+/*
 #include <QWidget>
 
+#include <Qt3DCore/QAspectEngine>
 #include <Qt3DCore/QEntity>
+#include <Qt3DCore/QTransform>
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QCameraLens>
-#include <Qt3DCore/QTransform>
-#include <Qt3DCore/QAspectEngine>
 
 #include <Qt3DInput/QInputAspect>
 
+#include <Qt3DExtras/QCuboidMesh>
+#include <Qt3DExtras/QCylinderMesh>
+#include <Qt3DExtras/QExtrudedTextMesh>
+#include <Qt3DExtras/QForwardRenderer>
+#include <Qt3DExtras/QNormalDiffuseSpecularMapMaterial>
+#include <Qt3DExtras/QPhongMaterial>
+#include <Qt3DExtras/QPlaneMesh>
+#include <Qt3DExtras/QSphereMesh>
+#include <Qt3DExtras/QText2DEntity>
+#include <Qt3DExtras/QTextureMaterial>
+#include <Qt3DRender/QPaintedTextureImage>
 #include <Qt3DRender/QRenderAspect>
 #include <Qt3DRender/QTexture>
-#include <Qt3DRender/QPaintedTextureImage>
-#include <Qt3DExtras/QForwardRenderer>
-#include <Qt3DExtras/QPhongMaterial>
-#include <Qt3DExtras/QCylinderMesh>
-#include <Qt3DExtras/QSphereMesh>
-#include <Qt3DExtras/QCuboidMesh>
-#include <Qt3DExtras/QTextureMaterial>
-#include <Qt3DExtras/QNormalDiffuseSpecularMapMaterial>
-#include <Qt3DExtras/QPlaneMesh>
-#include <Qt3DExtras/QText2DEntity>
-#include <Qt3DExtras/QExtrudedTextMesh>
 
 #include <QPropertyAnimation>
 
-#include "qt3dwindow.h"
 #include "qorbitcameracontroller.h"
+#include "qt3dwindow.h"
 
-#include <ui/system/session.hpp>
-#include <nxi/core.hpp>
-#include <nxi/config.hpp>
-#include <QtWidgets/QHBoxLayout>
 #include <include/nxw/hbox_layout.hpp>
+#include <nxi/config.hpp>
+#include <nxi/core.hpp>
+#include <ui/system/session.hpp>
+#include <QtWidgets/QHBoxLayout>
 
 namespace ui::views
 {
@@ -108,7 +109,7 @@ namespace ui::views
             text->addComponent(textMaterial);
             text->addComponent(textTransform);
             text->addComponent(textMesh);
-             */
+
         }
 
     private:
@@ -116,5 +117,7 @@ namespace ui::views
 
     };
 } // nxi::views
+
+ */
 
 #endif // INCLUDE_UI_VIEW_ABOUTGL_HPP_NXI
