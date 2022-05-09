@@ -41,7 +41,7 @@ function(internal_generate_static_module module_pack module module_path)
 
     # create variables for generated file
     string(APPEND NXI_MODULE_STATIC_INCLUDE "#include <../module/${module_path}/${module}.hpp>\n")
-    string(APPEND NXI_MODULE_STATIC_INIT ", ${module}_{ session }\n")
+    string(APPEND NXI_MODULE_STATIC_INIT ", ${module}_{ core }\n")
     string(APPEND NXI_MODULE_STATIC_LOAD "${module}_.load();\n")
     string(APPEND NXI_MODULE_STATIC_MEMBER "nxi::modules::${module} ${module}_;\n")
 

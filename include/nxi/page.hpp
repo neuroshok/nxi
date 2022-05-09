@@ -35,6 +35,7 @@ namespace nxi
 
         void load();
         void load(const QString& command);
+        void reload();
         void close();
 
         void set_audible(bool state);
@@ -49,12 +50,14 @@ namespace nxi
         void update_mute(bool state);
         void update_name(const QString& name, bool override = false);
         void update_property(const QString& name, const QString& value);
+        void update_session(int id);
 
         nxi::page_id id() const;
         const QString& name() const;
         const QString& command() const;
         nxi::page_type type() const;
         nxi::renderer_type renderer_type() const;
+        int session_id() const;
 
         bool has_color() const;
 
@@ -74,6 +77,7 @@ namespace nxi
         QString command_;
         nxi::page_type type_;
         nxi::renderer_type renderer_type_;
+        int session_id_;
 
         bool has_color_;
         bool has_name_;
@@ -98,6 +102,7 @@ namespace nxi
         void event_close();
         void event_focus();
         void event_load();
+        void event_reload();
     };
 } // nxi
 

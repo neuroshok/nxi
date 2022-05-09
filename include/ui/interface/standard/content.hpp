@@ -9,7 +9,7 @@ namespace nxw
     class explorer_view;
 } // nxw
 
-namespace ui { class session; }
+namespace ui { class user_session; }
 
 class QStackedWidget;
 
@@ -19,10 +19,10 @@ namespace ui::interfaces::standard
     {
     public:
 
-        explicit content(ui::session& session, ui::window* window);
+        explicit content(ui::user_session& session, ui::window* window);
 
     private:
-        ui::session& session_;
+        ui::user_session& session_;
 
         ui::renderer_view* renderer_view_;
     };

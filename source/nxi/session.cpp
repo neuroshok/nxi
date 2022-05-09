@@ -1,74 +1,40 @@
 #include <nxi/session.hpp>
 
-#include <nxi/config.hpp>
+#include <nxi/core.hpp>
 #include <nxi/web_session.hpp>
 
 namespace nxi
 {
     session::session(nxi::core& core, nxi::session_data data)
-        : nxi_core_{ core }
-        , id_{ data.name }
+        : core_{ core }
+        , id_{ data.id }
         , name_{ std::move(data.name) }
         , active_{ std::move(data.active) }
-        , core_database_{ name_ }
-        , api_{ *this }
-        , config_{ nullptr }
-        , command_system_{ *this }
-        , context_system_{ *this }
-        , interface_system_{ *this }
-        , page_system_{ *this, core_database_ }
-        , window_system_{ *this }
-        , module_system_{ *this }
-        , navigation_system_{ *this }
+        , config_{ "session", core_.user_database(), id_ }
         , web_session_{ new nxi::web_session{ *this, this } }
-    {}
+        , web_downloader_{ *this }
+    {
+        connect(static_cast<QWebEngineProfile*>(web_session_), &QWebEngineProfile::downloadRequested, [this](QWebEngineDownloadRequest* request) {
+            web_downloader_.process(request);
+        });
+    }
 
     void session::load()
     {
-        core_database_.connect();
-        config_ = std::make_unique<nxi::config>("nxi.session", core_database_);
-
-        window_system_.load(); // load before interface_system
-
-        command_system_.load();
-        context_system_.load();
-        interface_system_.load();
-        page_system_.load();
-        module_system_.load();
-        navigation_system_.load();
-
+        nxi::data::session::load(core_.user_database(), id());
         web_session_->load();
     }
 
-    void session::unload()
-    {
-        core_database_.close();
-    }
+    void session::unload() { nxi::data::session::unload(core_.user_database(), id()); }
 
-    void session::error(const QString& message) const
-    {
-        emit event_error(message);
-    }
-
-    const QString& session::id() const { return id_; }
+    int session::id() const { return id_; }
     const QString& session::name() const { return name_; }
     bool session::is_active() const { return active_; }
 
-    nxi::api::core& session::api() { return api_; }
-    nxi::config& session::config()
-    {
-        nxi_assert(config_ != nullptr);
-        return *config_;
-    }
-    nxi::database& session::database() { return core_database_; }
-    nxi::core& session::nxi_core() { return nxi_core_; }
-    nxi::web_session& session::web_session() { return *web_session_; }
+    const nxi::config& session::config() const { return config_; }
+    nxi::config& session::config() { return config_; }
 
-    nxi::command_system& session::command_system() { return command_system_; }
-    nxi::context_system& session::context_system() { return context_system_; }
-    nxi::interface_system& session::interface_system() { return interface_system_; }
-    nxi::module_system& session::module_system() { return module_system_; }
-    nxi::navigation_system& session::navigation_system() { return navigation_system_; }
-    nxi::page_system& session::page_system() { return page_system_; }
-    nxi::window_system& session::window_system() { return window_system_; }
+    nxi::core& session::core() { return core_; }
+    nxi::web_downloader& session::web_downloader() { return web_downloader_; }
+    nxi::web_session& session::web_session() { return *web_session_; }
 } // nxi

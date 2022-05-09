@@ -1,24 +1,26 @@
 #include <ui/page/node.hpp>
 
-#include <nxi/page/node.hpp>
 #include <nxi/core.hpp>
+#include <nxi/page/node.hpp>
+#include <nxi/user.hpp>
 
-#include <ui/core.hpp>
-#include <ui/renderer/widget.hpp>
-#include <ui/page/web.hpp>
 #include <nxw/hbox_layout.hpp>
+#include <ui/core.hpp>
+#include <ui/page/web.hpp>
+#include <ui/renderer/widget.hpp>
 
 #include <QLabel>
-#include <QPushButton>
 #include <QPainter>
-#include <QWebEngineView>
+#include <QPushButton>
+#include <QTimerEvent>
 #include <QWebEngineSettings>
+#include <QWebEngineView>
 
 // todo experimental / optimize
 
 namespace ui
 {
-    node_page::node_page(ui::session& session, nds::node_ptr<const nxi::page> page)
+    node_page::node_page(ui::user_session& session, nds::node_ptr<const nxi::page> page)
         : ui::page{ const_cast<nxi::page&>(*page) } // tmp
         , page_{ std::move(page) }
         , session_{ session }

@@ -3,15 +3,15 @@
 #include <nds/graph.hpp>
 #include <nds/graph/node.hpp>
 
+#include <nxi/core.hpp>
 #include <nxi/data/navigation.hpp>
 #include <nxi/page.hpp>
-#include <nxi/session.hpp>
 #include <nxi/system/page.hpp>
 
 namespace nxi
 {
-    navigation_system::navigation_system(nxi::session& session)
-        : session_{ session }
+    navigation_system::navigation_system(nxi::core& core)
+        : core_{ core }
         , recent_logs_cursor_{ 0 }
         , recent_logs_capacity_{ 3 + 1 }
         , load_source_{ load_source::standard }
@@ -19,8 +19,7 @@ namespace nxi
 
     void navigation_system::load()
     {
-        connect(&session_.page_system(), &nxi::page_system::event_update_command, [this](const nxi::page& source, const QString& target)
-        {
+        connect(&core_.page_system(), &nxi::page_system::event_update_command, [this](const nxi::page& source, const QString& target) {
             log_page_command(source, target);
         });
     }
@@ -34,9 +33,9 @@ namespace nxi
             return;
         }
 
-        nxi::data::navigation::log(session_.database(), source.id(), source.command(), target_command, 0);
+        nxi::data::navigation::log(core_.user_database(), source.id(), source.command(), target_command, 0);
         recent_logs_.push_front(source.command());
-        if (recent_logs_.size() > recent_logs_capacity_)  recent_logs_.pop_back();
+        if (recent_logs_.size() > recent_logs_capacity_) recent_logs_.pop_back();
 
         int i = 0;
         for (auto& item : recent_logs_)
@@ -59,9 +58,9 @@ namespace nxi
         --recent_logs_cursor_;
 
         load_source_ = load_source::from_next;
-        session_.page_system().focus()->load(get_page(recent_logs_cursor_));
+        core_.page_system().focus()->load(get_page(recent_logs_cursor_));
 
-                int i = 0;
+        int i = 0;
         for (auto& item : recent_logs_)
         {
             QString c = "";
@@ -82,9 +81,9 @@ namespace nxi
         }
 
         load_source_ = load_source::from_previous;
-        session_.page_system().focus()->load(get_page(recent_logs_cursor_));
+        core_.page_system().focus()->load(get_page(recent_logs_cursor_));
 
-                int i = 0;
+        int i = 0;
         for (auto& item : recent_logs_)
         {
             QString c = "";
@@ -99,8 +98,5 @@ namespace nxi
         return recent_logs_[recent_logs_cursor_];
     }
 
-    const std::deque<QString>& navigation_system::page_command_logs() const
-    {
-        return recent_logs_;
-    }
+    const std::deque<QString>& navigation_system::page_command_logs() const { return recent_logs_; }
 } // nxi

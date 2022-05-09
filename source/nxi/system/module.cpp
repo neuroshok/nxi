@@ -19,23 +19,20 @@
 
 namespace nxi
 {
-    module_system::module_system(nxi::session& session) :
-        session_{ session }
-        , static_modules_{ session_ }
+    module_system::module_system(nxi::core& core)
+        : core_{ core }
+        , static_modules_{ core_ }
         , web_channel_{ new QWebChannel{ this } }
-    {
-        web_channel_->registerObject("core", &session_.api());
-        web_channel_->registerObject("page_system", &session_.api().page_system());
-    }
+    {}
 
-    const std::vector<std::unique_ptr<nxi::module>>& module_system::get() const
-    {
-        return modules_;
-    }
+    const std::vector<std::unique_ptr<nxi::module>>& module_system::get() const { return modules_; }
 
     void module_system::load()
     {
         nxi_trace("");
+
+        web_channel_->registerObject("core", &core_.user().api());
+        web_channel_->registerObject("page_system", &core_.user().api().page_system());
 
         nxi_trace("load js_api");
         js_api_ = nxi::read_file(":/qtwebchannel/qwebchannel.js");
@@ -45,21 +42,21 @@ namespace nxi
         script.setSourceCode(js_api_);
         script.setInjectionPoint(QWebEngineScript::DocumentCreation);
         script.setWorldId(QWebEngineScript::MainWorld);
-        session_.web_session().scripts()->insert(script);
+        // core_.web_session().scripts()->insert(script);
 
         nxi_trace("load static modules");
         static_modules_.load();
 
         nxi_trace("load db modules");
 
-        auto result = nxi::data::module::get(session_.database());
+        auto result = nxi::data::module::get(core_.user_database());
         while(result.next())
         {
             std::unique_ptr<nxi::module> module_ptr;
-            auto module_data = nxi::module_data::from_get(result);
+            auto module_data = nxi::data::module::from_get(result);
             auto module_type = module_data.type;
 
-            if (!module_data.loaded) continue;
+            if (!module_data.active) continue;
 
             switch(module_type)
             {
@@ -68,13 +65,13 @@ namespace nxi
                 break;
 
             case nxi::module_type::dynamic:
-                module_ptr = std::make_unique<nxi::dynamic_module>(session_, module_data.name);
+                module_ptr = std::make_unique<nxi::dynamic_module>(core_, module_data.name);
                 module_ptr->load();
                 modules_.push_back(std::move(module_ptr));
                 break;
 
             case nxi::module_type::web:
-                module_ptr = std::make_unique<nxi::web_module>(session_, module_data.name);
+                module_ptr = std::make_unique<nxi::web_module>(core_, module_data.name);
                 module_ptr->load();
                 modules_.push_back(std::move(module_ptr));
                 break;

@@ -1,29 +1,9 @@
 #include <nxi/data/page.hpp>
 
-#include <nxi/core.hpp>
 #include <nxi/database/model.hpp>
 #include <nxi/database/result.hpp>
 #include <nxi/page.hpp>
-
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
-
-namespace nxi
-{
-    nxi::page_data page_data::from_get(const nxi::result& result)
-    {
-        nxi::page_data data;
-        data.command = result[nxi_model.page.command];
-        data.id = result[nxi_model.page.id];
-        data.loaded = result[nxi_model.page.loaded];
-        data.muted = result[nxi_model.page.muted];
-        data.name = result[nxi_model.page.name];
-        data.renderer_type = static_cast<nxi::renderer_type>(result[nxi_model.page.renderer_type]);
-        data.type = static_cast<nxi::page_type>(result[nxi_model.page.type]);
-        return data;
-    }
-} // nxi
+#include <nxi/type.hpp>
 
 namespace nxi::data::page
 {
@@ -36,6 +16,7 @@ namespace nxi::data::page
         query.bindValue(3, static_cast<int>(page.renderer_type()));
         query.bindValue(4, page.is_loaded());
         query.bindValue(5, page.is_muted());
+        query.bindValue(6, page.session_id());
         if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
         page.id_ = query.lastInsertId().toInt();
         return page.id();
@@ -93,8 +74,25 @@ namespace nxi::data::page
         query.bindValue(1, page.command());
         query.bindValue(2, page.is_loaded());
         query.bindValue(3, page.is_muted());
-        query.bindValue(4, page.id());
+        query.bindValue(4, page.session_id());
+        query.bindValue(5, page.id());
         if (!query.exec()) nxi_error("query error : {}", query.lastError().text());
+    }
+
+    nxi::page_data from_get(const nxi::result& result)
+    {
+        nxi::page_data data;
+        data.command = result[nxi_model.page.command];
+        data.id = result[nxi_model.page.id];
+        data.loaded = result[nxi_model.page.loaded];
+        data.muted = result[nxi_model.page.muted];
+        data.name = result[nxi_model.page.name];
+        auto v = result[nxi_model.page.renderer_type];
+        data.renderer_type = static_cast<nxi::renderer_type>(result[nxi_model.page.renderer_type]);
+        data.renderer_type = static_cast<nxi::renderer_type>(result[nxi_model.page.renderer_type]);
+        data.type = static_cast<nxi::page_type>(result[nxi_model.page.type]);
+        data.session_id = result[nxi_model.page.session_id];
+        return data;
     }
 
     //
@@ -123,22 +121,17 @@ namespace nxi::data::page
 
 namespace nxi::data::page::internal
 {
-    void make(nxi::database& db)
-    {
-        db.exec(internal::str_table_page.data());
-        db.exec(internal::str_table_page_arc.data());
-    }
-
     void prepare(nxi::database& db)
     {
-        db.prepare(prepared_query::add_page, "INSERT INTO page(name, command, type, renderer_type, loaded, muted) VALUES(?, ?, ?, ?, ?, ?)");
+        db.prepare(prepared_query::add_page,
+                   "INSERT INTO page(name, command, type, renderer_type, loaded, muted, session_id) VALUES(?, ?, ?, ?, ?, ?, ?)");
         db.prepare(prepared_query::del_page, "DELETE FROM page WHERE id = ?");
         db.prepare(prepared_query::count_page, "SELECT COUNT(id) FROM page");
         db.prepare(prepared_query::get_page, "SELECT * FROM page");
         db.prepare(prepared_query::get_page_id, "SELECT id, name, command FROM page WHERE page.id = ?");
         db.prepare(prepared_query::get_page_name, "SELECT id, name, command FROM page WHERE page.name = ?");
         db.prepare(prepared_query::set_page_loaded, "UPDATE page SET loaded = ? WHERE id = ?");
-        db.prepare(prepared_query::update_page, "UPDATE page SET name = ?, command = ?, loaded = ?, muted = ? WHERE id = ?");
+        db.prepare(prepared_query::update_page, "UPDATE page SET name = ?, command = ?, loaded = ?, muted = ?, session_id = ? WHERE id = ?");
 
         db.prepare(prepared_query::add_page_arc, "INSERT INTO page_arc(source_id, target_id) VALUES(?, ?)");
         db.prepare(prepared_query::del_page_arc, "DELETE FROM page_arc WHERE source_id = $1 OR target_id = $1");

@@ -4,7 +4,7 @@
 #include <nxi/data/window.hpp>
 #include <nxi/database/model.hpp>
 #include <nxi/log.hpp>
-#include <nxi/session.hpp>
+#include <nxi/user.hpp>
 
 #include <QGuiApplication>
 #include <QRect>
@@ -12,8 +12,8 @@
 
 namespace nxi
 {
-    window_system::window_system(nxi::session& session) :
-        session_{ session }
+    window_system::window_system(nxi::core& core)
+        : core_{ core }
     {}
 
     void window_system::load()
@@ -21,8 +21,8 @@ namespace nxi
         nxi_trace("");
 
         // load stored windows
-        auto result = nxi::data::window::get_windows(session_.database());
-        while(result.next())
+        auto result = nxi::data::window::get_windows(core_.user_database());
+        while (result.next())
         {
             nxi::window_data window;
             window.id = result[nxi_model.window.id];
@@ -50,7 +50,7 @@ namespace nxi
 
     void window_system::add(nxi::window_data window)
     {
-        window.id = nxi::data::window::add_window(session_.database(), window);
+        window.id = nxi::data::window::add_window(core_.user_database(), window);
         emit event_add(window);
 
         windows_.emplace(window.id, std::move(window));
@@ -63,7 +63,7 @@ namespace nxi
 
     void window_system::move(unsigned int id, int x, int y)
     {
-        nxi::data::window::move_window(session_.database(), id, x, y);
+        nxi::data::window::move_window(core_.user_database(), id, x, y);
         emit event_position_update(x, y);
     }
 

@@ -1,20 +1,20 @@
 #include <ui/view/config.hpp>
 
-#include <QLineEdit>
-#include <QLabel>
 #include <QFormLayout>
+#include <QLabel>
+#include <QLineEdit>
 
-#include <ui/core.hpp>
-#include <nxi/core.hpp>
 #include <nxi/config.hpp>
+#include <nxi/core.hpp>
+#include <nxi/user.hpp>
+#include <ui/core.hpp>
 
 namespace ui::views
 {
-    config::config(ui::session& session)
+    config::config(ui::user_session& session)
         : session_{ session }
     {
-        connect(&session.nxi_core(), &nxi::core::event_load, [ this]
-        {
+        connect(&session.nxi_core(), &nxi::core::event_load, [this] {
             auto& cfg = session_.nxi_session().config();
             for (auto key : cfg.list())
             {

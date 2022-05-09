@@ -14,14 +14,14 @@
 
 namespace nxi
 {
+    class core;
     class database;
-    class session;
 
     class context_system : public QObject
     {
         Q_OBJECT
     public:
-        context_system(nxi::session&);
+        context_system(nxi::core&, nxi::database&);
         context_system(const context_system&) = delete;
         context_system& operator=(const context_system&) = delete;
 
@@ -42,12 +42,12 @@ namespace nxi
                 nxi_warning("context already exist");
                 return;
             }
-            contexts_.emplace_back( std::make_unique<nxi::context>( Context{ std::forward<Args>(args)... } ) );
+            contexts_.emplace_back(std::make_unique<nxi::context>(Context{ std::forward<Args>(args)... }));
 
-            nxi::data::context::add(session_database_, *contexts_.back());
+            nxi::data::context::add(user_database_, *contexts_.back());
             emit event_context_add(*contexts_.back());
 
-            std::sort(contexts_.begin(), contexts_.end(), [](const auto& c1, const auto& c2){ return c1->priority() > c2->priority(); });
+            std::sort(contexts_.begin(), contexts_.end(), [](const auto& c1, const auto& c2) { return c1->priority() > c2->priority(); });
 
             if (focus_context != contexts_.front().get()) emit event_focus_context_update(*contexts_.front());
         }
@@ -58,7 +58,7 @@ namespace nxi
             int active_priority = contexts_.front()->priority();
             for (const auto& context : contexts_)
             {
-                if (context->priority() == active_priority) context->apply( std::forward<Fs>(fs)... );
+                if (context->priority() == active_priority) context->apply(std::forward<Fs>(fs)...);
                 else break;
             }
         }
@@ -67,15 +67,21 @@ namespace nxi
         void apply_on_focus(Fs&&... fs)
         {
             const auto& focus = contexts_.front();
-            focus->apply( std::forward<Fs>(fs)... );
+            focus->apply(std::forward<Fs>(fs)...);
         }
 
         template<class Context>
-        void del() { del(Context::ID); }
+        void del()
+        {
+            del(Context::ID);
+        }
         void del(const QString& id);
 
         template<class Context, class... Args>
-        void focus(Args&&... args) { focus(nxi::context::id<Context>(std::forward<Args>(args)...)); }
+        void focus(Args&&... args)
+        {
+            focus(nxi::context::id<Context>(std::forward<Args>(args)...));
+        }
         void focus(const QString& id);
 
         unsigned int active_priority() const;
@@ -86,9 +92,10 @@ namespace nxi
         bool is_active() const
         {
             int active_priority = contexts_.front()->priority();
-            auto f = [active_priority](const std::unique_ptr<nxi::context>& context)
-            {
-                return context->apply([active_priority](const auto& ctx){ return std::is_same_v<std::decay_t<decltype(ctx)>, Context> && ctx.priority() == active_priority; });
+            auto f = [active_priority](const std::unique_ptr<nxi::context>& context) {
+                return context->apply([active_priority](const auto& ctx) {
+                    return std::is_same_v<std::decay_t<decltype(ctx)>, Context> && ctx.priority() == active_priority;
+                });
             };
             if (std::find_if(contexts_.begin(), contexts_.end(), f) != contexts_.end()) return true;
 
@@ -98,18 +105,18 @@ namespace nxi
         template<class Context, class... Args>
         bool is_focus(Args&&... args) const
         {
-            return contexts_.front()->id() == nxi::context::id<Context>( std::forward<Args>(args)... );
+            return contexts_.front()->id() == nxi::context::id<Context>(std::forward<Args>(args)...);
         }
 
     signals:
         void event_context_add(const nxi::context&) const;
         void event_context_del(const nxi::context&) const;
         void event_focus_context_update(const nxi::context&) const;
-        //void event_active_context_update(std::vector<stz::observer_ptr<const nxi::context>) const;
+        // void event_active_context_update(std::vector<stz::observer_ptr<const nxi::context>) const;
 
     private:
-        nxi::session& session_;
-        nxi::database& session_database_;
+        nxi::core& core_;
+        nxi::database& user_database_;
 
         std::vector<std::unique_ptr<nxi::context>> contexts_;
         std::vector<nxi::context_data> available_contexts_;

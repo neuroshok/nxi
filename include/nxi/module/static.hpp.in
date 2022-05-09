@@ -5,26 +5,26 @@
 
 namespace nxi
 {
-	class session;
+class core;
 
-    class static_module_container
-    {
-    public:
-		explicit static_module_container(nxi::session& session) :
-			session_{ session }
-            @NXI_MODULE_STATIC_INIT@
-		{}
+class static_module_container
+{
+public:
+explicit static_module_container(nxi::core& core) :
+core_{ core }
+@NXI_MODULE_STATIC_INIT@
+{}
 
-        void load()
-		{
-            @NXI_MODULE_STATIC_LOAD@
-		}
+void load()
+{
+@NXI_MODULE_STATIC_LOAD@
+}
 
-    private:
-		nxi::session& session_;
+private:
+nxi::core& core_;
 
-        @NXI_MODULE_STATIC_MEMBER@
-    };
+@NXI_MODULE_STATIC_MEMBER@
+};
 } // nxi
 
 #endif // INCLUDE_NXI_MODULE_STATIC_HPP_NXI

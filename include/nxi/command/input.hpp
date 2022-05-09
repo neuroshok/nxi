@@ -15,40 +15,43 @@ class QKeyEvent;
 namespace nxi
 {
     class command_system;
-    class session;
+    class user;
 
     class command_input : public QObject
     {
         Q_OBJECT
     public:
-        enum class mode_type {
+        enum class mode_type
+        {
             display //! display text when ui::command_input is not focus, input is shown on hover
-            , input //! accept user input, can trigger shortcut mode
-            , shortcut //! triggered by shortcut trigger_keys
+            ,
+            input //! accept user input, can trigger shortcut mode
+            ,
+            shortcut //! triggered by shortcut trigger_keys
         };
 
-        enum class state { executing, search };
-
-/*
-        enum class context
+        enum class state
         {
-            command, page, history
-        };*/
+            executing,
+            search
+        };
 
-        command_input(nxi::session&);
+        command_input(nxi::core&);
+        command_input(const command_input&) = delete;
+        command_input& operator=(const command_input&) = delete;
 
         void exec();
         void update(const QString& input, QKeyEvent*);
 
         void context_suggest();
+
+        void set_mode(mode_type);
+
         void suggest_command();
         void suggest_context();
         void suggest_navigation();
         void suggest_page();
-
-        void set_mode(mode_type);
-
-        const QString& text() const;
+        void suggest_session();
 
         void clear();
         void reset();
@@ -56,24 +59,24 @@ namespace nxi
         mode_type mode() const;
         const nxi::suggestion_vector& suggestions() const;
         nxi::suggestion_vector& suggestions();
+        const QString& text() const;
 
         bool is_empty() const;
         bool is_valid() const;
 
-        const nxi::command_system& command_system() const;
         nxi::command_system& command_system();
+        const nxi::command_system& command_system() const;
         nxi::shortcut_input& shortcut_input();
 
     signals:
-        void event_suggestion_update(const nxi::suggestion_vector&);
         void event_input_update(const QString&);
-        void event_selection_update(int index);
         void event_reset();
-
+        void event_selection_update(int index);
         void event_shortcut_input_update(const QString&);
+        void event_suggestion_update(const nxi::suggestion_vector&);
 
     private:
-        nxi::session& session_;
+        nxi::core& core_;
 
         QString input_;
         mode_type mode_;

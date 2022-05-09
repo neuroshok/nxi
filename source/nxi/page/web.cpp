@@ -1,7 +1,7 @@
 #include <nxi/page/web.hpp>
 
-#include <nxi/core.hpp>
 #include <nxi/config.hpp>
+#include <nxi/core.hpp>
 #include <nxi/system/page.hpp>
 
 #include <QWebEngineScript>
@@ -13,21 +13,14 @@ namespace nxi
     {}
 
     web_page::web_page(nds::node_ptr<nxi::page> page_ptr, nxi::page_system& ps, QString url)
-        : web_page(page_ptr, ps, nxi::page_data{ 0, "new web_page", std::move(url), nxi::page_type::web, nxi::renderer_type::web })
+        : web_page(page_ptr,
+                   ps,
+                   nxi::page_data{ 0, url, std::move(url), nxi::page_type::web, nxi::renderer_type::web, false, false, false, ps.session_id() })
     {}
 
-    void web_page::add_script(const QWebEngineScript& script) const
-    {
-        emit event_add_script(script);
-    }
+    void web_page::add_script(const QWebEngineScript& script) const { emit event_add_script(script); }
 
-    void web_page::run_script(const QString& source_code) const
-    {
-        emit event_run_script(source_code);
-    }
+    void web_page::run_script(const QString& source_code) const { emit event_run_script(source_code); }
 
-    void web_page::run_script(const QString& source_code, std::function<void(const QVariant&)> fn) const
-    {
-        emit event_call_script(source_code, fn);
-    }
+    void web_page::run_script(const QString& source_code, std::function<void(const QVariant&)> fn) const { emit event_call_script(source_code, fn); }
 } // nxi

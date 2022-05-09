@@ -4,7 +4,7 @@
     </qresource>
 
     <qresource prefix="/image">
-
+        <file alias="nxi">icon.ico</file>
     </qresource>
     <qresource prefix="/icon">
         <file alias="add">icon/add.svg</file>

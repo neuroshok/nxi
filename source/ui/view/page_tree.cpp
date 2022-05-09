@@ -108,7 +108,7 @@ private:
 
 namespace ui::views
 {
-    page_tree::page_tree(ui::session& session) : session_{ session }
+    page_tree::page_tree(ui::user_session& session) : session_{ session }
     {
         init_ui();
         init_data();

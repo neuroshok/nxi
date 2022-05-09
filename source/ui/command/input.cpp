@@ -3,6 +3,7 @@
 #include <nxi/command/executor.hpp>
 #include <nxi/command/input.hpp>
 #include <nxi/core.hpp>
+#include <nxi/user.hpp>
 
 #include <ui/core.hpp>
 #include <ui/menu.hpp>
@@ -17,7 +18,7 @@
 
 namespace ui
 {
-    command_input::command_input(ui::session& session, QWidget* parent)
+    command_input::command_input(ui::user_session& session, QWidget* parent)
         : QLineEdit(parent)
         , session_{ session }
     {

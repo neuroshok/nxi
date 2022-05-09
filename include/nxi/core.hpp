@@ -3,9 +3,16 @@
 
 #include <nxi/config.hpp>
 #include <nxi/system/session.hpp>
+#include <nxi/system/user.hpp>
 
 namespace nxi
 {
+    class command_system;
+    class context_system;
+    class interface_system;
+    class navigation_system;
+    class page_system;
+
     class core : public QObject
     {
         Q_OBJECT
@@ -15,11 +22,29 @@ namespace nxi
         void operator=(const core&) = delete;
 
         void load();
+
+        void error(const QString&);
         void quit() const;
 
         nxi::database& global_database();
+        nxi::user_system& user_system();
+
+        // alias
+        nxi::session& session();
+        nxi::user& user();
+
+        nxi::config& session_config();
 
         nxi::session_system& session_system();
+        nxi::command_system& command_system();
+        nxi::context_system& context_system();
+        nxi::interface_system& interface_system();
+        nxi::navigation_system& navigation_system();
+        nxi::notification_system& notification_system();
+        nxi::page_system& page_system();
+
+        nxi::database& user_database();
+        // -- alias
 
         static QString module_path();
         static QString module_path(const QString& name, nxi::module_type);
@@ -32,7 +57,7 @@ namespace nxi
     private:
         nxi::global_database global_database_;
 
-        nxi::session_system session_system_;
+        nxi::user_system user_system_;
     };
 } // nxi
 

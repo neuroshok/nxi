@@ -19,6 +19,8 @@ namespace nxi
         Q_OBJECT
     public:
         command_executor(nds::node_ptr<const nxi::command> command);
+        command_executor(const command_executor&) = delete;
+        command_executor& operator=(const command_executor&) = delete;
 
         void add_value(const QString& value);
         void add_value(const nxi::suggestion& value);

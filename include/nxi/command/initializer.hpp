@@ -10,17 +10,20 @@ class QString;
 
 namespace nxi
 {
-    class session;
+    class core;
     class suggestion_vector;
 
     class command_initializer
     {
     public:
-        command_initializer(nxi::session&);
+        command_initializer(nxi::core&);
+        command_initializer(const command_initializer&) = delete;
+        command_initializer& operator=(const command_initializer&) = delete;
+
         void load();
 
     private:
-        nds::node_ptr<nxi::command> add(nxi::command_data data);
+        nds::node_ptr<nxi::command> add(nxi::command_data);
         nds::node_ptr<nxi::command> add(const QString& action, nxi::command_function_type fn, const QString& icon = "");
         nds::node_ptr<nxi::command> add_node(const QString& command_node);
 
@@ -30,12 +33,13 @@ namespace nxi
         nds::node_ptr<nxi::command> init_settings();
         nds::node_ptr<nxi::command> init_session();
         nds::node_ptr<nxi::command> init_tool();
+        nds::node_ptr<nxi::command> init_user();
 
         void set_node(nds::node_ptr<nxi::command>);
         void set_root(nds::node_ptr<nxi::command>);
 
     private:
-        nxi::session& session_;
+        nxi::core& core_;
         nds::node_ptr<nxi::command> node_;
     };
 } // nxi

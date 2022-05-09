@@ -6,7 +6,7 @@
 namespace ui
 {
     class command_menu;
-    class session;
+    class user_session;
     class window;
 
     namespace interfaces::standard
@@ -23,7 +23,7 @@ namespace ui::interfaces::light
     {
         Q_OBJECT
     public:
-        main(ui::session&, ui::window*);
+        main(ui::user_session&, ui::window*);
 
         bool toggle_fullmode(int) override;
 
@@ -34,7 +34,7 @@ namespace ui::interfaces::light
         void resizeEvent(QResizeEvent*) override;
 
     private:
-        ui::session& session_;
+        ui::user_session& session_;
 
         ui::interfaces::standard::content* content_;
         ui::interfaces::light::control_bar* control_bar_;

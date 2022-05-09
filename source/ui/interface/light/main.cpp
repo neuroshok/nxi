@@ -1,48 +1,45 @@
 #include <ui/interface/light/main.hpp>
 
 #include <nxi/core.hpp>
-#include <nxi/system/page.hpp>
+#include <nxi/notification_data.hpp>
+#include <nxi/system/interface.hpp>
 #include <nxi/system/session.hpp>
 
 #include <nxw/hbox_layout.hpp>
 #include <nxw/vbox_layout.hpp>
-#include <nxw/icon_button.hpp>
 
 #include <ui/core.hpp>
-#include <ui/interface/standard/content.hpp>
 #include <ui/interface/light/control_bar.hpp>
+#include <ui/interface/standard/content.hpp>
 
-
-#include <ui/view/config.hpp>
-#include <ui/view/page_tree.hpp>
-
-#include <QMessageBox>
-#include <nxi/system/page.hpp>
-#include <nxi/type.hpp>
-
-#include <QBrush>
-#include <QImage>
-#include <QPalette>
-#include <QtGui/QPainter>
 #include <ui/command/input.hpp>
 #include <ui/command/menu.hpp>
-#include <ui/system/session.hpp>
-#include <ui/window.hpp>
 #include <ui/interface/standard/window_control.hpp>
-#include <nxi/style_data.hpp>
+#include <ui/notification.hpp>
+#include <ui/system/user.hpp>
+#include <ui/view/config.hpp>
+#include <ui/view/page_tree.hpp>
+#include <ui/window.hpp>
 
+#include <QImage>
+#include <QMessageBox>
+#include <QProgressBar>
 #include <QWebEngineView>
-#include <ui/system/page.hpp>
+#include <QtGui/QPainter>
 
 namespace ui::interfaces::light
 {
-    main::main(ui::session& session, ui::window* window)
+    main::main(ui::user_session& session, ui::window* window)
         : ui::main_interface{ window }
         , session_{ session }
     {
-        connect(&session_.nxi_session().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style)
-        {
+        connect(&session_.nxi_session().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style) {
             style.update(this);
+        });
+
+        connect(&session_.nxi_session().session_system(), &nxi::session_system::event_focus, [this](const nxi::session& session) {
+            auto s = session.config().browser.interface.style.get();
+            session_.nxi_session().interface_system().load_style(s);
         });
 
         auto main_layout = new nxw::vbox_layout;
@@ -57,6 +54,8 @@ namespace ui::interfaces::light
         auto window_control = new ui::interfaces::standard::window_control(session_, window);
 
         static_cast<ui::window*>(this->window())->set_grip(this);
+        auto bar = new QProgressBar{ this };
+        bar->hide();
 
         top_layout->addSpacing(120);
         top_layout->addWidget(control_bar_);
@@ -64,26 +63,37 @@ namespace ui::interfaces::light
 
         main_layout->addLayout(top_layout);
         main_layout->addLayout(middle_layout, 1);
+        main_layout->addWidget(bar);
 
         command_menu_ = new ui::command_menu(session_, this);
         command_menu_->hide();
 
         setFocusPolicy(Qt::ClickFocus);
 
-        connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_reset, [this]()
-        {
-            command_menu_->hide();
+        auto session_info_ = new QLabel{ this };
+
+        connect(&session_.nxi_session().nxi_core(), &nxi::core::event_load, [bar, this]() {
+            connect(&session_.nxi_core().session().web_downloader(), &nxi::web_downloader::event_update, [bar](float percent) {
+                if (percent > 99) bar->hide();
+                else bar->show();
+                bar->setValue(percent);
+            });
+            connect(&session_.nxi_core().notification_system(), &nxi::notification_system::event_send, [this](const nxi::notification_data& data) {
+                auto notification = ui::notification::make(data, session_.nxi_core().session_config().browser.notification_mode.get());
+                notification->show();
+            });
         });
 
-        connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_suggestion_update, [this]
-        (const nxi::suggestion_vector& suggestions)
-        {
-            command_menu_->set_data(stz::make_observer(&suggestions));
-            command_menu_->exec();
-        });
+        connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_reset, [this]() { command_menu_->hide(); });
 
-        connect(&session_.nxi_session(), &nxi::session::event_error, this, [](const QString& message)
-        {
+        connect(&session_.nxi_session().command_system().command_input(),
+                &nxi::command_input::event_suggestion_update,
+                [this](const nxi::suggestion_vector& suggestions) {
+                    command_menu_->set_data(stz::make_observer(&suggestions));
+                    command_menu_->exec();
+                });
+
+        connect(&session_.nxi_session(), &nxi::user::event_error, this, [](const QString& message) {
             auto* error = new QMessageBox;
             error->setAttribute(Qt::WA_DeleteOnClose, true);
             error->setWindowTitle("nxi error");
@@ -161,12 +171,12 @@ namespace ui::interfaces::light
         QRectF target(0, -d_y, image.width(), image.height());
 
         QPainter painter(this);
-        painter.fillRect(0, 0 ,width(), height(), style_data.background_color);
-        //painter.drawImage(target, image, source);
+        painter.fillRect(0, 0, width(), height(), style_data.background_color);
+        // painter.drawImage(target, image, source);
 
         // insane design drawing
-        //auto& design_color = session_.nxi_session().interface_system().style().data().field.background_color.get();
-        //painter.fillRect(0, 0 , width(), control_bar_->height(), design_color);
+        // auto& design_color = session_.nxi_session().interface_system().style().data().field.background_color.get();
+        // painter.fillRect(0, 0 , width(), control_bar_->height(), design_color);
     }
 
     void main::resizeEvent(QResizeEvent*)

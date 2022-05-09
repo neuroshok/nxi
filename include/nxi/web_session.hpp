@@ -15,14 +15,12 @@ namespace nxi
 
         void load();
 
-        void load_cookie(const QString& domain);
+        void load_cookie(const QString& domain, int session_id);
 
         void import_cookies(const QString& database_path);
 
     private:
         nxi::session& session_;
-
-        QSqlDatabase cookie_db_;
     };
 } // nxi
 

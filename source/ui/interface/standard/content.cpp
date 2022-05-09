@@ -15,7 +15,7 @@
 
 namespace ui::interfaces::standard
 {
-    content::content(ui::session& session, ui::window* window)
+    content::content(ui::user_session& session, ui::window* window)
         : ui::interface("content", window)
         , session_{ session }
     {

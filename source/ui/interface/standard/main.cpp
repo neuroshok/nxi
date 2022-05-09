@@ -27,7 +27,7 @@
 
 namespace ui::interfaces::standard
 {
-    main::main(ui::session& session, ui::window* window)
+    main::main(ui::user_session& session, ui::window* window)
         : ui::main_interface{ window }
         , session_{ session }
     {

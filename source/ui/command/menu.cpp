@@ -3,14 +3,19 @@
 #include <nxi/command.hpp>
 #include <nxi/command/input.hpp>
 #include <nxi/core.hpp>
+#include <nxi/system/session.hpp>
+#include <nxi/user.hpp>
+
 #include <ui/core.hpp>
+#include <ui/utility.hpp>
+
 #include <QPainter>
 #include <QPainterPath>
-#include "ui/utility.hpp"
+
 
 namespace ui
 {
-    command_menu::command_menu(ui::session& session, QWidget* parent)
+    command_menu::command_menu(ui::user_session& session, QWidget* parent)
         : QWidget(parent)
         , session_{ session }
         , hover_index_{ -1 }
@@ -246,7 +251,7 @@ namespace ui
         item_rect.setLeft( item_rect.left() + icon_rect.width() + 2);
 
         // page name
-        QString page_id = "#" + QString::number(page->id());
+        QString page_id = "#" + QString::number(page->id()) + " [" + session_.nxi_session().session_system().get(page->session_id()).name() + "]";
         QString page_name = page->name();
         painter.setPen(style_data.item_text_color.lighter());
         painter.drawText(item_rect, Qt::AlignVCenter, page_id);

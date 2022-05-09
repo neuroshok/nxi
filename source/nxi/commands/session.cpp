@@ -15,31 +15,30 @@ namespace nxi
         add_session.function = [this](const nxi::values& params)
         {
             auto session_id = params.get(0);
-            session_.nxi_core().session_system().add(session_id);
+            core_.session_system().add(session_id);
         };
-        add_session.parameters = {{ "name" }};
+        add_session.parameters = { { "name" } };
         add(std::move(add_session));
 
         // del_session
         nxi::command_data del_session;
         del_session.action = "del_session";
         del_session.description = "Delete a session";
-        del_session.function = [this](const nxi::values& params)
-        {
-            auto session_id = params.get(0);
-            session_.nxi_core().session_system().del(session_id);
+        del_session.function = [this](const nxi::values& params) {
+            auto session_name = params.get(0);
+            auto& session = core_.session_system().get(session_name);
+            core_.session_system().del(session.id());
         };
-        del_session.parameters = {{ "name" }};
+        del_session.parameters = { { "name" } };
         add(std::move(del_session));
 
         // load_session
         nxi::command_data load_session;
         load_session.action = "load_session";
         load_session.description = "Load a session";
-        load_session.function = [this](const nxi::values& params)
-        {
+        load_session.function = [this](const nxi::values& params) {
             auto session_id = params.get(0);
-            session_.nxi_core().session_system().load(session_id);
+            core_.session_system().load(session_id);
         };
         load_session.parameters = {{ "name" }};
         add(std::move(load_session));
@@ -50,9 +49,30 @@ namespace nxi
         unload_session.description = "Close this session";
         unload_session.function = [this](const nxi::values& params)
         {
-            session_.nxi_core().session_system().unload(session_.id());
+            //core_.session_system().unload(core_.name());
         };
         add(std::move(unload_session));
+
+        // switch_session
+        nxi::command_data switch_session;
+        switch_session.action = "switch_session";
+        switch_session.description = "Switch session";
+        switch_session.function = [this](const nxi::values& values)
+        {
+            nxi_assert(values.size() == 1);
+            core_.session_system().switch_focus(values.get(0));
+        };
+        switch_session.parameters = {
+        { "name", [this](nxi::suggestion_vector& suggestion)
+            {
+                for (const auto& session : core_.session_system().sessions())
+                {
+                    suggestion.push_back(session->name());
+                }
+            }
+        }};
+
+        add(std::move(switch_session));
 
         return node;
     }

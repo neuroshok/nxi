@@ -16,18 +16,18 @@
 
 namespace ui::interfaces::standard
 {
-    page_bar::page_bar(ui::session& session, ui::window* window) :
+    page_bar::page_bar(ui::user_session& session, ui::window* window) :
         ui::interface("page_bar", window)
         , session_{ session }
     {
         /*
-        connect(&ui_core_.nxi_core().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style){
+        connect(&ui_core_.interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style){
             style.update(this);
             style.update(page_tree_);
         });*/
 
-        //if (ui_core_.nxi_core().config().browser.interface.show_page_bar.get()) show();
-        //else hide();
+        // if (ui_core_.config().browser.interface.show_page_bar.get()) show();
+        // else hide();
 
         /*
         auto layout = new nxw::vbox_layout;
@@ -39,7 +39,7 @@ namespace ui::interfaces::standard
 
         page_tree_ = new ui::views::page_tree(ui_core_);
 
-        connect(&ui_core_.nxi_core().page_system(), &nxi::page_system::event_add, [this](nxi::page_system::page_ptr page, nxi::page_system::page_ptr)
+        connect(&ui_core_.page_system(), &nxi::page_system::event_add, [this](nxi::page_system::page_ptr page, nxi::page_system::page_ptr)
         {
             //page_tree_->add(*page, source_id);
         });
@@ -56,12 +56,12 @@ namespace ui::interfaces::standard
 
         connect(btn_web_new, &QPushButton::clicked, this, [this]()
         {
-            ui_core_.nxi_core().page_system().add<nxi::web_page>();
+            ui_core_.page_system().add<nxi::web_page>();
         });
 
         connect(btn_explorer_new, &QPushButton::clicked, this, [this]()
         {
-            //ui_core_.nxi_core().page_system().add(nxi::explorer_page{}, 0);
+            //ui_core_.page_system().add(nxi::explorer_page{}, 0);
         });
          */
     }

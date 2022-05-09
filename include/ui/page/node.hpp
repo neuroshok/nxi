@@ -16,7 +16,7 @@ namespace nxi { class page_node; }
 
 namespace ui
 {
-    class session;
+    class user_session;
     class renderer;
     class web_page;
 
@@ -24,7 +24,7 @@ namespace ui
     {
         Q_OBJECT
     public:
-        node_page(ui::session&, nds::node_ptr<const nxi::page> page);
+        node_page(ui::user_session&, nds::node_ptr<const nxi::page> page);
 
         void display(ui::renderer* renderer) override;
         ui::renderer* make_renderer() const override;
@@ -39,7 +39,7 @@ namespace ui
         void resizeEvent(QResizeEvent* event) override;
 
     private:
-        ui::session& session_;
+        ui::user_session& session_;
         nds::node_ptr<const nxi::page> page_;
 
         QWebEngineView* view_;

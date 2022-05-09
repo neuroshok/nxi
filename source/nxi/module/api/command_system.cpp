@@ -1,6 +1,6 @@
 #include <nxi/module/api/command_system.hpp>
 
-#include <nxi/session.hpp>
+#include <nxi/core.hpp>
 #include <nxi/system/command.hpp>
 
 namespace nxi::api
@@ -9,6 +9,6 @@ namespace nxi::api
     {
         auto cmd = nxi::command(QString::fromStdString(name), "main", fn);
 
-        session_.command_system().add(std::move(cmd));
+        core_.command_system().add(std::move(cmd));
     }
 } // nxi::api

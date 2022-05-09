@@ -2,16 +2,21 @@
 
 #include <nxi/core.hpp>
 #include <nxi/log.hpp>
+#include <nxi/user.hpp>
 #include <nxw/hbox_layout.hpp>
 
+#include "nxw/icon_button.hpp"
 #include <ui/command/input.hpp>
 #include <ui/core.hpp>
 #include <ui/interface/light/button.hpp>
-#include "nxw/icon_button.hpp"
+
+#include <nxi/notification_data.hpp>
+#include <nxi/system/notification.hpp>
+#include <QIcon>
 
 namespace ui::interfaces::light
 {
-    control_bar::control_bar(ui::session& session, ui::window* window)
+    control_bar::control_bar(ui::user_session& session, ui::window* window)
         : ui::interface("control_bar", window)
         , session_{ session }
     {
@@ -27,6 +32,20 @@ namespace ui::interfaces::light
             layout->addWidget(command_input_);
             return;
         }
+
+        // session
+        auto session_button = new light::button("session", this);
+        session_button->setStyleSheet("font-weight: bold; color: #7722FF; padding: 0 20 0 20;");
+        session_button->style_data.text_color = QColor{ 255, 0, 0 };
+        connect(&session.nxi_core().session_system(), &nxi::session_system::event_focus, [session_button](nxi::session& s)
+        {
+            session_button->setText(s.name());
+        });
+
+        connect(session_button, &light::button::event_enter, [this]()
+        {
+            session_.nxi_session().command_system().command_input().suggest_session();
+        });
 
         // command_root
         command_root_ = new light::button("command_root_", this);
@@ -66,16 +85,17 @@ namespace ui::interfaces::light
         navigation->setStyleSheet("font-weight: bold; color: #BB2200; padding: 0 20 0 20;");
         connect(navigation, &light::button::event_enter, [this]()
         {
-            session_.nxi_session().command_system().command_input().suggest_navigation();
-        });
+            session_.nxi_session().command_system().command_input().suggest_navigation(); });
 
         // context
         context_ = new light::button("context_", this);
         context_->setStyleSheet("font-weight: bold; color: #00BB99; padding: 0 20 0 20;");
-        connect(context_, &light::button::event_enter, [this]()
-        {
-            session_.nxi_session().command_system().command_input().suggest_context();
-        });
+        connect(context_, &light::button::event_enter, [this]() { session_.nxi_session().command_system().command_input().suggest_context(); });
+
+        // notification
+        auto notification_ = new nxw::icon_button{ session_, this, ":/icon/notification", "" };
+
+        connect(notification_, &QPushButton::clicked, [this] { session_.nxi_core().notification_system().send("notif"); });
 
         // tools
         auto download_button = new nxw::icon_button{ session_, this, ":/icon/download" };
@@ -92,19 +112,25 @@ namespace ui::interfaces::light
             command_input_ = new ui::command_input(session_, this);
             command_input_->setFocus();
 
-            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/at" });
-            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/friend" });
-            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/notification" });
+            auto label = new QLabel{ this };
+            auto icon = new QIcon{ ":/image/nxi" };
+            label->setPixmap(icon->pixmap(16, 16));
+            layout->addWidget(label);
+
+            layout->addWidget(session_button);
             layout->addWidget(command_root_);
             layout->addWidget(page_root_);
             layout->addWidget(navigation);
-            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/refresh" });
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/refresh", "nxi:reload" });
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/previous" });
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/next" });
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/add", "nxi:new" });
             layout->addWidget(command_input_);
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/close", "nxi:close" });
             layout->addWidget(context_);
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/at" });
+            layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/friend" });
+            layout->addWidget(notification_);
             layout->addWidget(download_button);
             layout->addWidget(new nxw::icon_button{ session_, this, ":/icon/help" });
             layout->addWidget(close_button);

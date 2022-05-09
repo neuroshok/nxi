@@ -18,7 +18,7 @@
 
 namespace ui
 {
-    page_system::page_system(ui::session& session)
+    page_system::page_system(ui::user_session& session)
         : session_{ session }
     {
         // todo rename views to pages
