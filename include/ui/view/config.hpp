@@ -52,7 +52,7 @@ namespace ui::views
             value->setText(str_value);
 
             auto label_key = new QLabel(this);
-            label_key->setText(config_key->path());
+            label_key->setText(config_key->path() + " [" + session_.nxi_session().session_system().get(config_key->session_id()).name() + "]");
             label_key->setToolTip(config_key->description());
 
             form_->addRow(label_key, value);
