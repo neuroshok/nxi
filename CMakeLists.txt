@@ -198,7 +198,7 @@ if (NXI_TARGET_DESKTOP)
     endif ()
 
     add_custom_target(nxi_deploy
-            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/nxi${CMAKE_STATIC_LIBRARY_SUFFIX} ${NXI_LIB_ROOT}/nxi${CMAKE_STATIC_LIBRARY_SUFFIX}
+            #COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/nxi${CMAKE_STATIC_LIBRARY_SUFFIX} ${NXI_LIB_ROOT}/nxi${CMAKE_STATIC_LIBRARY_SUFFIX}
             COMMAND ${QT_DEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi_exe>
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/nxi.module/theme/ $<TARGET_FILE_DIR:nxi_exe>/module/theme/
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/nxi.module/web/ $<TARGET_FILE_DIR:nxi_exe>/module/web/
