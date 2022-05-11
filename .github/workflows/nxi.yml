@@ -1,0 +1,50 @@
+name: nxi_build
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  BUILD_TYPE: Release
+  GITHUB_TOKEN:
+
+jobs:
+  nxi:
+    strategy:
+      matrix:
+        config:
+          - { name: "Windows", os: windows-latest }
+          - { name: "Linux", os: ubuntu-latest }
+          - { name: "MacOS", os: macos-latest }
+    #
+    runs-on: ${{ matrix.config.os }}
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@master
+
+      - run: echo ${{ github.token }} | gh auth login --with-token
+
+      - run: gh release download release_${{ matrix.config.os }} -R neuroshok/fork.qt
+
+      # unix
+      - run: |
+          sudo apt-get install ninja-build libgl1-mesa-dev libxkbcommon-dev
+          unzip release_${{ matrix.config.os }}.zip
+          tar -xf release_${{ matrix.config.os }}.tar.gz
+          TAG=$(gh api repos/neuroshok/fork.qt/releases/latest --jq '.name')
+          gh api repos/neuroshok/fork.qt/git/ref/tags/$TAG --jq '.object.sha'
+        if: matrix.config.os == 'ubuntu-latest'
+
+      # windows
+      - run: |
+          unzip release_${{ matrix.config.os }}.zip
+          FOR /F %i IN ('gh api repos/neuroshok/fork.qt/releases/latest --jq ".name"') DO set TAG=%i
+          gh api repos/neuroshok/fork.qt/git/ref/tags/$TAG --jq '.object.sha'
+        if: matrix.config.os == 'windows-latest'
+
+      - name: Build nxi
+        run: |
+          git clone --recurse-submodules https://github.com/neuroshok/nxi.git && cd nxi
+          mkdir build && cd build
+          cmake -DNXI_QT_ROOT=${{ github.workspace }}/fork.qt/release  ..
+          cmake --build . --target nxi_deploy --config Release
