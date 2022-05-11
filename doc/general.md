@@ -1,18 +1,30 @@
 # Architecture
-- nxi
-    - systems
-- ui
-    - interface : contain widgets, manage events between nxi and ui
-    - view : widget displaying datas
-    - system : contain ui data of nxi systems
+- nxi::core
+    - user_system
+        - user
+            - command_system
+            - context_system
+            - interface_system
+            - module_system
+            - navigation_system
+            - notification_system
+            - page_system
+            - session_system
+            - window_system
+
+- ui::core
+    - nxi::core&
+    - user_system
+        - sessions
+            - page_system
+            - window_system
 
 ## Project tree
-- module : static modules
+
+- module : git submodule modules packs
 - nxi : system
 - nxw : generic widgets
 - ui : nxi interface
-    - view : data views
-    - interface : ui areas
 - platform : platform specific
 
 ## Loading steps
