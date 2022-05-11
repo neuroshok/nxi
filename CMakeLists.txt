@@ -81,6 +81,9 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+if (NXI_TARGET_SYSTEM STREQUAL "Linux")
+    list(APPEND NXI_PLATFORM_LIBS dl)
+endif ()
 
 #-------------------------------------------------------
 #                       Global
@@ -154,7 +157,7 @@ if (NXI_TARGET_DESKTOP)
     add_executable(nxi_exe ${NXI_SOURCES} ${NXI_ICON})
     target_include_directories(nxi_exe PUBLIC include)
     target_compile_definitions(nxi_exe PUBLIC ${NXI_DEFINITIONS})
-    target_link_libraries(nxi_exe lib_nds lib_speedlog ${NXI_STATIC_MODULES} ${NXI_QT_LIBS})
+    target_link_libraries(nxi_exe lib_nds lib_speedlog ${NXI_STATIC_MODULES} {NXI_PLATFORM_LIBS} ${NXI_QT_LIBS})
 
     # console
     if (NXI_CONSOLE)
