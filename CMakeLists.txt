@@ -189,19 +189,32 @@ if (NXI_TARGET_DESKTOP)
     get_target_property(QT_QMAKE_EXECUTABLE Qt::qmake IMPORTED_LOCATION)
     get_filename_component(QT_DEPLOYQT_PATH ${QT_QMAKE_EXECUTABLE} PATH)
 
+    #set(QT_DEPLOYQT_FLAGS "--qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi_exe>")
     if (NXI_TARGET_SYSTEM STREQUAL "Windows")
         set(QT_DEPLOYQT_EXECUTABLE "${QT_DEPLOYQT_PATH}/windeployqt.exe")
     elseif (NXI_TARGET_SYSTEM STREQUAL "Darwin")
         set(QT_DEPLOYQT_EXECUTABLE "${QT_DEPLOYQT_PATH}/macdeployqt")
     elseif (NXI_TARGET_SYSTEM STREQUAL "Linux")
-        set(QT_DEPLOYQT_EXECUTABLE "linuxdeployqt")
+        set(NXI_DEPLOY_ENV_LD_LIBRARY_PATH LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:${NXI_QT_ROOT}/lib)
+        set(NXI_DEPLOY_ENV_ARCH ARCH=x86_64)
+        set(QT_DEPLOYQT_EXECUTABLE ${QT_DEPLOYQT_PATH}/linuxdeployqt)
+        set(QT_DEPLOYQT_FLAGS "$<TARGET_FILE_DIR:nxi_exe>/nxi" -unsupported-bundle-everything -unsupported-allow-new-glibc -appimage -always-overwrite -no-strip
+                -extra-plugins=platforms,sqldrivers/libqsqlite.so,../libexec,../resources,../module,xcbglintegrations)
+        set(NXI_DEPLOY_SYSTEM_COMMAND
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_QT_ROOT}/plugins/platforms/ ${NXI_BIN_ROOT}/plugins/platforms/
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_QT_ROOT}/plugins/sqldrivers/ ${NXI_BIN_ROOT}/plugins/sqldrivers/
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_QT_ROOT}/plugins/xcbglintegrations/ ${NXI_BIN_ROOT}/plugins/xcbglintegrations/
+                COMMAND ${CMAKE_COMMAND} -E copy ${NXI_QT_ROOT}/libexec/QtWebEngineProcess ${NXI_BIN_ROOT}/libexec/QtWebEngineProcess
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_QT_ROOT}/resources/ ${NXI_BIN_ROOT}/resources/
+                )
     endif ()
 
     add_custom_target(nxi_deploy
             #COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/nxi${CMAKE_STATIC_LIBRARY_SUFFIX} ${NXI_LIB_ROOT}/nxi${CMAKE_STATIC_LIBRARY_SUFFIX}
-            COMMAND ${QT_DEPLOYQT_EXECUTABLE} --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi_exe>
+            ${NXI_DEPLOY_SYSTEM_COMMAND}
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/nxi.module/theme/ $<TARGET_FILE_DIR:nxi_exe>/module/theme/
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/nxi.module/web/ $<TARGET_FILE_DIR:nxi_exe>/module/web/
+            COMMAND ${CMAKE_COMMAND} -E env ${NXI_DEPLOY_ENV_LD_LIBRARY_PATH} ${NXI_DEPLOY_ENV_ARCH} ${QT_DEPLOYQT_EXECUTABLE} ${QT_DEPLOYQT_FLAGS}
             )
     add_dependencies(nxi_deploy nxi_exe)
 
