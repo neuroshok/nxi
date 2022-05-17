@@ -30,7 +30,7 @@ include(user-config.cmake OPTIONAL)
 #-------------------------------------------------------
 # path
 set(NXI_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
-set(NXI_BIN_ROOT ${NXI_ROOT}/bin/nxi)
+set(NXI_BIN_ROOT ${NXI_ROOT}/bin/${NXI_TARGET_SYSTEM}/nxi)
 set(NXI_LIB_ROOT ${NXI_ROOT}/lib)
 set(NXI_MODULE_ROOT "${NXI_ROOT}/module")
 set(NXI_MODULE_BIN_ROOT ${NXI_BIN_ROOT}/module)
@@ -189,7 +189,7 @@ if (NXI_TARGET_DESKTOP)
     get_target_property(QT_QMAKE_EXECUTABLE Qt::qmake IMPORTED_LOCATION)
     get_filename_component(QT_DEPLOYQT_PATH ${QT_QMAKE_EXECUTABLE} PATH)
 
-    #set(QT_DEPLOYQT_FLAGS "--qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi_exe>")
+    set(QT_DEPLOYQT_FLAGS --qmldir ${CMAKE_SOURCE_DIR} $<TARGET_FILE_DIR:nxi_exe>)
     if (NXI_TARGET_SYSTEM STREQUAL "Windows")
         set(QT_DEPLOYQT_EXECUTABLE "${QT_DEPLOYQT_PATH}/windeployqt.exe")
     elseif (NXI_TARGET_SYSTEM STREQUAL "Darwin")
@@ -214,7 +214,7 @@ if (NXI_TARGET_DESKTOP)
             ${NXI_DEPLOY_SYSTEM_COMMAND}
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/nxi.module/theme/ $<TARGET_FILE_DIR:nxi_exe>/module/theme/
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${NXI_ROOT}/module/nxi.module/web/ $<TARGET_FILE_DIR:nxi_exe>/module/web/
-            COMMAND ${CMAKE_COMMAND} -E env ${NXI_DEPLOY_ENV_LD_LIBRARY_PATH} ${NXI_DEPLOY_ENV_ARCH} ${QT_DEPLOYQT_EXECUTABLE} ${QT_DEPLOYQT_FLAGS}
+            COMMAND ${QT_DEPLOYQT_EXECUTABLE} ${QT_DEPLOYQT_FLAGS}
             )
     add_dependencies(nxi_deploy nxi_exe)
 
