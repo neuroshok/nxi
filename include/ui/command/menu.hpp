@@ -27,7 +27,7 @@ namespace ui
     public:
         struct style_type
         {
-            QImage background_image;
+            QPixmap background_image;
             QColor background_color{ 200, 200, 200 };
             QColor item_text_color{ 0, 0, 0 };
             QColor item_text_color_hover{ 0, 0, 0 };
@@ -67,7 +67,7 @@ namespace ui
 
         nxi::suggestion_vector& suggestions();
 
-        void draw_image(QPainter&, const QImage&, int x, int y, QSize size, int margin);
+        void draw_pixmap(QPainter&, const QPixmap&, int x, int y, QSize size, int margin);
 
     private:
         ui::user_session& session_;
@@ -84,10 +84,10 @@ namespace ui
         stz::observer_ptr<const nxi::suggestion_vector> suggestions_;
 
         // controls
-        QImage image_copy_;
-        QImage image_sound_;
-        QImage image_sound_muted_;
-        QImage image_sound_premuted_;
+        QPixmap icon_copy_;
+        QPixmap icon_sound_;
+        QPixmap icon_sound_muted_;
+        QPixmap icon_sound_premuted_;
     };
 } // ui
 

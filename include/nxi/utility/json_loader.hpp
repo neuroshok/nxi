@@ -10,9 +10,9 @@
 #include <QJsonValue>
 #include <QJsonValueRef>
 
-#include <QString>
+#include <QPixmap>
 #include <QSize>
-#include <QImage>
+#include <QString>
 
 #define nxi_json_key_overload2(NAME, TYPE) ::nxi::json_value<TYPE> NAME{ this, #NAME };
 #define nxi_json_key_overload3(NAME, TYPE, DEFAULT_VALUE) ::nxi::json_value<TYPE> NAME{ this, #NAME, TYPE DEFAULT_VALUE };

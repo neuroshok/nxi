@@ -22,13 +22,12 @@ namespace ui
         , selection_index_{ -1 }
     {
         setContentsMargins(5, 5, 5, 5);
-        connect(&session.nxi_core(), &nxi::core::event_load, [ this]
-        {
+        connect(&session.nxi_core(), &nxi::core::event_load, [ this] {
             QSize size{ style_data.item_height / 2 - style_data.control_padding, style_data.item_height / 2 - style_data.control_padding };
-            image_copy_ = ui::make_image_from_svg(":/icon/copy", size, style_data.item_text_color);
-            image_sound_ = ui::make_image_from_svg(":/icon/sound", size, style_data.item_text_color.darker(200));
-            image_sound_muted_ = ui::make_image_from_svg(":/icon/sound", size, QColor{ 180, 20, 20 });
-            image_sound_premuted_ = ui::make_image_from_svg(":/icon/sound", size, style_data.item_text_color.lighter(180));
+            icon_copy_ = ui::make_pixmap_from_svg(":/icon/copy", size, style_data.item_text_color);
+            icon_sound_ = ui::make_pixmap_from_svg(":/icon/sound", size, style_data.item_text_color.darker(200));
+            icon_sound_muted_ = ui::make_pixmap_from_svg(":/icon/sound", size, QColor{ 180, 20, 20 });
+            icon_sound_premuted_ = ui::make_pixmap_from_svg(":/icon/sound", size, style_data.item_text_color.lighter(180));
         });
 
 
@@ -84,7 +83,7 @@ namespace ui
         auto d_x = image.width() - width();
         QRectF source(0.0, 0.0, image.width(), image.height());
         QRectF target(d_x, 0, image.width(), image.height());
-        painter.drawImage(source, image, target);
+        painter.drawPixmap(source, image, target);
         painter.fillRect(rect(), style_data.background_color);
 
         draw_header();
@@ -181,12 +180,13 @@ namespace ui
 
         // command icon
         QRect icon_rect{ item_rect.left(), item_rect.top(), style_data.item_height, style_data.item_height };
-        QPixmap icon{ command.icon() };
+
+        auto icon = command.pixmap; // session_.icon_provider().get(command.icon())
         QRect source_icon_rect = icon.rect();
         source_icon_rect.moveCenter(icon_rect.center());
 
         painter.drawPixmap(source_icon_rect, icon);
-        item_rect.setLeft( item_rect.left() + icon_rect.width());
+        item_rect.setLeft(item_rect.left() + icon_rect.width());
 
         // command name
         painter.setPen(style_data.item_text_color);
@@ -286,13 +286,15 @@ namespace ui
         QRect control_rect{ item_rect.right() - style_data.item_height - 16, item_rect.top(), style_data.item_height, style_data.item_height };
 
         // muted state
-        draw_image(painter, image_copy_, control_rect.left(), control_rect.top(), image_copy_.size(), style_data.control_padding);
+        draw_pixmap(painter, icon_copy_, control_rect.left(), control_rect.top(), icon_copy_.size(), style_data.control_padding);
         control_rect.moveLeft(control_rect.left() - style_data.item_height);
 
         page_mute_area_ = control_rect;
-        if (page->is_muted()) draw_image(painter, image_sound_muted_, control_rect.left(), control_rect.top(), image_sound_muted_.size(), style_data.control_padding);
-        else if (page->is_audible()) draw_image(painter, image_sound_, control_rect.left(), control_rect.top(), image_sound_.size(), style_data.control_padding);
-        else draw_image(painter, image_sound_premuted_, control_rect.left(), control_rect.top(), image_sound_.size(), style_data.control_padding);
+        if (page->is_muted())
+            draw_pixmap(painter, icon_sound_muted_, control_rect.left(), control_rect.top(), icon_sound_muted_.size(), style_data.control_padding);
+        else if (page->is_audible())
+            draw_pixmap(painter, icon_sound_, control_rect.left(), control_rect.top(), icon_sound_.size(), style_data.control_padding);
+        else draw_pixmap(painter, icon_sound_premuted_, control_rect.left(), control_rect.top(), icon_sound_.size(), style_data.control_padding);
     }
     void command_menu::draw_item(const nxi::suggestion& suggestion,  QRect& item_rect, bool selected)
     {
@@ -302,10 +304,15 @@ namespace ui
         else painter.fillRect(item_rect, style_data.item_background_color);
 
         // suggestion icon
-        QImage suggestion_icon{ suggestion.icon() };
+        QPixmap suggestion_icon{ suggestion.icon() };
 
         QRect icon_rect{ item_rect.left(), item_rect.top(), style_data.item_height, style_data.item_height };
-        draw_image(painter, suggestion_icon, item_rect.left(), item_rect.top(), QSize{ style_data.item_height, style_data.item_height }, style_data.item_height / 4);
+        draw_pixmap(painter,
+                    suggestion_icon,
+                    item_rect.left(),
+                    item_rect.top(),
+                    QSize{ style_data.item_height, style_data.item_height },
+                    style_data.item_height / 4);
 
         item_rect.setLeft( item_rect.left() + icon_rect.width());
 
@@ -401,11 +408,11 @@ namespace ui
 
     nxi::suggestion_vector& command_menu::suggestions() { return session_.nxi_session().command_system().command_input().suggestions(); }
 
-    void command_menu::draw_image(QPainter& painter, const QImage& image, int x, int y, QSize size, int margin)
+    void command_menu::draw_pixmap(QPainter& painter, const QPixmap& image, int x, int y, QSize size, int margin)
     {
         x += (style_data.item_height - size.width()) / 2;
         y += (style_data.item_height - size.height()) / 2;
-        QRect source_image_rect{ x, y, size.width(), size.height() };
-        painter.drawImage(source_image_rect, image);
+        QRect source_icon_rect{ x, y, size.width(), size.height() };
+        painter.drawPixmap(source_icon_rect, image);
     }
 } // ui

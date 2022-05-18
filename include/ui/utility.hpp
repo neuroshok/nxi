@@ -3,11 +3,12 @@
 
 #include <QImage>
 #include <QPainter>
+#include <QPixmap>
 #include <QSvgRenderer>
 
 namespace ui
 {
-    inline QImage make_image_from_svg(const QString& svg, const QSize& size, QColor foreground_color, QColor background_color = { 0, 0, 0 })
+    inline QPixmap make_pixmap_from_svg(const QString& svg, const QSize& size, QColor foreground_color, QColor background_color = { 0, 0, 0 })
     {
         QSvgRenderer svg_renderer{ svg };
         QImage source{ size, QImage::Format_RGBA8888 };
@@ -38,7 +39,7 @@ namespace ui
             }
         }
 
-        return image;
+        return QPixmap::fromImage(image);
     }
 } // ui
 

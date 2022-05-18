@@ -12,8 +12,7 @@ namespace nxi
     {
         using json_object::json_object;
 
-        nxi_json_key(background_color, QColor, (61, 65, 71) )
-        nxi_json_key(background_image, QImage, (":/style/background") )
+        nxi_json_key(background_color, QColor, (61, 65, 71) ) nxi_json_key(background_image, QPixmap, (":/style/background"))
         nxi_json_key(text_color, QColor, (186, 187, 193) )
 
         nxi_json_open(field)

@@ -18,7 +18,6 @@ namespace nxw
     icon_button::icon_button(ui::user_session& session, QWidget* parent, const QString& icon_path, QString str_command, icon_button::style_type custom_style)
         : session_{ session }
         , str_command_{ std::move(str_command) }
-        , svg_renderer_{ new QSvgRenderer{ icon_path } }
         , style_data{ std::move(custom_style) }
     {
         connect(&session.nxi_core(), &nxi::core::event_load, [icon_path, this] {
@@ -31,15 +30,13 @@ namespace nxw
 
             setFixedSize(style_data.size);
             QSize size{ style_data.size.width() - style_data.padding * 2, style_data.size.height() - style_data.padding * 2 };
-            image_ = ui::make_image_from_svg(icon_path, size, style_data.icon_color, style_data.background_color);
-            image_hover_ = ui::make_image_from_svg(icon_path, size, style_data.icon_color_hover, style_data.background_color_hover);
+            icon_ = ui::make_pixmap_from_svg(icon_path, size, style_data.icon_color, style_data.background_color);
+            icon_hover_ = ui::make_pixmap_from_svg(icon_path, size, style_data.icon_color_hover, style_data.background_color_hover);
         });
 
         connect(this, &QPushButton::clicked, [this] {
             if (command_) command_->exec();
         });
-
-        if (!svg_renderer_->isValid()) nxi_error("invalid icon");
     }
 
     QImage icon_button::make_colorized_image(const QImage& source, QColor foreground_color, QColor background_color)
@@ -73,12 +70,12 @@ namespace nxw
         if (underMouse())
         {
             if (style_data.background_color_hover.alpha() > 0) painter.fillRect(0, 0, style_data.size.width(), style_data.size.height(), style_data.background_color_hover);
-            painter.drawImage(style_data.padding, style_data.padding, image_hover_);
+            painter.drawPixmap(style_data.padding, style_data.padding, icon_hover_);
         }
         else
         {
             if (style_data.background_color.alpha() > 0) painter.fillRect(0, 0, style_data.size.width(), style_data.size.height(), style_data.background_color);
-            painter.drawImage(style_data.padding, style_data.padding, image_);
+            painter.drawPixmap(style_data.padding, style_data.padding, icon_);
         }
     }
 } // nxw

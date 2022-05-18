@@ -49,8 +49,8 @@ namespace nxw
         ui::user_session& session_;
         nds::node_ptr<nxi::command> command_;
         QString str_command_;
-        QImage image_;
-        QImage image_hover_;
+        QPixmap icon_;
+        QPixmap icon_hover_;
         QSvgRenderer* svg_renderer_;
     };
 } // nxw

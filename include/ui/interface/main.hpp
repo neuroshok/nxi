@@ -12,8 +12,8 @@ namespace ui
     public:
         struct style_type
         {
-            QColor background_color = {238, 238, 238};
-            QImage background_image;
+            QColor background_color = { 238, 238, 238 };
+            QPixmap background_image;
         } style_data;
 
     public:

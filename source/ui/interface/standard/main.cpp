@@ -94,8 +94,8 @@ namespace ui::interfaces::standard
         QRectF target(0, -d_y, image.width(), image.height());
 
         QPainter painter(this);
-        painter.fillRect(0, 0 ,width(), height(), style_data.background_color);
-        painter.drawImage(target, image, source);
+        painter.fillRect(0, 0, width(), height(), style_data.background_color);
+        painter.drawPixmap(target, image, source);
     }
 
     void main::resizeEvent(QResizeEvent*)
