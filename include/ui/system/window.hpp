@@ -10,6 +10,7 @@ namespace nxi
 
 namespace ui
 {
+    class main_interface;
     class user_session;
     class window;
 
@@ -17,8 +18,8 @@ namespace ui
     {
         Q_OBJECT
     public:
-        window_system(ui::user_session&);
-        ~window_system();
+        explicit window_system(ui::user_session&);
+        ~window_system() override;
 
         void unload();
         ui::window* add(const nxi::window_data&);
@@ -28,13 +29,14 @@ namespace ui
         void resize(ui::window*, int w, int h);
         void minimize(ui::window*);
 
-        size_t count() const;
+        [[nodiscard]] size_t count() const;
+        std::vector<ui::window*> windows();
 
     private:
         ui::user_session& session_;
 
-        std::vector<ui::window*> m_windows;
-        //std::vector<std::pair<int, ui::window*> m_windows_storage_id;
+        std::vector<ui::window*> windows_;
+        // std::vector<std::pair<int, ui::window*> windows__storage_id;
         unsigned int m_current;
     };
 } // nxi

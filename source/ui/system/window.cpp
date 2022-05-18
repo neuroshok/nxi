@@ -16,21 +16,17 @@ namespace ui
     window_system::window_system(ui::user_session& session)
         : session_{ session }
     {
-        QObject::connect(&session_.nxi_session().window_system(), &nxi::window_system::event_add, [this](const nxi::window_data& window)
-        {
+        QObject::connect(&session_.nxi_session().window_system(), &nxi::window_system::event_add, [this](const nxi::window_data& window) {
             nxi_trace_event("");
             add(window);
         });
     }
 
-    window_system::~window_system()
-    {
-        unload();
-    }
+    window_system::~window_system() { unload(); }
 
     void window_system::unload()
     {
-        for (ui::window* window : m_windows)
+        for (ui::window* window : windows_)
         {
             window->deleteLater();
         }
@@ -47,7 +43,7 @@ namespace ui
         auto ui_interface = session_.make_main_interface(ui_window);
         ui_window->set_interface(ui_interface);
 
-        m_windows.push_back(ui_window);
+        windows_.push_back(ui_window);
         return ui_window;
     }
 
@@ -58,18 +54,12 @@ namespace ui
         {
             session_.nxi_session().window_system().del(window->id());
         }
-        m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), window), m_windows.end());
+        windows_.erase(std::remove(windows_.begin(), windows_.end(), window), windows_.end());
     }
 
-    void window_system::move(ui::window* window, int x, int y)
-    {
-        session_.nxi_session().window_system().move(window->id(), x, y);
-    }
+    void window_system::move(ui::window* window, int x, int y) { session_.nxi_session().window_system().move(window->id(), x, y); }
 
-    void window_system::resize(ui::window* window, int w, int h)
-    {
-        session_.nxi_session().window_system().resize(window->id(), w, h);
-    }
+    void window_system::resize(ui::window* window, int w, int h) { session_.nxi_session().window_system().resize(window->id(), w, h); }
 
     void window_system::minimize(ui::window* window)
     {
@@ -77,8 +67,6 @@ namespace ui
         window->showMinimized();
     }
 
-    size_t window_system::count() const
-    {
-        return m_windows.size();
-    }
+    size_t window_system::count() const { return windows_.size(); }
+    std::vector<ui::window*> window_system::windows() { return windows_; }
 } // ui

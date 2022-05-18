@@ -34,7 +34,7 @@ namespace ui::interfaces::light
         , session_{ session }
     {
         connect(&session_.nxi_session().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style) {
-            style.update(this);
+            style.update(session_);
         });
 
         connect(&session_.nxi_session().session_system(), &nxi::session_system::event_focus, [this](const nxi::session& session) {
