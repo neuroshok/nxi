@@ -1,8 +1,8 @@
 #ifndef NXI_COMMAND_H_NXI
 #define NXI_COMMAND_H_NXI
 
-#include <nxi/command/fwd.hpp>
 #include <nxi/command/data.hpp>
+#include <nxi/command/fwd.hpp>
 #include <nxi/shortcut.hpp>
 
 #include <nxi/database.hpp>
@@ -10,9 +10,10 @@
 #include <nds/graph/node.hpp>
 
 #include <functional>
-#include <QObject>
-#include <QHash>
 #include <QDebug>
+#include <QHash>
+#include <QObject>
+#include <QPixmap>
 
 namespace nxi
 {
@@ -53,6 +54,7 @@ namespace nxi
         const QString& description() const;
         const nxi::shortcut& shortcut() const;
         bool preview() const;
+        QPixmap pixmap;
 
         nds::node_ptr<const nxi::command> node() const;
 

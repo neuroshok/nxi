@@ -1,37 +1,38 @@
 #include <nxi/style.hpp>
 
 #include <nxi/core.hpp>
-
-#include <QString>
-#include <QFile>
-
-#include <w3c/theme.hpp>
-#include <include/nxi/style.hpp>
-#include <qdebug.h>
+#include <nxi/log.hpp>
+#include <nxi/style_data.hpp>
+#include <nxw/icon_button.hpp>
+#include <nxw/menu.hpp>
+#include <nxw/menu/item.hpp>
 
 #include <ui/command/input.hpp>
 #include <ui/command/menu.hpp>
 #include <ui/interface/main.hpp>
 #include <ui/interface/standard/control_bar.hpp>
-#include <include/w3c/theme.hpp>
-#include <include/nxi/log.hpp>
+#include <ui/user_session.hpp>
+#include <ui/utility.hpp>
+#include <ui/window.hpp>
 
-#include <QBrush>
-#include <QLineEdit>
-#include <QStyleOption>
-#include <include/nxw/icon_button.hpp>
-#include <include/nxi/style_data.hpp>
+#include <w3c/theme.hpp>
+
 #include <QApplication>
-#include <include/nxw/menu/item.hpp>
-#include <include/nxw/menu.hpp>
+#include <QBrush>
+#include <QFile>
+#include <QLineEdit>
+#include <QString>
+#include <QStyleOption>
 
 namespace nxi
 {
     style::style(const QString& name)
         : name_{ name }
-        , path_{ nxi::core::module_path() + "/theme/"+ name_ }
+        , path_{ nxi::core::module_path() + "/theme/" + name_ }
     {}
-    style::style() : style("nxi") {}
+    style::style()
+        : style("nxi")
+    {}
 
     const QString& style::name() const { return name_; }
     const QString& style::path() const { return path_; }
@@ -52,6 +53,19 @@ namespace nxi
         }
     }
 
+    void style::update(ui::user_session& session) const
+    {
+        // update commands icons
+        session.nxi_session().command_system().commands([this](auto&& command) {
+            if (command->icon().isEmpty()) return;
+            if (command->icon() == ":/icon/quit") command->pixmap = ui::make_pixmap_from_svg(command->icon(), QSize{ 16, 16 }, { 180, 0, 0 });
+            else if (command->icon() == ":/icon/nxi") command->pixmap = ui::make_pixmap_from_svg(command->icon(), QSize{ 16, 16 }, { 50, 149, 200 });
+            else command->pixmap = ui::make_pixmap_from_svg(command->icon(), QSize{ 16, 16 }, data_.icon_button.icon_color.get());
+        });
+
+        for (const auto& window : session.window_system().windows())
+            update(window->main_interface());
+    }
 
     // findChildren require Q_OBJECT to be present on the searched type to avoid conversion with common base
     void style::update(ui::main_interface* w) const
@@ -63,8 +77,10 @@ namespace nxi
         const QWidgetList top_widgets = QApplication::topLevelWidgets();
         for (auto top_widget : top_widgets)
         {
-            for (auto command_input : top_widget->findChildren<ui::command_input*>()) update(command_input);
-            for (auto command_menu : top_widget->findChildren<ui::command_menu*>()) update(command_menu);
+            for (auto command_input : top_widget->findChildren<ui::command_input*>())
+                update(command_input);
+            for (auto command_menu : top_widget->findChildren<ui::command_menu*>())
+                update(command_menu);
 
             for (auto icon_button : top_widget->findChildren<nxw::icon_button*>())
             {
@@ -88,10 +104,7 @@ namespace nxi
         ui::command_input::style_update(ui);
     }
 
-
-    void style::update(QWidget* ui) const
-    {
-    }
+    void style::update(QWidget* ui) const {}
 
     void style::update(ui::command_menu* widget) const
     {
@@ -103,22 +116,25 @@ namespace nxi
         widget->style_data.item_background_color_hover = data_.menu.item_background_color_hover.get();
         widget->style_data.item_background_color_selected = data_.menu.item_background_color_selected.get();
 
-        widget->style_data.item_height = 40;//data_.menu.item_height.get();
+        widget->style_data.item_height = 40; // data_.menu.item_height.get();
     }
 
-    #define map_color(NXI_KEY, W3C_KEY) if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(theme.W3C_KEY.get());
-    #define map_color_edit(NXI_KEY, W3C_KEY, EDIT) if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(theme.W3C_KEY.get().EDIT);
-    #define map_image(NXI_KEY, W3C_KEY) if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(QImage(path() + "/" + theme.W3C_KEY.get()));
+#define map_color(NXI_KEY, W3C_KEY)                                                                                                                  \
+    if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(theme.W3C_KEY.get());
+#define map_color_edit(NXI_KEY, W3C_KEY, EDIT)                                                                                                       \
+    if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(theme.W3C_KEY.get().EDIT);
+#define map_image(NXI_KEY, W3C_KEY)                                                                                                                  \
+    if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(QPixmap(path() + "/" + theme.W3C_KEY.get()));
     //! \brief map w3c theme color to nxi style color
     void style::from_w3c(w3c::theme& theme)
     {
-        #include <nxi/style/w3c_mapping.hpp>
+#include <nxi/style/w3c_mapping.hpp>
     }
-    #undef map_color
+#undef map_color
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////           BASIC STYLE          ////////////////////////
-////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////           BASIC STYLE          ////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
     void style::polish(QPalette& palette)
     {
         QPainter painter;
@@ -126,46 +142,43 @@ namespace nxi
         palette.setColor(QPalette::ColorRole::Base, Qt::transparent);
     }
 
-    void style::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption* option, QPainter* painter,
-                              const QWidget* widget) const
+    void style::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget) const
     {
 
-        switch(element)
+        switch (element)
         {
-            case QStyle::PE_PanelLineEdit:
+        case QStyle::PE_PanelLineEdit: {
+            int padding = 10;
+            if (option->state & State_Editing)
             {
-                int padding = 10;
-                if (option->state & State_Editing)
-                {
-                    padding = 0;
-                }
-
-                QColor field_background_color{ data_.field.background_color.get() };
-                if (option->state & State_HasFocus)
-                {
-                    field_background_color = data_.field.background_color_focus.get();
-                }
-
-                QPoint          topLeft     = option->rect.topLeft();
-                QPoint          bottomRight = option->rect.topRight();
-                QLinearGradient backgroundGradient(topLeft, bottomRight);
-                backgroundGradient.setColorAt(0.0, field_background_color);
-                backgroundGradient.setColorAt(1.0, field_background_color);
-
-                painter->fillRect(option->rect, backgroundGradient);
-                /*
-                painter->setRenderHint(QPainter::Antialiasing);
-                QPainterPath path;
-                path.addRoundedRect(0, 0, option->rect.width(), option->rect.height(), 5, 5);
-
-                painter->fillPath(path, backgroundGradient);
-                painter->drawPath(path);*/
-
+                padding = 0;
             }
-            break;
 
-            default:
-                QProxyStyle::drawPrimitive(element, option, painter, widget);
+            QColor field_background_color{ data_.field.background_color.get() };
+            if (option->state & State_HasFocus)
+            {
+                field_background_color = data_.field.background_color_focus.get();
+            }
+
+            QPoint topLeft = option->rect.topLeft();
+            QPoint bottomRight = option->rect.topRight();
+            QLinearGradient backgroundGradient(topLeft, bottomRight);
+            backgroundGradient.setColorAt(0.0, field_background_color);
+            backgroundGradient.setColorAt(1.0, field_background_color);
+
+            painter->fillRect(option->rect, backgroundGradient);
+            /*
+            painter->setRenderHint(QPainter::Antialiasing);
+            QPainterPath path;
+            path.addRoundedRect(0, 0, option->rect.width(), option->rect.height(), 5, 5);
+
+            painter->fillPath(path, backgroundGradient);
+            painter->drawPath(path);*/
+        }
+        break;
+
+        default:
+            QProxyStyle::drawPrimitive(element, option, painter, widget);
         }
     }
 } // nxi

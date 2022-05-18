@@ -41,10 +41,15 @@ namespace nxi
         void exec(nds::node_ptr<const nxi::command>) const;
         void exec(nds::node_ptr<const nxi::command>, const nxi::values&) const;
         commands_view search(const QString&);
-        void search(const QString&, callback_type);
-        nxi::command_input& command_input();
-
         void set_root(nds::node_ptr<nxi::command>);
+        void search(const QString&, callback_type);
+
+        template<class F>
+        void commands(F&& f)
+        {
+            graph_.nodes([&f](auto&& node) { f(node); });
+        }
+        nxi::command_input& command_input();
 
     signals:
         void event_add(const nxi::command&);
