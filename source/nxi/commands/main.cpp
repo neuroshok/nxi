@@ -25,7 +25,7 @@ namespace nxi
         //help
         nxi::command_data help;
         help.action = "help";
-        help.icon = "";
+        help.icon = ":/icon/help";
         help.description = "Display nxi help";
         help.function = [this](const nxi::values&) { core_.page_system().open<nxi::web_page>("https://github.com/neuroshok/nxi/wiki"); };
 
@@ -35,7 +35,10 @@ namespace nxi
         // test
         add("test", [this](const nxi::values&){ qDebug() << "TEST PAGE"; });
         // about
-        add("about", [this](const nxi::values&){ core_.page_system().open_static("nxi/about"); });
+        add(
+        "about",
+        [this](const nxi::values&) { core_.page_system().open_static("nxi/about"); },
+        ":/icon/nxi");
 
         return node;
     }

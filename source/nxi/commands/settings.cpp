@@ -11,7 +11,8 @@ namespace nxi
 
         nxi::command_data config;
         config.action = "config";
-        config.shortcut = {{ Qt::Key_Control, Qt::Key_Alt }, { Qt::Key_S }};
+        config.icon = ":/icon/config";
+        config.shortcut = { { Qt::Key_Control, Qt::Key_Alt }, { Qt::Key_S } };
         config.function = [this](const nxi::values&){ core_.page_system().open_static("nxi/config", nxi::renderer_type::widget); };
         add(std::move(config));
 

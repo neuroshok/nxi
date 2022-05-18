@@ -14,6 +14,7 @@ namespace nxi
         // new
         nxi::command_data page_new;
         page_new.action = "new";
+        page_new.icon = ":/icon/add";
         page_new.description = "Open new page";
         page_new.context_id = nxi::context::id<nxi::contexts::command>();
         page_new.shortcut = {{ Qt::Key_Control }, { Qt::Key_T }, nxi::context::id<nxi::contexts::page>() };

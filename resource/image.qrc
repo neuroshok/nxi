@@ -9,9 +9,9 @@
     <qresource prefix="/icon">
         <file alias="add">icon/add.svg</file>
         <file alias="at">icon/at.svg</file>
-        <file alias="notification">icon/bell.svg</file>
         <file alias="close">icon/close.svg</file>
         <file alias="copy">icon/copy.svg</file>
+        <file alias="config">icon/config.svg</file>
         <file alias="download">icon/download.svg</file>
         <file alias="friend">icon/users.svg</file>
         <file alias="help">icon/help.svg</file>
@@ -20,11 +20,14 @@
         <file alias="message">icon/message24.png</file>
         <file alias="minimize">icon/minimize24.png</file>
         <file alias="next">icon/next.svg</file>
-        <file alias="node">icon/node16.png</file>
+        <file alias="node">icon/node.svg</file>
+        <file alias="notification">icon/bell.svg</file>
+        <file alias="nxi">icon/nxi.svg</file>
         <file alias="previous">icon/previous.svg</file>
+        <file alias="quit">icon/quit.svg</file>
         <file alias="refresh">icon/refresh.svg</file>
         <file alias="search">icon/search.svg</file>
         <file alias="sound">icon/headphones.svg</file>
-        <file alias="switch">icon/switch16.png</file>
+        <file alias="switch">icon/exchange.svg</file>
     </qresource>
 </RCC>
