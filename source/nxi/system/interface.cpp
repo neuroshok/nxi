@@ -3,8 +3,10 @@
 #include <nxi/core.hpp>
 #include <nxi/style.hpp>
 #include <nxi/user.hpp>
+#include <ui/utility.hpp>
 #include <QApplication>
 #include <QDir>
+#include <QPixmap>
 
 namespace nxi
 {
@@ -23,17 +25,14 @@ namespace nxi
         emit event_update_style(*style);
     }
 
-    nxi::style& interface_system::style()
-    {
-        return *static_cast<nxi::style*>(QApplication::style());
-    }
+    nxi::style& interface_system::style() { return *static_cast<nxi::style*>(QApplication::style()); }
 
     std::vector<QString> interface_system::styles() const
     {
         std::vector<QString> styles;
-        QDir dir ("./module/theme/");
+        QDir dir{ "./module/theme/" };
         QStringList list = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
         auto vec = list.toVector();
-        return std::vector<QString>(vec.begin(), vec.end());
+        return { vec.begin(), vec.end() };
     }
 } // nxi
