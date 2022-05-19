@@ -8,8 +8,8 @@
         class result;                                                                                                                                \
         struct Name##_data                                                                                                                           \
         {
-#define init_field(Index, Type, Name, SqlType) Type Name;
-#define init_lfield(Index, Type, Name, SqlType) Type Name;
+#define init_field(Index, Type, Name, SqlType) Type Name{};
+#define init_lfield(Index, Type, Name, SqlType) Type Name{};
 #define init_SQL(Data)
 #define init_close(Name)                                                                                                                             \
     }                                                                                                                                                \
