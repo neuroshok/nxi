@@ -205,6 +205,7 @@ namespace ui
     void command_input::mouseReleaseEvent(QMouseEvent* event)
     {
         if (nxi_input().mode() == nxi::command_input::mode_type::input) return QLineEdit::mouseReleaseEvent(event);
+        else if (nxi_input().mode() == nxi::command_input::mode_type::display) event->ignore();
 
         if (mouse_press_origin_ == event->globalPosition().toPoint())
         {
