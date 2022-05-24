@@ -5,7 +5,8 @@
 
 namespace nxi
 {
-    struct window_data;
+    ;
+    class window;
 } // nxi
 
 namespace ui
@@ -22,7 +23,7 @@ namespace ui
         ~window_system() override;
 
         void unload();
-        ui::window* add(const nxi::window_data&);
+        ui::window* add(nxi::window&);
         void close(ui::window*);
 
         void move(ui::window*, int x, int y);
@@ -36,8 +37,6 @@ namespace ui
         ui::user_session& session_;
 
         std::vector<ui::window*> windows_;
-        // std::vector<std::pair<int, ui::window*> windows__storage_id;
-        unsigned int m_current;
     };
 } // nxi
 

@@ -9,9 +9,9 @@
 
 namespace ui
 {
-    window::window(ui::window_system& window_system, unsigned int id)
+    window::window(ui::window_system& window_system, nxi::window& window)
         : window_system_{ window_system }
-        , id_{ id }
+        , nxi_window_{ window }
         , interface_{ nullptr }
     {
         layout_ = new nxw::hbox_layout;
@@ -51,24 +51,12 @@ namespace ui
         layout_->addWidget(interface_);
     }
 
+    int window::id() const { return id_; }
 
-    unsigned int window::id() const
-    {
-        return id_;
-    }
+    ui::window_system& window::window_system() { return window_system_; }
 
-    ui::window_system& window::window_system()
-    {
-        return window_system_;
-    }
+    void window::set_grip(QWidget* widget) { platform::window::set_grip(widget); }
 
-    void window::set_grip(QWidget* widget)
-    {
-        platform::window::set_grip(widget);
-    }
-
-    void window::set_fullscreen()
-    {
-        platform::window::set_fullscreen();
-    }
+    void window::set_fullscreen() { platform::window::set_fullscreen(); }
+    nxi::window& window::nxi_window() const { return nxi_window_; }
 } // ui

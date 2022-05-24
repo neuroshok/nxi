@@ -5,6 +5,7 @@
 #include <nxi/database/model.hpp>
 #include <nxi/log.hpp>
 #include <nxi/user.hpp>
+#include <nxi/window.hpp>
 
 #include <QGuiApplication>
 #include <QRect>
@@ -30,8 +31,8 @@ namespace nxi
             window.y = result[nxi_model.window.y];
             window.w = result[nxi_model.window.w];
             window.h = result[nxi_model.window.h];
-            emit event_add(window);
-            windows_.emplace(window.id, std::move(window));
+
+            internal_add(window);
         }
 
         if (windows_.empty())
@@ -44,21 +45,19 @@ namespace nxi
             window.x = (screen_size.width() - window.w) / 2;
             window.y = (screen_size.height() - window.h) / 2;
 
-            add(std::move(window));
+            add(window);
         }
     }
 
     void window_system::add(nxi::window_data window)
     {
         window.id = nxi::data::window::add_window(core_.user_database(), window);
-        emit event_add(window);
-
-        windows_.emplace(window.id, std::move(window));
+        internal_add(window);
     }
 
     void window_system::del(int id)
     {
-        //nxi::queries::del_window(id);
+        // nxi::queries::del_window(id);
     }
 
     void window_system::move(unsigned int id, int x, int y)
@@ -72,14 +71,21 @@ namespace nxi
         //// ndb::query<dbs::core>() << // ndb::set(nxi_model.window.w = w, nxi_model.window.h = h);
     }
 
-    std::unordered_map<unsigned int, nxi::window_data>& window_system::get()
-    {
-        return windows_;
-    }
+    std::unordered_map<unsigned int, nxi::window*>& window_system::windows() { return windows_; }
 
     void window_system::minimize(unsigned int id)
     {
-	    // windows_[id].state = window_states::minimized;
+        // windows_[id].state = window_states::minimized;
         emit event_state_update(id, window_states::minimized);
+    }
+
+    void window_system::internal_add(nxi::window_data window_data)
+    {
+        // create a command buffer for the window
+        // core_.user().command_system().add_buffer(window.id);
+
+        auto window = new nxi::window{ core_, window_data };
+        emit event_add(*window);
+        windows_.emplace(window->id(), window);
     }
 } // nxi

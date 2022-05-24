@@ -3,10 +3,15 @@
 
 #include <stz/observer_ptr.hpp>
 
-#include <QWidget>
 #include <platform/window.hpp>
+#include <QWidget>
 
 class QHBoxLayout;
+
+namespace nxi
+{
+    class window;
+} // nxi
 
 namespace ui
 {
@@ -15,9 +20,9 @@ namespace ui
 
     class window : public platform::window
     {
-    Q_OBJECT
+        Q_OBJECT
     public:
-        window(ui::window_system&, unsigned int m_id);
+        window(ui::window_system&, nxi::window&);
         ~window();
 
         void mouseReleaseEvent(QMouseEvent*) override;
@@ -29,12 +34,14 @@ namespace ui
         void set_grip(QWidget*);
         void set_fullscreen();
 
-        unsigned int id() const;
+        [[nodiscard]] int id() const;
+        [[nodiscard]] nxi::window& nxi_window() const;
         ui::window_system& window_system();
 
     private:
         ui::window_system& window_system_;
         unsigned int id_;
+        nxi::window& nxi_window_;
         ui::main_interface* interface_;
         QHBoxLayout* layout_;
     };
