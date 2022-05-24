@@ -5,7 +5,6 @@
 
 namespace nxi
 {
-    ;
     class window;
 } // nxi
 
