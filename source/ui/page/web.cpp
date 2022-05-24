@@ -84,5 +84,6 @@ namespace ui
         native_page_->load(QUrl::fromUserInput(url));
     }
 
+    nxi::web_page& web_page::nxi_page() { return page_; }
     QWebEnginePage* web_page::native() { return static_cast<QWebEnginePage*>(native_page_); }
 } // ui

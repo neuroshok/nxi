@@ -1,53 +1,58 @@
 #include <ui/view/renderer.hpp>
 
-#include <ui/core.hpp>
-#include <ui/system/page.hpp>
 #include <nxi/core.hpp>
 #include <nxi/page/node.hpp>
+#include <nxi/window.hpp>
+#include <ui/core.hpp>
+#include <ui/system/page.hpp>
+#include <ui/window.hpp>
 
-#include <ui/renderer/web.hpp>
-#include <ui/page.hpp>
-#include <nxw/vbox_layout.hpp>
-#include <nxi/system/page.hpp>
-#include <ui/renderer/qt3d.hpp>
 #include <nxi/log.hpp>
+#include <nxi/system/page.hpp>
+#include <nxw/vbox_layout.hpp>
+#include <ui/page.hpp>
+#include <ui/renderer/qt3d.hpp>
+#include <ui/renderer/web.hpp>
+#include <QLabel>
 
 namespace ui
 {
     renderer_view::renderer_view(ui::user_session& session, QWidget* parent)
-        : QWidget(parent)
+        : ui::basic_element<QWidget>(parent)
         , session_{ session }
+        , renderer_{ new ui::web_renderer }
+        , buffer_id_{ ui_window()->nxi_window().buffer_system().add() }
     {
+        renderer_->widget()->setParent(this);
+
         layout_ = new nxw::vbox_layout;
         setLayout(layout_);
+        setFocusPolicy(Qt::FocusPolicy::ClickFocus);
+        focus_marker_ = new QLabel{ this };
+        focus_marker_->setFixedHeight(5);
+        focus_marker_->setStyleSheet("background-color: transparent");
+        layout_->addWidget(focus_marker_, 0, Qt::AlignTop);
+        layout_->addWidget(renderer_->widget(), 1);
     }
 
-    void renderer_view::display(const nxi::page& page)
+    void renderer_view::display(nxi::page_system::page_ptr page)
     {
-        nxi_trace("renderer_view::display {}", page.name());
-        auto ui_page = session_.page_system().get(page);
+        nxi_trace("renderer_view::display {}", page->name());
 
-        auto get_renderer = [this, &ui_page](const nxi::page& page)
+        ui_window()->nxi_window().buffer_system().get(buffer_id_).set_page(page);
+
+        auto ui_page = session_.page_system().get(*page);
+
+        if (renderer_->type() != page->renderer_type())
         {
-            for (auto renderer : renderers_) renderer->hide();
-            for (auto renderer : renderers_)
-            {
-                // get the first available renderer of the right type
-                if (renderer->type() == page.renderer_type()) return renderer.get();
-            }
-            // no renderer available, make one
-            renderers_.push_back(stz::make_observer<ui::renderer>(ui::renderer::make(ui_page)));
-            return renderers_.back().get();
-        };
+            delete renderer_;
+            renderer_ = ui::renderer::make(ui_page);
+            renderer_->widget()->setParent(this);
+            renderer_->widget()->show();
+            layout_->addWidget(renderer_->widget(), 1);
+        }
 
-        ui::renderer* page_renderer = get_renderer(page);
-        page_renderer->show();
-        // if mode == multi, new ui::node_renderer, page.display(node_renderer)
-
-        while (layout_->takeAt(0)) {}
-        layout_->addWidget(page_renderer);
-
-        ui_page->display(page_renderer);
+        ui_page->display(renderer_);
     }
 
     void renderer_view::display(const nxi::page_system::pages_view pages)
@@ -62,4 +67,13 @@ namespace ui
         }
          */
     }
+
+    void renderer_view::focusInEvent(QFocusEvent*)
+    {
+        ui_window()->nxi_window().buffer_system().focus(buffer_id_);
+        focus_marker_->setStyleSheet("background-color: " +
+                                     session_.nxi_session().interface_system().style().data().menu.item_background_color_selected.get().name());
+    }
+
+    void renderer_view::focusOutEvent(QFocusEvent*) { focus_marker_->setStyleSheet("background-color: transparent"); }
 } // ui

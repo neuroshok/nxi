@@ -1,28 +1,34 @@
 #include <ui/renderer/web.hpp>
 
+#include <nxi/page/web.hpp>
+
 #include <ui/page/web.hpp>
 
-#include <QWebEngineView>
-#include <include/nxw/hbox_layout.hpp>
+#include <QCoreApplication>
+#include <QFocusEvent>
 
 namespace ui
 {
     web_renderer::web_renderer()
-    {
-        view_ = new QWebEngineView(this);
+        : web_page_{ nullptr }
+    {}
 
-        auto l = new nxw::hbox_layout;
-        setLayout(l);
-        l->addWidget(view_);
+    void web_renderer::display(ui::web_page* page)
+    {
+        setPage(page->native());
+        web_page_ = page;
     }
 
-    void web_renderer::display(web_page* page)
+    nxi::renderer_type web_renderer::type() const { return nxi::renderer_type::web; }
+
+    void web_renderer::focusInEvent(QFocusEvent* event)
     {
-        view_->setPage(page->native());
+        if (web_page_) web_page_->nxi_page().focus();
+        if (parent()) QCoreApplication::sendEvent(parent(), event);
     }
 
-    nxi::renderer_type web_renderer::type() const
+    void web_renderer::focusOutEvent(QFocusEvent* event)
     {
-        return nxi::renderer_type::web;
+        if (parent()) QCoreApplication::sendEvent(parent(), event);
     }
 } // ui

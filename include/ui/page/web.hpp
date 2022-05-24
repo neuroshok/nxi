@@ -19,6 +19,7 @@ namespace ui
         web_page(ui::user_session&, nxi::web_page& page);
 
         void load(const QString& url);
+        nxi::web_page& nxi_page();
         QWebEnginePage* native();
 
     private:

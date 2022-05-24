@@ -3,28 +3,38 @@
 
 #include <ui/renderer.hpp>
 
-#include <QWidget>
 #include <QPainter>
+#include <QWidget>
 
+class QFocusEvent;
 class QWebEngineView;
 
-#include <QWebEngineView>
 #include <QDebug>
+#include <QWebEngineView>
 
 namespace ui
 {
     class web_page;
 
-    class web_renderer : public ui::renderer
+    class web_renderer : private QWebEngineView, public ui::renderer
     {
+        Q_OBJECT
     public:
         web_renderer();
 
         void display(web_page* p);
-        nxi::renderer_type type() const override;
+        [[nodiscard]] nxi::renderer_type type() const override;
+        QWidget* widget() override { return this; }
+
+    signals:
+        void event_focus();
+
+    protected:
+        void focusInEvent(QFocusEvent*) override;
+        void focusOutEvent(QFocusEvent*) override;
 
     private:
-        QWebEngineView* view_;
+        ui::web_page* web_page_;
     };
 } // ui
 

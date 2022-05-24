@@ -8,7 +8,7 @@ class QHBoxLayout;
 
 namespace ui
 {
-    class widget_renderer : public ui::renderer
+    class widget_renderer : public ui::renderer, public QWidget
     {
     public:
         widget_renderer();
@@ -16,6 +16,7 @@ namespace ui
         void display(node_page*);
         void display(widget_page*);
         nxi::renderer_type type() const override;
+        QWidget* widget() override { return this; }
 
     private:
         QHBoxLayout* layout_;
