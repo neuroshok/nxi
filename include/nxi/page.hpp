@@ -33,6 +33,7 @@ namespace nxi
 
         virtual void run_script(const QString& script) const;
 
+        void focus();
         void load();
         void load(const QString& command);
         void reload();

@@ -93,6 +93,8 @@ namespace nxi
 
     void page::toggle_mute() { update_mute(!is_muted_); }
 
+    void page::focus() { page_system_.focus(id_); }
+
     void page::load()
     {
         if (is_loaded_) return;

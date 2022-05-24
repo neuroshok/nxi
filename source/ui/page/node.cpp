@@ -2,6 +2,7 @@
 
 #include <nxi/core.hpp>
 #include <nxi/page/node.hpp>
+#include <nxi/page/web.hpp>
 #include <nxi/user.hpp>
 
 #include <nxw/hbox_layout.hpp>

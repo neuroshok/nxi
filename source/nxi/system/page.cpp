@@ -100,6 +100,8 @@ namespace nxi
         connect(&core_.session_system(), &nxi::session_system::event_focus, [this](nxi::session& s) { session_id_ = s.id(); });
     }
 
+    void page_system::activate(nds::node_ptr<nxi::page> page) { emit event_activate(page); }
+
     page_system::page_ptr page_system::add_static(const QString& path, nxi::renderer_type renderer_type)
     {
         if (renderer_type == nxi::renderer_type::web) return add<nxi::page>(path, nxi::core::page_path(path), nxi::page_type::static_, renderer_type);
