@@ -10,8 +10,8 @@
 #include <QStackedWidget>
 #include <QWebEngineView>
 
+#include <nxi/log.hpp>
 #include <ui/view/renderer.hpp>
-#include <include/nxi/log.hpp>
 
 namespace ui::interfaces::standard
 {

@@ -1,27 +1,28 @@
 #include <nxi/style.hpp>
 
 #include <nxi/core.hpp>
-#include <nxi/log.hpp>
-#include <nxi/style_data.hpp>
-#include <nxw/icon_button.hpp>
-#include <nxw/menu.hpp>
-#include <nxw/menu/item.hpp>
 
+#include <QFile>
+#include <QString>
+
+#include <nxi/style.hpp>
+#include <w3c/theme.hpp>
+#include <qdebug.h>
+
+#include <nxi/log.hpp>
 #include <ui/command/input.hpp>
 #include <ui/command/menu.hpp>
 #include <ui/interface/main.hpp>
 #include <ui/interface/standard/control_bar.hpp>
-#include <ui/user_session.hpp>
-#include <ui/utility.hpp>
-#include <ui/window.hpp>
-
 #include <w3c/theme.hpp>
 
+#include <nxi/style_data.hpp>
+#include <nxw/icon_button.hpp>
+#include <nxw/menu.hpp>
+#include <nxw/menu/item.hpp>
 #include <QApplication>
 #include <QBrush>
-#include <QFile>
 #include <QLineEdit>
-#include <QString>
 #include <QStyleOption>
 
 namespace nxi
@@ -53,19 +54,6 @@ namespace nxi
         }
     }
 
-    void style::update(ui::user_session& session) const
-    {
-        // update commands icons
-        session.nxi_session().command_system().commands([this](auto&& command) {
-            if (command->icon().isEmpty()) return;
-            if (command->icon() == ":/icon/quit") command->pixmap = ui::make_pixmap_from_svg(command->icon(), QSize{ 16, 16 }, { 180, 0, 0 });
-            else if (command->icon() == ":/icon/nxi") command->pixmap = ui::make_pixmap_from_svg(command->icon(), QSize{ 16, 16 }, { 50, 149, 200 });
-            else command->pixmap = ui::make_pixmap_from_svg(command->icon(), QSize{ 16, 16 }, data_.icon_button.icon_color.get());
-        });
-
-        for (const auto& window : session.window_system().windows())
-            update(window->main_interface());
-    }
 
     // findChildren require Q_OBJECT to be present on the searched type to avoid conversion with common base
     void style::update(ui::main_interface* w) const
@@ -124,7 +112,7 @@ namespace nxi
 #define map_color_edit(NXI_KEY, W3C_KEY, EDIT)                                                                                                       \
     if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(theme.W3C_KEY.get().EDIT);
 #define map_image(NXI_KEY, W3C_KEY)                                                                                                                  \
-    if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(QPixmap(path() + "/" + theme.W3C_KEY.get()));
+    if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(QImage(path() + "/" + theme.W3C_KEY.get()));
     //! \brief map w3c theme color to nxi style color
     void style::from_w3c(w3c::theme& theme)
     {

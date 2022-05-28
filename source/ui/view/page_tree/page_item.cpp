@@ -6,16 +6,9 @@
 #include <ui/core.hpp>
 #include <ui/view/page_tree/page_item.hpp>
 
+#include <nxw/hbox_layout.hpp>
 #include <QWidget>
-#include <include/nxw/hbox_layout.hpp>
 #include <QtWidgets/QLabel>
-
-
-
-
-
-
-
 
 namespace ui
 {

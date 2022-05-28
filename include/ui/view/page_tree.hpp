@@ -3,9 +3,9 @@
 
 class QTreeWidget;
 
+#include <nxi/system/page.hpp>
 #include <ui/interface.hpp>
 #include <ui/view/page_tree/page_item.hpp>
-#include <include/nxi/system/page.hpp>
 
 namespace ui
 {

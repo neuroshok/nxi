@@ -1,23 +1,22 @@
 #include <ui/interface/standard/page_bar.hpp>
 
-#include <ui/core.hpp>
 #include <nxi/core.hpp>
+#include <ui/core.hpp>
 
 #include <nxw/hbox_layout.hpp>
-#include <ui/view/page_tree.hpp>
 #include <nxw/vbox_layout.hpp>
+#include <ui/view/page_tree.hpp>
 
-#include <ui/menu.hpp>
-#include <nxw/icon_button.hpp>
-#include <include/ui/interface/standard/page_bar.hpp>
-#include <include/nxi/log.hpp>
+#include <nxi/log.hpp>
 #include <nxi/page/web.hpp>
-
+#include <nxw/icon_button.hpp>
+#include <ui/interface/standard/page_bar.hpp>
+#include <ui/menu.hpp>
 
 namespace ui::interfaces::standard
 {
-    page_bar::page_bar(ui::user_session& session, ui::window* window) :
-        ui::interface("page_bar", window)
+    page_bar::page_bar(ui::user_session& session, ui::window* window)
+        : ui::interface("page_bar", window)
         , session_{ session }
     {
         /*

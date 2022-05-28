@@ -31,9 +31,9 @@
 #include "qorbitcameracontroller.h"
 #include "qt3dwindow.h"
 
-#include <include/nxw/hbox_layout.hpp>
 #include <nxi/config.hpp>
 #include <nxi/core.hpp>
+#include <nxw/hbox_layout.hpp>
 #include <ui/system/session.hpp>
 #include <QtWidgets/QHBoxLayout>
 
