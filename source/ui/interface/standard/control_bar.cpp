@@ -6,18 +6,18 @@
 #include <nxi/system/command.hpp>
 
 #include <QComboBox>
-#include <QLineEdit>
 #include <QLabel>
+#include <QLineEdit>
 
+#include <nxi/config.hpp>
+#include <nxi/log.hpp>
+#include <nxi/module/web.hpp>
 #include <nxw/hbox_layout.hpp>
 #include <nxw/icon_button.hpp>
 #include <nxw/menu.hpp>
 #include <nxw/menu/item.hpp>
-#include <include/ui/interface/standard/control_bar.hpp>
+#include <ui/interface/standard/control_bar.hpp>
 #include <QWebEngineView>
-#include <include/nxi/module/web.hpp>
-#include <include/nxi/log.hpp>
-#include <nxi/config.hpp>
 
 #include <ui/command/input.hpp>
 #include <ui/window.hpp>

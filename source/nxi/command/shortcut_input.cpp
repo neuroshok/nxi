@@ -5,9 +5,9 @@
 #include <nxi/suggestion/vector.hpp>
 #include <nxi/system/command.hpp>
 
-#include <sstream>
+#include <nxi/log.hpp>
 #include <optional>
-#include <include/nxi/log.hpp>
+#include <sstream>
 
 namespace nxi
 {

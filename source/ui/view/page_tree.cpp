@@ -8,22 +8,21 @@
 #include <ui/view/page_tree.hpp>
 #include <ui/view/page_tree/page_item.hpp>
 
-#include <QDebug>
 #include <nxi/log.hpp>
+#include <ui/menu.hpp>
 #include <ui/view/page_tree.hpp>
-#include <include/ui/menu.hpp>
+#include <QDebug>
 
 #include <nxi/page/node.hpp>
 #include <nxi/page/web.hpp>
 
-
-#include <QStyledItemDelegate>
-#include <QPainter>
-#include <QtCore/QEvent>
+#include <nxi/page/custom.hpp>
+#include <ui/view/config.hpp>
 #include <QMouseEvent>
+#include <QPainter>
+#include <QStyledItemDelegate>
 #include <QWheelEvent>
-#include <include/nxi/page/custom.hpp>
-#include <include/ui/view/config.hpp>
+#include <QtCore/QEvent>
 
 /*
 class tree_page_item_delegate : public QStyledItemDelegate {

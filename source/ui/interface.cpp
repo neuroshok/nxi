@@ -1,7 +1,7 @@
 #include <ui/interface.hpp>
 
+#include <nxi/log.hpp>
 #include <ui/window.hpp>
-#include <include/nxi/log.hpp>
 
 namespace ui
 {

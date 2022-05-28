@@ -4,8 +4,8 @@
 #include <ui/renderer/web.hpp>
 #include <ui/renderer/widget.hpp>
 
+#include <stz/observer_ptr.hpp>
 #include <QDebug>
-#include <include/stz/observer_ptr.hpp>
 
 namespace ui
 {

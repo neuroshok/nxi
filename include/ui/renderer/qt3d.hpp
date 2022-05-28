@@ -31,7 +31,7 @@
 #include "qorbitcameracontroller.h"
 #include "qt3dwindow.h"
 
-#include <include/nxi/page/node.hpp>
+#include <nxi/page/node.hpp>
 #include <QWebEnginePage>
 #include <QWebEngineSettings>
 #include <QWebEngineView>
