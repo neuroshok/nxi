@@ -92,6 +92,7 @@ namespace nxi
         ui::command_input::style_update(ui);
     }
 
+    void style::update(ui::user_session& session) const {}
     void style::update(QWidget* ui) const {}
 
     void style::update(ui::command_menu* widget) const
@@ -112,7 +113,7 @@ namespace nxi
 #define map_color_edit(NXI_KEY, W3C_KEY, EDIT)                                                                                                       \
     if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(theme.W3C_KEY.get().EDIT);
 #define map_image(NXI_KEY, W3C_KEY)                                                                                                                  \
-    if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(QImage(path() + "/" + theme.W3C_KEY.get()));
+    if (!theme.W3C_KEY.is_null()) data_.NXI_KEY.set(QPixmap(path() + "/" + theme.W3C_KEY.get()));
     //! \brief map w3c theme color to nxi style color
     void style::from_w3c(w3c::theme& theme)
     {
