@@ -1,14 +1,15 @@
+#include <Windows.h>
+
 #include <platform/windows/window.hpp>
 
 #include <QApplication>
 #include <QDebug>
 #include <QMouseEvent>
 #include <QPoint>
-#include <QSize>
 
+#include <QSize>
 #include <WinUser.h>
 #include <dwmapi.h>
-#include <windows.h>
 #include <windowsx.h>
 
 #pragma comment(lib, "Dwmapi.lib") // Adds missing library, fixes error LNK2019: unresolved external symbol __imp__DwmExtendFrameIntoClientArea

@@ -14,11 +14,11 @@ include(cmake/utility.cmake)
 if (NOT NXI_TARGET_SYSTEM)
     set(NXI_TARGET_DESKTOP 1)
     set(NXI_TARGET_SYSTEM ${CMAKE_HOST_SYSTEM_NAME})
-endif()
+endif ()
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
-endif()
+endif ()
 
 option(NXI_WINDOW_GENERIC "Use generic window" ON)
 
@@ -39,11 +39,11 @@ set(NXI_THIRD_PARTY_ROOT ${NXI_ROOT}/third_party)
 # qt path
 if (NOT NXI_QT_ROOT)
     message(FATAL_ERROR "Variable NXI_QT_ROOT not found")
-endif()
+endif ()
 
-set(CMAKE_FIND_ROOT_PATH  ${NXI_QT_ROOT})
-set(CMAKE_PREFIX_PATH  ${NXI_QT_ROOT})
-set(CMAKE_MODULE_PATH  ${NXI_QT_ROOT})
+set(CMAKE_FIND_ROOT_PATH ${NXI_QT_ROOT})
+set(CMAKE_PREFIX_PATH ${NXI_QT_ROOT})
+set(CMAKE_MODULE_PATH ${NXI_QT_ROOT})
 
 ## PLATFORM
 # windows
@@ -73,6 +73,11 @@ add_subdirectory(${NXI_THIRD_PARTY_ROOT}/nds)
 # speedlog
 add_library(lib_speedlog INTERFACE)
 target_include_directories(lib_speedlog INTERFACE ${NXI_THIRD_PARTY_ROOT}/spdlog/include)
+
+add_library(lib_wintoast INTERFACE)
+target_include_directories(lib_wintoast INTERFACE ${NXI_THIRD_PARTY_ROOT}/wintoast/include)
+target_sources(lib_wintoast INTERFACE ${NXI_THIRD_PARTY_ROOT}/wintoast/source/wintoast.cpp)
+
 
 # QT
 find_package(Qt6 REQUIRED COMPONENTS ${NXI_QT_COMPONENTS})
@@ -113,43 +118,35 @@ if (NXI_TARGET_SYSTEM STREQUAL "android")
     target_link_libraries(nxi lib_nds ${NXI_STATIC_MODULES} ${NXI_QT_LIBS})
 
     nxi_android_apk_target(nxi)
-endif()
+endif ()
 
 if (NXI_TARGET_DESKTOP)
     # sources
     if (WIN32)
         set(NXI_ICON "${PROJECT_SOURCE_DIR}/resource/icon.rc" "${PROJECT_SOURCE_DIR}/resource/icon.ico")
 
-        # use generic window
-        if (NOT NXI_WINDOW_GENERIC)
-            list(APPEND NXI_PLATFORM_SOURCES "${PROJECT_SOURCE_DIR}/platform/windows/window.cpp")
+        if (NXI_WINDOW_PLATFORM)
+            list(APPEND NXI_PLATFORM_SOURCES
+                    "${PROJECT_SOURCE_DIR}/include/platform/windows/window.hpp"
+                    "${PROJECT_SOURCE_DIR}/source/platform/windows/window.cpp")
+            list(APPEND NXI_DEFINITIONS NXI_WINDOW_PLATFORM)
         endif ()
-
-        list(APPEND NXI_PLATFORM_SOURCES
-                "${PROJECT_SOURCE_DIR}/platform/windows/notification.cpp"
-                "${PROJECT_SOURCE_DIR}/third_party/wintoast/wintoast.cpp")
-    endif()
-
-    if (NOT WIN32)
-        set(NXI_WINDOW_GENERIC ON)
+        if (NXI_NOTIFICATION_PLATFORM)
+            list(APPEND NXI_PLATFORM_SOURCES
+                    "${PROJECT_SOURCE_DIR}/source/platform/windows/notification.cpp"
+                    "${PROJECT_SOURCE_DIR}/include/platform/windows/notification.hpp")
+            list(APPEND NXI_DEFINITIONS NXI_NOTIFICATION_PLATFORM)
+            list(APPEND NXI_PLATFORM_LIBS lib_wintoast)
+        endif ()
     endif ()
-
-    # use generic window
-    if (NXI_WINDOW_GENERIC)
-        list(APPEND NXI_PLATFORM_SOURCES "${PROJECT_SOURCE_DIR}/platform/generic/window.cpp")
-        list(APPEND NXI_DEFINITIONS NXI_WINDOW_GENERIC)
-    endif ()
-
-    # generic platform sources
-    list(APPEND NXI_PLATFORM_SOURCES "${PROJECT_SOURCE_DIR}/platform/generic/notification.cpp")
 
     file(GLOB_RECURSE NXI_SOURCES
-            "${PROJECT_SOURCE_DIR}/source/nxi/*.cpp"
-            "${PROJECT_SOURCE_DIR}/source/nxw/*.cpp"
-            "${PROJECT_SOURCE_DIR}/source/ui/*.cpp"
-            "${PROJECT_SOURCE_DIR}/source/w3c/*.cpp"
-            "${PROJECT_SOURCE_DIR}/resource/*.qrc"
-            "${PROJECT_SOURCE_DIR}/include/*.hpp")
+            "${PROJECT_SOURCE_DIR}/source/nxi/*.cpp" "${PROJECT_SOURCE_DIR}/include/nxi/*.hpp"
+            "${PROJECT_SOURCE_DIR}/source/nxw/*.cpp" "${PROJECT_SOURCE_DIR}/include/nxw/*.hpp"
+            "${PROJECT_SOURCE_DIR}/source/ui/*.cpp" "${PROJECT_SOURCE_DIR}/include/ui/*.hpp"
+            "${PROJECT_SOURCE_DIR}/source/w3c/*.cpp" "${PROJECT_SOURCE_DIR}/include/w3c/*.hpp"
+            "${PROJECT_SOURCE_DIR}/source/platform/generic/*.cpp" "${PROJECT_SOURCE_DIR}/include/platform/generic/*.hpp"
+            "${PROJECT_SOURCE_DIR}/resource/*.qrc")
     set(NXI_SOURCES ${NXI_SOURCES} ${NXI_PLATFORM_SOURCES} source/main.cpp)
 
     list(APPEND NXI_DEFINITIONS QT_FORCE_ASSERTS)
@@ -162,9 +159,11 @@ if (NXI_TARGET_DESKTOP)
     # console
     if (NXI_CONSOLE)
         set_target_properties(nxi_exe PROPERTIES WIN32_EXECUTABLE false)
-    else()
+
+    else ()
         set_target_properties(nxi_exe PROPERTIES WIN32_EXECUTABLE true)
-    endif()
+
+    endif ()
 
     set_target_properties(nxi_exe
             PROPERTIES
@@ -179,11 +178,11 @@ if (NXI_TARGET_DESKTOP)
     target_include_directories(tool_theme_converter PUBLIC include)
     target_link_libraries(tool_theme_converter Qt6::Core)
     set_target_properties(tool_theme_converter
-        PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${NXI_BIN_ROOT}"
-        RUNTIME_OUTPUT_DIRECTORY_RELEASE "${NXI_BIN_ROOT}"
-        OUTPUT_NAME "theme_converter"
-        )
+            PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${NXI_BIN_ROOT}"
+            RUNTIME_OUTPUT_DIRECTORY_RELEASE "${NXI_BIN_ROOT}"
+            OUTPUT_NAME "theme_converter"
+            )
 
     # deploy
     get_target_property(QT_QMAKE_EXECUTABLE Qt::qmake IMPORTED_LOCATION)
@@ -218,6 +217,6 @@ if (NXI_TARGET_DESKTOP)
             )
     add_dependencies(nxi_deploy nxi_exe)
 
-endif()
+endif ()
 
 message("--------------------------------------------------------")

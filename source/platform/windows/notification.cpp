@@ -3,7 +3,7 @@
 #include <nxi/notification_data.hpp>
 
 #include <nxi/log.hpp>
-#include <third_party/wintoast/wintoastlib.hpp>
+#include <wintoastlib.hpp>
 
 using namespace WinToastLib;
 

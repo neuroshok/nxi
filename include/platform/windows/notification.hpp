@@ -3,7 +3,7 @@
 
 #include <ui/notification.hpp>
 
-#include <wintoast/wintoastlib.hpp>
+#include <wintoastlib.hpp>
 
 #include <memory>
 

@@ -10,7 +10,7 @@ namespace platform::windows
     {
         Q_OBJECT
     public:
-        explicit window(QWidget* parent = 0);
+        explicit window(QWidget* parent = nullptr);
         void set_grip(QWidget* widget);
 
         void setContentsMargins(const QMargins& margins);

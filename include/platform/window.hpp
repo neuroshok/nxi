@@ -3,7 +3,7 @@
 
 #include <QtGlobal>
 
-#if defined(Q_OS_WIN) && !defined(NXI_WINDOW_GENERIC)
+#if defined(Q_OS_WIN) && defined(NXI_WINDOW_PLATFORM)
 #include <platform/windows/window.hpp>
 namespace platform
 {
