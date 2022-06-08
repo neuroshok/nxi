@@ -7,6 +7,8 @@ set_version("0.0.1")
 set_defaultarchs("x64")
 set_warnings("allextra")
 
+add_rules("mode.release", "mode.releasedbg")
+
 -------------------------------------------------------
 ---                    libraries                   ---
 -------------------------------------------------------
