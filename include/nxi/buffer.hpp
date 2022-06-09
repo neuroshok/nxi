@@ -27,6 +27,8 @@ namespace nxi
         [[nodiscard]] nxi::command_input& input();
 
     private:
+        nxi::core& core_;
+
         int id_;
         nxi::buffer_group& group_;
         nxi::command_input input_;

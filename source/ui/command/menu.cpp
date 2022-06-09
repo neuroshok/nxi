@@ -3,7 +3,7 @@
 #include <nxi/command.hpp>
 #include <nxi/command/input.hpp>
 #include <nxi/core.hpp>
-#include <nxi/system/session.hpp>
+#include <nxi/system/buffer.hpp>
 #include <nxi/user.hpp>
 
 #include <ui/core.hpp>
@@ -16,7 +16,7 @@
 namespace ui
 {
     command_menu::command_menu(ui::user_session& session, QWidget* parent)
-        : QWidget(parent)
+        : ui::basic_element<QWidget>(parent)
         , session_{ session }
         , hover_index_{ -1 }
         , selection_index_{ -1 }
@@ -30,14 +30,10 @@ namespace ui
             icon_sound_premuted_ = ui::make_pixmap_from_svg(":/icon/sound", size, style_data.item_text_color.lighter(180));
         });
 
+        connect(&suggestions(), &nxi::suggestion_vector::event_update,
+                [this](stz::observer_ptr<const nxi::suggestion_vector> suggestions) { set_data(suggestions); });
 
-        connect(&session_.nxi_session().command_system().command_input().suggestions(), &nxi::suggestion_vector::event_update, [this](stz::observer_ptr<const nxi::suggestion_vector> suggestions)
-        {
-            set_data(suggestions);
-        });
-
-        connect(&session_.nxi_session().command_system().command_input().suggestions(), &nxi::suggestion_vector::event_selection_update, [this](int index)
-        {
+        connect(&suggestions(), &nxi::suggestion_vector::event_selection_update, [this](int index) {
             selection_index_ = index;
             repaint();
         });
@@ -192,7 +188,8 @@ namespace ui
         painter.setPen(style_data.item_text_color);
         painter.drawText(item_rect, Qt::AlignVCenter, command.name());
 
-        QString input_text = session_.nxi_session().command_system().command_input().text();
+        /*
+        QString input_text = nxi_input().text();
         int hl_offset = command.name().indexOf(input_text);
         if (input_text.size() > 0 && hl_offset >= 0)
         {
@@ -201,7 +198,7 @@ namespace ui
             hl_rect.setLeft(item_rect.left() + painter.fontMetrics().size(Qt::TextSingleLine, command.name().mid(0, hl_offset)).width());
             painter.setPen(Qt::green);
             painter.drawText(hl_rect, Qt::AlignVCenter, hl_text);
-        }
+        }*/
 
         item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, command.name()).width());
 
@@ -262,7 +259,8 @@ namespace ui
         painter.drawText(item_rect, Qt::AlignVCenter, page->name());
 
         // highlight
-        QString input_text = session_.nxi_session().command_system().command_input().text();
+        /*
+        QString input_text = nxi_input().text();
         int hl_offset = page_name.indexOf(input_text);
         if (input_text.size() > 0 && hl_offset >= 0)
         {
@@ -271,7 +269,7 @@ namespace ui
             hl_rect.setLeft(item_rect.left() + painter.fontMetrics().size(Qt::TextSingleLine, page_name.mid(0, hl_offset)).width());
             painter.setPen(Qt::green);
             painter.drawText(hl_rect, Qt::AlignVCenter, hl_text);
-        }
+        }*/
         item_rect.setLeft(item_rect.left() + 16 + painter.fontMetrics().size(Qt::TextSingleLine, page_name).width());
 
         // page command
@@ -366,9 +364,8 @@ namespace ui
             }
         }
 
-        if (hover_index_ != -1 && hover_index_ != selection_index_)
-            session_.nxi_session().command_system().command_input().suggestions().select(hover_index_);
-        else if (hover_index_ == -1) session_.nxi_session().command_system().command_input().suggestions().select(-1);
+        if (hover_index_ != -1 && hover_index_ != selection_index_) suggestions().select(hover_index_);
+        else if (hover_index_ == -1) suggestions().select(-1);
     }
 
     void command_menu::mousePressEvent(QMouseEvent* event)
@@ -381,32 +378,33 @@ namespace ui
             , [](auto&&) {});
         }
 
-        if (event->button() == Qt::LeftButton)
-            session_.nxi_session().command_system().command_input().exec();
+        if (event->button() == Qt::LeftButton) session_.nxi_session().buffer_system().group(ui_window()->id()).exec();
         else if (event->button() == Qt::MiddleButton)
         {
             if (suggestions().has_selection())
             {
                 suggestions().selected().apply(
-                [this](nds::node_ptr<nxi::page> page) {
-                    // todo suggestion_vector should use use event_close
-                    session_.nxi_session().command_system().command_input().suggestions().erase(page);
-                    session_.nxi_session().page_system().close(page);
-                },
-                [this](auto&&) {});
+                    [this](nds::node_ptr<nxi::page> page) {
+                        // todo suggestion_vector should use use event_close
+                        suggestions().erase(page);
+                        session_.nxi_session().page_system().close(page);
+                    },
+                    [this](auto&&) {});
             }
         }
     }
 
     void command_menu::wheelEvent(QWheelEvent* event)
     {
-        if (event->angleDelta().y() > 0)
-            session_.nxi_session().command_system().command_input().suggestions().select_previous();
-        else
-            session_.nxi_session().command_system().command_input().suggestions().select_next();
+        if (event->angleDelta().y() > 0) suggestions().select_previous();
+        else suggestions().select_next();
     }
 
-    nxi::suggestion_vector& command_menu::suggestions() { return session_.nxi_session().command_system().command_input().suggestions(); }
+    nxi::command_input& command_menu::nxi_input()
+    {
+        return session_.nxi_session().buffer_system().focus().input();
+    } // group.input() -> group.focus().input()
+    nxi::suggestion_vector& command_menu::suggestions() { return session_.nxi_session().buffer_system().group(ui_window()->id()).suggestions(); }
 
     void command_menu::draw_pixmap(QPainter& painter, const QPixmap& image, int x, int y, QSize size, int margin)
     {

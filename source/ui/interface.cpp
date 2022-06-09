@@ -17,8 +17,6 @@ namespace ui
          : interface("default", window)
     {}
 
-    ui::window* interface::window() const
-    {
-        return static_cast<ui::window*>(QWidget::window());
-    }
+    ui::window* interface::ui_window() const { return static_cast<ui::window*>(QWidget::window()); }
+    int interface::group_id() const { return ui_window()->id(); }
 } // ui

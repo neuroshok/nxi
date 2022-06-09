@@ -4,6 +4,7 @@
 #include <nxi/command/fwd.hpp>
 #include <nxi/suggestion/vector.hpp>
 #include <stz/observer_ptr.hpp>
+#include <ui/element.hpp>
 
 #include <QColor>
 #include <QMovie>
@@ -12,6 +13,7 @@
 namespace nxi
 {
     class command;
+    class command_input;
     class page;
 } // nxi
 
@@ -20,7 +22,7 @@ namespace ui
     class user_session;
     class menu_item;
 
-    class command_menu : public QWidget
+    class command_menu : public ui::basic_element<QWidget>
     {
         Q_OBJECT
 
@@ -52,6 +54,8 @@ namespace ui
 
         void exec();
 
+        nxi::command_input& nxi_input();
+
     protected:
         void leaveEvent(QEvent*) override;
         void mouseMoveEvent(QMouseEvent*) override;
@@ -63,7 +67,7 @@ namespace ui
         void draw_header();
         void draw_item(nds::node_ptr<const nxi::command>, QRect&, bool selected);
         void draw_item(nds::node_ptr<const nxi::page>, QRect&, bool selected);
-        void draw_item(const nxi::suggestion& text,  QRect& item_rect, bool selected);
+        void draw_item(const nxi::suggestion& text, QRect& item_rect, bool selected);
 
         nxi::suggestion_vector& suggestions();
 

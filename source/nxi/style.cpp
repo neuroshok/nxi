@@ -14,7 +14,10 @@
 #include <ui/command/menu.hpp>
 #include <ui/interface/main.hpp>
 #include <ui/interface/standard/control_bar.hpp>
+#include <ui/user_session.hpp>
+#include <ui/window.hpp>
 #include <w3c/theme.hpp>
+#include <utility>
 
 #include <nxi/style_data.hpp>
 #include <nxw/icon_button.hpp>
@@ -27,8 +30,8 @@
 
 namespace nxi
 {
-    style::style(const QString& name)
-        : name_{ name }
+    style::style(QString name)
+        : name_{ std::move(name) }
         , path_{ nxi::core::module_path() + "/theme/" + name_ }
     {}
     style::style()
@@ -54,30 +57,25 @@ namespace nxi
         }
     }
 
-
     // findChildren require Q_OBJECT to be present on the searched type to avoid conversion with common base
-    void style::update(ui::main_interface* w) const
+    void style::update(ui::main_interface* main_interface) const
     {
-        w->style_data.background_color = data_.background_color.get();
-        w->style_data.background_image = data_.background_image.get();
-        w->style_data.background_image = w->style_data.background_image.transformed(QTransform().rotate(90));
+        main_interface->style_data.background_color = data_.background_color.get();
+        main_interface->style_data.background_image = data_.background_image.get();
+        main_interface->style_data.background_image = main_interface->style_data.background_image.transformed(QTransform().rotate(90));
 
-        const QWidgetList top_widgets = QApplication::topLevelWidgets();
-        for (auto top_widget : top_widgets)
+        for (auto command_input : main_interface->findChildren<ui::command_input*>())
+            update(command_input);
+        for (auto command_menu : main_interface->findChildren<ui::command_menu*>())
+            update(command_menu);
+
+        for (auto icon_button : main_interface->findChildren<nxw::icon_button*>())
         {
-            for (auto command_input : top_widget->findChildren<ui::command_input*>())
-                update(command_input);
-            for (auto command_menu : top_widget->findChildren<ui::command_menu*>())
-                update(command_menu);
-
-            for (auto icon_button : top_widget->findChildren<nxw::icon_button*>())
-            {
-                icon_button->setFixedSize(data_.icon_button.size.get());
-                icon_button->style_data.icon_color = data_.icon_button.icon_color.get();
-                icon_button->style_data.icon_color_hover = data_.icon_button.icon_color_hover.get();
-                icon_button->style_data.background_color = data_.icon_button.background_color.get();
-                icon_button->style_data.background_color_hover = data_.icon_button.background_color_hover.get();
-            }
+            icon_button->setFixedSize(data_.icon_button.size.get());
+            icon_button->style_data.icon_color = data_.icon_button.icon_color.get();
+            icon_button->style_data.icon_color_hover = data_.icon_button.icon_color_hover.get();
+            icon_button->style_data.background_color = data_.icon_button.background_color.get();
+            icon_button->style_data.background_color_hover = data_.icon_button.background_color_hover.get();
         }
     }
 
@@ -92,8 +90,15 @@ namespace nxi
         ui::command_input::style_update(ui);
     }
 
-    void style::update(ui::user_session& session) const {}
-    void style::update(QWidget* ui) const {}
+    void style::update(ui::user_session& session) const
+    {
+        /*
+        for (auto qwindow : QApplication::topLevelWidgets())
+        {
+            auto main_interface = dynamic_cast<ui::window*>(qwindow)->main_interface();
+            if (main_interface) update(main_interface);
+        }*/
+    }
 
     void style::update(ui::command_menu* widget) const
     {

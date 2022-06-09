@@ -96,134 +96,15 @@ namespace nxi
         }
     }
 
-    void command_input::exec()
-    {
-        if (!suggestions_.has_selection())
-        {
-            nxi_warning("nothing to execute");
-            return;
-        }
-        nxi_trace(" exec : {} ", input_);
-
-        suggestions_.selected().apply([this](auto&& suggestion)
-        {
-            using suggestion_type = std::decay_t<decltype(suggestion)>;
-            if constexpr (std::is_same_v<suggestion_type, nds::node_ptr<const nxi::command>>)
-            {
-                core_.command_system().exec(suggestion);
-            }
-            else if constexpr (std::is_same_v<suggestion_type, nds::node_ptr<nxi::page>>)
-            {
-                core_.page_system().focus(suggestion);
-            }
-            else if constexpr (std::is_same_v<suggestion_type, nxi::search_suggestion>)
-            {
-                core_.page_system().open<nxi::web_page>(suggestion.url() + suggestion.text());
-                // core_.search(suggestion.text());
-            }
-            else nxi_warning("unknown suggestion");
-        });
-    }
-
-    void command_input::set_mode(command_input::mode_type mode)
-    {
-        mode_ = mode;
-    }
+    void command_input::set_mode(command_input::mode_type mode) { mode_ = mode; }
 
     command_input::mode_type command_input::mode() const { return mode_; }
 
-    const nxi::suggestion_vector& command_input::suggestions() const
-    {
-        return suggestions_;
-    }
+    const QString& command_input::text() const { return input_; }
 
-    nxi::suggestion_vector& command_input::suggestions()
-    {
-        return suggestions_;
-    }
+    bool command_input::is_empty() const { return input_.isEmpty(); }
 
-    const QString& command_input::text() const
-    {
-        return input_;
-    }
-
-    bool command_input::is_empty() const
-    {
-        return input_.isEmpty();
-    }
-
-    bool command_input::is_valid() const
-    {
-        return true;
-    }
-
-    void command_input::context_suggest()
-    {
-        suggestions_.clear();
-        core_.context_system().apply_on_active(
-        [this](const nxi::contexts::command&) {
-            command_system().root_list([this](nds::node_ptr<const nxi::command> command) { suggestions_.push_back(std::move(command)); });
-        },
-        [this](const nxi::contexts::page&) {
-            for (auto& page : core_.page_system().root_targets())
-            {
-                suggestions_.push_back(page);
-            }
-        }, [this](const nxi::contexts::command_executor& ctx) { ctx.data.active_parameter().suggestion_callback(suggestions_); }
-            , [this](auto&&) { nxi_warning("no suggestion"); }
-        );
-        emit event_suggestion_update(suggestions_);
-    }
-
-    void command_input::suggest_command()
-    {
-        suggestions_.clear();
-        command_system().root_list([this](nds::node_ptr<const nxi::command> command)
-        {
-            suggestions_.push_back(std::move(command));
-        });
-        emit event_suggestion_update(suggestions_);
-    }
-
-    void command_input::suggest_context()
-    {
-        suggestions_.clear();
-        for (const auto& context : core_.context_system().contexts())
-        {
-            suggestions_.push_back(nxi::text_suggestion{ context->name(), "", QString::number(context->priority()) });
-        };
-        emit event_suggestion_update(suggestions_);
-    }
-
-    void command_input::suggest_navigation()
-    {
-        suggestions_.clear();
-        for (const auto& page_command : core_.navigation_system().page_command_logs())
-        {
-            suggestions_.push_back(page_command);
-        }
-        emit event_suggestion_update(suggestions_);
-    }
-
-    void command_input::suggest_page()
-    {
-        suggestions_.clear();
-        for (const auto& page : core_.page_system().root_targets())
-        {
-            suggestions_.push_back(page);
-        }
-        emit event_suggestion_update(suggestions_);
-    }
-
-    void command_input::suggest_session()
-    {
-        suggestions_.clear();
-        for (const auto& session : core_.session_system().sessions())
-        {
-            suggestions_.push_back(session->name());
-        }
-        emit event_suggestion_update(suggestions_);
-    }
+    bool command_input::is_valid() const { return true; }
 
     void command_input::reset()
     {
@@ -242,8 +123,5 @@ namespace nxi
     const nxi::command_system& command_input::command_system() const { return core_.command_system(); }
     nxi::command_system& command_input::command_system() { return core_.command_system(); }
 
-    nxi::shortcut_input& command_input::shortcut_input()
-    {
-        return shortcut_input_;
-    }
+    nxi::shortcut_input& command_input::shortcut_input() { return shortcut_input_; }
 } // nxi

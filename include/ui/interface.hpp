@@ -13,7 +13,8 @@ namespace ui
         interface(const QString& name, ui::window*);
         interface(ui::window*);
 
-        ui::window* window() const;
+        int group_id() const;
+        ui::window* ui_window() const;
     };
 } // ui
 

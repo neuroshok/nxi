@@ -39,7 +39,7 @@ namespace nxi
     {
     public:
         style();
-        explicit style(const QString& name);
+        explicit style(QString name);
 
         void load();
         const QString& name() const;
@@ -47,7 +47,7 @@ namespace nxi
         [[nodiscard]] const nxi::style_data& data() const;
 
         void update(ui::user_session& session) const;
-        void update(QWidget*) const;
+
         void update(ui::command_input*) const;
         void update(ui::main_interface*) const;
 

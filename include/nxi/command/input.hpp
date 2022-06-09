@@ -40,25 +40,15 @@ namespace nxi
         command_input(const command_input&) = delete;
         command_input& operator=(const command_input&) = delete;
 
-        void exec();
         void update(const QString& input, QKeyEvent*);
 
-        void context_suggest();
-
         void set_mode(mode_type);
-
-        void suggest_command();
-        void suggest_context();
-        void suggest_navigation();
-        void suggest_page();
-        void suggest_session();
 
         void clear();
         void reset();
 
         mode_type mode() const;
-        const nxi::suggestion_vector& suggestions() const;
-        nxi::suggestion_vector& suggestions();
+
         const QString& text() const;
 
         bool is_empty() const;

@@ -28,13 +28,13 @@ namespace nxi
 
         void load();
 
-        nds::node_ptr<nxi::command> root() const;
-        nxi::commands_view root_list() const;
+        [[nodiscard]] nds::node_ptr<nxi::command> root() const;
+        [[nodiscard]] nxi::commands_view root_list() const;
         void root_list(callback_type) const;
-        nxi::commands_view root_sources() const;
+        [[nodiscard]] nxi::commands_view root_sources() const;
 
-        const nxi::command& get(const QString& module_action, const QString& module_name = "nxi") const;
-        nds::node_ptr<nxi::command> find(const QString& module_action, const QString& module_name = "nxi") const;
+        [[nodiscard]] const nxi::command& get(const QString& module_action, const QString& module_name = "nxi") const;
+        [[nodiscard]] nds::node_ptr<nxi::command> find(const QString& module_action, const QString& module_name = "nxi") const;
         template<class Callback>
         void for_each(Callback&&) const;
         nds::node_ptr<nxi::command> add(nxi::command command, nds::node_ptr<nxi::command> source = {});
@@ -59,7 +59,6 @@ namespace nxi
     private:
         nxi::core& core_;
         nxi::command_initializer command_initializer_;
-        nxi::command_input command_input_;
         nds::node_ptr<nxi::command> root_;
         nds::graph<nxi::command> graph_;
 

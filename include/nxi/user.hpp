@@ -5,6 +5,7 @@
 #include <nxi/database.hpp>
 #include <nxi/module/api/core.hpp>
 
+#include <nxi/system/buffer.hpp>
 #include <nxi/system/command.hpp>
 #include <nxi/system/context.hpp>
 #include <nxi/system/interface.hpp>
@@ -45,6 +46,7 @@ namespace nxi
         nxi::database& database();
         nxi::core& nxi_core();
 
+        nxi::buffer_system& buffer_system();
         nxi::command_system& command_system();
         nxi::context_system& context_system();
         nxi::interface_system& interface_system();
@@ -70,6 +72,7 @@ namespace nxi
         nxi::api::core api_;
         std::unique_ptr<nxi::config> config_;
 
+        nxi::buffer_system buffer_system_;
         nxi::session_system session_system_;
         nxi::command_system command_system_;
         nxi::context_system context_system_;

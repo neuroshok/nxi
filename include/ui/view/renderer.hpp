@@ -13,6 +13,7 @@ namespace nxw
 }
 namespace nxi
 {
+    class buffer;
     class page;
 }
 
@@ -33,7 +34,7 @@ namespace ui
         void display(nxi::page_system::page_ptr);
         void display(nxi::page_system::pages_view pages);
 
-        int buffer_id() const { return buffer_id_; }
+        nxi::buffer& buffer() const { return buffer_; }
 
         void focusInEvent(QFocusEvent*) override;
         void focusOutEvent(QFocusEvent*) override;
@@ -41,7 +42,7 @@ namespace ui
     private:
         ui::user_session& session_;
         ui::renderer* renderer_;
-        int buffer_id_;
+        nxi::buffer& buffer_;
 
         QLabel* focus_marker_;
         nxw::vbox_layout* layout_;

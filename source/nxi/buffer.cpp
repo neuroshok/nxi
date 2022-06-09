@@ -6,7 +6,8 @@
 namespace nxi
 {
     buffer::buffer(nxi::core& core, nxi::buffer_group& group, int id)
-        : id_{ id }
+        : core_{ core }
+        , id_{ id }
         , group_{ group }
         , input_{ core }
     {}

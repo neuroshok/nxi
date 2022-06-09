@@ -21,7 +21,7 @@ namespace ui
         : ui::basic_element<QWidget>(parent)
         , session_{ session }
         , renderer_{ new ui::web_renderer }
-        , buffer_id_{ ui_window()->nxi_window().buffer_system().add() }
+        , buffer_{ ui_window()->nxi_window().buffer_system().add(ui_window()->id()) }
     {
         renderer_->widget()->setParent(this);
 
@@ -39,7 +39,7 @@ namespace ui
     {
         nxi_trace("renderer_view::display {}", page->name());
 
-        ui_window()->nxi_window().buffer_system().get(buffer_id_).set_page(page);
+        buffer_.set_page(page);
 
         auto ui_page = session_.page_system().get(*page);
 
@@ -70,7 +70,7 @@ namespace ui
 
     void renderer_view::focusInEvent(QFocusEvent*)
     {
-        ui_window()->nxi_window().buffer_system().focus(buffer_id_);
+        ui_window()->nxi_window().buffer_system().focus(buffer_);
         focus_marker_->setStyleSheet("background-color: " +
                                      session_.nxi_session().interface_system().style().data().menu.item_background_color_selected.get().name());
     }

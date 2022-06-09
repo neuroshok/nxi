@@ -33,9 +33,7 @@ namespace ui::interfaces::light
         : ui::main_interface{ window }
         , session_{ session }
     {
-        connect(&session_.nxi_session().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style) {
-            style.update(session_);
-        });
+        connect(&session_.nxi_session().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style) { style.update(this); });
 
         connect(&session_.nxi_session().session_system(), &nxi::session_system::event_focus, [this](const nxi::session& session) {
             auto s = session.config().browser.interface.style.get();
@@ -84,10 +82,9 @@ namespace ui::interfaces::light
             });
         });
 
-        connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_reset, [this]() { command_menu_->hide(); });
+        // connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_reset, [this]() { command_menu_->hide(); });
 
-        connect(&session_.nxi_session().command_system().command_input(),
-                &nxi::command_input::event_suggestion_update,
+        connect(&session_.nxi_session().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_action_update,
                 [this](const nxi::suggestion_vector& suggestions) {
                     command_menu_->set_data(stz::make_observer(&suggestions));
                     command_menu_->exec();

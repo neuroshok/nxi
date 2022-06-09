@@ -7,7 +7,10 @@
 
 #include <QWidget>
 
-namespace nxi { class core; }
+namespace nxi
+{
+    class core;
+}
 
 class QApplication;
 class QSystemTrayIcon;
@@ -32,12 +35,14 @@ namespace ui
         void load();
         void quit();
 
+        QApplication& application();
+
         nxi::core& nxi_core();
         ui::user_system& user_system();
         ui::interface_system& interface_system();
 
     private:
-        QApplication& app_;
+        QApplication& application_;
         nxi::core& nxi_core_;
 
         ui::interface_system interface_system_;

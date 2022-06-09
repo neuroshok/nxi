@@ -1,29 +1,39 @@
 #ifndef INCLUDE_UI_COMMAND_INPUT_HPP_NXI
 #define INCLUDE_UI_COMMAND_INPUT_HPP_NXI
 
+#include <nxi/command/executor.hpp>
+#include <nxi/command/input.hpp>
+#include <nxi/system/command.hpp>
+
+#include <ui/element.hpp>
+
+#include <optional>
+
+#include <QEvent>
 #include <QLineEdit>
 #include <QString>
+
+namespace nxw
+{
+    class menu;
+}
+namespace nxi
+{
+    class style;
+    class buffer_group;
+}
 
 class QLabel;
 class QResizeEvent;
 class QKeyEvent;
 class QEvent;
 
-#include <QEvent>
-#include <nxi/system/command.hpp>
-#include <nxi/command/input.hpp>
-#include <nxi/command/executor.hpp>
-#include <optional>
-
-namespace nxw { class menu; }
-namespace nxi { class style; }
-
 namespace ui
 {
     class command_menu;
     class user_session;
 
-    class command_input : public QLineEdit
+    class command_input : public ui::basic_element<QLineEdit>
     {
         Q_OBJECT
     public:
@@ -64,6 +74,8 @@ namespace ui
         nxi::command_input& nxi_input();
 
     private:
+        nxi::buffer_group& buffer_group();
+
         ui::user_session& session_;
 
         bool first_focus_ = true;

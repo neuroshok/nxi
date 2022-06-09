@@ -81,8 +81,8 @@ namespace nxi
 
     void window_system::internal_add(nxi::window_data window_data)
     {
-        // create a command buffer for the window
-        // core_.user().command_system().add_buffer(window.id);
+        // create a buffer_group for the window
+        core_.user().buffer_system().add_group(window_data.id);
 
         auto window = new nxi::window{ core_, window_data };
         emit event_add(*window);

@@ -3,6 +3,7 @@
 #include <nxi/command.hpp>
 #include <nxi/core.hpp>
 
+#include <nxi/page/web.hpp>
 #include <nxi/system/command.hpp>
 #include <nxi/system/interface.hpp>
 #include <nxi/system/module.hpp>
@@ -27,7 +28,6 @@ namespace nxi
     command_system::command_system(nxi::core& core)
         : core_{ core }
         , command_initializer_{ core }
-        , command_input_{ core }
         , root_{ nullptr }
     {}
 
@@ -39,8 +39,8 @@ namespace nxi
         // init trigger keys
         for_each([this](auto&& node) {
             const nxi::shortcut& shortcut = node->shortcut();
-            if (shortcut.combo_keys.size() > 0) command_input().shortcut_input().add_trigger_key(shortcut.combo_keys[0]);
-            else if (shortcut.sequence_keys.size() > 0) command_input().shortcut_input().add_trigger_key(shortcut.sequence_keys[0]);
+            // if (shortcut.combo_keys.size() > 0) command_input().shortcut_input().add_trigger_key(shortcut.combo_keys[0]);
+            // else if (shortcut.sequence_keys.size() > 0) command_input().shortcut_input().add_trigger_key(shortcut.sequence_keys[0]);
         });
 
         // auto cmd_page = add(nxi::command("nxi", "page", [this](const nxi::values&){ session_.page_system().focus(); }), main_cmd);
@@ -120,8 +120,6 @@ namespace nxi
             }
         });
     }
-
-    nxi::command_input& command_system::command_input() { return command_input_; }
 
     void command_system::set_root(nds::node_ptr<nxi::command> node)
     {

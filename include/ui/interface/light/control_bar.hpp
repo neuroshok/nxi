@@ -2,6 +2,10 @@
 #define INCLUDE_UI_INTERFACE_LIGHT_CONTROL_BAR_HPP_NXI
 
 #include <ui/interface.hpp>
+namespace nxi
+{
+    class buffer_group;
+} // nxi
 
 namespace ui
 {
@@ -24,7 +28,7 @@ namespace ui::interfaces::light
         ui::command_input* command_input();
 
     private:
-        void init_ui();
+        nxi::buffer_group& buffer_group();
 
         ui::user_session& session_;
 

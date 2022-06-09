@@ -6,25 +6,27 @@
 
 namespace nxw
 {
-    class explorer_view;
+    class hbox_layout;
 } // nxw
 
 namespace ui { class user_session; }
-
-class QStackedWidget;
 
 namespace ui::interfaces::standard
 {
     class content : public ui::interface
     {
     public:
-
         explicit content(ui::user_session& session, ui::window* window);
+
+        ui::renderer_view* add();
 
     private:
         ui::user_session& session_;
 
-        ui::renderer_view* renderer_view_;
+        nxw::hbox_layout* layout_;
+        ui::renderer_view* focus_;
+
+        inline static std::unordered_map<int, ui::renderer_view*> views_{};
     };
 } // ui::interfaces::standard
 

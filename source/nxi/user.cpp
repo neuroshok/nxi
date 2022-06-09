@@ -14,6 +14,7 @@ namespace nxi
         , user_database_{ name_ }
         , api_{ core }
         , config_{ nullptr }
+        , buffer_system_{ core }
         , session_system_{ core }
         , command_system_{ core }
         , context_system_{ core, user_database_ }
@@ -30,15 +31,20 @@ namespace nxi
         user_database_.connect();
         config_ = std::make_unique<nxi::config>("nxi.user", user_database_, 0);
 
-        window_system_.load(); // load before interface_system
+        window_system_.load();
 
         session_system_.load();
         command_system_.load();
-        context_system_.load();
-        interface_system_.load();
         page_system_.load();
+        context_system_.load();
+        // requires window_system
+        interface_system_.load();
+
         module_system_.load();
         navigation_system_.load();
+
+        // requires command_system
+        buffer_system_.load();
         // notification_system.load();
     }
 
@@ -59,6 +65,7 @@ namespace nxi
     nxi::database& user::database() { return user_database_; }
     nxi::core& user::nxi_core() { return nxi_core_; }
 
+    nxi::buffer_system& user::buffer_system() { return buffer_system_; }
     nxi::command_system& user::command_system() { return command_system_; }
     nxi::context_system& user::context_system() { return context_system_; }
     nxi::interface_system& user::interface_system() { return interface_system_; }

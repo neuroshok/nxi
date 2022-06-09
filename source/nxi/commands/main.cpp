@@ -10,7 +10,7 @@ namespace nxi
     {
         auto node = add_node("main");
         set_node(node);
-        set_root(node);
+        core_.command_system().set_root(node);
 
         // quit
         nxi::command_data quit;

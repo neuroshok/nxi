@@ -2,16 +2,18 @@
 
 #include <nxi/core.hpp>
 #include <nxi/log.hpp>
+#include <nxi/notification_data.hpp>
+#include <nxi/system/notification.hpp>
 #include <nxi/user.hpp>
-#include <nxw/hbox_layout.hpp>
 
-#include "nxw/icon_button.hpp"
+#include <nxw/hbox_layout.hpp>
+#include <nxw/icon_button.hpp>
+
 #include <ui/command/input.hpp>
 #include <ui/core.hpp>
 #include <ui/interface/light/button.hpp>
+#include <ui/window.hpp>
 
-#include <nxi/notification_data.hpp>
-#include <nxi/system/notification.hpp>
 #include <QIcon>
 
 namespace ui::interfaces::light
@@ -37,60 +39,45 @@ namespace ui::interfaces::light
         auto session_button = new light::button("session", this);
         session_button->setStyleSheet("font-weight: bold; color: #7722FF; padding: 0 20 0 20;");
         session_button->style_data.text_color = QColor{ 255, 0, 0 };
-        connect(&session.nxi_core().session_system(), &nxi::session_system::event_focus, [session_button](nxi::session& s)
-        {
-            session_button->setText(s.name());
-        });
+        connect(&session.nxi_core().session_system(), &nxi::session_system::event_focus,
+                [session_button](nxi::session& s) { session_button->setText(s.name()); });
 
-        connect(session_button, &light::button::event_enter, [this]()
-        {
-            session_.nxi_session().command_system().command_input().suggest_session();
-        });
+        connect(session_button, &light::button::event_enter,
+                [this]() { session_.nxi_session().buffer_system().group(ui_window()->id()).suggest_session(); });
 
         // command_root
         command_root_ = new light::button("command_root_", this);
         command_root_->setStyleSheet("font-weight: bold; color: #00BBFF; padding: 0 20 0 20;");
         command_root_->style_data.text_color = QColor{ 0, 187, 255 };
-        connect(command_root_, &light::button::event_enter, [this]()
-        {
-          session_.nxi_session().context_system().focus<nxi::contexts::command>();
-          session_.nxi_session().command_system().command_input().suggest_command();
+        connect(command_root_, &light::button::event_enter, [this]() {
+            session_.nxi_session().context_system().focus<nxi::contexts::command>();
+            buffer_group().suggest_command();
         });
-        connect(command_root_, &light::button::event_mousewheel_up, [this]() { session_.nxi_session().command_system().command_input().suggestions().select_previous(); });
-        connect(command_root_, &light::button::event_mousewheel_down, [this]() { session_.nxi_session().command_system().command_input().suggestions().select_next(); });
-        connect(&session_.nxi_session().command_system(), &nxi::command_system::event_root_update,
-        [this](nds::node_ptr<nxi::command> command)
-        {
-            command_root_->setText(command->action_name());
-        });
+        connect(command_root_, &light::button::event_mousewheel_up, [this]() { buffer_group().suggestions().select_previous(); });
+        connect(command_root_, &light::button::event_mousewheel_down, [this]() { buffer_group().suggestions().select_next(); });
+        connect(&buffer_group(), &nxi::buffer_group::event_command_root_update,
+                [this](nds::node_ptr<nxi::command> command) { command_root_->setText(command->action_name()); });
 
         // page_root
         page_root_ = new light::button("page_root_", this);
         page_root_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #FFBB00; padding: 0 20 0 20;");
         page_root_->style_data.text_color = QColor{ 255, 187, 0 };
-        connect(page_root_, &light::button::event_enter, [this]()
-        {
+        connect(page_root_, &light::button::event_enter, [this]() {
             session_.nxi_session().context_system().focus<nxi::contexts::page>();
-            session_.nxi_session().command_system().command_input().suggest_page();
+            buffer_group().suggest_page();
         });
-
-        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_update_root,
-        [this](nds::node_ptr<const nxi::page> page)
-        {
-            page_root_->setText(page->name());
-        });
+        connect(&buffer_group(), &nxi::buffer_group::event_page_root_update,
+                [this](nds::node_ptr<nxi::page> page) { page_root_->setText(page->name()); });
 
         // navigation
         auto navigation = new light::button("< o >", this);
         navigation->setStyleSheet("font-weight: bold; color: #BB2200; padding: 0 20 0 20;");
-        connect(navigation, &light::button::event_enter, [this]()
-        {
-            session_.nxi_session().command_system().command_input().suggest_navigation(); });
+        connect(navigation, &light::button::event_enter, [this]() { buffer_group().suggest_navigation(); });
 
         // context
         context_ = new light::button("context_", this);
         context_->setStyleSheet("font-weight: bold; color: #00BB99; padding: 0 20 0 20;");
-        connect(context_, &light::button::event_enter, [this]() { session_.nxi_session().command_system().command_input().suggest_context(); });
+        connect(context_, &light::button::event_enter, [this]() { buffer_group().suggest_context(); });
 
         // notification
         auto notification_ = new nxw::icon_button{ session_, this, ":/icon/notification", "" };
@@ -137,51 +124,31 @@ namespace ui::interfaces::light
         }
 
         /*
-        connect(&session_.nxi_session().command_system(), &nxi::page_system::event_root_update,
+        connect(&buffer_group(), &nxi::page_system::event_root_update,
         [this](nds::node_ptr<nxi::command> command)
         {
             command_root_->setText(command->action_name());
         });*/
 
         connect(&session_.nxi_session().context_system(), &nxi::context_system::event_focus_context_update,
-        [this](const nxi::context& context)
-        {
-            context_->setText("[" + context.name() + "]");
+                [this](const nxi::context& context) { context_->setText("[" + context.name() + "]"); });
+
+        connect(&session_.nxi_session().context_system(), &nxi::context_system::event_context_add, [this](const nxi::context& context) {
+            context.apply([this](const nxi::contexts::command&) { command_root_->activate(); },
+                          [this](const nxi::contexts::page&) { page_root_->activate(); }, [this](auto&&) {});
         });
 
-        connect(&session_.nxi_session().context_system(), &nxi::context_system::event_context_add,
-        [this](const nxi::context& context)
-        {
-            context.apply(
-            [this](const nxi::contexts::command&) { command_root_->activate(); }
-            , [this](const nxi::contexts::page&) { page_root_->activate(); }
-            , [this](auto&&) {}
-            );
-        });
-
-        connect(&session_.nxi_session().context_system(), &nxi::context_system::event_context_del,
-        [this](const nxi::context& context)
-        {
-            context.apply(
-            [this](const nxi::contexts::command&) { command_root_->activate(false); }
-            , [this](const nxi::contexts::page&) { page_root_->activate(false); }
-            , [this](auto&&) {}
-            );
+        connect(&session_.nxi_session().context_system(), &nxi::context_system::event_context_del, [this](const nxi::context& context) {
+            context.apply([this](const nxi::contexts::command&) { command_root_->activate(false); },
+                          [this](const nxi::contexts::page&) { page_root_->activate(false); }, [this](auto&&) {});
         });
     }
 
-    ui::command_input* control_bar::command_input()
-    {
-        return command_input_;
-    }
+    ui::command_input* control_bar::command_input() { return command_input_; }
 
-    void control_bar::enterEvent(QEnterEvent* event)
-    {
+    void control_bar::enterEvent(QEnterEvent* event) {}
 
-    }
+    void control_bar::leaveEvent(QEvent* event) {}
 
-    void control_bar::leaveEvent(QEvent* event)
-    {
-
-    }
+    nxi::buffer_group& control_bar::buffer_group() { return session_.nxi_session().buffer_system().group(interface::group_id()); }
 } // ui::interfaces

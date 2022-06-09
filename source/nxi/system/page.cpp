@@ -232,6 +232,8 @@ namespace nxi
         return targets(static_cast<nds::node_ptr<const nxi::page>>(get(source)));
     }
 
+    page_system::page_ptr page_system::root() const { return root_; }
+
     void page_system::set_root(nds::node_ptr<nxi::page> page)
     {
         root_ = page;

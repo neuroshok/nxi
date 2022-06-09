@@ -24,6 +24,9 @@ namespace ui
         user_session(ui::core& ui_core, nxi::user&);
         ~user_session();
 
+        ui::main_interface* make_main_interface(ui::window*);
+        void set_main_interface(std::function<ui::main_interface*(ui::window*)>);
+
         int id() const;
 
         nxi::core& nxi_core();
@@ -32,9 +35,6 @@ namespace ui
         ui::page_system& page_system();
         ui::window_system& window_system();
 
-        ui::main_interface* make_main_interface(ui::window*);
-        void set_main_interface(std::function<ui::main_interface*(ui::window*)>);
-
     private:
         ui::core& ui_core_;
         nxi::core& nxi_core_;
@@ -42,7 +42,7 @@ namespace ui
         ui::page_system page_system_;
         ui::window_system window_system_;
 
-        std::function<ui::main_interface*(ui::window*)> main_interface_;
+        std::function<ui::main_interface*(ui::window*)> make_main_interface_;
     };
 } //  nxi
 

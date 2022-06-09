@@ -19,7 +19,7 @@
 namespace ui
 {
     command_input::command_input(ui::user_session& session, QWidget* parent)
-        : QLineEdit(parent)
+        : ui::basic_element<QLineEdit>(parent)
         , session_{ session }
     {
         setStyleSheet("font-weight:bold");
@@ -54,7 +54,7 @@ namespace ui
                     setText("");
                 }
             }
-            else nxi_input().exec();
+            else buffer_group().exec();
         });
 
         connect(&session_.nxi_session().context_system(), &nxi::context_system::event_context_add,
@@ -75,14 +75,12 @@ namespace ui
             );
         });
 
-        connect(&nxi_input().suggestions(), &nxi::suggestion_vector::event_selection_update,
-        [this](int index)
-        {
+        connect(&buffer_group().suggestions(), &nxi::suggestion_vector::event_selection_update, [this](int index) {
             if (session_.nxi_session().context_system().is_focus<nxi::contexts::command_executor>())
             {
-                if (nxi_input().suggestions().has_selection())
+                if (buffer_group().suggestions().has_selection())
                 {
-                    auto suggestion_text = nxi_input().suggestions().selected().text();
+                    auto suggestion_text = buffer_group().suggestions().selected().text();
                     auto input_text_size = text().size() - selectedText().size();
                     setText(suggestion_text);
                     setSelection(input_text_size, suggestion_text.size() - input_text_size);
@@ -104,15 +102,10 @@ namespace ui
             setText(page->name());
         });*/
 
-        connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_shortcut_input_update, this, [this](const QString& shortcut_input)
-        {
-            setPlaceholderText(shortcut_input);
-        });
+        connect(&nxi_input(), &nxi::command_input::event_shortcut_input_update, this,
+                [this](const QString& shortcut_input) { setPlaceholderText(shortcut_input); });
 
-        connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_input_update, this, [this](const QString& input)
-        {
-            setText(input);
-        });
+        connect(&nxi_input(), &nxi::command_input::event_input_update, this, [this](const QString& input) { setText(input); });
     }
 
     void command_input::resizeEvent(QResizeEvent* event)
@@ -133,17 +126,17 @@ namespace ui
                 nxi_input().reset();
                 break;
             case Qt::Key_Up:
-                nxi_input().suggestions().select_previous();
+                buffer_group().suggestions().select_previous();
                 break;
             case Qt::Key_Down:
-                if (!nxi_input().suggestions().has_selection())
+                if (!buffer_group().suggestions().has_selection())
                 {
-                    if (nxi_input().is_empty()) nxi_input().context_suggest();
+                    if (nxi_input().is_empty()) buffer_group().context_suggest();
                     else nxi_input().update(text(), event);
 
-                    nxi_input().suggestions().select_next();
+                    buffer_group().suggestions().select_next();
                 }
-                else nxi_input().suggestions().select_next();
+                else buffer_group().suggestions().select_next();
                 break;
 
             case Qt::Key_Backspace:
@@ -151,13 +144,10 @@ namespace ui
                 break;
 
             default:
-                session_.nxi_session().command_system().command_input().update(text(), event);
-        }
+                nxi_input().update(text(), event);
+            }
     }
-    void command_input::keyReleaseEvent(QKeyEvent* event)
-    {
-        session_.nxi_session().command_system().command_input().update(text(), event);
-    }
+    void command_input::keyReleaseEvent(QKeyEvent* event) { nxi_input().update(text(), event); }
 
     void command_input::focusInEvent(QFocusEvent *event)
     {
@@ -167,8 +157,8 @@ namespace ui
     void command_input::focusOutEvent(QFocusEvent* event)
     {
         QLineEdit::focusOutEvent(event);
-        auto focused_page = session_.nxi_session().page_system().focus();
-        if (focused_page) setText(focused_page->name());
+        // auto focused_page = session_.nxi_session().page_system().focus();
+        // if (focused_page) setText(focused_page->name());
         first_focus_ = true;
         set_mode(nxi::command_input::mode_type::display);
     }
@@ -225,18 +215,9 @@ namespace ui
         }
     }
 
+    void command_input::paintEvent(QPaintEvent* event) { QLineEdit::paintEvent(event); }
 
-    void command_input::paintEvent(QPaintEvent* event)
-    {
-
-
-        QLineEdit::paintEvent(event);
-    }
-
-    nxi::command_input& command_input::nxi_input()
-    {
-        return session_.nxi_session().command_system().command_input();
-    }
+    nxi::command_input& command_input::nxi_input() { return session_.nxi_session().buffer_system().focus().input(); }
 
     void command_input::set_executor_placeholder(const QString& parameter_name)
     {
@@ -264,4 +245,6 @@ namespace ui
         palette.setColor(QPalette::Text, ui->style_data.text_color);
         ui->setPalette(palette);
     }
+
+    nxi::buffer_group& command_input::buffer_group() { return session_.nxi_session().buffer_system().group(ui_window()->id()); }
 } // ui

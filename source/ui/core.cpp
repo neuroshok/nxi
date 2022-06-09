@@ -10,8 +10,8 @@
 
 namespace ui
 {
-    core::core(QApplication& app, nxi::core& nxi_core)
-        : app_{ app }
+    core::core(QApplication& application, nxi::core& nxi_core)
+        : application_{ application }
         , nxi_core_{ nxi_core }
         , interface_system_{ *this }
         , user_system_{ *this }
@@ -34,4 +34,6 @@ namespace ui
     nxi::core& core::nxi_core() { return nxi_core_; }
 
     ui::interface_system& core::interface_system() { return interface_system_; }
+
+    QApplication& core::application() { return application_; }
 } // ui

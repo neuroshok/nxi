@@ -36,7 +36,6 @@ namespace nxi
         nds::node_ptr<nxi::command> init_user();
 
         void set_node(nds::node_ptr<nxi::command>);
-        void set_root(nds::node_ptr<nxi::command>);
 
     private:
         nxi::core& core_;
