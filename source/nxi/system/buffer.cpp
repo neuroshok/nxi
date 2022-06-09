@@ -31,9 +31,11 @@ namespace nxi
 
     void buffer_system::focus(nxi::buffer& buffer)
     {
+        nxi_trace("focus buffer {}", buffer.id());
         focus_ = &buffer;
 
         emit event_focus(buffer);
+        emit buffer.group().event_buffer_focus(buffer);
     }
 
     nxi::buffer_group& buffer_system::add_group(int group_id)
@@ -51,7 +53,7 @@ namespace nxi
 
         int id = static_cast<int>(buffers_.size());
         buffers_.emplace_back(std::make_unique<nxi::buffer>(core_, v_group, id));
-        nxi_trace("add buffer {}", id);
+        nxi_trace("add buffer {} in group {}", id, group_id);
         focus(*buffers_.back());
         return *buffers_.back();
     }

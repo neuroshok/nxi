@@ -18,7 +18,10 @@ namespace ui
     {
     public:
         using Widget::Widget;
+
         ui::window* ui_window() { return static_cast<ui::window*>(Widget::window()); }
+        [[nodiscard]] const ui::window* ui_window() const { return static_cast<ui::window*>(Widget::window()); }
+        [[nodiscard]] int group_id() const { return ui_window()->id(); }
     };
 } // ui
 

@@ -21,7 +21,7 @@ namespace ui
         : ui::basic_element<QWidget>(parent)
         , session_{ session }
         , renderer_{ new ui::web_renderer }
-        , buffer_{ ui_window()->nxi_window().buffer_system().add(ui_window()->id()) }
+        , buffer_{ session_.nxi_session().buffer_system().add(group_id()) }
     {
         renderer_->widget()->setParent(this);
 
@@ -70,7 +70,9 @@ namespace ui
 
     void renderer_view::focusInEvent(QFocusEvent*)
     {
-        ui_window()->nxi_window().buffer_system().focus(buffer_);
+        session_.nxi_session().buffer_system().focus(buffer_);
+        // session_.nxi_session().buffer_system().group(group_id()).focus(buffer_);
+
         focus_marker_->setStyleSheet("background-color: " +
                                      session_.nxi_session().interface_system().style().data().menu.item_background_color_selected.get().name());
     }

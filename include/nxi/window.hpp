@@ -19,13 +19,10 @@ namespace nxi
         [[nodiscard]] int width() const;
 
         [[nodiscard]] int height() const;
-        [[nodiscard]] nxi::buffer_system& buffer_system();
 
     private:
         nxi::core& core_;
         nxi::window_data data_;
-
-        nxi::buffer_system buffer_system_;
     };
 } // nxi
 

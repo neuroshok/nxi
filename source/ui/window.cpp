@@ -1,16 +1,18 @@
 #include <ui/window.hpp>
 
+#include <nxi/window.hpp>
+
 #include <ui/core.hpp>
 #include <ui/interface/main.hpp>
 #include <ui/system/window.hpp>
 
 #include <nxw/hbox_layout.hpp>
 
-
 namespace ui
 {
     window::window(ui::window_system& window_system, nxi::window& window)
         : window_system_{ window_system }
+        , id_{ -1 }
         , nxi_window_{ window }
         , interface_{ nullptr }
     {
@@ -18,8 +20,7 @@ namespace ui
         setLayout(layout_);
     }
 
-    window::~window(){ }
-
+    window::~window() = default;
 
     void window::mouseReleaseEvent(QMouseEvent* event)
     {
@@ -51,7 +52,7 @@ namespace ui
         layout_->addWidget(interface_);
     }
 
-    int window::id() const { return id_; }
+    int window::id() const { return nxi_window_.id(); }
 
     ui::window_system& window::window_system() { return window_system_; }
 

@@ -40,7 +40,7 @@ namespace ui
 
     private:
         ui::window_system& window_system_;
-        unsigned int id_;
+        int id_;
         nxi::window& nxi_window_;
         ui::main_interface* interface_;
         QHBoxLayout* layout_;

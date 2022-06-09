@@ -22,7 +22,7 @@ namespace nxi
         void set_page(nds::node_ptr<nxi::page>);
 
         [[nodiscard]] int id() const;
-        [[nodiscard]] const nxi::buffer_group& group() const;
+        [[nodiscard]] nxi::buffer_group& group();
         [[nodiscard]] nds::node_ptr<nxi::page> page();
         [[nodiscard]] nxi::command_input& input();
 

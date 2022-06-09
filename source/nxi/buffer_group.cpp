@@ -26,7 +26,7 @@ namespace nxi
             }
             else if constexpr (std::is_same_v<suggestion_type, nds::node_ptr<nxi::page>>)
             {
-                core_.page_system().activate(suggestion);
+                emit event_page_activate(suggestion);
             }
             else if constexpr (std::is_same_v<suggestion_type, nxi::search_suggestion>)
             {

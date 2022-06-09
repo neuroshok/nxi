@@ -12,7 +12,6 @@
 #include <QPainter>
 #include <QPainterPath>
 
-
 namespace ui
 {
     command_menu::command_menu(ui::user_session& session, QWidget* parent)
@@ -22,7 +21,7 @@ namespace ui
         , selection_index_{ -1 }
     {
         setContentsMargins(5, 5, 5, 5);
-        connect(&session.nxi_core(), &nxi::core::event_load, [ this] {
+        connect(&session.nxi_core(), &nxi::core::event_load, [this] {
             QSize size{ style_data.item_height / 2 - style_data.control_padding, style_data.item_height / 2 - style_data.control_padding };
             icon_copy_ = ui::make_pixmap_from_svg(":/icon/copy", size, style_data.item_text_color);
             icon_sound_ = ui::make_pixmap_from_svg(":/icon/sound", size, style_data.item_text_color.darker(200));
@@ -38,8 +37,7 @@ namespace ui
             repaint();
         });
 
-        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_update, [this](nds::node_ptr<nxi::page> page)
-        {
+        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_update, [this](nds::node_ptr<nxi::page> page) {
             repaint();
             update();
         });
@@ -47,16 +45,14 @@ namespace ui
         setMouseTracking(true);
     }
 
-    void command_menu::exec()
-    {
-        show();
-    }
+    void command_menu::exec() { show(); }
 
     void command_menu::set_data(stz::observer_ptr<nxi::commands_view> data)
     {
         commands_ = data;
 
-        setFixedHeight(static_cast<int>(commands_->size()) * (style_data.item_height + 1) + contentsMargins().top() * 2 + style_data.header_height - 1 + contentsMargins().bottom());
+        setFixedHeight(static_cast<int>(commands_->size()) * (style_data.item_height + 1) + contentsMargins().top() * 2 + style_data.header_height -
+                       1 + contentsMargins().bottom());
 
         repaint();
     }
@@ -65,7 +61,8 @@ namespace ui
     {
         suggestions_.swap(suggestions);
 
-        setFixedHeight(static_cast<int>(suggestions_->size()) * (style_data.item_height + 1) + contentsMargins().top() * 2 + style_data.header_height - 1 + contentsMargins().bottom());
+        setFixedHeight(static_cast<int>(suggestions_->size()) * (style_data.item_height + 1) + contentsMargins().top() * 2 +
+                       style_data.header_height - 1 + contentsMargins().bottom());
 
         repaint();
     }
@@ -95,10 +92,9 @@ namespace ui
             if (item_index == selection_index_) selected = true;
 
             suggestion.apply(
-              [this, &item_rect, &selected](nds::node_ptr<const nxi::command> s) { draw_item(s, item_rect, selected); }
-            , [this, &item_rect, &selected](nds::node_ptr<nxi::page> s) { draw_item(nds::node_ptr<const nxi::page>{ s }, item_rect, selected); }
-            , [this, &item_rect, &selected, &suggestion](auto&& s) { draw_item(suggestion, item_rect, selected); }
-            );
+                [this, &item_rect, &selected](nds::node_ptr<const nxi::command> s) { draw_item(s, item_rect, selected); },
+                [this, &item_rect, &selected](nds::node_ptr<nxi::page> s) { draw_item(nds::node_ptr<const nxi::page>{ s }, item_rect, selected); },
+                [this, &item_rect, &selected, &suggestion](auto&& s) { draw_item(suggestion, item_rect, selected); });
 
             item_y += style_data.item_height + 1;
             item_index++;
@@ -109,33 +105,29 @@ namespace ui
     void command_menu::draw_header()
     {
         QPainter painter(this);
-        QRect header_rect{ contentsMargins().top(), contentsMargins().left(), width() - contentsMargins().left() - contentsMargins().right(), style_data.header_height };
+        QRect header_rect{ contentsMargins().top(), contentsMargins().left(), width() - contentsMargins().left() - contentsMargins().right(),
+                           style_data.header_height };
         painter.fillRect(header_rect, style_data.background_color.darker());
 
         QRect item_rect = header_rect;
         std::vector<QString> items;
-        session_.nxi_session().context_system().apply_on_focus
-        (
-            [this, &items](const nxi::contexts::command&)
-            {
+        session_.nxi_session().context_system().apply_on_focus(
+            [this, &items](const nxi::contexts::command&) {
                 auto res = session_.nxi_session().command_system().root_sources();
                 if (res.size() > 0) items.push_back(res[0]->action_name());
 
                 items.push_back(session_.nxi_session().command_system().root()->action_name());
-            }
-            , [this, &items](const nxi::contexts::page&)
-            {
+            },
+            [this, &items](const nxi::contexts::page&) {
                 items.push_back("main");
                 items.push_back("dev");
                 items.push_back("nxi");
-            }
-            , [this, &items](const nxi::contexts::command_executor& ctx)
-            {
+            },
+            [this, &items](const nxi::contexts::command_executor& ctx) {
                 items.push_back(ctx.data.command().action_name());
                 items.push_back(ctx.data.active_parameter().name());
-            }
-            , [this](auto&&) {  }
-        );
+            },
+            [this](auto&&) {});
 
         // display session_.nxi_session().page_system().root()
         // header with items
@@ -167,7 +159,7 @@ namespace ui
     }
 
     // draw command
-    void command_menu::draw_item(nds::node_ptr<const nxi::command> node_command,  QRect& item_rect, bool selected)
+    void command_menu::draw_item(nds::node_ptr<const nxi::command> node_command, QRect& item_rect, bool selected)
     {
         const nxi::command& command = *node_command;
         QPainter painter(this);
@@ -225,8 +217,8 @@ namespace ui
         }
 
         // sound icon
-        //QPixmap currentFrame = movie_.currentPixmap();
-        //painter.drawPixmap(item_rect.left(), item_rect.top(), currentFrame);
+        // QPixmap currentFrame = movie_.currentPixmap();
+        // painter.drawPixmap(item_rect.left(), item_rect.top(), currentFrame);
     }
 
     void command_menu::draw_item(nds::node_ptr<const nxi::page> page, QRect& item_rect, bool selected)
@@ -245,7 +237,7 @@ namespace ui
         QRect source_icon_rect = icon.rect();
         source_icon_rect.moveCenter(icon_rect.center());
         painter.drawPixmap(source_icon_rect, icon);
-        item_rect.setLeft( item_rect.left() + icon_rect.width() + 2);
+        item_rect.setLeft(item_rect.left() + icon_rect.width() + 2);
 
         // page name
         QString page_id = "#" + QString::number(page->id()) + " [" + session_.nxi_session().session_system().get(page->session_id()).name() + "]";
@@ -294,7 +286,7 @@ namespace ui
             draw_pixmap(painter, icon_sound_, control_rect.left(), control_rect.top(), icon_sound_.size(), style_data.control_padding);
         else draw_pixmap(painter, icon_sound_premuted_, control_rect.left(), control_rect.top(), icon_sound_.size(), style_data.control_padding);
     }
-    void command_menu::draw_item(const nxi::suggestion& suggestion,  QRect& item_rect, bool selected)
+    void command_menu::draw_item(const nxi::suggestion& suggestion, QRect& item_rect, bool selected)
     {
         QPainter painter(this);
 
@@ -305,14 +297,10 @@ namespace ui
         QPixmap suggestion_icon{ suggestion.icon() };
 
         QRect icon_rect{ item_rect.left(), item_rect.top(), style_data.item_height, style_data.item_height };
-        draw_pixmap(painter,
-                    suggestion_icon,
-                    item_rect.left(),
-                    item_rect.top(),
-                    QSize{ style_data.item_height, style_data.item_height },
+        draw_pixmap(painter, suggestion_icon, item_rect.left(), item_rect.top(), QSize{ style_data.item_height, style_data.item_height },
                     style_data.item_height / 4);
 
-        item_rect.setLeft( item_rect.left() + icon_rect.width());
+        item_rect.setLeft(item_rect.left() + icon_rect.width());
 
         // suggestion name
         painter.setPen(style_data.item_text_color);
@@ -331,10 +319,7 @@ namespace ui
         }
     }
 
-    void command_menu::leaveEvent(QEvent* event)
-    {
-        hide();
-    }
+    void command_menu::leaveEvent(QEvent* event) { hide(); }
 
     void command_menu::mouseMoveEvent(QMouseEvent* event)
     {
@@ -344,8 +329,8 @@ namespace ui
         mouse_pos.setY(mouse_pos.y());
 
         // header area
-        if (mouse_pos.y() >= contentsMargins().top() && mouse_pos.y() < contentsMargins().top() + style_data.header_height
-            && mouse_pos.x() > contentsMargins().left())
+        if (mouse_pos.y() >= contentsMargins().top() && mouse_pos.y() < contentsMargins().top() + style_data.header_height &&
+            mouse_pos.x() > contentsMargins().left())
         {
             auto width = (contentsMargins().left() + (style_data.header_item_width + 2) * 3) / 3;
             header_item_index_ = mouse_pos.x() / width;
@@ -373,12 +358,10 @@ namespace ui
         auto mouse_pos = mapFromGlobal(event->globalPosition()).toPoint();
         if (mouse_pos.x() > page_mute_area_.left() && mouse_pos.x() < page_mute_area_.right())
         {
-            suggestions().selected().apply(
-            [](nds::node_ptr<nxi::page> page) { page->toggle_mute(); }
-            , [](auto&&) {});
+            suggestions().selected().apply([](nds::node_ptr<nxi::page> page) { page->toggle_mute(); }, [](auto&&) {});
         }
 
-        if (event->button() == Qt::LeftButton) session_.nxi_session().buffer_system().group(ui_window()->id()).exec();
+        if (event->button() == Qt::LeftButton) session_.nxi_session().buffer_system().group(group_id()).exec();
         else if (event->button() == Qt::MiddleButton)
         {
             if (suggestions().has_selection())
@@ -404,7 +387,7 @@ namespace ui
     {
         return session_.nxi_session().buffer_system().focus().input();
     } // group.input() -> group.focus().input()
-    nxi::suggestion_vector& command_menu::suggestions() { return session_.nxi_session().buffer_system().group(ui_window()->id()).suggestions(); }
+    nxi::suggestion_vector& command_menu::suggestions() { return session_.nxi_session().buffer_system().group(group_id()).suggestions(); }
 
     void command_menu::draw_pixmap(QPainter& painter, const QPixmap& image, int x, int y, QSize size, int margin)
     {
