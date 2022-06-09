@@ -37,6 +37,8 @@ namespace nxi {
         
         // nxi read member functions
         
+        // static member functions
+        
     signals:
         // qt signals
         void event_signal1();
@@ -45,9 +47,13 @@ namespace nxi {
     protected:
         
     private:
-        // private member variables
+        // static member variables
+        
+        // member variables
     
         // member variables, grouped by logic
+        
+        // static member variables
     };
 } // nxi
 ```
