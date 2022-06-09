@@ -2,6 +2,7 @@
 ---
 Language: Cpp
 # BasedOnStyle:  LLVM
+AllowShortLambdasOnASingleLine: All
 AccessModifierOffset: -4
 AlignAfterOpenBracket: Align
 AlignConsecutiveAssignments: None
@@ -10,7 +11,7 @@ AlignEscapedNewlines: Right
 AlignOperands: AlignAfterOperator
 AlignTrailingComments: true
 AllowAllParametersOfDeclarationOnNextLine: false
-AllowAllArgumentsOnNextLine: false
+AllowAllArgumentsOnNextLine: true
 AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortEnumsOnASingleLine: true
@@ -22,8 +23,8 @@ AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: Yes
-BinPackArguments: false
-BinPackParameters: false
+BinPackArguments: true
+BinPackParameters: true
 BraceWrapping:
   AfterClass: true
   AfterControlStatement: Always
@@ -54,7 +55,7 @@ CommentPragmas:  '^ IWYU pragma:'
 CompactNamespaces: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ConstructorInitializerIndentWidth: 4
-ContinuationIndentWidth: 0
+ContinuationIndentWidth: 4
 Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 DisableFormat:   false
