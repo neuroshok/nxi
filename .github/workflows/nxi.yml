@@ -2,49 +2,57 @@ name: nxi_build
 
 on:
   push:
-    branches: [ master ]
-
-env:
-  BUILD_TYPE: Release
-  GITHUB_TOKEN:
+    branches: [ master, dev, test_ci ]
 
 jobs:
   nxi:
     strategy:
       matrix:
         config:
-          - { name: "Windows", os: windows-latest }
-          - { name: "Linux", os: ubuntu-latest }
-          - { name: "MacOS", os: macos-latest }
+          - { name: "windows", os: windows-latest, qt_release: "release_windows-latest.zip" }
+          - { name: "ubuntu", os: ubuntu-latest, qt_release: "release_ubuntu-latest.tar.gz" }
+          - { name: "macos", os: macos-latest, qt_release: "release_macos-latest.tar.gz" }
     #
     runs-on: ${{ matrix.config.os }}
     continue-on-error: true
+
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
-      - run: echo ${{ github.token }} | gh auth login --with-token
+      - uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: branch@dev
 
-      - run: gh release download release_${{ matrix.config.os }} -R neuroshok/fork.qt
-
-      # unix
-      - run: |
-          sudo apt-get install ninja-build libgl1-mesa-dev libxkbcommon-dev
-          unzip release_${{ matrix.config.os }}.zip
-          tar -xf release_${{ matrix.config.os }}.tar.gz
-          TAG=$(gh api repos/neuroshok/fork.qt/releases/latest --jq '.name')
-          gh api repos/neuroshok/fork.qt/git/ref/tags/$TAG --jq '.object.sha'
+      - uses: egor-tensin/setup-gcc@v1
         if: matrix.config.os == 'ubuntu-latest'
 
-      # windows
-      - run: |
-          unzip release_${{ matrix.config.os }}.zip
-          FOR /F %i IN ('gh api repos/neuroshok/fork.qt/releases/latest --jq ".name"') DO set TAG=%i
-          gh api repos/neuroshok/fork.qt/git/ref/tags/$TAG --jq '.object.sha'
+      - uses: suisei-cn/actions-download-file@v1
+        with:
+          url: "https://github.com/neuroshok/fork.qt/releases/download/latest/${{ matrix.config.qt_release }}"
+          target: .
+
+      - run: sudo apt-get install libx11-xcb-dev libglu1-mesa-dev
+        if: matrix.config.os == 'ubuntu-latest'
+
+      - run: tar -xvzf ${{ matrix.config.qt_release }}
+
+      - run: xmake config --qt=release -y
+      - run: xmake  -y
+      - run: xmake install -o nxi
+
+      - run: cd nxi && echo "" > ${{ github.sha }}
+
+      - run: zip -r nxi-${{ matrix.config.name }}-${{ github.ref_name }}.zip nxi
+        if: matrix.config.os != 'windows-latest'
+
+      - run: Compress-Archive -Path nxi -DestinationPath nxi-${{ matrix.config.name }}-${{ github.ref_name }}.zip
         if: matrix.config.os == 'windows-latest'
 
-      - name: Build nxi
-        run: |
-          git clone --recurse-submodules https://github.com/neuroshok/nxi.git && cd nxi
-          mkdir build && cd build
-          cmake -DNXI_QT_ROOT=${{ github.workspace }}/fork.qt/release  ..
-          cmake --build . --target nxi_deploy --config Release
+      - uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ github.token }}
+          file: nxi-${{ matrix.config.name }}-${{ github.ref_name }}.zip
+          tag: latest
+          overwrite: true

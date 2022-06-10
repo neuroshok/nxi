@@ -52,7 +52,18 @@ target("nxi")
     add_files("source/w3c/**.cpp", "include/w3c/**.hpp")
     add_files("resource/*.qrc")
     
-    -- platform
+    -- config sources
+    -- todo fix path
+    
+    -- local NXI_MODULE_STATIC_INCLUDE = "#include <../module/${module_path}/${module}.hpp>\n"
+    -- local NXI_MODULE_STATIC_INIT = ", ${module}_{ core }\n"
+    -- local NXI_MODULE_STATIC_LOAD = "${module}_.load();\n"
+    -- local NXI_MODULE_STATIC_MEMBER = "nxi::modules::${module} ${module}_;\n"
+    
+    add_configfiles("$(projectdir)/include/nxi/module/static.hpp.in", { filename = "static.generated.hpp", prefixdir = "../include/nxi/module",
+    variables = {NXI_MODULE_STATIC_INCLUDE = "", NXI_MODULE_STATIC_INIT = "", NXI_MODULE_STATIC_LOAD = "", NXI_MODULE_STATIC_MEMBER = ""} })
+    
+    -- platform sources
     if (is_plat("windows")) then
         add_files("resource/icon.rc")
         
