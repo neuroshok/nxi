@@ -60,6 +60,7 @@ namespace nxi
 
         // window
         add_window,
+        del_window,
         get_windows,
         move_window,
         get_config_value,

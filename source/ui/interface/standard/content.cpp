@@ -25,12 +25,13 @@ namespace ui::interfaces::standard
         focus_ = add();
         add();
 
-        connect(&user_.nxi_user().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_buffer_focus, [this](nxi::buffer& buffer) {
-            nxi_assert(views_.find(buffer.id()) != views_.end());
-            focus_ = views_[buffer.id()];
-        });
+        connect(&user_.nxi_user().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_buffer_focus, this,
+                [this](nxi::buffer& buffer) {
+                    nxi_assert(views_.find(buffer.id()) != views_.end());
+                    focus_ = views_[buffer.id()];
+                });
 
-        connect(&user_.nxi_user().buffer_system().group(group_id()), &nxi::buffer_group::event_page_activate,
+        connect(&user_.nxi_user().buffer_system().group(group_id()), &nxi::buffer_group::event_page_activate, this,
                 [this](nxi::page_system::page_ptr page) { focus_->display(page); });
     }
 

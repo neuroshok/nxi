@@ -48,6 +48,7 @@ namespace ui::interfaces::light
         auto middle_layout = new nxw::hbox_layout(this);
 
         content_ = new interfaces::standard::content(user_, window);
+        nxi_trace("main {}", window->id());
         control_bar_ = new ui::interfaces::light::control_bar(user_, window);
 
         auto window_control = new ui::interfaces::standard::window_control(user_, window);
@@ -85,7 +86,7 @@ namespace ui::interfaces::light
 
         // connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_reset, [this]() { command_menu_->hide(); });
 
-        connect(&user_.nxi_user().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_action_update,
+        connect(&user_.nxi_user().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_action_update, this,
                 [this](const nxi::suggestion_vector& suggestions) {
                     command_menu_->set_data(stz::make_observer(&suggestions));
                     command_menu_->exec();

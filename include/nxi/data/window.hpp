@@ -19,9 +19,10 @@ namespace nxi
 
 namespace nxi::data::window
 {
-    unsigned int add_window(nxi::database& core, nxi::window_data);
-    nxi::result get_windows(nxi::database& core);
-    void move_window(nxi::database& core, unsigned int id, int x, int y);
+    unsigned int add_window(nxi::database&, nxi::window_data);
+    nxi::result get_windows(nxi::database&);
+    void del_window(nxi::database&, int id);
+    void move_window(nxi::database&, unsigned int id, int x, int y);
 } // nxi::data::window
 
 #endif // INCLUDE_NXI_DATA_WINDOW_HPP_NXI

@@ -42,6 +42,7 @@ namespace nxi
         nxi::navigation_system& navigation_system();
         nxi::notification_system& notification_system();
         nxi::page_system& page_system();
+        nxi::window_system& window_system();
 
         nxi::database& user_database();
         // -- alias

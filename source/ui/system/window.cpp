@@ -17,45 +17,41 @@ namespace ui
     window_system::window_system(ui::user& user)
         : user_{ user }
     {
-        QObject::connect(&user_.nxi_user().window_system(), &nxi::window_system::event_add, [this](nxi::window& window) {
+        connect(&user_.nxi_user().window_system(), &nxi::window_system::event_add, this, [this](nxi::window& window) {
             nxi_trace_event("");
             add(window);
         });
+
+        connect(&user_.nxi_user().window_system(), &nxi::window_system::event_close, this, [this](int window_id) { close(window_id); });
     }
 
     window_system::~window_system() { unload(); }
 
     void window_system::unload()
-    {
-        for (ui::window* window : windows_)
-        {
-            window->deleteLater();
-        }
-    }
+    { windows_.clear(); }
 
     ui::window* window_system::add(nxi::window& window)
     {
-        auto ui_window = new ui::window(*this, window);
-        // make defaut interface
+        auto ui_window = std::make_unique<ui::window>(user_, window);
+        // make default interface
         ui_window->move(window.x(), window.y());
         ui_window->resize(window.width(), window.height());
         ui_window->show();
 
-        auto ui_interface = user_.make_main_interface(ui_window);
+        auto ui_interface = user_.make_main_interface(ui_window.get());
         ui_window->set_interface(ui_interface);
 
-        windows_.push_back(ui_window);
-        return ui_window;
+        windows_.emplace_back(std::move(ui_window));
+
+        return windows_.back().get();
     }
 
-    void window_system::close(ui::window* window)
+    void window_system::close(int id)
     {
-        if (count() == 1) user_.ui_core().quit();
-        else
-        {
-            user_.nxi_user().window_system().del(window->id());
-        }
-        windows_.erase(std::remove(windows_.begin(), windows_.end(), window), windows_.end());
+        auto window_it = std::find_if(windows_.begin(), windows_.end(), [id](const auto& window) { return window->id() == id; });
+        nxi_assert(window_it != windows_.end());
+        windows_.erase(std::remove(windows_.begin(), windows_.end(), *window_it), windows_.end());
+        //(*window_it)->deleteLater();
     }
 
     void window_system::move(ui::window* window, int x, int y) { user_.nxi_user().window_system().move(window->id(), x, y); }
@@ -69,5 +65,6 @@ namespace ui
     }
 
     size_t window_system::count() const { return windows_.size(); }
-    std::vector<ui::window*> window_system::windows() { return windows_; }
+
+    std::vector<std::unique_ptr<ui::window>>& window_system::windows() { return windows_; }
 } // ui

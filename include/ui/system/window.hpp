@@ -23,19 +23,18 @@ namespace ui
 
         void unload();
         ui::window* add(nxi::window&);
-        void close(ui::window*);
-
+        void close(int id);
         void move(ui::window*, int x, int y);
         void resize(ui::window*, int w, int h);
         void minimize(ui::window*);
 
         [[nodiscard]] size_t count() const;
-        std::vector<ui::window*> windows();
+        std::vector<std::unique_ptr<ui::window>>& windows();
 
     private:
         ui::user& user_;
 
-        std::vector<ui::window*> windows_;
+        std::vector<std::unique_ptr<ui::window>> windows_;
     };
 } // nxi
 

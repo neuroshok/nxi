@@ -2,15 +2,22 @@
 #define NXI_WINDOW_SYSTEM_H_NXI
 
 #include <nxi/data/window.hpp>
+#include <nxi/window.hpp>
+
 #include <unordered_map>
+
 #include <QObject>
 
 namespace nxi
 {
     class core;
-    class window;
 
-    enum class window_states { normal, minimized, maximized };
+    enum class window_states
+    {
+        normal,
+        minimized,
+        maximized
+    };
 
     class window_system : public QObject
     {
@@ -21,9 +28,10 @@ namespace nxi
         void operator=(const window_system&) = delete;
 
         void load();
+        void add();
         void add(nxi::window_data);
-        void del(int id);
-        std::unordered_map<unsigned int, nxi::window*>& windows();
+        void close(int id);
+        std::unordered_map<unsigned int, std::unique_ptr<nxi::window>>& windows();
 
         void move(unsigned int id, int x, int y);
         void resize(unsigned int id, int w, int h);
@@ -31,6 +39,7 @@ namespace nxi
 
     signals:
         void event_add(nxi::window&);
+        void event_close(int id);
         void event_position_update(int x, int y);
         void event_state_update(unsigned int id, window_states state);
 
@@ -38,7 +47,7 @@ namespace nxi
         void internal_add(nxi::window_data);
 
         nxi::core& core_;
-        std::unordered_map<unsigned int, nxi::window*> windows_;
+        std::unordered_map<unsigned int, std::unique_ptr<nxi::window>> windows_;
     };
 } // nxi
 

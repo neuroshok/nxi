@@ -31,21 +31,19 @@ namespace nxi
         user_database_.connect();
         config_ = std::make_unique<nxi::config>("nxi.user", user_database_, 0);
 
-        window_system_.load();
-
         session_system_.load();
         command_system_.load();
         page_system_.load();
         context_system_.load();
-        // requires window_system
-        interface_system_.load();
 
         module_system_.load();
         navigation_system_.load();
 
         // requires command_system
         buffer_system_.load();
-        // notification_system.load();
+
+        interface_system_.load();
+        window_system_.load();
     }
 
     void user::unload() { user_database_.close(); }

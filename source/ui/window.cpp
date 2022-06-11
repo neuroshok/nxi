@@ -1,18 +1,21 @@
 #include <ui/window.hpp>
 
+#include <nxi/system/interface.hpp>
+#include <nxi/user.hpp>
 #include <nxi/window.hpp>
 
 #include <ui/core.hpp>
 #include <ui/interface/main.hpp>
 #include <ui/system/window.hpp>
+#include <ui/user.hpp>
 
 #include <nxw/hbox_layout.hpp>
 
 namespace ui
 {
-    window::window(ui::window_system& window_system, nxi::window& window)
-        : window_system_{ window_system }
-        , id_{ -1 }
+    window::window(ui::user& user, nxi::window& window)
+        : user_{ user }
+        , window_system_{ user_.window_system() }
         , nxi_window_{ window }
         , interface_{ nullptr }
     {
@@ -31,8 +34,8 @@ namespace ui
 
     void window::closeEvent(QCloseEvent* event)
     {
-        window_system().close(this);
-        deleteLater();
+        // window_system().close(id());
+        //  todo user_.nxi_user().window_system().close(id);
     }
 
     void window::resizeEvent(QResizeEvent*)
@@ -50,6 +53,7 @@ namespace ui
     {
         interface_ = interface;
         layout_->addWidget(interface_);
+        user_.nxi_user().interface_system().style().update(interface);
     }
 
     int window::id() const { return nxi_window_.id(); }

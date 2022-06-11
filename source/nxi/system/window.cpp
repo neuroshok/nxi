@@ -35,18 +35,19 @@ namespace nxi
             internal_add(window);
         }
 
-        if (windows_.empty())
-        {
-            QRect screen_size = QGuiApplication::primaryScreen()->geometry();
+        if (windows_.empty()) add();
+    }
 
-            nxi::window_data window;
-            window.w = screen_size.width() * 0.8;
-            window.h = screen_size.height() * 0.7;
-            window.x = (screen_size.width() - window.w) / 2;
-            window.y = (screen_size.height() - window.h) / 2;
+    void window_system::add()
+    {
+        QRect screen_size = QGuiApplication::primaryScreen()->geometry();
 
-            add(window);
-        }
+        nxi::window_data window;
+        window.w = static_cast<int>(screen_size.width() * 0.8);
+        window.h = static_cast<int>(screen_size.height() * 0.7);
+        window.x = (screen_size.width() - window.w) / 2;
+        window.y = (screen_size.height() - window.h) / 2;
+        add(window);
     }
 
     void window_system::add(nxi::window_data window)
@@ -55,9 +56,13 @@ namespace nxi
         internal_add(window);
     }
 
-    void window_system::del(int id)
+    void window_system::close(int id)
     {
-        // nxi::queries::del_window(id);
+        if (windows_.size() == 1) return core_.quit();
+
+        nxi::data::window::del_window(core_.user_database(), id);
+        emit event_close(id);
+        windows_.erase(id);
     }
 
     void window_system::move(unsigned int id, int x, int y)
@@ -71,7 +76,7 @@ namespace nxi
         //// ndb::query<dbs::core>() << // ndb::set(nxi_model.window.w = w, nxi_model.window.h = h);
     }
 
-    std::unordered_map<unsigned int, nxi::window*>& window_system::windows() { return windows_; }
+    std::unordered_map<unsigned int, std::unique_ptr<nxi::window>>& window_system::windows() { return windows_; }
 
     void window_system::minimize(unsigned int id)
     {
@@ -84,8 +89,9 @@ namespace nxi
         // create a buffer_group for the window
         core_.user().buffer_system().add_group(window_data.id);
 
-        auto window = new nxi::window{ core_, window_data };
+        auto window = std::make_unique<nxi::window>(core_, window_data);
+        auto id = window->id();
         emit event_add(*window);
-        windows_.emplace(window->id(), window);
+        windows_.emplace(id, std::move(window));
     }
 } // nxi

@@ -15,14 +15,15 @@ namespace nxi
 
 namespace ui
 {
-    class window_system;
+    class user;
     class main_interface;
+    class window_system;
 
     class window : public platform::window
     {
         Q_OBJECT
     public:
-        window(ui::window_system&, nxi::window&);
+        window(ui::user&, nxi::window&);
         ~window();
 
         void mouseReleaseEvent(QMouseEvent*) override;
@@ -39,8 +40,8 @@ namespace ui
         ui::window_system& window_system();
 
     private:
+        ui::user& user_;
         ui::window_system& window_system_;
-        int id_;
         nxi::window& nxi_window_;
         ui::main_interface* interface_;
         QHBoxLayout* layout_;

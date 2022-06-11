@@ -41,6 +41,7 @@ namespace nxi
     nxi::notification_system& core::notification_system() { return user().notification_system(); }
     nxi::page_system& core::page_system() { return user().page_system(); }
     nxi::session_system& core::session_system() { return user().session_system(); }
+    nxi::window_system& core::window_system() { return user().window_system(); }
 
     nxi::database& core::user_database() { return user().database(); }
 
