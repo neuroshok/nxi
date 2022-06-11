@@ -4,7 +4,6 @@ set_version("0.0.1")
 -------------------------------------------------------
 ---                      config                     ---
 -------------------------------------------------------
-set_defaultarchs("x64")
 set_warnings("allextra")
 
 add_rules("mode.release", "mode.releasedbg")
@@ -60,7 +59,8 @@ target("nxi")
     -- local NXI_MODULE_STATIC_LOAD = "${module}_.load();\n"
     -- local NXI_MODULE_STATIC_MEMBER = "nxi::modules::${module} ${module}_;\n"
     
-    add_configfiles("$(projectdir)/include/nxi/module/static.hpp.in", { filename = "static.generated.hpp", prefixdir = "../include/nxi/module",
+    set_configdir("$(projectdir)/")
+    add_configfiles("include/nxi/module/static.hpp.in", { filename = "static.generated.hpp", prefixdir = "include/nxi/module",
     variables = {NXI_MODULE_STATIC_INCLUDE = "", NXI_MODULE_STATIC_INIT = "", NXI_MODULE_STATIC_LOAD = "", NXI_MODULE_STATIC_MEMBER = ""} })
     
     -- platform sources
