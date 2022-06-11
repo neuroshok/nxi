@@ -7,14 +7,14 @@ namespace nxi { class custom_page; }
 
 namespace ui
 {
-    class user_session;
+    class user;
     class renderer;
 
     class widget_page : public ui::page
     {
         Q_OBJECT
     public:
-        widget_page(ui::user_session&, nxi::custom_page& page);
+        widget_page(ui::user&, nxi::custom_page& page);
 
         void display(ui::renderer* renderer) override;
         ui::renderer* make_renderer() const override;
@@ -22,7 +22,7 @@ namespace ui
         QWidget* widget();
 
     private:
-        ui::user_session& session_;
+        ui::user& user_;
         nxi::custom_page& page_;
         QWidget* widget_;
     };

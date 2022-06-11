@@ -9,14 +9,14 @@ class QWebEnginePage;
 
 namespace ui
 {
-    class user_session;
+    class user;
     class web_engine_page;
 
     class web_page : public ui::page
     {
         Q_OBJECT
     public:
-        web_page(ui::user_session&, nxi::web_page& page);
+        web_page(ui::user&, nxi::web_page& page);
 
         void load(const QString& url);
         nxi::web_page& nxi_page();
@@ -27,7 +27,7 @@ namespace ui
         ui::renderer* make_renderer() const override;
 
     private:
-        ui::user_session& session_;
+        ui::user& user_;
         nxi::web_page& page_;
 
         ui::web_engine_page* native_page_;

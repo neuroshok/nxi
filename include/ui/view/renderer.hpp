@@ -21,7 +21,7 @@ class QLabel;
 
 namespace ui
 {
-    class user_session;
+    class user;
     class page;
     class renderer;
 
@@ -29,7 +29,7 @@ namespace ui
     {
         Q_OBJECT
     public:
-        renderer_view(ui::user_session&, QWidget* parent);
+        renderer_view(ui::user&, QWidget* parent);
 
         void display(nxi::page_system::page_ptr);
         void display(nxi::page_system::pages_view pages);
@@ -40,7 +40,7 @@ namespace ui
         void focusOutEvent(QFocusEvent*) override;
 
     private:
-        ui::user_session& session_;
+        ui::user& user_;
         ui::renderer* renderer_;
         nxi::buffer& buffer_;
 

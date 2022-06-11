@@ -9,19 +9,22 @@ namespace nxw
     class hbox_layout;
 } // nxw
 
-namespace ui { class user_session; }
+namespace ui
+{
+    class user;
+}
 
 namespace ui::interfaces::standard
 {
     class content : public ui::interface
     {
     public:
-        explicit content(ui::user_session& session, ui::window* window);
+        explicit content(ui::user& user, ui::window* window);
 
         ui::renderer_view* add();
 
     private:
-        ui::user_session& session_;
+        ui::user& user_;
 
         nxw::hbox_layout* layout_;
         ui::renderer_view* focus_;

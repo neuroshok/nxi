@@ -31,7 +31,7 @@ class QEvent;
 namespace ui
 {
     class command_menu;
-    class user_session;
+    class user;
 
     class command_input : public ui::basic_element<QLineEdit>
     {
@@ -48,20 +48,20 @@ namespace ui
         } style_data;
         static void style_update(ui::command_input*);
 
-        command_input(ui::user_session& ui_core, QWidget* parent);
+        command_input(ui::user&, QWidget* parent);
 
-        void resizeEvent(QResizeEvent* event) override;
-        void keyPressEvent(QKeyEvent* event) override;
-        void keyReleaseEvent(QKeyEvent* event) override;
-        void enterEvent(QEnterEvent* event) override;
-        void leaveEvent(QEvent* event) override;
+        void resizeEvent(QResizeEvent*) override;
+        void keyPressEvent(QKeyEvent*) override;
+        void keyReleaseEvent(QKeyEvent*) override;
+        void enterEvent(QEnterEvent*) override;
+        void leaveEvent(QEvent*) override;
 
         void mouseMoveEvent(QMouseEvent*) override;
         void mousePressEvent(QMouseEvent*) override;
         void mouseReleaseEvent(QMouseEvent*) override;
 
-        void focusInEvent(QFocusEvent* event) override;
-        void focusOutEvent(QFocusEvent* event) override;
+        void focusInEvent(QFocusEvent*) override;
+        void focusOutEvent(QFocusEvent*) override;
 
         void paintEvent(QPaintEvent*) override;
 
@@ -76,7 +76,7 @@ namespace ui
     private:
         nxi::buffer_group& buffer_group();
 
-        ui::user_session& session_;
+        ui::user& user_;
 
         bool first_focus_ = true;
         QPoint mouse_press_origin_;

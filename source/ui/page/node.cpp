@@ -21,10 +21,10 @@
 
 namespace ui
 {
-    node_page::node_page(ui::user_session& session, nds::node_ptr<const nxi::page> page)
+    node_page::node_page(ui::user& user, nds::node_ptr<const nxi::page> page)
         : ui::page{ const_cast<nxi::page&>(*page) } // tmp
-        , page_{ std::move(page) }
-        , session_{ session }
+        , page_{ page }
+        , user_{ user }
     {
         view_ = new QWebEngineView;
         view_->setAttribute(Qt::WA_DontShowOnScreen);
@@ -71,7 +71,7 @@ namespace ui
 
     void node_page::paintEvent(QPaintEvent*)
     {
-        auto pages = session_.nxi_session().page_system().targets(page_);
+        auto pages = user_.nxi_user().page_system().targets(page_);
 
         if (pages.size() == 0)
         {
@@ -92,7 +92,7 @@ namespace ui
         for (auto p : pages)
         {
             page_rects_.emplace_back(page_x, 0, page_width, height());
-            auto ui_page = session_.page_system().get(*p).get();
+            auto ui_page = user_.page_system().get(*p).get();
             pages_.push_back(static_cast<ui::web_page*>(ui_page));
             page_x += page_width;
         }
@@ -119,7 +119,7 @@ namespace ui
             QRect r = page_rects_[i];
             if (QRect(mapToGlobal(r.topLeft()), r.size()).contains(event->globalPosition().toPoint()))
             {
-                session_.nxi_session().page_system().focus(pages_[i]->nxi_page().id());
+                user_.nxi_user().page_system().focus(pages_[i]->nxi_page().id());
                 break;
             }
         }

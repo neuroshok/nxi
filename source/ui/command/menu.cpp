@@ -14,14 +14,14 @@
 
 namespace ui
 {
-    command_menu::command_menu(ui::user_session& session, QWidget* parent)
+    command_menu::command_menu(ui::user& user, QWidget* parent)
         : ui::basic_element<QWidget>(parent)
-        , session_{ session }
+        , user_{ user }
         , hover_index_{ -1 }
         , selection_index_{ -1 }
     {
         setContentsMargins(5, 5, 5, 5);
-        connect(&session.nxi_core(), &nxi::core::event_load, [this] {
+        connect(&user_.nxi_core(), &nxi::core::event_load, [this] {
             QSize size{ style_data.item_height / 2 - style_data.control_padding, style_data.item_height / 2 - style_data.control_padding };
             icon_copy_ = ui::make_pixmap_from_svg(":/icon/copy", size, style_data.item_text_color);
             icon_sound_ = ui::make_pixmap_from_svg(":/icon/sound", size, style_data.item_text_color.darker(200));
@@ -37,7 +37,7 @@ namespace ui
             repaint();
         });
 
-        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_update, [this](nds::node_ptr<nxi::page> page) {
+        connect(&user_.nxi_user().page_system(), &nxi::page_system::event_update, [this](nds::node_ptr<nxi::page> page) {
             repaint();
             update();
         });
@@ -111,12 +111,12 @@ namespace ui
 
         QRect item_rect = header_rect;
         std::vector<QString> items;
-        session_.nxi_session().context_system().apply_on_focus(
+        user_.nxi_user().context_system().apply_on_focus(
             [this, &items](const nxi::contexts::command&) {
-                auto res = session_.nxi_session().command_system().root_sources();
+                auto res = user_.nxi_user().command_system().root_sources();
                 if (res.size() > 0) items.push_back(res[0]->action_name());
 
-                items.push_back(session_.nxi_session().command_system().root()->action_name());
+                items.push_back(user_.nxi_user().command_system().root()->action_name());
             },
             [this, &items](const nxi::contexts::page&) {
                 items.push_back("main");
@@ -240,7 +240,7 @@ namespace ui
         item_rect.setLeft(item_rect.left() + icon_rect.width() + 2);
 
         // page name
-        QString page_id = "#" + QString::number(page->id()) + " [" + session_.nxi_session().session_system().get(page->session_id()).name() + "]";
+        QString page_id = "#" + QString::number(page->id()) + " [" + user_.nxi_user().session_system().get(page->session_id()).name() + "]";
         QString page_name = page->name();
         painter.setPen(style_data.item_text_color.lighter());
         painter.drawText(item_rect, Qt::AlignVCenter, page_id);
@@ -361,7 +361,7 @@ namespace ui
             suggestions().selected().apply([](nds::node_ptr<nxi::page> page) { page->toggle_mute(); }, [](auto&&) {});
         }
 
-        if (event->button() == Qt::LeftButton) session_.nxi_session().buffer_system().group(group_id()).exec();
+        if (event->button() == Qt::LeftButton) user_.nxi_user().buffer_system().group(group_id()).exec();
         else if (event->button() == Qt::MiddleButton)
         {
             if (suggestions().has_selection())
@@ -370,7 +370,7 @@ namespace ui
                     [this](nds::node_ptr<nxi::page> page) {
                         // todo suggestion_vector should use use event_close
                         suggestions().erase(page);
-                        session_.nxi_session().page_system().close(page);
+                        user_.nxi_user().page_system().close(page);
                     },
                     [this](auto&&) {});
             }
@@ -385,9 +385,9 @@ namespace ui
 
     nxi::command_input& command_menu::nxi_input()
     {
-        return session_.nxi_session().buffer_system().focus().input();
+        return user_.nxi_user().buffer_system().focus().input();
     } // group.input() -> group.focus().input()
-    nxi::suggestion_vector& command_menu::suggestions() { return session_.nxi_session().buffer_system().group(group_id()).suggestions(); }
+    nxi::suggestion_vector& command_menu::suggestions() { return user_.nxi_user().buffer_system().group(group_id()).suggestions(); }
 
     void command_menu::draw_pixmap(QPainter& painter, const QPixmap& image, int x, int y, QSize size, int margin)
     {

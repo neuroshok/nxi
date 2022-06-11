@@ -16,7 +16,7 @@ namespace ui::views
     class config : public QWidget
     {
     public:
-        config(ui::user_session& session);
+        config(ui::user& user);
 
         template<class T>
         void add_row(nxi::persistent<T>* persistent)
@@ -52,7 +52,7 @@ namespace ui::views
             value->setText(str_value);
 
             auto label_key = new QLabel(this);
-            label_key->setText(config_key->path() + " [" + session_.nxi_session().session_system().get(config_key->session_id()).name() + "]");
+            label_key->setText(config_key->path() + " [" + user_.nxi_user().session_system().get(config_key->session_id()).name() + "]");
             label_key->setToolTip(config_key->description());
 
             form_->addRow(label_key, value);
@@ -60,7 +60,7 @@ namespace ui::views
         }
 
     private:
-        ui::user_session& session_;
+        ui::user& user_;
 
         QFormLayout* form_;
     };

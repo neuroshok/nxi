@@ -17,11 +17,11 @@
 
 namespace ui
 {
-    renderer_view::renderer_view(ui::user_session& session, QWidget* parent)
+    renderer_view::renderer_view(ui::user& user, QWidget* parent)
         : ui::basic_element<QWidget>(parent)
-        , session_{ session }
+        , user_{ user }
         , renderer_{ new ui::web_renderer }
-        , buffer_{ session_.nxi_session().buffer_system().add(group_id()) }
+        , buffer_{ user_.nxi_user().buffer_system().add(group_id()) }
     {
         renderer_->widget()->setParent(this);
 
@@ -41,7 +41,7 @@ namespace ui
 
         buffer_.set_page(page);
 
-        auto ui_page = session_.page_system().get(*page);
+        auto ui_page = user_.page_system().get(*page);
 
         if (renderer_->type() != page->renderer_type())
         {
@@ -70,11 +70,11 @@ namespace ui
 
     void renderer_view::focusInEvent(QFocusEvent*)
     {
-        session_.nxi_session().buffer_system().focus(buffer_);
+        user_.nxi_user().buffer_system().focus(buffer_);
         // session_.nxi_session().buffer_system().group(group_id()).focus(buffer_);
 
         focus_marker_->setStyleSheet("background-color: " +
-                                     session_.nxi_session().interface_system().style().data().menu.item_background_color_selected.get().name());
+                                     user_.nxi_user().interface_system().style().data().menu.item_background_color_selected.get().name());
     }
 
     void renderer_view::focusOutEvent(QFocusEvent*) { focus_marker_->setStyleSheet("background-color: transparent"); }

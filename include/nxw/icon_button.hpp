@@ -18,7 +18,7 @@ namespace nxi
 } // nxi
 namespace ui
 {
-    class user_session;
+    class user;
 } // ui
 
 namespace nxw
@@ -38,15 +38,15 @@ namespace nxw
             int padding = { 4 };
         } style_data;
 
-        icon_button(ui::user_session&, QWidget* parent, const QString& icon_path, QString str_command = "nxi:help");
-        icon_button(ui::user_session&, QWidget* parent, const QString& icon_path, QString str_command, style_type);
+        icon_button(ui::user&, QWidget* parent, const QString& icon_path, QString str_command = "nxi:help");
+        icon_button(ui::user&, QWidget* parent, const QString& icon_path, QString str_command, style_type);
 
         void paintEvent(QPaintEvent*) override;
 
     private:
         QImage make_colorized_image(const QImage& source, QColor foreground_color, QColor background_color);
 
-        ui::user_session& session_;
+        ui::user& user_;
         nds::node_ptr<nxi::command> command_;
         QString str_command_;
         QPixmap icon_;

@@ -6,22 +6,22 @@
 #include <nxi/user.hpp>
 
 #include <ui/system/user.hpp>
-#include <ui/user_session.hpp>
+#include <ui/user.hpp>
 #include <ui/utility.hpp>
 
 namespace nxw
 {
-    icon_button::icon_button(ui::user_session& session, QWidget* parent, const QString& icon_path, QString str_command)
-        : icon_button(session, parent, icon_path, std::move(str_command), style_type{})
+    icon_button::icon_button(ui::user& user, QWidget* parent, const QString& icon_path, QString str_command)
+        : icon_button(user, parent, icon_path, std::move(str_command), style_type{})
     {}
 
-    icon_button::icon_button(ui::user_session& session, QWidget* parent, const QString& icon_path, QString str_command, icon_button::style_type custom_style)
-        : session_{ session }
+    icon_button::icon_button(ui::user& user, QWidget* parent, const QString& icon_path, QString str_command, icon_button::style_type custom_style)
+        : user_{ user }
         , str_command_{ std::move(str_command) }
         , style_data{ std::move(custom_style) }
     {
-        connect(&session.nxi_core(), &nxi::core::event_load, [icon_path, this] {
-            auto vs = session_.nxi_session().command_system().search(str_command_);
+        connect(&user_.nxi_core(), &nxi::core::event_load, [icon_path, this] {
+            auto vs = user_.nxi_user().command_system().search(str_command_);
             if (!vs.empty()) command_ = vs[0];
             else nxi_warning("command {} not found", str_command_);
 

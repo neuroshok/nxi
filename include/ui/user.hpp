@@ -1,5 +1,5 @@
-#ifndef INCLUDE_UI_USER_SESSION_HPP_NXI
-#define INCLUDE_UI_USER_SESSION_HPP_NXI
+#ifndef INCLUDE_UI_USER_HPP_NXI
+#define INCLUDE_UI_USER_HPP_NXI
 
 #include <ui/system/page.hpp>
 #include <ui/system/window.hpp>
@@ -18,11 +18,11 @@ namespace ui
     class main_interface;
     class window;
 
-    class user_session
+    class user
     {
     public:
-        user_session(ui::core& ui_core, nxi::user&);
-        ~user_session();
+        user(ui::core& ui_core, nxi::user&);
+        ~user();
 
         ui::main_interface* make_main_interface(ui::window*);
         void set_main_interface(std::function<ui::main_interface*(ui::window*)>);
@@ -30,7 +30,7 @@ namespace ui
         int id() const;
 
         nxi::core& nxi_core();
-        nxi::user& nxi_session();
+        nxi::user& nxi_user();
         ui::core& ui_core();
         ui::page_system& page_system();
         ui::window_system& window_system();
@@ -38,7 +38,7 @@ namespace ui
     private:
         ui::core& ui_core_;
         nxi::core& nxi_core_;
-        nxi::user& nxi_session_;
+        nxi::user& nxi_user_;
         ui::page_system page_system_;
         ui::window_system window_system_;
 
@@ -46,4 +46,4 @@ namespace ui
     };
 } //  nxi
 
-#endif // INCLUDE_UI_USER_SESSION_HPP_NXI
+#endif // INCLUDE_UI_USER_HPP_NXI

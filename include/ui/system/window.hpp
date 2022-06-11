@@ -11,14 +11,14 @@ namespace nxi
 namespace ui
 {
     class main_interface;
-    class user_session;
+    class user;
     class window;
 
     class window_system : public QObject
     {
         Q_OBJECT
     public:
-        explicit window_system(ui::user_session&);
+        explicit window_system(ui::user&);
         ~window_system() override;
 
         void unload();
@@ -33,7 +33,7 @@ namespace ui
         std::vector<ui::window*> windows();
 
     private:
-        ui::user_session& session_;
+        ui::user& user_;
 
         std::vector<ui::window*> windows_;
     };

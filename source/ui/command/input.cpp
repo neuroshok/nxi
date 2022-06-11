@@ -18,9 +18,9 @@
 
 namespace ui
 {
-    command_input::command_input(ui::user_session& session, QWidget* parent)
+    command_input::command_input(ui::user& user, QWidget* parent)
         : ui::basic_element<QLineEdit>(parent)
-        , session_{ session }
+        , user_{ user }
     {
         setStyleSheet("font-weight:bold");
 
@@ -29,24 +29,23 @@ namespace ui
         info_ = new QLabel(this);
         header_ = new QLabel(this);
 
-        connect(&session_.nxi_session().command_system(), &nxi::command_system::event_execution_request, [this](nds::node_ptr<const nxi::command> command)
-        {
-            command_executor_.emplace( command );
-            session_.nxi_session().context_system().add<nxi::contexts::command_executor>(command_executor_.value());
+        connect(&user_.nxi_user().command_system(), &nxi::command_system::event_execution_request, [this](nds::node_ptr<const nxi::command> command) {
+            command_executor_.emplace(command);
+            user_.nxi_user().context_system().add<nxi::contexts::command_executor>(command_executor_.value());
             setText("");
         });
 
         connect(this, &QLineEdit::returnPressed, [this]()
         {
-            if (command_executor_ && session_.nxi_session().context_system().is_focus<nxi::contexts::command_executor>())
+            if (command_executor_ && user_.nxi_user().context_system().is_focus<nxi::contexts::command_executor>())
             {
-                //if (nxi_input().suggestions().has_selection()) command_executor_->add_suggestion(nxi_input().suggestions().selected());
+                // if (nxi_input().suggestions().has_selection()) command_executor_->add_suggestion(nxi_input().suggestions().selected());
                 command_executor_->add_value(nxi_input().text());
                 command_executor_->exec();
                 if (command_executor_->is_complete())
                 {
                     nxi_input().reset();
-                    session_.nxi_session().context_system().del<nxi::contexts::command_executor>();
+                    user_.nxi_user().context_system().del<nxi::contexts::command_executor>();
                 }
                 else
                 {
@@ -57,26 +56,18 @@ namespace ui
             else buffer_group().exec();
         });
 
-        connect(&session_.nxi_session().context_system(), &nxi::context_system::event_context_add,
-        [this](const nxi::context& context)
-        {
-            context.apply(
-            [this](const nxi::contexts::command_executor& ex){ set_executor_placeholder(ex.data.active_parameter().name()); }
-            , [this](auto&&) { setPlaceholderText(default_placeholder_text); }
-            );
+        connect(&user_.nxi_user().context_system(), &nxi::context_system::event_context_add, [this](const nxi::context& context) {
+            context.apply([this](const nxi::contexts::command_executor& ex) { set_executor_placeholder(ex.data.active_parameter().name()); },
+                          [this](auto&&) { setPlaceholderText(default_placeholder_text); });
         });
 
-        connect(&session_.nxi_session().context_system(), &nxi::context_system::event_focus_context_update,
-        [this](const nxi::context& context)
-        {
-            context.apply(
-            [this](const nxi::contexts::command_executor& ex){ set_executor_placeholder(ex.data.active_parameter().name()); }
-            , [this](auto&&) { setPlaceholderText(default_placeholder_text); }
-            );
+        connect(&user_.nxi_user().context_system(), &nxi::context_system::event_focus_context_update, [this](const nxi::context& context) {
+            context.apply([this](const nxi::contexts::command_executor& ex) { set_executor_placeholder(ex.data.active_parameter().name()); },
+                          [this](auto&&) { setPlaceholderText(default_placeholder_text); });
         });
 
         connect(&buffer_group().suggestions(), &nxi::suggestion_vector::event_selection_update, [this](int index) {
-            if (session_.nxi_session().context_system().is_focus<nxi::contexts::command_executor>())
+            if (user_.nxi_user().context_system().is_focus<nxi::contexts::command_executor>())
             {
                 if (buffer_group().suggestions().has_selection())
                 {
@@ -91,13 +82,11 @@ namespace ui
 
 
         // use only base
-        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_focus, this, [this](nxi::page_system::page_ptr page)
-        {
-            setText(page->name());
-        });
+        connect(&user_.nxi_user().page_system(), &nxi::page_system::event_focus, this,
+                [this](nxi::page_system::page_ptr page) { setText(page->name()); });
 
         /*
-        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_update_command, this, [this](nxi::page_system::page_ptr page)
+        connect(&user_.nxi_user().page_system(), &nxi::page_system::event_update_command, this, [this](nxi::page_system::page_ptr page)
         {
             setText(page->name());
         });*/
@@ -120,10 +109,10 @@ namespace ui
 
         switch (event->key())
         {
-            case Qt::Key_Escape:
-                if (command_executor_ && session_.nxi_session().context_system().is_active<nxi::contexts::command_executor>())
-                    session_.nxi_session().context_system().del<nxi::contexts::command_executor>();
-                nxi_input().reset();
+        case Qt::Key_Escape:
+            if (command_executor_ && user_.nxi_user().context_system().is_active<nxi::contexts::command_executor>())
+                user_.nxi_user().context_system().del<nxi::contexts::command_executor>();
+            nxi_input().reset();
                 break;
             case Qt::Key_Up:
                 buffer_group().suggestions().select_previous();
@@ -157,7 +146,7 @@ namespace ui
     void command_input::focusOutEvent(QFocusEvent* event)
     {
         QLineEdit::focusOutEvent(event);
-        // auto focused_page = session_.nxi_session().page_system().focus();
+        // auto focused_page = user_.nxi_user().page_system().focus();
         // if (focused_page) setText(focused_page->name());
         first_focus_ = true;
         set_mode(nxi::command_input::mode_type::display);
@@ -167,7 +156,7 @@ namespace ui
     {
         if (hasFocus()) return;
         //if (!input_.is_empty()) return;
-        auto focused_page = session_.nxi_session().page_system().focus();
+        auto focused_page = user_.nxi_user().page_system().focus();
         //if (focused_page) setText(focused_page->name());
     }
 
@@ -175,7 +164,7 @@ namespace ui
     {
         if (hasFocus()) return;
         //if (!input_.is_empty()) return;
-        auto focused_page = session_.nxi_session().page_system().focus();
+        auto focused_page = user_.nxi_user().page_system().focus();
         //if (focused_page) setText(focused_page->name());
     }
 
@@ -205,7 +194,7 @@ namespace ui
             {
                 if (nxi_input().is_empty())
                 {
-                    auto focused_page = session_.nxi_session().page_system().focus();
+                    auto focused_page = user_.nxi_user().page_system().focus();
                     if (focused_page) setText(focused_page->command());
                 }
                 else setText(nxi_input().text());
@@ -217,7 +206,7 @@ namespace ui
 
     void command_input::paintEvent(QPaintEvent* event) { QLineEdit::paintEvent(event); }
 
-    nxi::command_input& command_input::nxi_input() { return session_.nxi_session().buffer_system().focus().input(); }
+    nxi::command_input& command_input::nxi_input() { return user_.nxi_user().buffer_system().focus().input(); }
 
     void command_input::set_executor_placeholder(const QString& parameter_name)
     {
@@ -246,5 +235,5 @@ namespace ui
         ui->setPalette(palette);
     }
 
-    nxi::buffer_group& command_input::buffer_group() { return session_.nxi_session().buffer_system().group(ui_window()->id()); }
+    nxi::buffer_group& command_input::buffer_group() { return user_.nxi_user().buffer_system().group(ui_window()->id()); }
 } // ui

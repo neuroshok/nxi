@@ -15,11 +15,10 @@ namespace ui::interfaces::standard
     {
         Q_OBJECT
     public:
-
-        explicit page_bar(ui::user_session&, ui::window*);
+        explicit page_bar(ui::user&, ui::window*);
 
     private:
-        ui::user_session& session_;
+        ui::user& user_;
         ui::views::page_tree* page_tree_;
     };
 } // ui::interfaces::standard

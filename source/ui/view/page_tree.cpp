@@ -107,7 +107,8 @@ private:
 
 namespace ui::views
 {
-    page_tree::page_tree(ui::user_session& session) : session_{ session }
+    page_tree::page_tree(ui::user& session)
+        : session_{ session }
     {
         init_ui();
         init_data();
@@ -278,7 +279,7 @@ namespace ui::views
 
                 if (event->dropAction() == Qt::MoveAction)
                 {
-                    session_.nxi_session().page_system().move(page_id, source_id, target_id);
+                    session_.nxi_user().page_system().move(page_id, source_id, target_id);
                 }
                 if (event->dropAction() == Qt::CopyAction)
                 {

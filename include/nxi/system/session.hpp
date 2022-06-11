@@ -34,7 +34,7 @@ namespace nxi
         void load(nxi::session&);
         void load(const QString& session_id);
         void unload(const QString& session_id);
-        const std::vector<std::unique_ptr<nxi::session>>& sessions() const;
+        [[nodiscard]] const std::vector<std::unique_ptr<nxi::session>>& sessions() const;
 
         void switch_focus(const QString& new_session_id);
 

@@ -10,7 +10,7 @@ namespace ui
     class command_input;
     class command_menu;
     class main_interface;
-    class user_session;
+    class user;
 
     namespace interfaces
     {
@@ -46,7 +46,7 @@ namespace nxi
         [[nodiscard]] const QString& path() const;
         [[nodiscard]] const nxi::style_data& data() const;
 
-        void update(ui::user_session& session) const;
+        void update(ui::user&) const;
 
         void update(ui::command_input*) const;
         void update(ui::main_interface*) const;

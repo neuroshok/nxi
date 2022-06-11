@@ -25,14 +25,14 @@
 
 namespace ui
 {
-    web_page::web_page(ui::user_session& session, nxi::web_page& page)
+    web_page::web_page(ui::user& user, nxi::web_page& page)
         : ui::page{ page }
         , page_{ page }
-        , session_{ session }
+        , user_{ user }
     {
-        auto& websession = session_.nxi_core().session_system().get(page_.session_id()).web_session();
+        auto& websession = user_.nxi_core().session_system().get(page_.session_id()).web_session();
         native_page_ = new ui::web_engine_page(static_cast<QWebEngineProfile*>(&websession), this);
-        native_page_->setWebChannel(session_.nxi_session().module_system().web_channel());
+        native_page_->setWebChannel(user_.nxi_user().module_system().web_channel());
 
         native_page_->setAudioMuted(page.is_muted());
 
@@ -71,7 +71,7 @@ namespace ui
             });
         });
 
-        session_.nxi_session().module_system().process(page_);
+        user_.nxi_user().module_system().process(page_);
     }
 
     void web_page::display(ui::renderer* renderer) { renderer->display(this); }

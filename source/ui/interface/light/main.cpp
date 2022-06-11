@@ -29,15 +29,16 @@
 
 namespace ui::interfaces::light
 {
-    main::main(ui::user_session& session, ui::window* window)
+    main::main(ui::user& user, ui::window* window)
         : ui::main_interface{ window }
-        , session_{ session }
+        , user_{ user }
     {
-        connect(&session_.nxi_session().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style) { style.update(this); });
+        connect(&user_.nxi_user().interface_system(), &nxi::interface_system::event_update_style,
+                [this](const nxi::style& style) { style.update(this); });
 
-        connect(&session_.nxi_session().session_system(), &nxi::session_system::event_focus, [this](const nxi::session& session) {
+        connect(&user_.nxi_user().session_system(), &nxi::session_system::event_focus, [this](const nxi::session& session) {
             auto s = session.config().browser.interface.style.get();
-            session_.nxi_session().interface_system().load_style(s);
+            user_.nxi_user().interface_system().load_style(s);
         });
 
         auto main_layout = new nxw::vbox_layout;
@@ -46,10 +47,10 @@ namespace ui::interfaces::light
         auto top_layout = new nxw::hbox_layout(this);
         auto middle_layout = new nxw::hbox_layout(this);
 
-        content_ = new interfaces::standard::content(session_, window);
-        control_bar_ = new ui::interfaces::light::control_bar(session_, window);
+        content_ = new interfaces::standard::content(user_, window);
+        control_bar_ = new ui::interfaces::light::control_bar(user_, window);
 
-        auto window_control = new ui::interfaces::standard::window_control(session_, window);
+        auto window_control = new ui::interfaces::standard::window_control(user_, window);
 
         static_cast<ui::window*>(this->window())->set_grip(this);
         auto bar = new QProgressBar{ this };
@@ -63,34 +64,34 @@ namespace ui::interfaces::light
         main_layout->addLayout(middle_layout, 1);
         main_layout->addWidget(bar);
 
-        command_menu_ = new ui::command_menu(session_, this);
+        command_menu_ = new ui::command_menu(user_, this);
         command_menu_->hide();
 
         setFocusPolicy(Qt::ClickFocus);
 
         auto session_info_ = new QLabel{ this };
 
-        connect(&session_.nxi_session().nxi_core(), &nxi::core::event_load, [bar, this]() {
-            connect(&session_.nxi_core().session().web_downloader(), &nxi::web_downloader::event_update, [bar](float percent) {
+        connect(&user_.nxi_user().nxi_core(), &nxi::core::event_load, [bar, this]() {
+            connect(&user_.nxi_core().session().web_downloader(), &nxi::web_downloader::event_update, [bar](float percent) {
                 if (percent > 99) bar->hide();
                 else bar->show();
                 bar->setValue(percent);
             });
-            connect(&session_.nxi_core().notification_system(), &nxi::notification_system::event_send, [this](const nxi::notification_data& data) {
-                auto notification = ui::notification::make(data, session_.nxi_core().session_config().browser.notification_mode.get());
+            connect(&user_.nxi_core().notification_system(), &nxi::notification_system::event_send, [this](const nxi::notification_data& data) {
+                auto notification = ui::notification::make(data, user_.nxi_core().session_config().browser.notification_mode.get());
                 notification->show();
             });
         });
 
         // connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_reset, [this]() { command_menu_->hide(); });
 
-        connect(&session_.nxi_session().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_action_update,
+        connect(&user_.nxi_user().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_action_update,
                 [this](const nxi::suggestion_vector& suggestions) {
                     command_menu_->set_data(stz::make_observer(&suggestions));
                     command_menu_->exec();
                 });
 
-        connect(&session_.nxi_session(), &nxi::user::event_error, this, [](const QString& message) {
+        connect(&user_.nxi_user(), &nxi::user::event_error, this, [](const QString& message) {
             auto* error = new QMessageBox;
             error->setAttribute(Qt::WA_DeleteOnClose, true);
             error->setWindowTitle("nxi error");
@@ -120,7 +121,7 @@ namespace ui::interfaces::light
             else this_->control_bar_->showNormal();
         };
 
-        auto fullscreen_mode = session_.nxi_session().config().browser.page_fullscreen_mode.get();
+        auto fullscreen_mode = user_.nxi_user().config().browser.page_fullscreen_mode.get();
 
         switch (static_cast<nxi::config::fullscreen_mode>(fullscreen_mode))
         {

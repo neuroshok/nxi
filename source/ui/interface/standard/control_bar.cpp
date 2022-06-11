@@ -39,7 +39,8 @@ namespace ui::interfaces::standard
     class window_controls : public ui::interface
     {
     public:
-        window_controls(ui::user_session& session, ui::window* w) : interface(w)
+        window_controls(ui::user& user, ui::window* w)
+            : interface(w)
         {
             /*
             auto layout = new nxw::hbox_layout;

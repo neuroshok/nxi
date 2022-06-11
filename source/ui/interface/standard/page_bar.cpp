@@ -15,9 +15,9 @@
 
 namespace ui::interfaces::standard
 {
-    page_bar::page_bar(ui::user_session& session, ui::window* window)
+    page_bar::page_bar(ui::user& user, ui::window* window)
         : ui::interface("page_bar", window)
-        , session_{ session }
+        , user_{ user }
     {
         /*
         connect(&ui_core_.interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style){

@@ -18,28 +18,28 @@
 
 namespace ui
 {
-    page_system::page_system(ui::user_session& session)
-        : session_{ session }
+    page_system::page_system(ui::user& user)
+        : user_{ user }
     {
         // todo rename views to pages
         // init static widget page
         make_widget<ui::views::config>("nxi/config");
         // make_widget<ui::views::aboutgl>("nxi/aboutgl");
 
-        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_add, this, [this](nds::node_ptr<nxi::page> page, nds::node_ptr<nxi::page>)
-        {
+        connect(&user_.nxi_user().page_system(), &nxi::page_system::event_add, this, [this](nds::node_ptr<nxi::page> page, nds::node_ptr<nxi::page>) {
             // todo replace by page->make_ui(this);
-            if (page->type() == nxi::page_type::node) pages_.emplace(page->id(), QPointer{ new ui::node_page(session_, page) });
-            else if (page->renderer_type() == nxi::renderer_type::web) pages_.emplace(page->id(), QPointer{ new ui::web_page(session_, static_cast<nxi::web_page&>(*page))});
-            else if (page->renderer_type() == nxi::renderer_type::widget) pages_.emplace(page->id(), QPointer{ new ui::widget_page(session_, static_cast<nxi::custom_page&>(*page))});
+            if (page->type() == nxi::page_type::node) pages_.emplace(page->id(), QPointer{ new ui::node_page(user_, page) });
+            else if (page->renderer_type() == nxi::renderer_type::web)
+                pages_.emplace(page->id(), QPointer{ new ui::web_page(user_, static_cast<nxi::web_page&>(*page)) });
+            else if (page->renderer_type() == nxi::renderer_type::widget)
+                pages_.emplace(page->id(), QPointer{ new ui::widget_page(user_, static_cast<nxi::custom_page&>(*page)) });
             else nxi_error("fail");
         });
 
-        connect(&session_.nxi_session().page_system(), &nxi::page_system::event_close, this, [this](nds::node_ptr<nxi::page> page)
-        {
+        connect(&user_.nxi_user().page_system(), &nxi::page_system::event_close, this, [this](nds::node_ptr<nxi::page> page) {
             auto it = pages_.find(page->id());
             nxi_assert(it != pages_.end());
-            if (it->second) delete it->second;
+            delete it->second;
             pages_.erase(it);
         });
     }

@@ -27,14 +27,12 @@
 
 namespace ui::interfaces::standard
 {
-    main::main(ui::user_session& session, ui::window* window)
+    main::main(ui::user& user, ui::window* window)
         : ui::main_interface{ window }
-        , session_{ session }
+        , user_{ user }
     {
-        connect(&session_.nxi_session().interface_system(), &nxi::interface_system::event_update_style, [this](const nxi::style& style)
-        {
-            style.update(this);
-        });
+        connect(&user_.nxi_user().interface_system(), &nxi::interface_system::event_update_style,
+                [this](const nxi::style& style) { style.update(this); });
 
 
         auto main_layout = new nxw::vbox_layout;
@@ -43,7 +41,7 @@ namespace ui::interfaces::standard
         auto top_layout = new nxw::hbox_layout(this);
         auto middle_layout = new nxw::hbox_layout(this);
 
-        content_ = new content(session_, window);
+        content_ = new content(user_, window);
         //control_bar_ = new control_bar(session_, window);
         //page_bar_ = new page_bar(session_, window);
 
@@ -55,15 +53,15 @@ namespace ui::interfaces::standard
 
         main_layout->addLayout(top_layout);
         main_layout->addLayout(middle_layout);
-/*
-        connect(&session_.nxi_session()., &nxi::core::event_error, this, [](const QString& message)
-        {
-            auto* error = new QMessageBox;
-            error->setAttribute(Qt::WA_DeleteOnClose, true);
-            error->setWindowTitle("nxi error");
-            error->setText(message);
-            error->show();
-        });*/
+        /*
+                connect(&user_.nxi_user()., &nxi::core::event_error, this, [](const QString& message)
+                {
+                    auto* error = new QMessageBox;
+                    error->setAttribute(Qt::WA_DeleteOnClose, true);
+                    error->setWindowTitle("nxi error");
+                    error->setText(message);
+                    error->show();
+                });*/
     }
 
     bool main::toggle_fullmode(int state)

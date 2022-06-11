@@ -19,7 +19,7 @@ namespace nxi
 
 namespace ui
 {
-    class user_session;
+    class user;
     class menu_item;
 
     class command_menu : public ui::basic_element<QWidget>
@@ -47,7 +47,7 @@ namespace ui
         } style_data;
 
     public:
-        command_menu(ui::user_session&, QWidget* parent);
+        command_menu(ui::user&, QWidget* parent);
 
         void set_data(stz::observer_ptr<nxi::commands_view>);
         void set_data(stz::observer_ptr<const nxi::suggestion_vector>);
@@ -74,7 +74,7 @@ namespace ui
         void draw_pixmap(QPainter&, const QPixmap&, int x, int y, QSize size, int margin);
 
     private:
-        ui::user_session& session_;
+        ui::user& user_;
 
         int header_item_index_;
         int hover_index_;

@@ -11,16 +11,14 @@
 
 namespace ui::views
 {
-    config::config(ui::user_session& session)
-        : session_{ session }
+    config::config(ui::user& user)
+        : user_{ user }
     {
-        connect(&session.nxi_core(), &nxi::core::event_load, [this] {
-            auto& cfg = session_.nxi_session().config();
+        connect(&user_.nxi_core(), &nxi::core::event_load, [this] {
+            auto& cfg = user_.nxi_user().config();
             for (auto key : cfg.list())
             {
-                std::visit(overloaded{
-                [this](auto config_value) { add_row(config_value); }
-                }, key);
+                std::visit(overloaded{ [this](auto config_value) { add_row(config_value); } }, key);
             }
         });
 

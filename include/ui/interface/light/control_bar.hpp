@@ -10,7 +10,7 @@ namespace nxi
 namespace ui
 {
     class command_input;
-    class user_session;
+    class user;
 } // ui
 
 namespace ui::interfaces::light
@@ -20,7 +20,7 @@ namespace ui::interfaces::light
     class control_bar : public ui::interface
     {
     public:
-        control_bar(ui::user_session&, ui::window*);
+        control_bar(ui::user&, ui::window*);
 
         void enterEvent(QEnterEvent* event) override;
         void leaveEvent(QEvent* event) override;
@@ -30,7 +30,7 @@ namespace ui::interfaces::light
     private:
         nxi::buffer_group& buffer_group();
 
-        ui::user_session& session_;
+        ui::user& user_;
 
         ui::command_input* command_input_;
         button* command_root_;

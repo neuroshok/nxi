@@ -14,10 +14,10 @@
 
 namespace ui
 {
-    window_system::window_system(ui::user_session& session)
-        : session_{ session }
+    window_system::window_system(ui::user& user)
+        : user_{ user }
     {
-        QObject::connect(&session_.nxi_session().window_system(), &nxi::window_system::event_add, [this](nxi::window& window) {
+        QObject::connect(&user_.nxi_user().window_system(), &nxi::window_system::event_add, [this](nxi::window& window) {
             nxi_trace_event("");
             add(window);
         });
@@ -41,7 +41,7 @@ namespace ui
         ui_window->resize(window.width(), window.height());
         ui_window->show();
 
-        auto ui_interface = session_.make_main_interface(ui_window);
+        auto ui_interface = user_.make_main_interface(ui_window);
         ui_window->set_interface(ui_interface);
 
         windows_.push_back(ui_window);
@@ -50,21 +50,21 @@ namespace ui
 
     void window_system::close(ui::window* window)
     {
-        if (count() == 1) session_.ui_core().quit();
+        if (count() == 1) user_.ui_core().quit();
         else
         {
-            session_.nxi_session().window_system().del(window->id());
+            user_.nxi_user().window_system().del(window->id());
         }
         windows_.erase(std::remove(windows_.begin(), windows_.end(), window), windows_.end());
     }
 
-    void window_system::move(ui::window* window, int x, int y) { session_.nxi_session().window_system().move(window->id(), x, y); }
+    void window_system::move(ui::window* window, int x, int y) { user_.nxi_user().window_system().move(window->id(), x, y); }
 
-    void window_system::resize(ui::window* window, int w, int h) { session_.nxi_session().window_system().resize(window->id(), w, h); }
+    void window_system::resize(ui::window* window, int w, int h) { user_.nxi_user().window_system().resize(window->id(), w, h); }
 
     void window_system::minimize(ui::window* window)
     {
-        session_.nxi_session().window_system().minimize(window->id());
+        user_.nxi_user().window_system().minimize(window->id());
         window->showMinimized();
     }
 

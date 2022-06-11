@@ -15,9 +15,9 @@
 
 namespace ui::interfaces::standard
 {
-    content::content(ui::user_session& session, ui::window* window)
+    content::content(ui::user& user, ui::window* window)
         : ui::interface("content", window)
-        , session_{ session }
+        , user_{ user }
     {
         layout_ = new nxw::hbox_layout;
         setLayout(layout_);
@@ -25,19 +25,18 @@ namespace ui::interfaces::standard
         focus_ = add();
         add();
 
-        connect(&session_.nxi_session().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_buffer_focus,
-                [this](nxi::buffer& buffer) {
-                    nxi_assert(views_.find(buffer.id()) != views_.end());
-                    focus_ = views_[buffer.id()];
-                });
+        connect(&user_.nxi_user().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_buffer_focus, [this](nxi::buffer& buffer) {
+            nxi_assert(views_.find(buffer.id()) != views_.end());
+            focus_ = views_[buffer.id()];
+        });
 
-        connect(&session_.nxi_session().buffer_system().group(group_id()), &nxi::buffer_group::event_page_activate,
+        connect(&user_.nxi_user().buffer_system().group(group_id()), &nxi::buffer_group::event_page_activate,
                 [this](nxi::page_system::page_ptr page) { focus_->display(page); });
     }
 
     ui::renderer_view* content::add()
     {
-        auto renderer_view = new ui::renderer_view(session_, this);
+        auto renderer_view = new ui::renderer_view(user_, this);
         layout_->addWidget(renderer_view);
         views_.emplace(renderer_view->buffer().id(), renderer_view);
         return renderer_view;

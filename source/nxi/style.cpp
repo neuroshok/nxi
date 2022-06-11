@@ -14,7 +14,7 @@
 #include <ui/command/menu.hpp>
 #include <ui/interface/main.hpp>
 #include <ui/interface/standard/control_bar.hpp>
-#include <ui/user_session.hpp>
+#include <ui/user.hpp>
 #include <ui/window.hpp>
 #include <w3c/theme.hpp>
 #include <utility>
@@ -90,7 +90,7 @@ namespace nxi
         ui::command_input::style_update(ui);
     }
 
-    void style::update(ui::user_session& session) const
+    void style::update(ui::user& session) const
     {
         /*
         for (auto qwindow : QApplication::topLevelWidgets())
