@@ -14,7 +14,6 @@ jobs:
           - { name: "macos", os: macos-latest, qt_release: "release_macos-latest.tar.gz" }
     #
     runs-on: ${{ matrix.config.os }}
-    continue-on-error: true
 
     steps:
       - uses: actions/checkout@v2
