@@ -2,7 +2,7 @@ name: nxi_build
 
 on:
   push:
-    branches: [ master, dev, test_ci ]
+    branches: [ master, dev ]
 
 jobs:
   nxi:
