@@ -35,13 +35,14 @@ namespace nxi
 
         nxi::config& session_config();
 
-        nxi::session_system& session_system();
+        nxi::buffer_system& buffer_system();
         nxi::command_system& command_system();
         nxi::context_system& context_system();
         nxi::interface_system& interface_system();
         nxi::navigation_system& navigation_system();
         nxi::notification_system& notification_system();
         nxi::page_system& page_system();
+        nxi::session_system& session_system();
         nxi::window_system& window_system();
 
         nxi::database& user_database();

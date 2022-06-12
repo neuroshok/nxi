@@ -2,6 +2,7 @@
 
 #include <nxi/core.hpp>
 #include <nxi/page/web.hpp>
+#include <nxi/system/buffer.hpp>
 
 namespace nxi
 {
@@ -9,6 +10,14 @@ namespace nxi
         : core_{ core }
         , id_{ id }
     {}
+
+    //! load group using the default group data
+    void buffer_group::load()
+    {
+        const auto& default_group = core_.user().buffer_system().group();
+        set_command_root(default_group.command_root());
+        set_page_root(default_group.page_root());
+    }
 
     void buffer_group::exec()
     {

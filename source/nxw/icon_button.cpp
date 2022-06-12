@@ -20,19 +20,18 @@ namespace nxw
         , str_command_{ std::move(str_command) }
         , style_data{ std::move(custom_style) }
     {
-        connect(&user_.nxi_core(), &nxi::core::event_load, [icon_path, this] {
-            auto vs = user_.nxi_user().command_system().search(str_command_);
-            if (!vs.empty()) command_ = vs[0];
-            else nxi_warning("command {} not found", str_command_);
+        // todo icon provider to cache conversions
+        auto vs = user_.nxi_user().command_system().search(str_command_);
+        if (!vs.empty()) command_ = vs[0];
+        else nxi_warning("command {} not found", str_command_);
 
-            if (command_) setToolTip(command_->description());
-            else nxi_warning("command {} does not exist", str_command_);
+        if (command_) setToolTip(command_->description());
+        else nxi_warning("command {} does not exist", str_command_);
 
-            setFixedSize(style_data.size);
-            QSize size{ style_data.size.width() - style_data.padding * 2, style_data.size.height() - style_data.padding * 2 };
-            icon_ = ui::make_pixmap_from_svg(icon_path, size, style_data.icon_color, style_data.background_color);
-            icon_hover_ = ui::make_pixmap_from_svg(icon_path, size, style_data.icon_color_hover, style_data.background_color_hover);
-        });
+        setFixedSize(style_data.size);
+        QSize size{ style_data.size.width() - style_data.padding * 2, style_data.size.height() - style_data.padding * 2 };
+        icon_ = ui::make_pixmap_from_svg(icon_path, size, style_data.icon_color, style_data.background_color);
+        icon_hover_ = ui::make_pixmap_from_svg(icon_path, size, style_data.icon_color_hover, style_data.background_color_hover);
 
         connect(this, &QPushButton::clicked, [this] {
             if (command_) command_->exec();

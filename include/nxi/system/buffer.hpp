@@ -25,6 +25,8 @@ namespace nxi
 
         nxi::buffer& add(int group_id);
         nxi::buffer_group& add_group(int id);
+        void del(int buffer_id);
+        void del_group(int group_id);
         void focus(nxi::buffer&);
         [[nodiscard]] bool group_exists(int id) const;
 

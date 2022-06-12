@@ -21,7 +21,7 @@ namespace ui
         , selection_index_{ -1 }
     {
         setContentsMargins(5, 5, 5, 5);
-        connect(&user_.nxi_core(), &nxi::core::event_load, [this] {
+        connect(&user_.nxi_core(), &nxi::core::event_load, this, [this] {
             QSize size{ style_data.item_height / 2 - style_data.control_padding, style_data.item_height / 2 - style_data.control_padding };
             icon_copy_ = ui::make_pixmap_from_svg(":/icon/copy", size, style_data.item_text_color);
             icon_sound_ = ui::make_pixmap_from_svg(":/icon/sound", size, style_data.item_text_color.darker(200));
@@ -29,15 +29,15 @@ namespace ui
             icon_sound_premuted_ = ui::make_pixmap_from_svg(":/icon/sound", size, style_data.item_text_color.lighter(180));
         });
 
-        connect(&suggestions(), &nxi::suggestion_vector::event_update,
+        connect(&suggestions(), &nxi::suggestion_vector::event_update, this,
                 [this](stz::observer_ptr<const nxi::suggestion_vector> suggestions) { set_data(suggestions); });
 
-        connect(&suggestions(), &nxi::suggestion_vector::event_selection_update, [this](int index) {
+        connect(&suggestions(), &nxi::suggestion_vector::event_selection_update, this, [this](int index) {
             selection_index_ = index;
             repaint();
         });
 
-        connect(&user_.nxi_user().page_system(), &nxi::page_system::event_update, [this](nds::node_ptr<nxi::page> page) {
+        connect(&user_.nxi_user().page_system(), &nxi::page_system::event_update, this, [this](nds::node_ptr<nxi::page> page) {
             repaint();
             update();
         });

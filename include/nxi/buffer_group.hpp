@@ -16,6 +16,7 @@ namespace nxi
         explicit buffer_group(nxi::core&, int id);
 
         void exec();
+        void load();
 
         void set_command_root(nds::node_ptr<nxi::command>);
         void set_page_root(nds::node_ptr<nxi::page>);

@@ -33,10 +33,10 @@ namespace ui::interfaces::light
         : ui::main_interface{ window }
         , user_{ user }
     {
-        connect(&user_.nxi_user().interface_system(), &nxi::interface_system::event_update_style,
+        connect(&user_.nxi_user().interface_system(), &nxi::interface_system::event_update_style, this,
                 [this](const nxi::style& style) { style.update(this); });
 
-        connect(&user_.nxi_user().session_system(), &nxi::session_system::event_focus, [this](const nxi::session& session) {
+        connect(&user_.nxi_user().session_system(), &nxi::session_system::event_focus, this, [this](const nxi::session& session) {
             auto s = session.config().browser.interface.style.get();
             user_.nxi_user().interface_system().load_style(s);
         });
@@ -48,7 +48,6 @@ namespace ui::interfaces::light
         auto middle_layout = new nxw::hbox_layout(this);
 
         content_ = new interfaces::standard::content(user_, window);
-        nxi_trace("main {}", window->id());
         control_bar_ = new ui::interfaces::light::control_bar(user_, window);
 
         auto window_control = new ui::interfaces::standard::window_control(user_, window);

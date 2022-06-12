@@ -29,14 +29,14 @@ namespace ui
         info_ = new QLabel(this);
         header_ = new QLabel(this);
 
-        connect(&user_.nxi_user().command_system(), &nxi::command_system::event_execution_request, [this](nds::node_ptr<const nxi::command> command) {
-            command_executor_.emplace(command);
-            user_.nxi_user().context_system().add<nxi::contexts::command_executor>(command_executor_.value());
-            setText("");
-        });
+        connect(&user_.nxi_user().command_system(), &nxi::command_system::event_execution_request, this,
+                [this](nds::node_ptr<const nxi::command> command) {
+                    command_executor_.emplace(command);
+                    user_.nxi_user().context_system().add<nxi::contexts::command_executor>(command_executor_.value());
+                    setText("");
+                });
 
-        connect(this, &QLineEdit::returnPressed, [this]()
-        {
+        connect(this, &QLineEdit::returnPressed, this, [this]() {
             if (command_executor_ && user_.nxi_user().context_system().is_focus<nxi::contexts::command_executor>())
             {
                 // if (nxi_input().suggestions().has_selection()) command_executor_->add_suggestion(nxi_input().suggestions().selected());
@@ -56,17 +56,17 @@ namespace ui
             else buffer_group().exec();
         });
 
-        connect(&user_.nxi_user().context_system(), &nxi::context_system::event_context_add, [this](const nxi::context& context) {
+        connect(&user_.nxi_user().context_system(), &nxi::context_system::event_context_add, this, [this](const nxi::context& context) {
             context.apply([this](const nxi::contexts::command_executor& ex) { set_executor_placeholder(ex.data.active_parameter().name()); },
                           [this](auto&&) { setPlaceholderText(default_placeholder_text); });
         });
 
-        connect(&user_.nxi_user().context_system(), &nxi::context_system::event_focus_context_update, [this](const nxi::context& context) {
+        connect(&user_.nxi_user().context_system(), &nxi::context_system::event_focus_context_update, this, [this](const nxi::context& context) {
             context.apply([this](const nxi::contexts::command_executor& ex) { set_executor_placeholder(ex.data.active_parameter().name()); },
                           [this](auto&&) { setPlaceholderText(default_placeholder_text); });
         });
 
-        connect(&buffer_group().suggestions(), &nxi::suggestion_vector::event_selection_update, [this](int index) {
+        connect(&buffer_group().suggestions(), &nxi::suggestion_vector::event_selection_update, this, [this](int index) {
             if (user_.nxi_user().context_system().is_focus<nxi::contexts::command_executor>())
             {
                 if (buffer_group().suggestions().has_selection())

@@ -22,11 +22,9 @@ namespace nxi
 
         default_group_.set_command_root(core_.command_system().root());
         default_group_.set_page_root(core_.page_system().root());
+
         for (auto& group : groups_)
-        {
-            group->set_command_root(core_.command_system().root());
-            group->set_page_root(core_.page_system().root());
-        }
+            group->load();
     }
 
     void buffer_system::focus(nxi::buffer& buffer)
@@ -41,14 +39,38 @@ namespace nxi
     nxi::buffer_group& buffer_system::add_group(int group_id)
     {
         auto v_group = std::make_unique<nxi::buffer_group>(core_, group_id);
+        v_group->load();
         groups_.emplace_back(std::move(v_group));
 
         return *groups_.back();
     }
 
+    void buffer_system::del(int buffer_id)
+    {
+        nxi_trace("del buffer {} ", buffer_id);
+
+        buffers_.erase(std::remove_if(buffers_.begin(), buffers_.end(), [buffer_id](const auto& buffer) { return buffer->id() == buffer_id; }),
+                       buffers_.end());
+    }
+
+    void buffer_system::del_group(int group_id)
+    {
+        nxi_trace("del group {} ", group_id);
+
+        groups_.erase(std::remove_if(groups_.begin(), groups_.end(), [group_id](const auto& group) { return group->id() == group_id; }),
+                      groups_.end());
+
+        buffers_.erase(std::remove_if(buffers_.begin(), buffers_.end(), [group_id](const auto& buffer) { return buffer->group().id() == group_id; }),
+                       buffers_.end());
+    }
+
     nxi::buffer& buffer_system::add(int group_id)
     {
-        if (!group_exists(group_id)) add_group(group_id);
+        if (!group_exists(group_id))
+        {
+            nxi_warning("adding a buffer in an inexistent group {}, it will be created", group_id);
+            add_group(group_id);
+        }
         auto& v_group = group(group_id);
 
         int id = static_cast<int>(buffers_.size());
@@ -75,8 +97,11 @@ namespace nxi
 
     nxi::buffer_group& buffer_system::group(int id)
     {
-        // nxi_assert(group_exists(id));
-        if (!group_exists(id)) add_group(id);
+        if (!group_exists(id))
+        {
+            nxi_warning("adding a buffer in an inexistent group {}, it will be created", id);
+            add_group(id);
+        }
         return **std::find_if(groups_.begin(), groups_.end(), [id](const auto& group) { return group->id() == id; });
     }
 } // nxi

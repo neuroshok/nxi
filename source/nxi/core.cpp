@@ -34,6 +34,7 @@ namespace nxi
 
     nxi::config& core::session_config() { return user().session_system().focus().config(); }
 
+    nxi::buffer_system& core::buffer_system() { return user().buffer_system(); }
     nxi::command_system& core::command_system() { return user().command_system(); }
     nxi::context_system& core::context_system() { return user().context_system(); }
     nxi::interface_system& core::interface_system() { return user().interface_system(); }

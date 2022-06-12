@@ -3,6 +3,7 @@
 #include <nxi/core.hpp>
 #include <nxi/log.hpp>
 #include <nxi/notification_data.hpp>
+#include <nxi/system/buffer.hpp>
 #include <nxi/system/notification.hpp>
 #include <nxi/system/window.hpp>
 #include <nxi/user.hpp>
@@ -40,6 +41,7 @@ namespace ui::interfaces::light
         auto session_button = new light::button("session", this);
         session_button->setStyleSheet("font-weight: bold; color: #7722FF; padding: 0 20 0 20;");
         session_button->style_data.text_color = QColor{ 255, 0, 0 };
+        session_button->setText(user_.nxi_core().session_system().focus().name());
         connect(&user_.nxi_core().session_system(), &nxi::session_system::event_focus, this,
                 [session_button](nxi::session& s) { session_button->setText(s.name()); });
 
@@ -50,6 +52,8 @@ namespace ui::interfaces::light
         command_root_ = new light::button("command_root_", this);
         command_root_->setStyleSheet("font-weight: bold; color: #00BBFF; padding: 0 20 0 20;");
         command_root_->style_data.text_color = QColor{ 0, 187, 255 };
+        command_root_->setText(user_.nxi_core().buffer_system().group(group_id()).command_root()->name());
+
         connect(command_root_, &light::button::event_enter, this, [this]() {
             user_.nxi_user().context_system().focus<nxi::contexts::command>();
             buffer_group().suggest_command();
@@ -61,8 +65,10 @@ namespace ui::interfaces::light
 
         // page_root
         page_root_ = new light::button("page_root_", this);
-        page_root_->setStyleSheet("font-weight: bold; background-color: #0F1419; color: #FFBB00; padding: 0 20 0 20;");
+        page_root_->setStyleSheet("font-weight: bold; color: #FFBB00; padding: 0 20 0 20;");
         page_root_->style_data.text_color = QColor{ 255, 187, 0 };
+        page_root_->setText(user_.nxi_core().buffer_system().group(group_id()).page_root()->name());
+
         connect(page_root_, &light::button::event_enter, this, [this]() {
             user_.nxi_user().context_system().focus<nxi::contexts::page>();
             buffer_group().suggest_page();

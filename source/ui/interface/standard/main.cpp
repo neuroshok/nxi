@@ -31,7 +31,7 @@ namespace ui::interfaces::standard
         : ui::main_interface{ window }
         , user_{ user }
     {
-        connect(&user_.nxi_user().interface_system(), &nxi::interface_system::event_update_style,
+        connect(&user_.nxi_user().interface_system(), &nxi::interface_system::event_update_style, this,
                 [this](const nxi::style& style) { style.update(this); });
 
 

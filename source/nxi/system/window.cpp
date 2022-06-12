@@ -63,6 +63,9 @@ namespace nxi
         nxi::data::window::del_window(core_.user_database(), id);
         emit event_close(id);
         windows_.erase(id);
+
+        // remove buffer associated to the window
+        core_.user().buffer_system().del_group(id);
     }
 
     void window_system::move(unsigned int id, int x, int y)
@@ -86,8 +89,8 @@ namespace nxi
 
     void window_system::internal_add(nxi::window_data window_data)
     {
-        // create a buffer_group for the window
-        core_.user().buffer_system().add_group(window_data.id);
+        // add a buffer_group for the new window
+        auto& buffer_group = core_.user().buffer_system().add_group(window_data.id);
 
         auto window = std::make_unique<nxi::window>(core_, window_data);
         auto id = window->id();
