@@ -80,6 +80,10 @@ target("nxi")
         add_files("source/platform/windows/notification.cpp", "include/platform/windows/notification.hpp")
         add_files("third_party/wintoast/source/wintoast.cpp")
     end
+    
+    if (is_plat("linux")) then
+        add_syslinks("dl", "pthread")
+    end
 
 -------------------------------------------------------
 ---                     install                     ---
