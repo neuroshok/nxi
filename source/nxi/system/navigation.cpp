@@ -19,9 +19,10 @@ namespace nxi
 
     void navigation_system::load()
     {
-        connect(&core_.page_system(), &nxi::page_system::event_update_command, [this](const nxi::page& source, const QString& target) {
-            log_page_command(source, target);
-        });
+        nxi_trace("");
+
+        connect(&core_.page_system(), &nxi::page_system::event_update_command,
+                [this](const nxi::page& source, const QString& target) { log_page_command(source, target); });
     }
 
     void navigation_system::log_page_command(const nxi::page& source, const QString& target_command)

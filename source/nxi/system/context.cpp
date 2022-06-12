@@ -26,6 +26,8 @@ namespace nxi
 
     void context_system::load()
     {
+        nxi_trace("");
+
         // load available contexts
         auto result = nxi::data::context::get_available(core_.user_database());
 

@@ -18,6 +18,8 @@ namespace nxi
 
     void interface_system::load_style(const QString& name)
     {
+        nxi_trace("");
+
         auto style = new nxi::style(name);
         style->load();
         QApplication::setStyle(style); // QApplication own style
