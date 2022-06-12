@@ -25,34 +25,30 @@
 # Build
 
 ## Prerequisites
-- Custom Qt6 build binaires
-- c++17 compiler
 
-## Cmake options
-**user-config.cmake**
-```cmake
-if (NXI_TARGET_DESKTOP)
-    set(NXI_WINDOW_GENERIC ON) # use generic/platform windows
-    set(NXI_CONSOLE ON) # display/hide the console
+- [Custom Qt6 build binaries](https://github.com/neuroshok/fork.qt/releases/tag/latest)
+- C++17 compiler
+- [xmake](https://github.com/xmake-io/xmake/releases)
 
-    module_build(nxi.module adk) # build the adk static module from *nxi.module* module pack
-    module_build(nxi.module example.rust) # build the example.rust dynamic module from *nxi.module* module pack
-endif()
-```
+## Build options
+
+- `nxi_window` use **generic** or **platform** windows
+- `nxi_console` display a console
 
 ## Commands
+
 ```
 git clone --recurse-submodules https://github.com/neuroshok/nxi.git && cd nxi
 ```
 
 ```
-mkdir build && cd build
+xmake config --qt=/path/to/qt/version/compiler 
 ```
 
 ```
-cmake -DNXI_QT_ROOT=/path/to/qt/version/compiler  ..
+xmake build
 ```
 
 ```
-cmake --build . --target nxi_deploy --config Release
+xmake install
 ```
