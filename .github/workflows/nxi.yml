@@ -39,7 +39,7 @@ jobs:
 
       - run: xmake config --qt=release -y
       - run: xmake  -y
-      - run: xmake install -v -o nxi
+      - run: xmake install -v -o nxi nxi
 
       - run: cd nxi && echo "" > ${{ github.sha }}
 
