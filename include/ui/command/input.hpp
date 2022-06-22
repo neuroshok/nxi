@@ -78,7 +78,7 @@ namespace ui
 
         ui::user& user_;
 
-        bool first_focus_ = true;
+        bool first_focus_;
         QPoint mouse_press_origin_;
         QLabel* info_;
         QLabel* header_;

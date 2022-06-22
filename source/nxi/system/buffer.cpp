@@ -11,28 +11,40 @@ namespace nxi
 {
     buffer_system::buffer_system(nxi::core& core)
         : core_{ core }
-        , default_group_{ core_, 0 }
-        , default_buffer_{ core_, default_group_, 0 }
-        , focus_{ &default_buffer_ }
+        , main_group_{ core_, 0 }
+        , main_buffer_{ core_, main_group_, 0 }
+        , focus_{ &main_buffer_ }
     {}
 
     void buffer_system::load()
     {
         nxi_trace("");
 
-        default_group_.set_command_root(core_.command_system().root());
-        default_group_.set_page_root(core_.page_system().root());
+        main_group_.set_command_root(core_.command_system().root());
+        main_group_.set_page_root(core_.page_system().root());
 
         for (auto& group : groups_)
             group->load();
+
+        // focus the main buffer
+        emit event_focus(main_buffer_);
+        emit event_focus_changed(main_buffer_, main_buffer_);
+        emit main_group_.event_buffer_focus(main_buffer_);
     }
 
     void buffer_system::focus(nxi::buffer& buffer)
     {
         nxi_trace("focus buffer {}", buffer.id());
+        auto previous_focus = focus_;
         focus_ = &buffer;
 
         emit event_focus(buffer);
+
+        if (previous_focus != focus_)
+        {
+            emit event_focus_changed(*previous_focus, buffer);
+        }
+
         emit buffer.group().event_buffer_focus(buffer);
     }
 
@@ -73,10 +85,9 @@ namespace nxi
         }
         auto& v_group = group(group_id);
 
-        int id = static_cast<int>(buffers_.size());
+        int id = static_cast<int>(buffers_.size() + 1); // start index at 1, 0 is reserved for main buffer
         buffers_.emplace_back(std::make_unique<nxi::buffer>(core_, v_group, id));
         nxi_trace("add buffer {} in group {}", id, group_id);
-        focus(*buffers_.back());
         return *buffers_.back();
     }
 
@@ -85,7 +96,7 @@ namespace nxi
         return std::find_if(groups_.begin(), groups_.end(), [id](const auto& group_ptr) { return group_ptr->id() == id; }) != groups_.end();
     }
 
-    nxi::buffer& buffer_system::buffer() { return default_buffer_; }
+    nxi::buffer& buffer_system::buffer() { return main_buffer_; }
 
     nxi::buffer& buffer_system::focus()
     {
@@ -93,7 +104,7 @@ namespace nxi
         return *focus_;
     }
 
-    nxi::buffer_group& buffer_system::group() { return default_group_; }
+    nxi::buffer_group& buffer_system::group() { return main_group_; }
 
     nxi::buffer_group& buffer_system::group(int id)
     {

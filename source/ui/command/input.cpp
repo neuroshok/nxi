@@ -21,8 +21,10 @@ namespace ui
     command_input::command_input(ui::user& user, QWidget* parent)
         : ui::basic_element<QLineEdit>(parent)
         , user_{ user }
+        , first_focus_{ true }
     {
         setStyleSheet("font-weight:bold");
+        setPlaceholderText(default_placeholder_text);
 
         set_mode(nxi::command_input::mode_type::display);
 
@@ -79,22 +81,23 @@ namespace ui
             }
         });
 
-
+        connect(&buffer_group(), &nxi::buffer_group::event_buffer_focus, this, [this](nxi::buffer& buffer) { setText(buffer.input().text()); });
 
         // use only base
         connect(&user_.nxi_user().page_system(), &nxi::page_system::event_focus, this,
                 [this](nxi::page_system::page_ptr page) { setText(page->name()); });
 
+        connect(&user_.nxi_user().page_system(), &nxi::page_system::event_focus, this,
+                [this](nxi::page_system::page_ptr page) { setText(page->name()); });
+
         /*
-        connect(&user_.nxi_user().page_system(), &nxi::page_system::event_update_command, this, [this](nxi::page_system::page_ptr page)
-        {
-            setText(page->name());
-        });*/
+                connect(&nxi_input(), &nxi::command_input::event_shortcut_input_update, this,
+                        [this](const QString& shortcut_input) { setPlaceholderText(shortcut_input); });
 
-        connect(&nxi_input(), &nxi::command_input::event_shortcut_input_update, this,
-                [this](const QString& shortcut_input) { setPlaceholderText(shortcut_input); });
-
-        connect(&nxi_input(), &nxi::command_input::event_input_update, this, [this](const QString& input) { setText(input); });
+                connect(&nxi_input(), &nxi::command_input::event_input_update, this, [this](const QString& input)
+                        {
+                            setText(input);
+                        });*/
     }
 
     void command_input::resizeEvent(QResizeEvent* event)
@@ -194,7 +197,7 @@ namespace ui
             {
                 if (nxi_input().is_empty())
                 {
-                    auto focused_page = user_.nxi_user().page_system().focus();
+                    auto focused_page = user_.nxi_user().buffer_system().focus().page();
                     if (focused_page) setText(focused_page->command());
                 }
                 else setText(nxi_input().text());
@@ -235,5 +238,5 @@ namespace ui
         ui->setPalette(palette);
     }
 
-    nxi::buffer_group& command_input::buffer_group() { return user_.nxi_user().buffer_system().group(ui_window()->id()); }
+    nxi::buffer_group& command_input::buffer_group() { return user_.nxi_user().buffer_system().group(group_id()); }
 } // ui

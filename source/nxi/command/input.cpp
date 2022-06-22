@@ -61,25 +61,25 @@ namespace nxi
                 {
                     suggestions_.push_back(nxi::search_suggestion{ input_, "Google", "https://www.google.com/search?q=", ":/icon/search" });
                     suggestions_.push_back(
-                    nxi::search_suggestion{ input_, "CppReference", "https://en.cppreference.com/mwiki/index.php?search=", ":/icon/search" });
+                        nxi::search_suggestion{ input_, "CppReference", "https://en.cppreference.com/mwiki/index.php?search=", ":/icon/search" });
                 }
 
                 core_.context_system().apply_on_active(
-                [this](const nxi::contexts::command&) {
-                    command_system().search(input_,
-                                            [this](nds::node_ptr<const nxi::command> command) { suggestions_.push_back(std::move(command)); });
-                },
-                [this](const nxi::contexts::page&) {
-                    core_.page_system().search(input_, [this](nds::node_ptr<nxi::page> page) { suggestions_.push_back(std::move(page)); });
-                }
-                    , [this](const nxi::contexts::command_executor& ctx)
-                    {
+                    [this](const nxi::contexts::command&) {
+                        command_system().search(input_, [this](nds::node_ptr<const nxi::command> command) { suggestions_.push_back(command); });
+                    },
+                    [this](const nxi::contexts::page&) {
+                        core_.page_system().search(input_, [this](nds::node_ptr<nxi::page> page) { suggestions_.push_back(page); });
+                    },
+                    [this](const nxi::contexts::command_executor& ctx) {
                         decltype(suggestions_) suggestions;
                         ctx.data.active_parameter().suggestion_callback(suggestions);
-                        for (const auto& s : suggestions) { if (s.text().contains(input_)) suggestions_.push_back(s); }
-                    }
-                    , [this](auto&&) { nxi_warning("no suggestion"); }
-                );
+                        for (const auto& s : suggestions)
+                        {
+                            if (s.text().contains(input_)) suggestions_.push_back(s);
+                        }
+                    },
+                    [this](auto&&) { nxi_warning("no suggestion"); });
             }
 
             if (suggestions_.size() > 0) suggestions_.select(0);

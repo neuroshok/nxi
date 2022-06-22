@@ -39,11 +39,11 @@ namespace nxi
         module_system_.load();
         navigation_system_.load();
 
-        // requires command_system
-        buffer_system_.load();
-
         interface_system_.load();
         window_system_.load();
+
+        // requires command_system, ui initialized
+        buffer_system_.load();
     }
 
     void user::unload() { user_database_.close(); }

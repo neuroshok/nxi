@@ -52,7 +52,7 @@ namespace ui::interfaces::light
         command_root_ = new light::button("command_root_", this);
         command_root_->setStyleSheet("font-weight: bold; color: #00BBFF; padding: 0 20 0 20;");
         command_root_->style_data.text_color = QColor{ 0, 187, 255 };
-        command_root_->setText(user_.nxi_core().buffer_system().group(group_id()).command_root()->name());
+        // command_root_->setText(user_.nxi_core().buffer_system().group(group_id()).command_root()->name());
 
         connect(command_root_, &light::button::event_enter, this, [this]() {
             user_.nxi_user().context_system().focus<nxi::contexts::command>();
@@ -67,7 +67,7 @@ namespace ui::interfaces::light
         page_root_ = new light::button("page_root_", this);
         page_root_->setStyleSheet("font-weight: bold; color: #FFBB00; padding: 0 20 0 20;");
         page_root_->style_data.text_color = QColor{ 255, 187, 0 };
-        page_root_->setText(user_.nxi_core().buffer_system().group(group_id()).page_root()->name());
+        // page_root_->setText(user_.nxi_core().buffer_system().group(group_id()).page_root()->name());
 
         connect(page_root_, &light::button::event_enter, this, [this]() {
             user_.nxi_user().context_system().focus<nxi::contexts::page>();

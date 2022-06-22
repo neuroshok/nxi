@@ -85,6 +85,18 @@ namespace ui::interfaces::light
 
         // connect(&session_.nxi_session().command_system().command_input(), &nxi::command_input::event_reset, [this]() { command_menu_->hide(); });
 
+        // disconnect the previous buffer input and connect the new focus to the command menu
+        connect(&user_.nxi_user().buffer_system(), &nxi::buffer_system::event_focus_changed, this,
+                [this](nxi::buffer& previous_buffer, nxi::buffer& buffer) {
+                    nxi_trace("Disconnect buffer {}", previous_buffer.id());
+                    previous_buffer.input().disconnect();
+                    nxi_trace("Connect buffer {}", buffer.id());
+                    connect(&buffer.input(), &nxi::command_input::event_suggestion_update, this, [this](const nxi::suggestion_vector& suggestions) {
+                        command_menu_->set_data(stz::make_observer(&suggestions));
+                        command_menu_->exec();
+                    });
+                });
+
         connect(&user_.nxi_user().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_action_update, this,
                 [this](const nxi::suggestion_vector& suggestions) {
                     command_menu_->set_data(stz::make_observer(&suggestions));

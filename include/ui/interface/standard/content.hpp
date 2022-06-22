@@ -21,7 +21,7 @@ namespace ui::interfaces::standard
     public:
         explicit content(ui::user& user, ui::window* window);
 
-        ui::renderer_view* add();
+        ui::renderer_view* add_view();
 
     private:
         ui::user& user_;

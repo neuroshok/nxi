@@ -37,11 +37,12 @@ namespace nxi
 
     signals:
         void event_focus(nxi::buffer&);
+        void event_focus_changed(nxi::buffer& previous, nxi::buffer&);
 
     private:
         nxi::core& core_;
-        nxi::buffer_group default_group_;
-        nxi::buffer default_buffer_;
+        nxi::buffer_group main_group_;
+        nxi::buffer main_buffer_;
 
         nxi::buffer* focus_;
         std::vector<std::unique_ptr<nxi::buffer_group>> groups_;
