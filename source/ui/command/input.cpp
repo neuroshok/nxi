@@ -26,7 +26,7 @@ namespace ui
         setStyleSheet("font-weight:bold");
         setPlaceholderText(default_placeholder_text);
 
-        set_mode(nxi::command_input::mode_type::display);
+        set_mode(nxi::command_input::mode_type::input);
 
         info_ = new QLabel(this);
         header_ = new QLabel(this);
@@ -132,7 +132,8 @@ namespace ui
                 break;
 
             case Qt::Key_Backspace:
-                setText(text().mid(0, text().size()));
+                // setText(text().mid(0, text().size()));
+                nxi_input().update(text(), event);
                 break;
 
             default:
@@ -151,8 +152,8 @@ namespace ui
         QLineEdit::focusOutEvent(event);
         // auto focused_page = user_.nxi_user().page_system().focus();
         // if (focused_page) setText(focused_page->name());
-        first_focus_ = true;
-        set_mode(nxi::command_input::mode_type::display);
+        // first_focus_ = true;
+        // set_mode(nxi::command_input::mode_type::display);
     }
 
     void command_input::enterEvent(QEnterEvent* event)
