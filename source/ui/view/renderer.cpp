@@ -18,11 +18,12 @@
 namespace ui
 {
     renderer_view::renderer_view(ui::user& user, QWidget* parent)
-        : ui::basic_element<QWidget>(parent)
+        : ui::element(parent)
         , user_{ user }
         , renderer_{ new ui::web_renderer }
         , buffer_{ user_.nxi_user().buffer_system().add(group_id()) }
     {
+        // todo what is that ?
         renderer_->widget()->setParent(this);
 
         layout_ = new nxw::vbox_layout;
@@ -31,6 +32,7 @@ namespace ui
         focus_marker_ = new QLabel{ this };
         focus_marker_->setFixedHeight(5);
         focus_marker_->setStyleSheet("background-color: transparent");
+        focus_marker_->hide();
         layout_->addWidget(focus_marker_, 0, Qt::AlignTop);
         layout_->addWidget(renderer_->widget(), 1);
     }
@@ -67,6 +69,8 @@ namespace ui
         }
          */
     }
+
+    void renderer_view::show_focus_marker(bool state) { state ? focus_marker_->show() : focus_marker_->hide(); }
 
     void renderer_view::focusInEvent(QFocusEvent*)
     {

@@ -34,6 +34,8 @@ namespace ui
         void display(nxi::page_system::page_ptr);
         void display(nxi::page_system::pages_view pages);
 
+        void show_focus_marker(bool state = true);
+
         [[nodiscard]] nxi::buffer& buffer() const { return buffer_; }
 
         void focusInEvent(QFocusEvent*) override;

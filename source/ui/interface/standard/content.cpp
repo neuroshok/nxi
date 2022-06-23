@@ -39,6 +39,9 @@ namespace ui::interfaces::standard
         auto renderer_view = new ui::renderer_view(user_, this);
         layout_->addWidget(renderer_view);
         views_.emplace(renderer_view->buffer().id(), renderer_view);
+
+        if (views_.size() > 1) renderer_view->show_focus_marker();
+
         return renderer_view;
     }
 } // ui::interfaces
