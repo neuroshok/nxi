@@ -9,6 +9,7 @@
 #include <nxw/vbox_layout.hpp>
 
 #include <ui/core.hpp>
+#include <ui/interface/light/access_bar.hpp>
 #include <ui/interface/light/control_bar.hpp>
 #include <ui/interface/standard/content.hpp>
 
@@ -44,11 +45,12 @@ namespace ui::interfaces::light
         auto main_layout = new nxw::vbox_layout;
         setLayout(main_layout);
 
-        auto top_layout = new nxw::hbox_layout(this);
+        auto top_layout = new nxw::vbox_layout(this);
         auto middle_layout = new nxw::hbox_layout(this);
 
         content_ = new interfaces::standard::content(user_, window);
         control_bar_ = new ui::interfaces::light::control_bar(user_, window);
+        access_bar_ = new ui::interfaces::light::access_bar(user_, window);
 
         auto window_control = new ui::interfaces::standard::window_control(user_, window);
 
@@ -56,8 +58,8 @@ namespace ui::interfaces::light
         auto bar = new QProgressBar{ this };
         bar->hide();
 
-        top_layout->addSpacing(120);
         top_layout->addWidget(control_bar_);
+        top_layout->addWidget(access_bar_);
         middle_layout->addWidget(content_);
 
         main_layout->addLayout(top_layout);

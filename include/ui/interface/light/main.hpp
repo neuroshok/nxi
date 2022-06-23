@@ -17,6 +17,7 @@ namespace ui
 
 namespace ui::interfaces::light
 {
+    class access_bar;
     class control_bar;
 
     class main : public ui::main_interface
@@ -37,6 +38,7 @@ namespace ui::interfaces::light
         ui::user& user_;
 
         ui::interfaces::standard::content* content_;
+        ui::interfaces::light::access_bar* access_bar_;
         ui::interfaces::light::control_bar* control_bar_;
         ui::command_menu* command_menu_;
     };

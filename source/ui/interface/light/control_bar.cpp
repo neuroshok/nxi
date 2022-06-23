@@ -29,6 +29,8 @@ namespace ui::interfaces::light
         auto* layout = new nxw::hbox_layout;
         setLayout(layout);
 
+        layout->addSpacing(120);
+
         if (user_.nxi_user().config().browser.interface.light.console_mode.get())
         {
             command_input_ = new ui::command_input(user_, this);
