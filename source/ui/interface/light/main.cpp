@@ -95,6 +95,7 @@ namespace ui::interfaces::light
                         command_menu_->set_data(stz::make_observer(&suggestions));
                         command_menu_->exec();
                     });
+                    connect(&buffer.input(), &nxi::command_input::event_reset, this, [this]() { command_menu_->hide(); });
                 });
 
         connect(&user_.nxi_user().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_action_update, this,
