@@ -5,14 +5,6 @@
 
 namespace ui
 {
-    class element
-    {
-    public:
-        element();
-
-    private:
-    };
-
     template<class Widget>
     class basic_element : public Widget
     {
@@ -23,6 +15,8 @@ namespace ui
         [[nodiscard]] const ui::window* ui_window() const { return static_cast<ui::window*>(Widget::window()); }
         [[nodiscard]] int group_id() const { return ui_window()->id(); }
     };
+
+    using element = basic_element<QWidget>;
 } // ui
 
 #endif // INCLUDE_UI_ELEMENT_HPP_NXI
