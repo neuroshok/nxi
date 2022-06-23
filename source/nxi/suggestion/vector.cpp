@@ -10,15 +10,13 @@ namespace nxi
     suggestion_vector::suggestions_type::const_iterator suggestion_vector::begin() const { return suggestions_.begin(); }
     suggestion_vector::suggestions_type::const_iterator suggestion_vector::end() const { return suggestions_.end(); }
 
-    void suggestion_vector::push_back(QString text)
-    {
-        suggestions_.emplace_back(nxi::text_suggestion{ std::move(text) });
-    }
+    suggestion_vector::suggestion_vector()
+        : selected_index_{ -1 }
+    {}
 
-    void suggestion_vector::push_back(const char* text)
-    {
-        push_back(QString{ text });
-    }
+    void suggestion_vector::push_back(QString text) { suggestions_.emplace_back(nxi::text_suggestion{ std::move(text) }); }
+
+    void suggestion_vector::push_back(const char* text) { push_back(QString{ text }); }
 
     void suggestion_vector::erase(int index)
     {

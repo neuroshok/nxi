@@ -22,7 +22,7 @@ namespace nxi
         using suggestions_type = std::vector<suggestion_type>;
 
     public:
-        suggestion_vector() = default;
+        suggestion_vector();
         suggestion_vector(const suggestion_vector&) = delete;
 
         suggestions_type::iterator begin();
