@@ -171,7 +171,7 @@ namespace nxi
         page_reload.action = "reload";
         page_reload.description = "Reload this page";
         page_reload.context_id = nxi::context::id<nxi::contexts::page>();
-        page_reload.function = [this](const nxi::values& values) { core_.page_system().focus()->reload(); };
+        page_reload.function = [this](const nxi::values& values) { core_.buffer_system().focus().page()->reload(); };
         add(std::move(page_reload));
 
         // set_property
