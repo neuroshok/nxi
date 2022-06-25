@@ -42,8 +42,8 @@ jobs:
       - run: xmake install -v -o nxi nxi
 
       # macos install
-      - run: ls
-      - run: cp -R build/macos/x86_64/release nxi
+      - run: cd build && ls
+      - run: cp -R build/macosx/x86_64/release nxi
         if: matrix.config.os == 'macos-latest'
 
       - run: cd nxi && echo "" > ${{ github.sha }}
