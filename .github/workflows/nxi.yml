@@ -43,7 +43,7 @@ jobs:
 
       # macos install
       - run: cp -R build/macosx/x86_64/release/ nxi/bin
-        if: matrix.config.os == 'macos-latest'
+        if: matrix.config.name == 'macos'
 
       - run: cd nxi && echo "" > ${{ github.sha }}
 
