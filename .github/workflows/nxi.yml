@@ -11,7 +11,7 @@ jobs:
         config:
           - { name: "windows", os: windows-latest, qt_release: "release_windows-latest.zip" }
           - { name: "ubuntu", os: ubuntu-latest, qt_release: "release_ubuntu-latest.tar.gz" }
-          - { name: "macos", os: macos-latest, qt_release: "release_macos-latest.tar.gz" }
+          - { name: "macos", os: macos-11, qt_release: "release_macos-latest.tar.gz" }
     #
     runs-on: ${{ matrix.config.os }}
 
