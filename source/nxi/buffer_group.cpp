@@ -72,14 +72,14 @@ namespace nxi
             },
             [this](const nxi::contexts::command_executor& ctx) { ctx.data.active_parameter().suggestion_callback(suggestions_); },
             [this](auto&&) { nxi_warning("no suggestion"); });
-        emit event_action_update(suggestions_);
+        suggestions_.updated();
     }
 
     void buffer_group::suggest_command()
     {
         suggestions_.clear();
         core_.command_system().root_list([this](nds::node_ptr<const nxi::command> command) { suggestions_.push_back(command); });
-        emit event_action_update(suggestions_);
+        suggestions_.updated();
     }
 
     void buffer_group::suggest_context()
@@ -89,7 +89,7 @@ namespace nxi
         {
             suggestions_.push_back(nxi::text_suggestion{ context->name(), "", QString::number(context->priority()) });
         };
-        emit event_action_update(suggestions_);
+        suggestions_.updated();
     }
 
     void buffer_group::suggest_navigation()
@@ -99,7 +99,7 @@ namespace nxi
         {
             suggestions_.push_back(page_command);
         }
-        emit event_action_update(suggestions_);
+        suggestions_.updated();
     }
 
     void buffer_group::suggest_page()
@@ -109,7 +109,7 @@ namespace nxi
         {
             suggestions_.push_back(page);
         }
-        emit event_action_update(suggestions_);
+        suggestions_.updated();
     }
 
     void buffer_group::suggest_session()
@@ -119,7 +119,7 @@ namespace nxi
         {
             suggestions_.push_back(session->name());
         }
-        emit event_action_update(suggestions_);
+        suggestions_.updated();
     }
 
     int buffer_group::id() const { return id_; }

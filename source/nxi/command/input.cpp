@@ -31,7 +31,7 @@ namespace nxi
         });*/
     }
 
-    void command_input::update(const QString& input, QKeyEvent* event)
+    void command_input::update(const QString& input, QKeyEvent* event, nxi::suggestion_vector& suggestions)
     {
         input_ = input;
         auto key = static_cast<Qt::Key>(event->key());
@@ -48,51 +48,51 @@ namespace nxi
                 reset();
                 return;
             }
-            suggestions_.clear();
 
             if (mode_ == mode_type::shortcut)
             {
-                shortcut_input_.update(event, suggestions_);
+                shortcut_input_.update(event, suggestions);
                 emit event_shortcut_input_update(shortcut_input_.to_string());
             }
             if (mode_ == mode_type::input)
             {
                 if (!input_.isEmpty() && !core_.context_system().is_active<nxi::contexts::command_executor>())
                 {
-                    suggestions_.push_back(nxi::search_suggestion{ input_, "Google", "https://www.google.com/search?q=", ":/icon/search" });
-                    suggestions_.push_back(
+                    // todo make a access_action
+                    suggestions.push_back(nxi::search_suggestion{ "Go to " + input_, "", "https://www.google.com/search?q=", ":/icon/search" });
+                    suggestions.push_back(nxi::search_suggestion{ input_, "Google", "https://www.google.com/search?q=", ":/icon/search" });
+                    suggestions.push_back(
                         nxi::search_suggestion{ input_, "CppReference", "https://en.cppreference.com/mwiki/index.php?search=", ":/icon/search" });
                 }
 
                 core_.context_system().apply_on_active(
-                    [this](const nxi::contexts::command&) {
-                        command_system().search(input_, [this](nds::node_ptr<const nxi::command> command) { suggestions_.push_back(command); });
+                    [this, &suggestions](const nxi::contexts::command&) {
+                        command_system().search(input_,
+                                                [&suggestions](nds::node_ptr<const nxi::command> command) { suggestions.push_back(command); });
                     },
-                    [this](const nxi::contexts::page&) {
-                        core_.page_system().search(input_, [this](nds::node_ptr<nxi::page> page) { suggestions_.push_back(page); });
+                    [this, &suggestions](const nxi::contexts::page&) {
+                        core_.page_system().search(input_, [&suggestions](nds::node_ptr<nxi::page> page) { suggestions.push_back(page); });
                     },
-                    [this](const nxi::contexts::command_executor& ctx) {
-                        decltype(suggestions_) suggestions;
+                    [this, &suggestions](const nxi::contexts::command_executor& ctx) {
                         ctx.data.active_parameter().suggestion_callback(suggestions);
                         for (const auto& s : suggestions)
                         {
-                            if (s.text().contains(input_)) suggestions_.push_back(s);
+                            if (s.text().contains(input_)) suggestions.push_back(s);
                         }
                     },
-                    [this](auto&&) { nxi_warning("no suggestion"); });
+                    [](auto&&) { nxi_warning("no suggestion"); });
             }
 
-            if (suggestions_.size() > 0) suggestions_.select(0);
-            emit event_suggestion_update(suggestions_);
+            if (suggestions.size() > 0) suggestions.select(0);
+            suggestions.updated();
         }
 
         // shortcut mode need release event
         if (mode_ == mode_type::shortcut && event->type() == QEvent::KeyRelease)
         {
-            shortcut_input_.update(event, suggestions_);
+            shortcut_input_.update(event, suggestions);
             if (!shortcut_input_.is_triggered()) set_mode(mode_type::input);
             emit event_shortcut_input_update(shortcut_input_.to_string());
-            emit event_suggestion_update(suggestions_);
         }
     }
 
@@ -117,11 +117,9 @@ namespace nxi
     {
         input_ = "";
         emit event_input_update(input_);
-        suggestions_.clear();
     }
 
     const nxi::command_system& command_input::command_system() const { return core_.command_system(); }
     nxi::command_system& command_input::command_system() { return core_.command_system(); }
-
     nxi::shortcut_input& command_input::shortcut_input() { return shortcut_input_; }
 } // nxi

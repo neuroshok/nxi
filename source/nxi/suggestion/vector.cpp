@@ -88,13 +88,9 @@ namespace nxi
         selected_index_ = -1;
     }
 
-    std::size_t suggestion_vector::size() const
-    {
-        return suggestions_.size();
-    }
+    std::size_t suggestion_vector::size() const { return suggestions_.size(); }
 
-    const suggestion_vector::suggestion_type& suggestion_vector::operator[](unsigned int index) const
-    {
-        return suggestions_[index];
-    }
+    const suggestion_vector::suggestion_type& suggestion_vector::operator[](unsigned int index) const { return suggestions_[index]; }
+
+    void suggestion_vector::updated() { emit event_update(stz::make_observer(this)); }
 } // nxi

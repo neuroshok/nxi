@@ -34,7 +34,6 @@ namespace ui::interfaces::light
         if (user_.nxi_user().config().browser.interface.light.console_mode.get())
         {
             command_input_ = new ui::command_input(user_, this);
-            command_input_->setFocus();
             layout->addWidget(command_input_);
             return;
         }
@@ -101,13 +100,11 @@ namespace ui::interfaces::light
         if (user_.nxi_user().config().browser.interface.light.console_mode.get())
         {
             command_input_ = new ui::command_input(user_, this);
-            command_input_->setFocus();
             layout->addWidget(command_input_);
         }
         else
         {
             command_input_ = new ui::command_input(user_, this);
-            command_input_->setFocus();
 
             auto label = new QLabel{ this };
             auto icon = new QIcon{ ":/image/nxi" };

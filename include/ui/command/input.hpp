@@ -70,6 +70,7 @@ namespace ui
 
         void set_executor_placeholder(const QString& parameter_name);
         void set_mode(nxi::command_input::mode_type);
+        void update_input(QKeyEvent*);
 
         nxi::command_input& nxi_input();
 

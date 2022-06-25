@@ -29,8 +29,10 @@ namespace ui
             icon_sound_premuted_ = ui::make_pixmap_from_svg(":/icon/sound", size, style_data.item_text_color.lighter(180));
         });
 
-        connect(&suggestions(), &nxi::suggestion_vector::event_update, this,
-                [this](stz::observer_ptr<const nxi::suggestion_vector> suggestions) { set_data(suggestions); });
+        connect(&suggestions(), &nxi::suggestion_vector::event_update, this, [this](stz::observer_ptr<const nxi::suggestion_vector> suggestions) {
+            if (suggestions->size() > 0) show();
+            set_data(suggestions);
+        });
 
         connect(&suggestions(), &nxi::suggestion_vector::event_selection_update, this, [this](int index) {
             selection_index_ = index;

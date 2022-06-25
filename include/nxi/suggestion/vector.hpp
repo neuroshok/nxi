@@ -39,19 +39,19 @@ namespace nxi
             suggestions_.emplace_back(nxi::suggestion{ std::move(item) });
         }
 
+        void clear();
         void erase(int index);
         void erase(nds::node_ptr<const nxi::page>);
-
         void select(int index) const;
         void select_previous() const;
         void select_next() const;
+        void updated();
+
         size_t suggestion_count() const;
         const suggestion_type& suggestion(int index) const;
         const suggestion_type& selected() const;
         int selected_index() const;
         bool has_selection() const;
-
-        void clear();
         std::size_t size() const;
         const suggestion_type& operator[](unsigned int index) const;
 

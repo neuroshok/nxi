@@ -36,7 +36,6 @@ namespace nxi
         [[nodiscard]] const nxi::suggestion_vector& suggestions() const;
 
     signals:
-        void event_action_update(const nxi::suggestion_vector&);
         void event_buffer_focus(nxi::buffer&);
         void event_command_root_update(nds::node_ptr<nxi::command>);
         void event_page_activate(nds::node_ptr<nxi::page>);

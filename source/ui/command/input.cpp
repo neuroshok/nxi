@@ -5,16 +5,12 @@
 #include <nxi/core.hpp>
 #include <nxi/user.hpp>
 
+#include <ui/command/menu.hpp>
 #include <ui/core.hpp>
 #include <ui/menu.hpp>
-#include <ui/window.hpp>
-#include <ui/command/menu.hpp>
 
-#include <QKeyEvent>
-#include <QPaintEvent>
 #include <QLabel>
-#include <nxi/system/interface.hpp>
-#include <nxi/style.hpp>
+#include <QPaintEvent>
 
 namespace ui
 {
@@ -81,14 +77,11 @@ namespace ui
             }
         });
 
-        connect(&buffer_group(), &nxi::buffer_group::event_buffer_focus, this, [this](nxi::buffer& buffer) { setText(buffer.input().text()); });
-
-        // use only base
-        connect(&user_.nxi_user().page_system(), &nxi::page_system::event_focus, this,
-                [this](nxi::page_system::page_ptr page) { setText(page->name()); });
-
-        connect(&user_.nxi_user().page_system(), &nxi::page_system::event_focus, this,
-                [this](nxi::page_system::page_ptr page) { setText(page->name()); });
+        // connect(&buffer_group(), &nxi::buffer_group::event_buffer_focus, this, [this](nxi::buffer& buffer) { setText(buffer.input().text()); });
+        connect(&buffer_group(), &nxi::buffer_group::event_page_activate, this, [this](nds::node_ptr<nxi::page> page) {
+            setText(page->name());
+            set_mode(nxi::command_input::mode_type::display);
+        });
 
         /*
                 connect(&nxi_input(), &nxi::command_input::event_shortcut_input_update, this,
@@ -103,11 +96,12 @@ namespace ui
     void command_input::resizeEvent(QResizeEvent* event)
     {
         QLineEdit::resizeEvent(event);
-        //menu_->setFixedWidth(width());
+        // menu_->setFixedWidth(width());
     }
 
     void command_input::keyPressEvent(QKeyEvent* event)
     {
+        bool is_empty = text().isEmpty();
         QLineEdit::keyPressEvent(event);
 
         switch (event->key())
@@ -116,60 +110,59 @@ namespace ui
             if (command_executor_ && user_.nxi_user().context_system().is_active<nxi::contexts::command_executor>())
                 user_.nxi_user().context_system().del<nxi::contexts::command_executor>();
             nxi_input().reset();
-                break;
-            case Qt::Key_Up:
-                buffer_group().suggestions().select_previous();
-                break;
-            case Qt::Key_Down:
-                if (!buffer_group().suggestions().has_selection())
-                {
-                    if (nxi_input().is_empty()) buffer_group().context_suggest();
-                    else nxi_input().update(text(), event);
+            break;
+        case Qt::Key_Up:
+            buffer_group().suggestions().select_previous();
+            break;
+        case Qt::Key_Down:
+            if (nxi_input().is_empty() && !buffer_group().suggestions().has_selection()) buffer_group().context_suggest();
+            buffer_group().suggestions().select_next();
+            break;
 
-                    buffer_group().suggestions().select_next();
-                }
-                else buffer_group().suggestions().select_next();
-                break;
-
-            case Qt::Key_Backspace:
-                // setText(text().mid(0, text().size()));
-                nxi_input().update(text(), event);
-                break;
-
-            default:
-                nxi_input().update(text(), event);
+        case Qt::Key_Backspace:
+            if (is_empty && !event->isAutoRepeat())
+            {
+                auto focused_page = user_.nxi_user().buffer_system().focus().page();
+                if (focused_page) setText(focused_page->command());
+                selectAll();
             }
-    }
-    void command_input::keyReleaseEvent(QKeyEvent* event) { nxi_input().update(text(), event); }
+            else update_input(event);
+            break;
 
-    void command_input::focusInEvent(QFocusEvent *event)
-    {
-        QLineEdit::focusInEvent(event);
+        default:
+            update_input(event);
+        }
     }
+    void command_input::keyReleaseEvent(QKeyEvent* event)
+    { /*update_input(event);*/
+    }
+
+    void command_input::focusInEvent(QFocusEvent* event) { QLineEdit::focusInEvent(event); }
 
     void command_input::focusOutEvent(QFocusEvent* event)
     {
         QLineEdit::focusOutEvent(event);
-        // auto focused_page = user_.nxi_user().page_system().focus();
-        // if (focused_page) setText(focused_page->name());
-        // first_focus_ = true;
-        // set_mode(nxi::command_input::mode_type::display);
+        first_focus_ = true;
+        set_mode(nxi::command_input::mode_type::display);
+
+        auto focused_page = user_.nxi_user().buffer_system().focus().page();
+        if (focused_page) setText(focused_page->name());
     }
 
     void command_input::enterEvent(QEnterEvent* event)
     {
         if (hasFocus()) return;
-        //if (!input_.is_empty()) return;
-        auto focused_page = user_.nxi_user().page_system().focus();
-        //if (focused_page) setText(focused_page->name());
+        // if (!input_.is_empty()) return;
+        // auto focused_page = user_.nxi_user().page_system().focus();
+        // if (focused_page) setText(focused_page->name());
     }
 
     void command_input::leaveEvent(QEvent* event)
     {
         if (hasFocus()) return;
-        //if (!input_.is_empty()) return;
-        auto focused_page = user_.nxi_user().page_system().focus();
-        //if (focused_page) setText(focused_page->name());
+        // if (!input_.is_empty()) return;
+        // auto focused_page = user_.nxi_user().page_system().focus();
+        // if (focused_page) setText(focused_page->name());
     }
 
     void command_input::mouseMoveEvent(QMouseEvent* event)
@@ -200,6 +193,7 @@ namespace ui
                 {
                     auto focused_page = user_.nxi_user().buffer_system().focus().page();
                     if (focused_page) setText(focused_page->command());
+                    else setText("");
                 }
                 else setText(nxi_input().text());
                 selectAll();
@@ -228,6 +222,12 @@ namespace ui
         {
             QWidget::setCursor(QCursor(Qt::IBeamCursor));
         }
+    }
+
+    void command_input::update_input(QKeyEvent* event)
+    {
+        buffer_group().suggestions().clear();
+        nxi_input().update(text(), event, buffer_group().suggestions());
     }
 
     void command_input::style_update(ui::command_input* ui)

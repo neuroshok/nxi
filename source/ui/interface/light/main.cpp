@@ -59,7 +59,7 @@ namespace ui::interfaces::light
         bar->hide();
 
         top_layout->addWidget(control_bar_);
-        top_layout->addWidget(access_bar_);
+        // top_layout->addWidget(access_bar_);
         middle_layout->addWidget(content_);
 
         main_layout->addLayout(top_layout);
@@ -93,17 +93,7 @@ namespace ui::interfaces::light
                     nxi_trace("Disconnect buffer {}", previous_buffer.id());
                     previous_buffer.input().disconnect();
                     nxi_trace("Connect buffer {}", buffer.id());
-                    connect(&buffer.input(), &nxi::command_input::event_suggestion_update, this, [this](const nxi::suggestion_vector& suggestions) {
-                        command_menu_->set_data(stz::make_observer(&suggestions));
-                        command_menu_->exec();
-                    });
                     connect(&buffer.input(), &nxi::command_input::event_reset, this, [this]() { command_menu_->hide(); });
-                });
-
-        connect(&user_.nxi_user().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_action_update, this,
-                [this](const nxi::suggestion_vector& suggestions) {
-                    command_menu_->set_data(stz::make_observer(&suggestions));
-                    command_menu_->exec();
                 });
 
         connect(&user_.nxi_user(), &nxi::user::event_error, this, [](const QString& message) {

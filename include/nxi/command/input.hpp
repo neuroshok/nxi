@@ -40,7 +40,7 @@ namespace nxi
         command_input(const command_input&) = delete;
         command_input& operator=(const command_input&) = delete;
 
-        void update(const QString& input, QKeyEvent*);
+        void update(const QString& input, QKeyEvent*, nxi::suggestion_vector&);
 
         void set_mode(mode_type);
 
@@ -61,9 +61,7 @@ namespace nxi
     signals:
         void event_input_update(const QString&);
         void event_reset();
-        void event_selection_update(int index);
         void event_shortcut_input_update(const QString&);
-        void event_suggestion_update(const nxi::suggestion_vector&);
 
     private:
         nxi::core& core_;
@@ -72,7 +70,6 @@ namespace nxi
         mode_type mode_;
         state state_;
         nxi::shortcut_input shortcut_input_;
-        nxi::suggestion_vector suggestions_;
     };
 } // nxi
 
