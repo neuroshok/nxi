@@ -34,18 +34,18 @@ namespace nxi
 
     void buffer_system::focus(nxi::buffer& buffer)
     {
-        nxi_trace("focus buffer {}", buffer.id());
         auto previous_focus = focus_;
         focus_ = &buffer;
 
-        emit event_focus(buffer);
-
         if (previous_focus != focus_)
         {
-            emit event_focus_changed(*previous_focus, buffer);
-        }
+            nxi_trace("focus buffer {}", buffer.id());
 
-        emit buffer.group().event_buffer_focus(buffer);
+            emit event_focus_changed(*previous_focus, buffer);
+
+            emit event_focus(buffer);
+            emit buffer.group().event_buffer_focus(buffer);
+        }
     }
 
     nxi::buffer_group& buffer_system::add_group(int group_id)
