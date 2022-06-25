@@ -33,7 +33,10 @@ namespace nxi
 
         session_system_.load();
         command_system_.load();
+
+        // requires session_system
         page_system_.load();
+
         context_system_.load();
 
         module_system_.load();

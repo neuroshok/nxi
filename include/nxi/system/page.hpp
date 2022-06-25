@@ -92,12 +92,13 @@ namespace nxi
     public:
         nxi::core& core_;
         nxi::database& user_database_;
+        int session_id_;
+
+        page_ptr root_;
+        page_ptr focus_;
+
         nds::graph<nxi::page> graph_;
 
-        page_ptr focus_;
-        page_ptr root_;
-
-        int session_id_ = 0;
         // std::vector<page_ptr> actives_;
         std::vector<page_ptr> visible_pages_;
     };

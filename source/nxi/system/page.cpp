@@ -15,7 +15,7 @@ namespace nxi
     page_system::page_system(nxi::core& core, nxi::database& user_database)
         : core_{ core }
         , user_database_{ user_database }
-        , root_{ nullptr }
+        , session_id_{ 0 }
     {}
 
     void page_system::load()
@@ -97,6 +97,8 @@ namespace nxi
         // notify
         graph_.targets(root_, [this](auto&& page) { emit event_add(page, root_); });
 
+        // session
+        session_id_ = core_.session_system().focus().id();
         connect(&core_.session_system(), &nxi::session_system::event_focus, [this](nxi::session& s) { session_id_ = s.id(); });
     }
 
