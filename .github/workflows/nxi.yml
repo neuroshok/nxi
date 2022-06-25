@@ -2,7 +2,7 @@ name: nxi_build
 
 on:
   push:
-    branches: [ master, dev ]
+    branches: [ master, dev, test ]
 
 jobs:
   nxi:
@@ -40,6 +40,10 @@ jobs:
       - run: xmake config --qt=release -y
       - run: xmake  -y
       - run: xmake install -v -o nxi nxi
+
+      # macos install
+      - run: cp -R build/macosx/x86_64/release/ nxi/bin
+        if: matrix.config.os == 'macos-latest'
 
       - run: cd nxi && echo "" > ${{ github.sha }}
 
