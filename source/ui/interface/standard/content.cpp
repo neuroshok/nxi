@@ -22,7 +22,7 @@ namespace ui::interfaces::standard
         layout_ = new nxw::hbox_layout;
         setLayout(layout_);
 
-        focus_ = add_view();
+        connect(&user_.nxi_core(), &nxi::core::event_load, this, [this] { focus_ = add_view(); });
 
         connect(&user_.nxi_user().buffer_system().group(ui_window()->id()), &nxi::buffer_group::event_buffer_focus, this,
                 [this](nxi::buffer& buffer) {
@@ -39,6 +39,8 @@ namespace ui::interfaces::standard
         auto renderer_view = new ui::renderer_view(user_, this);
         layout_->addWidget(renderer_view);
         views_.emplace(renderer_view->buffer().id(), renderer_view);
+
+        user_.nxi_user().buffer_system().focus(renderer_view->buffer());
 
         if (views_.size() > 1) renderer_view->show_focus_marker();
 
